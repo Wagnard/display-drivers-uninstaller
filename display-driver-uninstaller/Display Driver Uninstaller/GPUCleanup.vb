@@ -10,11 +10,11 @@ Namespace Display_Driver_Uninstaller
 
 	Public Class GPUCleanup
 
-		Dim FileIO As New FileIO
-		Dim winxp As Boolean = frmMain.winxp
-		Dim win10 As Boolean = frmMain.win10
-		Dim win8higher As Boolean = frmMain.win8higher
-		Dim sysdrv As String = Application.Paths.SystemDrive
+		Private _fileIo As New FileIO
+		Private _winxp As Boolean = frmMain.IsWindowsXp
+		Private _win10 As Boolean = frmMain.IsWindows10
+		Private _isWindows8OrHigher As Boolean = frmMain.IsWindows8OrHigher
+		Private _sysdrv As String = Application.Paths.SystemDrive
 
 		Public Sub Start(ByVal config As ThreadSettings)
 			Dim CleanupEngine As New CleanupEngine
@@ -202,7 +202,7 @@ Namespace Display_Driver_Uninstaller
 
 
 								'Removing Software components (DCH stuff, win10+)
-								If win10 Then
+								If _win10 Then
 									Application.Log.AddMessage("Executing SetupAPI: Remove SoftwareComponent.")
 									Dim SoftwareComponents As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False, True)
 									If SoftwareComponents.Count > 0 Then
@@ -255,7 +255,7 @@ Namespace Display_Driver_Uninstaller
 				ImpersonateLoggedOnUser.Taketoken()
 				'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
 				Try
-					frmMain.donotremoveamdhdaudiobusfiles = False
+					frmMain.DoNotRemoveAmdHdAudioBusFiles = False
 					Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\PCI")
 						If subregkey IsNot Nothing Then
 							For Each child2 As String In subregkey.GetSubKeyNames()
@@ -274,7 +274,7 @@ Namespace Display_Driver_Uninstaller
 
 														If StrContainsAny(entry, True, "amdkmafd") Then
 															Application.Log.AddWarningMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
-															frmMain.donotremoveamdhdaudiobusfiles = True
+															frmMain.DoNotRemoveAmdHdAudioBusFiles = True
 														End If
 													Next
 												End If
@@ -287,7 +287,7 @@ Namespace Display_Driver_Uninstaller
 					End Using
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					frmMain.donotremoveamdhdaudiobusfiles = True  ' A security if the code to check fail.
+					frmMain.DoNotRemoveAmdHdAudioBusFiles = True  ' A security if the code to check fail.
 				End Try
 
 				If WindowsIdentity.GetCurrent().IsSystem Then
@@ -418,7 +418,7 @@ Namespace Display_Driver_Uninstaller
 					If GPUs IsNot Nothing AndAlso GPUs.Count > 0 Then
 						For Each GPU As SetupAPI.Device In GPUs
 							If GPU IsNot Nothing Then
-								If win10 Then
+								If _win10 Then
 									Application.Log.AddMessage("Executing SetupAPI: Remove SoftwareComponent connected to the GPU.")
 									Dim SoftwareComponents As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False, True)
 									If SoftwareComponents IsNot Nothing AndAlso SoftwareComponents.Count > 0 Then
@@ -462,21 +462,21 @@ Namespace Display_Driver_Uninstaller
 									'Removing Software components (DCH stuff, win10+) (no parents, because old device is removed. SafeMode behavior)
 									Application.Log.AddMessage("Executing SetupAPI: Remove SoftwareComponent.")
 									Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
-										If found IsNot Nothing AndAlso found.Count > 0 Then
-											For Each d As SetupAPI.Device In found
-												If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
-													If StrContainsAny(d.HardwareIDs(0), True, VendidSC) Then
-														SetupAPI.UninstallDevice(d)
-													End If
+									If found IsNot Nothing AndAlso found.Count > 0 Then
+										For Each d As SetupAPI.Device In found
+											If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+												If StrContainsAny(d.HardwareIDs(0), True, VendidSC) Then
+													SetupAPI.UninstallDevice(d)
 												End If
-											Next
-											found.Clear()
-										End If
+											End If
+										Next
+										found.Clear()
+									End If
 
 									Application.Log.AddMessage("SetupAPI: Remove SoftwareComponent Completed.")
 								End If
-									'	SetupAPI.EnableDevice(GPU, False)
-									SetupAPI.UninstallDevice(GPU) 'Then we remove the GPU itself.
+								'	SetupAPI.EnableDevice(GPU, False)
+								SetupAPI.UninstallDevice(GPU) 'Then we remove the GPU itself.
 							End If
 						Next
 						GPUs.Clear()
@@ -721,7 +721,7 @@ Namespace Display_Driver_Uninstaller
 												If IsNullOrWhitespace(LowerFilter) Then Continue For
 												If StrContainsAny(LowerFilter, True, "amdkmpfd") Then
 													Application.Log.AddMessage("Executing SetupAPI: update AMDKMPFD system device to Windows default started")
-													If win10 Then
+													If _win10 Then
 														SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\PCI.inf", True)
 													Else
 														SetupAPI.UpdateDeviceInf(d, config.Paths.WinDir + "inf\machine.inf", True)
@@ -919,7 +919,7 @@ Namespace Display_Driver_Uninstaller
 
 
 			'Removal of the (DCH) AMD control panel comming from the Window Store. (In progress...)
-			If win10 Then
+			If _win10 Then
 				If config.RemoveAMDCP Then
 					If CanDeprovisionPackageForAllUsersAsync() Then
 						CleanupEngine.RemoveAppx1809("AMDRadeonSoftware")
@@ -1442,36 +1442,36 @@ Namespace Display_Driver_Uninstaller
 													If Not IsNullOrWhitespace(wantedvalue) Then
 														Try
 															Select Case True
-																Case wantedvalue.Contains(";" + sysdrv & "program files (x86)\amd app\bin\x86_64")
-																	wantedvalue = wantedvalue.Replace(";" + sysdrv & "program files (x86)\amd app\bin\x86_64", "")
+																Case wantedvalue.Contains(";" + _sysdrv & "program files (x86)\amd app\bin\x86_64")
+																	wantedvalue = wantedvalue.Replace(";" + _sysdrv & "program files (x86)\amd app\bin\x86_64", "")
 																	regkey.SetValue(child, wantedvalue)
 
-																Case wantedvalue.Contains(sysdrv & "program files (x86)\amd app\bin\x86_64;")
-																	wantedvalue = wantedvalue.Replace(sysdrv & "program files (x86)\amd app\bin\x86_64;", "")
+																Case wantedvalue.Contains(_sysdrv & "program files (x86)\amd app\bin\x86_64;")
+																	wantedvalue = wantedvalue.Replace(_sysdrv & "program files (x86)\amd app\bin\x86_64;", "")
 																	regkey.SetValue(child, wantedvalue)
 
-																Case wantedvalue.Contains(";" + sysdrv & "program files (x86)\amd app\bin\x86")
-																	wantedvalue = wantedvalue.Replace(";" + sysdrv & "program files (x86)\amd app\bin\x86", "")
+																Case wantedvalue.Contains(";" + _sysdrv & "program files (x86)\amd app\bin\x86")
+																	wantedvalue = wantedvalue.Replace(";" + _sysdrv & "program files (x86)\amd app\bin\x86", "")
 																	regkey.SetValue(child, wantedvalue)
 
-																Case wantedvalue.Contains(sysdrv & "program files (x86)\amd app\bin\x86;")
-																	wantedvalue = wantedvalue.Replace(sysdrv & "program files (x86)\amd app\bin\x86;", "")
+																Case wantedvalue.Contains(_sysdrv & "program files (x86)\amd app\bin\x86;")
+																	wantedvalue = wantedvalue.Replace(_sysdrv & "program files (x86)\amd app\bin\x86;", "")
 																	regkey.SetValue(child, wantedvalue)
 
-																Case wantedvalue.Contains(";" + sysdrv & "program Files (x86)\ati technologies\ati.ace\core-static")
-																	wantedvalue = wantedvalue.Replace(";" + sysdrv & "program Files (x86)\ati technologies\ati.ace\core-static", "")
+																Case wantedvalue.Contains(";" + _sysdrv & "program Files (x86)\ati technologies\ati.ace\core-static")
+																	wantedvalue = wantedvalue.Replace(";" + _sysdrv & "program Files (x86)\ati technologies\ati.ace\core-static", "")
 																	regkey.SetValue(child, wantedvalue)
 
-																Case wantedvalue.Contains(sysdrv & "program Files (x86)\ati technologies\ati.ace\core-static;")
-																	wantedvalue = wantedvalue.Replace(sysdrv & "program Files (x86)\ati technologies\ati.ace\core-static;", "")
+																Case wantedvalue.Contains(_sysdrv & "program Files (x86)\ati technologies\ati.ace\core-static;")
+																	wantedvalue = wantedvalue.Replace(_sysdrv & "program Files (x86)\ati technologies\ati.ace\core-static;", "")
 																	regkey.SetValue(child, wantedvalue)
 
-																Case wantedvalue.Contains(";" + sysdrv & "program Files (x86)\amd\ati.ace\core-static")
-																	wantedvalue = wantedvalue.Replace(";" + sysdrv & "program Files (x86)\ati technologies\ati.ace\core-static", "")
+																Case wantedvalue.Contains(";" + _sysdrv & "program Files (x86)\amd\ati.ace\core-static")
+																	wantedvalue = wantedvalue.Replace(";" + _sysdrv & "program Files (x86)\ati technologies\ati.ace\core-static", "")
 																	regkey.SetValue(child, wantedvalue)
 
-																Case wantedvalue.Contains(sysdrv & "program Files (x86)\amd\ati.ace\core-static;")
-																	wantedvalue = wantedvalue.Replace(sysdrv & "program Files (x86)\ati technologies\ati.ace\core-static;", "")
+																Case wantedvalue.Contains(_sysdrv & "program Files (x86)\amd\ati.ace\core-static;")
+																	wantedvalue = wantedvalue.Replace(_sysdrv & "program Files (x86)\ati technologies\ati.ace\core-static;", "")
 																	regkey.SetValue(child, wantedvalue)
 
 															End Select
@@ -1738,8 +1738,8 @@ Namespace Display_Driver_Uninstaller
 
 												filePath = regkey2.GetValue("InstallDir", String.Empty).ToString
 
-												If Not IsNullOrWhitespace(filePath) AndAlso FileIO.ExistsDir(filePath) Then
-													For Each childf As String In FileIO.GetDirectories(filePath)
+												If Not IsNullOrWhitespace(filePath) AndAlso _fileIo.ExistsDir(filePath) Then
+													For Each childf As String In _fileIo.GetDirectories(filePath)
 														If IsNullOrWhitespace(childf) Then Continue For
 
 														If StrContainsAny(childf, True, "ati.ace", "cnext", "cim", "Performance Profile Client") Then
@@ -1749,7 +1749,7 @@ Namespace Display_Driver_Uninstaller
 															Delete(childf)
 														End If
 													Next
-													If FileIO.CountDirectories(filePath) = 0 Then
+													If _fileIo.CountDirectories(filePath) = 0 Then
 
 														Delete(filePath)
 
@@ -1950,8 +1950,8 @@ Namespace Display_Driver_Uninstaller
 												If Not IsNullOrWhitespace(regkey2.GetValue("InstallDir", String.Empty).ToString) Then
 
 													filePath = regkey2.GetValue("InstallDir", String.Empty).ToString
-													If Not IsNullOrWhitespace(filePath) AndAlso FileIO.ExistsDir(filePath) Then
-														For Each childf As String In FileIO.GetDirectories(filePath)
+													If Not IsNullOrWhitespace(filePath) AndAlso _fileIo.ExistsDir(filePath) Then
+														For Each childf As String In _fileIo.GetDirectories(filePath)
 															If IsNullOrWhitespace(childf) Then Continue For
 
 															If StrContainsAny(childf, True, "ati.ace", "cnext", "cim") Then
@@ -1965,7 +1965,7 @@ Namespace Display_Driver_Uninstaller
 
 															End If
 														Next
-														If FileIO.CountDirectories(filePath) = 0 Then
+														If _fileIo.CountDirectories(filePath) = 0 Then
 
 															Delete(filePath)
 
@@ -2520,11 +2520,11 @@ Namespace Display_Driver_Uninstaller
 
 
 			If config.RemoveAMDDirs Then
-				filePath = sysdrv + "AMD"
+				filePath = _sysdrv + "AMD"
 
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 
-					For Each child As String In FileIO.GetDirectories(filePath)
+					For Each child As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) Then Continue For
 						If Not StrContainsAny(child, True, "Chipset_Software") Then
 
@@ -2532,12 +2532,12 @@ Namespace Display_Driver_Uninstaller
 
 						End If
 					Next
-					If FileIO.CountDirectories(filePath) = 0 Then
+					If _fileIo.CountDirectories(filePath) = 0 Then
 
 						Delete(filePath)
 
 					Else
-						For Each data As String In FileIO.GetDirectories(filePath)
+						For Each data As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
@@ -2580,9 +2580,9 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\ATI Technologies"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 
-				For Each child As String In FileIO.GetDirectories(filePath)
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("ati.ace") Or
 				   child.ToLower.Contains("ati catalyst control center") Or
@@ -2595,12 +2595,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					End If
 				Next
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If _fileIo.CountDirectories(filePath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In FileIO.GetDirectories(filePath)
+					For Each data As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
@@ -2610,8 +2610,8 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\ATI"
-			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In FileIO.GetDirectories(filePath)
+			If _fileIo.ExistsDir(filePath) Then
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("cim") Then
 
@@ -2620,12 +2620,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					End If
 				Next
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If _fileIo.CountDirectories(filePath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In FileIO.GetDirectories(filePath)
+					For Each data As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
@@ -2636,8 +2636,8 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		  (Environment.SpecialFolder.ProgramFiles) + "\Common Files" + "\ATI Technologies"
-			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In FileIO.GetDirectories(filePath)
+			If _fileIo.ExistsDir(filePath) Then
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("multimedia") Then
 
@@ -2646,12 +2646,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					End If
 				Next
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If _fileIo.CountDirectories(filePath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In FileIO.GetDirectories(filePath)
+					For Each data As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
@@ -2661,7 +2661,7 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\AMD APP"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 
 				Delete(filePath)
 
@@ -2671,7 +2671,7 @@ Namespace Display_Driver_Uninstaller
 
 				filePath = Environment.GetFolderPath _
 			  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 
 					Delete(filePath)
 
@@ -2679,9 +2679,9 @@ Namespace Display_Driver_Uninstaller
 
 				filePath = Environment.GetFolderPath _
 			 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("ati.ace") Or
 							 child.ToLower.Contains("ati catalyst control center") Or
@@ -2694,12 +2694,12 @@ Namespace Display_Driver_Uninstaller
 								End If
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -2710,7 +2710,7 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				filePath = System.Environment.SystemDirectory
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Dim files() As String = IO.Directory.GetFiles(filePath + "\", "coinst_*.*")
 					For i As Integer = 0 To files.Length - 1
 						If Not IsNullOrWhitespace(files(i)) Then
@@ -2720,9 +2720,9 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				filePath = System.Environment.SystemDirectory + "\amd"
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If StrContainsAny(child, True, "acrdumps", "mmddumps", "real", "amdfendr", "EeuDumps", "Persistent", "ANR") Or
 							 (child.ToLower.Contains("amdkmpfd") AndAlso config.NotPresentAMDKMPFD) Or
@@ -2733,12 +2733,12 @@ Namespace Display_Driver_Uninstaller
 								End If
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -2750,7 +2750,7 @@ Namespace Display_Driver_Uninstaller
 
 				filePath = Environment.GetFolderPath _
 			   (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 
 					Delete(filePath)
 
@@ -2758,7 +2758,7 @@ Namespace Display_Driver_Uninstaller
 
 				filePath = Environment.GetFolderPath _
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 
 					Delete(filePath)
 
@@ -2766,7 +2766,7 @@ Namespace Display_Driver_Uninstaller
 
 				filePath = Environment.GetFolderPath _
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoFirefox"
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 
 					Delete(filePath)
 
@@ -2774,7 +2774,7 @@ Namespace Display_Driver_Uninstaller
 
 				filePath = Environment.GetFolderPath _
 			(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoChrome"
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 
 					Delete(filePath)
 
@@ -2782,8 +2782,8 @@ Namespace Display_Driver_Uninstaller
 
 				filePath = Environment.GetFolderPath _
 			 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\Common Files" + "\ATI Technologies"
-				If FileIO.ExistsDir(filePath) Then
-					For Each child As String In FileIO.GetDirectories(filePath)
+				If _fileIo.ExistsDir(filePath) Then
+					For Each child As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("multimedia") Then
 
@@ -2793,12 +2793,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					Next
 					Try
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -2812,7 +2812,7 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\Catalyst Control Center"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 
 				Delete(filePath)
 
@@ -2820,7 +2820,7 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Problem Report Wizard"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 
 				Delete(filePath)
 
@@ -2828,7 +2828,7 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Settings"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 
 				Delete(filePath)
 
@@ -2836,7 +2836,7 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Catalyst Control Center"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 
 				Delete(filePath)
 
@@ -2844,7 +2844,7 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Radeon Software"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 
 				Delete(filePath)
 
@@ -2852,7 +2852,7 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Software꞉ Adrenalin Edition"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 
 				Delete(filePath)
 
@@ -2860,7 +2860,7 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMDBugReportTool"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 
 				Delete(filePath)
 
@@ -2868,7 +2868,7 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD Bug Report Tool"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 
 				Delete(filePath)
 
@@ -2876,7 +2876,7 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\AMD link for Windows"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 
 				Delete(filePath)
 
@@ -2884,8 +2884,8 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\ATI"
-			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In FileIO.GetDirectories(filePath)
+			If _fileIo.ExistsDir(filePath) Then
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("ace") Then
 
@@ -2894,12 +2894,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					End If
 				Next
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If _fileIo.CountDirectories(filePath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In FileIO.GetDirectories(filePath)
+					For Each data As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
@@ -2909,8 +2909,8 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\AMD"
-			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In FileIO.GetDirectories(filePath)
+			If _fileIo.ExistsDir(filePath) Then
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "kdb", "ppc", "fuel", "installuep", "uxg") Then
 
@@ -2919,12 +2919,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					End If
 				Next
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If _fileIo.CountDirectories(filePath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In FileIO.GetDirectories(filePath)
+					For Each data As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
@@ -2932,15 +2932,15 @@ Namespace Display_Driver_Uninstaller
 				End If
 			End If
 
-			For Each filepaths As String In FileIO.GetDirectories(config.Paths.UserPath)
+			For Each filepaths As String In _fileIo.GetDirectories(config.Paths.UserPath)
 				If IsNullOrWhitespace(filepaths) Then Continue For
 				filePath = filepaths + "\AppData\Roaming\ATI"
-				If winxp Then
+				If _winxp Then
 					filePath = filepaths + "\Application Data\ATI"
 				End If
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("ace") Then
 
@@ -2949,12 +2949,12 @@ Namespace Display_Driver_Uninstaller
 								End If
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -2967,12 +2967,12 @@ Namespace Display_Driver_Uninstaller
 
 
 				filePath = filepaths + "\AppData\Local\ATI"
-				If winxp Then
+				If _winxp Then
 					filePath = filepaths + "\Local Settings\Application Data\ATI"
 				End If
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("ace") Then
 
@@ -2981,12 +2981,12 @@ Namespace Display_Driver_Uninstaller
 								End If
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -2998,12 +2998,12 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				filePath = filepaths + "\AppData\Local\AMD"
-				If winxp Then
+				If _winxp Then
 					filePath = filepaths + "\Local Settings\Application Data\AMD"
 				End If
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If StrContainsAny(child, True, "cn", "fuel", "dvr", "radeonsoftware", "link") Or
 							 removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Then
@@ -3013,12 +3013,12 @@ Namespace Display_Driver_Uninstaller
 								End If
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -3030,12 +3030,12 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				filePath = filepaths + "\AppData\Local\RadeonInstaller"
-				If winxp Then
+				If _winxp Then
 					filePath = filepaths + "\Local Settings\Application Data\RadeonInstaller"
 				End If
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If StrContainsAny(child, True, "cache", "QtWeb Engine") Then
 
@@ -3044,12 +3044,12 @@ Namespace Display_Driver_Uninstaller
 								End If
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -3061,12 +3061,12 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				filePath = filepaths + "\AppData\Local\AMDSoftwareInstaller"
-				If winxp Then
+				If _winxp Then
 					filePath = filepaths + "\Local Settings\Application Data\AMDSoftwareInstaller"
 				End If
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If StrContainsAny(child, True, "cache") Then
 
@@ -3075,12 +3075,12 @@ Namespace Display_Driver_Uninstaller
 								End If
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -3092,17 +3092,17 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				filePath = filepaths + "\AppData\Local\AMD_Common"
-				If winxp Then
+				If _winxp Then
 					filePath = filepaths + "\Local Settings\Application Data\AMD_Common"
 				End If
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -3114,22 +3114,22 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				filePath = filepaths + "\AppData\Local\D3DSCache"
-				If winxp Then
+				If _winxp Then
 					filePath = filepaths + "\Local Settings\Application Data\D3DSCache"
 				End If
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								Delete(child)
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -3141,12 +3141,12 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				filePath = filepaths + "\AppData\LocalLow\AMD"
-				If winxp Then
+				If _winxp Then
 					filePath = filepaths + "\Local Settings\Application Data\AMD"  'need check in the future.
 				End If
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("cn") Or
 							 child.ToLower.Contains("fuel") Or
@@ -3159,12 +3159,12 @@ Namespace Display_Driver_Uninstaller
 								End If
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -3181,8 +3181,8 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.ProgramFiles) + "\AMD"
-			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In FileIO.GetDirectories(filePath)
+			If _fileIo.ExistsDir(filePath) Then
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "ccc2", "prw", "cnext", "steadyvideo", "920dec42-4ca5-4d1d-9487-67be645cddfc", "cim", "performance profile client", "wvr", "installuep") Then
 
@@ -3205,12 +3205,12 @@ Namespace Display_Driver_Uninstaller
 					End If
 				Next
 				Try
-					If FileIO.CountDirectories(filePath) = 0 Then
+					If _fileIo.CountDirectories(filePath) = 0 Then
 
 						Delete(filePath)
 
 					Else
-						For Each data As String In FileIO.GetDirectories(filePath)
+						For Each data As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
@@ -3222,9 +3222,9 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		  (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 
-				For Each child As String In FileIO.GetDirectories(filePath)
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("ati.ace") Or
 					   child.ToLower.Contains("cnext") Then
@@ -3234,12 +3234,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					End If
 				Next
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If _fileIo.CountDirectories(filePath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In FileIO.GetDirectories(filePath)
+					For Each data As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
@@ -3251,8 +3251,8 @@ Namespace Display_Driver_Uninstaller
 
 
 			filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_64"
-			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In FileIO.GetDirectories(filePath)
+			If _fileIo.ExistsDir(filePath) Then
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.EndsWith("\mom") Or
 					 child.ToLower.Contains("\mom.") Or
@@ -3284,8 +3284,8 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 			filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\GAC_MSIL"
-			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In FileIO.GetDirectories(filePath)
+			If _fileIo.ExistsDir(filePath) Then
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.EndsWith("\mom") Or
 					 child.ToLower.Contains("\mom.") Or
@@ -3484,7 +3484,7 @@ Namespace Display_Driver_Uninstaller
 		End Function
 
 		Private Sub Checkpcieroot(ByVal config As ThreadSettings)   'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
-			Dim win10 As Boolean = frmMain.win10
+			Dim win10 As Boolean = frmMain.IsWindows10
 
 			If WindowsIdentity.GetCurrent().IsSystem Then
 				ImpersonateLoggedOnUser.ReleaseToken()
@@ -3500,7 +3500,7 @@ Namespace Display_Driver_Uninstaller
 						If StrContainsAny(d.HardwareIDs(0), True, "VEN_8086") Then
 							If d.UpperFilters IsNot Nothing AndAlso d.UpperFilters.Length > 0 AndAlso StrContainsAny(String.Join(",", d.UpperFilters), True, "nvpciflt", "nvkflt") Then
 								Application.Log.AddMessage("Upper filter found on device : " + d.Description)
-								If d.OemInfs.Length > 0 AndAlso (Not IsNullOrWhitespace(d.OemInfs(0).ToString)) AndAlso FileIO.ExistsFile(d.OemInfs(0).ToString) Then
+								If d.OemInfs.Length > 0 AndAlso (Not IsNullOrWhitespace(d.OemInfs(0).ToString)) AndAlso _fileIo.ExistsFile(d.OemInfs(0).ToString) Then
 									SetupAPI.UpdateDeviceInf(d, d.OemInfs(0).ToString, True)
 								Else
 									If win10 Then
@@ -3589,10 +3589,10 @@ Namespace Display_Driver_Uninstaller
 				filePath = Environment.GetFolderPath _
 			(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
 
-				For Each child As String In FileIO.GetDirectories(filePath)
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("installer2") Then
-							For Each child2 As String In FileIO.GetDirectories(child)
+							For Each child2 As String In _fileIo.GetDirectories(child)
 								If IsNullOrWhitespace(child2) = False Then
 									If child2.ToLower.Contains("display.3dvision") Or
 								   child2.ToLower.Contains("display.controlpanel") Or
@@ -3626,7 +3626,7 @@ Namespace Display_Driver_Uninstaller
 								End If
 							Next
 
-							If FileIO.CountDirectories(child) = 0 Then
+							If _fileIo.CountDirectories(child) = 0 Then
 								Try
 									Delete(child)
 								Catch ex As Exception
@@ -3679,7 +3679,7 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 			'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
-			If win10 AndAlso config.RemoveNVCP Then
+			If _win10 AndAlso config.RemoveNVCP Then
 				If CanDeprovisionPackageForAllUsersAsync() Then
 					CleanupEngine.RemoveAppx1809("NVIDIAControlPanel")
 				Else
@@ -3871,7 +3871,7 @@ Namespace Display_Driver_Uninstaller
 				'----------------------
 				Application.Log.AddMessage("Firewall entry cleanUP")
 				Try
-					If winxp = False Then
+					If _winxp = False Then
 						Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM", False)
 							If subregkey IsNot Nothing Then
 								For Each child2 As String In subregkey.GetSubKeyNames()
@@ -3912,7 +3912,7 @@ Namespace Display_Driver_Uninstaller
 			'--------------------------
 			Application.Log.AddMessage("Power Settings Cleanup")
 			Try
-				If winxp = False Then
+				If _winxp = False Then
 					Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM", False)
 						If subregkey IsNot Nothing Then
 							For Each child2 As String In subregkey.GetSubKeyNames()
@@ -4024,15 +4024,15 @@ Namespace Display_Driver_Uninstaller
 
 													Try
 														Select Case True
-															Case StrContainsAny(wantedvalue, True, sysdrv & "program files (x86)\nvidia corporation\physx\common;")
-																wantedvalue = wantedvalue.Replace(sysdrv.ToLower & "program files (x86)\nvidia corporation\physx\common;", "")
+															Case StrContainsAny(wantedvalue, True, _sysdrv & "program files (x86)\nvidia corporation\physx\common;")
+																wantedvalue = wantedvalue.Replace(_sysdrv.ToLower & "program files (x86)\nvidia corporation\physx\common;", "")
 																Try
 																	regkey.SetValue(child, wantedvalue)
 																Catch ex As Exception
 																	Application.Log.AddException(ex)
 																End Try
-															Case StrContainsAny(wantedvalue, True, ";" & sysdrv & "program files (x86)\nvidia corporation\physx\common")
-																wantedvalue = wantedvalue.Replace(";" & sysdrv.ToLower & "program files (x86)\nvidia corporation\physx\common", "")
+															Case StrContainsAny(wantedvalue, True, ";" & _sysdrv & "program files (x86)\nvidia corporation\physx\common")
+																wantedvalue = wantedvalue.Replace(";" & _sysdrv.ToLower & "program files (x86)\nvidia corporation\physx\common", "")
 																Try
 																	regkey.SetValue(child, wantedvalue)
 																Catch ex As Exception
@@ -4067,16 +4067,16 @@ Namespace Display_Driver_Uninstaller
 						wantedvalue = regkey.GetValue("AppInit_DLLs", String.Empty).ToString   'Will need to consider the comma in the future for multiple value
 						If IsNullOrWhitespace(wantedvalue) = False Then
 							Select Case True
-								Case wantedvalue.Contains(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv.ToUpper & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
-									wantedvalue = wantedvalue.Replace(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv.ToUpper & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+								Case wantedvalue.Contains(_sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & _sysdrv.ToUpper & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
+									wantedvalue = wantedvalue.Replace(_sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & _sysdrv.ToUpper & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
 									regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-								Case wantedvalue.Contains(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
-									wantedvalue = wantedvalue.Replace(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
+								Case wantedvalue.Contains(_sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
+									wantedvalue = wantedvalue.Replace(_sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
 									regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-								Case wantedvalue.Contains(sysdrv.ToUpper & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
-									wantedvalue = wantedvalue.Replace(sysdrv.ToUpper & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+								Case wantedvalue.Contains(_sysdrv.ToUpper & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll")
+									wantedvalue = wantedvalue.Replace(_sysdrv.ToUpper & "PROGRA~1\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
 									regkey.SetValue("AppInit_DLLs", wantedvalue)
 							End Select
 						End If
@@ -4101,16 +4101,16 @@ Namespace Display_Driver_Uninstaller
 							wantedvalue = regkey.GetValue("AppInit_DLLs", String.Empty).ToString
 							If IsNullOrWhitespace(wantedvalue) = False Then
 								Select Case True
-									Case wantedvalue.Contains(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
-										wantedvalue = wantedvalue.Replace(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+									Case wantedvalue.Contains(_sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & _sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
+										wantedvalue = wantedvalue.Replace(_sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL, " & _sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
 										regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-									Case wantedvalue.Contains(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
-										wantedvalue = wantedvalue.Replace(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
+									Case wantedvalue.Contains(_sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL")
+										wantedvalue = wantedvalue.Replace(_sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\3DVISI~1\NVSTIN~1.DLL", "")
 										regkey.SetValue("AppInit_DLLs", wantedvalue)
 
-									Case wantedvalue.Contains(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
-										wantedvalue = wantedvalue.Replace(sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
+									Case wantedvalue.Contains(_sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll")
+										wantedvalue = wantedvalue.Replace(_sysdrv.ToUpper & "PROGRA~2\NVIDIA~1\NVSTRE~1\rxinput.dll", "")
 										regkey.SetValue("AppInit_DLLs", wantedvalue)
 								End Select
 							End If
@@ -5568,9 +5568,9 @@ Namespace Display_Driver_Uninstaller
 			End Using
 
 			Dim filePath As String = config.Paths.System32 + "Tasks"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 				If filePath IsNot Nothing Then
-					For Each child As String In FileIO.GetFiles(filePath)
+					For Each child As String In _fileIo.GetFiles(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NvBatteryBoostCheckOnLogon", "nvngx") AndAlso config.RemoveGFE Then
 
@@ -5707,7 +5707,7 @@ Namespace Display_Driver_Uninstaller
 
 
 			If config.RemoveNvidiaDirs = True Then
-				filePath = sysdrv + "NVIDIA"
+				filePath = _sysdrv + "NVIDIA"
 
 				Delete(filePath)
 
@@ -5716,7 +5716,7 @@ Namespace Display_Driver_Uninstaller
 
 			' here I erase the folders / files of the nvidia GFE / update in users.
 			filePath = config.Paths.UserPath
-			For Each child As String In FileIO.GetDirectories(filePath)
+			For Each child As String In _fileIo.GetDirectories(filePath)
 				If IsNullOrWhitespace(child) = False Then
 					If StrContainsAny(child, True, "updatususer") Then
 
@@ -5736,9 +5736,9 @@ Namespace Display_Driver_Uninstaller
 			Next
 
 			filePath = config.Paths.UserPath + "Public\Desktop"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 				If filePath IsNot Nothing Then
-					For Each child As String In FileIO.GetFiles(filePath)
+					For Each child As String In _fileIo.GetFiles(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If (StrContainsAny(child, True, "geforce experience.lnk") AndAlso config.RemoveGFE) Or
 							(StrContainsAny(child, True, "3d vision photo viewer")) Then
@@ -5752,9 +5752,9 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 			filePath = config.Paths.UserPath + "Public\Pictures\NVIDIA Corporation"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 				If filePath IsNot Nothing Then
-					For Each child As String In FileIO.GetDirectories(filePath)
+					For Each child As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If StrContainsAny(child, True, "3d vision experience") Then
 
@@ -5764,12 +5764,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					Next
 					Try
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -5781,9 +5781,9 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 			filePath = config.Paths.System32 + "drivers\NVIDIA Corporation"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 				If filePath IsNot Nothing Then
-					For Each child As String In FileIO.GetDirectories(filePath)
+					For Each child As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If StrContainsAny(child, True, "drs") Then
 
@@ -5793,12 +5793,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					Next
 					Try
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -5809,13 +5809,13 @@ Namespace Display_Driver_Uninstaller
 				End If
 			End If
 
-			For Each filepaths As String In FileIO.GetDirectories(config.Paths.UserPath)
+			For Each filepaths As String In _fileIo.GetDirectories(config.Paths.UserPath)
 				If IsNullOrWhitespace(filepaths) Then Continue For
 				filePath = filepaths + "\AppData\Local\NVIDIA"
 
 
 				Try
-					For Each child As String In FileIO.GetDirectories(filePath)
+					For Each child As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If StrContainsAny(child, True, "nvbackend", "gfexperience") AndAlso config.RemoveGFE Or StrContainsAny(child, True, "nvosc", "shareconnect", "nvgs", "glcache", "DXCache", "FrameViewSdk", "OptixCache") Then
 								Delete(child)
@@ -5823,12 +5823,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					Next
 					Try
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -5843,7 +5843,7 @@ Namespace Display_Driver_Uninstaller
 				filePath = filepaths + "\AppData\Roaming\NVIDIA"
 
 				Try
-					For Each child As String In FileIO.GetDirectories(filePath)
+					For Each child As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("computecache") Or
 						 child.ToLower.Contains("glcache") Then
@@ -5854,12 +5854,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					Next
 					Try
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -5874,7 +5874,7 @@ Namespace Display_Driver_Uninstaller
 				filePath = filepaths + "\AppData\Local\NVIDIA Corporation"
 				If config.RemoveGFE Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
@@ -5910,12 +5910,12 @@ Namespace Display_Driver_Uninstaller
 							End If
 						Next
 						Try
-							If FileIO.CountDirectories(filePath) = 0 Then
+							If _fileIo.CountDirectories(filePath) = 0 Then
 
 								Delete(filePath)
 
 							Else
-								For Each data As String In FileIO.GetDirectories(filePath)
+								For Each data As String In _fileIo.GetDirectories(filePath)
 									If IsNullOrWhitespace(data) Then Continue For
 									Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 								Next
@@ -5929,22 +5929,22 @@ Namespace Display_Driver_Uninstaller
 
 
 				filePath = filepaths + "\AppData\Local\D3DSCache"
-				If winxp Then
+				If _winxp Then
 					filePath = filepaths + "\Local Settings\Application Data\D3DSCache"
 				End If
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								Delete(child)
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -5961,7 +5961,7 @@ Namespace Display_Driver_Uninstaller
 		 (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA"
 
 			Try
-				For Each child As String In FileIO.GetDirectories(filePath)
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("updatus") Or
 					 child.ToLower.Contains("shimgen") Or
@@ -5974,9 +5974,9 @@ Namespace Display_Driver_Uninstaller
 						End If
 
 						If StrContainsAny(child, True, "ngx") Then
-							For Each child2 As String In FileIO.GetDirectories(child)
+							For Each child2 As String In _fileIo.GetDirectories(child)
 								If Not IsNullOrWhitespace(child2) Then
-									For Each child3 As String In FileIO.GetDirectories(child2)
+									For Each child3 As String In _fileIo.GetDirectories(child2)
 										If IsNullOrWhitespace(child3) Then Continue For
 
 										If StrContainsAny(child3, True, "nvbroadcast", "nvbcast") AndAlso Not config.RemoveNVBROADCAST Then
@@ -5986,11 +5986,11 @@ Namespace Display_Driver_Uninstaller
 										End If
 									Next
 									Try
-										If FileIO.CountDirectories(child2) = 0 Then
+										If _fileIo.CountDirectories(child2) = 0 Then
 
 											Delete(child2)
 										Else
-											For Each data As String In FileIO.GetDirectories(child2)
+											For Each data As String In _fileIo.GetDirectories(child2)
 												If IsNullOrWhitespace(child2) Then Continue For
 												Application.Log.AddWarningMessage("Remaining folders found " + " : " + child2 + "\ --> " + data)
 											Next
@@ -6001,11 +6001,11 @@ Namespace Display_Driver_Uninstaller
 								End If
 							Next
 							Try
-								If FileIO.CountDirectories(child) = 0 Then
+								If _fileIo.CountDirectories(child) = 0 Then
 
 									Delete(child)
 								Else
-									For Each data As String In FileIO.GetDirectories(child)
+									For Each data As String In _fileIo.GetDirectories(child)
 										If IsNullOrWhitespace(child) Then Continue For
 										Application.Log.AddWarningMessage("Remaining folders found " + " : " + child + "\ --> " + data)
 									Next
@@ -6016,12 +6016,12 @@ Namespace Display_Driver_Uninstaller
 					End If
 				Next
 				Try
-					If FileIO.CountDirectories(filePath) = 0 AndAlso config.RemoveGFE Then
+					If _fileIo.CountDirectories(filePath) = 0 AndAlso config.RemoveGFE Then
 
 						Delete(filePath)
 
 					Else
-						For Each data As String In FileIO.GetDirectories(filePath)
+						For Each data As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
@@ -6034,7 +6034,7 @@ Namespace Display_Driver_Uninstaller
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\NVIDIA Corporation"
 			Try
-				For Each child As String In FileIO.GetDirectories(filePath)
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If (StrContainsAny(child, True, "drs") AndAlso Not config.KeepNVCPopt) Or
 						StrContainsAny(child, True, "nv_cache", "umdlogs", "nvtopps", "GameSessionTelemetry") Or
@@ -6067,12 +6067,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					End If
 				Next
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If _fileIo.CountDirectories(filePath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In FileIO.GetDirectories(filePath)
+					For Each data As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
@@ -6084,7 +6084,7 @@ Namespace Display_Driver_Uninstaller
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData)
 			Try
-				For Each child As String In FileIO.GetFiles(filePath)
+				For Each child As String In _fileIo.GetFiles(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "DisplaySessionContainer", "", "nvcdispcoreplugin", "NVDisplay.Container") Then
 							Delete(child)
@@ -6098,7 +6098,7 @@ Namespace Display_Driver_Uninstaller
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\NVIDIA Corporation"
 			Try
-				For Each child As String In FileIO.GetDirectories(filePath)
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("3d vision") Then
 
@@ -6108,7 +6108,7 @@ Namespace Display_Driver_Uninstaller
 
 					End If
 				Next
-				For Each child As String In FileIO.GetFiles(filePath)
+				For Each child As String In _fileIo.GetFiles(filePath)
 					If IsNullOrWhitespace(child) Then Continue For
 					If child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE Or
 				   child.ToLower.Contains("nvidia broadcast") AndAlso config.RemoveNVBROADCAST Then
@@ -6118,16 +6118,16 @@ Namespace Display_Driver_Uninstaller
 					End If
 				Next
 				Try
-					If FileIO.CountDirectories(filePath) = 0 AndAlso (FileIO.CountFiles(filePath) = 0 AndAlso config.RemoveGFE) Then
+					If _fileIo.CountDirectories(filePath) = 0 AndAlso (_fileIo.CountFiles(filePath) = 0 AndAlso config.RemoveGFE) Then
 
 						Delete(filePath)
 
 					Else
-						For Each data As String In FileIO.GetDirectories(filePath)
+						For Each data As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
-						For Each data As String In FileIO.GetFiles(filePath)
+						For Each data As String In _fileIo.GetFiles(filePath)
 							If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining file(s) found " + " : " + filePath + "\ --> " + data)
 						Next
@@ -6139,9 +6139,9 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		(Environment.SpecialFolder.ProgramFiles) + "\NVIDIA Corporation"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIo.ExistsDir(filePath) Then
 				Dim hit As Boolean = False
-				For Each child As String In FileIO.GetDirectories(filePath)
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If child.ToLower.Contains("control panel client") Or
 					   child.ToLower.Contains("display") Or
@@ -6186,7 +6186,7 @@ Namespace Display_Driver_Uninstaller
 
 						End If
 						If child.ToLower.Contains("installer2") Then
-							For Each child2 As String In FileIO.GetDirectories(child)
+							For Each child2 As String In _fileIo.GetDirectories(child)
 								If IsNullOrWhitespace(child2) = False Then
 									If child2.ToLower.Contains("display.3dvision") Or
 								   child2.ToLower.Contains("display.controlpanel") Or
@@ -6288,12 +6288,12 @@ Namespace Display_Driver_Uninstaller
 								End If
 							Next
 
-							If FileIO.CountDirectories(child) = 0 Then
+							If _fileIo.CountDirectories(child) = 0 Then
 
 								Delete(child)
 
 							Else
-								For Each data As String In FileIO.GetDirectories(child)
+								For Each data As String In _fileIo.GetDirectories(child)
 									If IsNullOrWhitespace(data) Then Continue For
 									Application.Log.AddWarningMessage("Remaining folders found " + " : " + child + "\ --> " + data)
 								Next
@@ -6302,12 +6302,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					End If
 				Next
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If _fileIo.CountDirectories(filePath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In FileIO.GetDirectories(filePath)
+					For Each data As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
@@ -6318,7 +6318,7 @@ Namespace Display_Driver_Uninstaller
 			If config.RemovePhysX Then
 				filePath = Environment.GetFolderPath _
 			 (Environment.SpecialFolder.ProgramFiles) + "\AGEIA Technologies"
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 
 					Delete(filePath)
 
@@ -6328,8 +6328,8 @@ Namespace Display_Driver_Uninstaller
 
 			If IntPtr.Size = 8 Then
 				filePath = config.Paths.ProgramFilesx86 & "NVIDIA Corporation"
-				If FileIO.ExistsDir(filePath) Then
-					For Each child As String In FileIO.GetDirectories(filePath)
+				If _fileIo.ExistsDir(filePath) Then
+					For Each child As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("3d vision") Or
 						 child.ToLower.Contains("coprocmanager") Or
@@ -6373,12 +6373,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					Next
 
-					If FileIO.CountDirectories(filePath) = 0 Then
+					If _fileIo.CountDirectories(filePath) = 0 Then
 
 						Delete(filePath)
 
 					Else
-						For Each data As String In FileIO.GetDirectories(filePath)
+						For Each data As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
@@ -6392,7 +6392,7 @@ Namespace Display_Driver_Uninstaller
 				If IntPtr.Size = 8 Then
 					filePath = Environment.GetFolderPath _
 				 (Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AGEIA Technologies"
-					If FileIO.ExistsDir(filePath) Then
+					If _fileIo.ExistsDir(filePath) Then
 
 						Delete(filePath)
 
@@ -6429,7 +6429,7 @@ Namespace Display_Driver_Uninstaller
 
 			Try
 				filePath = config.Paths.WinDir + "Temp"
-				For Each child As String In FileIO.GetDirectories(filePath)
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "NVIDIA Corporation", "NvidiaLogging") Then
 							Delete(child)
@@ -6442,8 +6442,8 @@ Namespace Display_Driver_Uninstaller
 
 			Try
 				filePath = config.Paths.SystemDrive & "Temp"
-				If FileIO.ExistsDir(filePath) Then
-					For Each child As String In FileIO.GetDirectories(filePath)
+				If _fileIo.ExistsDir(filePath) Then
+					For Each child As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If StrContainsAny(child, True, "NVIDIA") Then
 								Delete(child)
@@ -6456,12 +6456,12 @@ Namespace Display_Driver_Uninstaller
 			End Try
 
 
-			For Each filepaths As String In FileIO.GetDirectories(config.Paths.UserPath)
+			For Each filepaths As String In _fileIo.GetDirectories(config.Paths.UserPath)
 				If IsNullOrWhitespace(filepaths) Then Continue For
 				filePath = filepaths + "\AppData\Local\Temp\NvidiaLogging"
-				If FileIO.ExistsDir(filePath) AndAlso config.RemoveGFE Then
+				If _fileIo.ExistsDir(filePath) AndAlso config.RemoveGFE Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 
 								Delete(child)
@@ -6469,12 +6469,12 @@ Namespace Display_Driver_Uninstaller
 							End If
 						Next
 						Try
-							If FileIO.CountDirectories(filePath) = 0 Then
+							If _fileIo.CountDirectories(filePath) = 0 Then
 
 								Delete(filePath)
 
 							Else
-								For Each data As String In FileIO.GetDirectories(filePath)
+								For Each data As String In _fileIo.GetDirectories(filePath)
 									If IsNullOrWhitespace(data) Then Continue For
 									Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 								Next
@@ -6489,9 +6489,9 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				filePath = filepaths + "\AppData\Local\Temp\NVIDIA Corporation"
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("nv_cache") Or
 							 child.ToLower.Contains("displaydriver") Then
@@ -6502,12 +6502,12 @@ Namespace Display_Driver_Uninstaller
 							End If
 						Next
 						Try
-							If FileIO.CountDirectories(filePath) = 0 Then
+							If _fileIo.CountDirectories(filePath) = 0 Then
 
 								Delete(filePath)
 
 							Else
-								For Each data As String In FileIO.GetDirectories(filePath)
+								For Each data As String In _fileIo.GetDirectories(filePath)
 									If IsNullOrWhitespace(data) Then Continue For
 									Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 								Next
@@ -6522,9 +6522,9 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				filePath = filepaths + "\AppData\Local\Temp\NVIDIA"
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If (child.ToLower.Contains("geforceexperienceselfupdate") AndAlso config.RemoveGFE) Or
 							  (child.ToLower.Contains("gfe") AndAlso config.RemoveGFE) Or
@@ -6536,12 +6536,12 @@ Namespace Display_Driver_Uninstaller
 							End If
 						Next
 						Try
-							If FileIO.CountDirectories(filePath) = 0 Then
+							If _fileIo.CountDirectories(filePath) = 0 Then
 
 								Delete(filePath)
 
 							Else
-								For Each data As String In FileIO.GetDirectories(filePath)
+								For Each data As String In _fileIo.GetDirectories(filePath)
 									If IsNullOrWhitespace(data) Then Continue For
 									Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 								Next
@@ -6556,9 +6556,9 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				filePath = filepaths + "\AppData\Local\Temp\Low\NVIDIA Corporation"
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If child.ToLower.Contains("nv_cache") Then
 
@@ -6568,12 +6568,12 @@ Namespace Display_Driver_Uninstaller
 							End If
 						Next
 						Try
-							If FileIO.CountDirectories(filePath) = 0 Then
+							If _fileIo.CountDirectories(filePath) = 0 Then
 
 								Delete(filePath)
 
 							Else
-								For Each data As String In FileIO.GetDirectories(filePath)
+								For Each data As String In _fileIo.GetDirectories(filePath)
 									If IsNullOrWhitespace(data) Then Continue For
 									Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 								Next
@@ -6589,15 +6589,15 @@ Namespace Display_Driver_Uninstaller
 				'windows 8+ only (store apps nv_cache cleanup)
 
 				Try
-					If win8higher Then
+					If _isWindows8OrHigher Then
 						Dim prefilePath As String = filepaths + "\AppData\Local\Packages"
-						If FileIO.ExistsDir(prefilePath) Then
-							For Each childs As String In FileIO.GetDirectories(prefilePath)
+						If _fileIo.ExistsDir(prefilePath) Then
+							For Each childs As String In _fileIo.GetDirectories(prefilePath)
 								If Not IsNullOrWhitespace(childs) Then
 									filePath = childs + "\AC\Temp\NVIDIA Corporation"
 
-									If FileIO.ExistsDir(filePath) Then
-										For Each child As String In FileIO.GetDirectories(filePath)
+									If _fileIo.ExistsDir(filePath) Then
+										For Each child As String In _fileIo.GetDirectories(filePath)
 											If IsNullOrWhitespace(child) = False Then
 												If child.ToLower.Contains("nv_cache") Then
 
@@ -6607,12 +6607,12 @@ Namespace Display_Driver_Uninstaller
 											End If
 										Next
 
-										If FileIO.CountDirectories(filePath) = 0 Then
+										If _fileIo.CountDirectories(filePath) = 0 Then
 
 											Delete(filePath)
 
 										Else
-											For Each data As String In FileIO.GetDirectories(filePath)
+											For Each data As String In _fileIo.GetDirectories(filePath)
 												If IsNullOrWhitespace(data) Then Continue For
 												Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 											Next
@@ -6632,8 +6632,8 @@ Namespace Display_Driver_Uninstaller
 			'Cleaning the GFE 2.0.1 and earlier assemblies.
 			If config.RemoveGFE Then
 				filePath = Environment.GetEnvironmentVariable("windir") + "\assembly\NativeImages_v4.0.30319_32"
-				If FileIO.ExistsDir(filePath) Then
-					For Each child As String In FileIO.GetDirectories(filePath)
+				If _fileIo.ExistsDir(filePath) Then
+					For Each child As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If child.ToLower.Contains("gfexperience") Or
 						 child.ToLower.Contains("nvidia.sett") Or
@@ -6768,7 +6768,7 @@ Namespace Display_Driver_Uninstaller
 			Application.Log.AddMessage("Cleaning registry")
 
 			'Removal of the (DCH) from the Window Store. (In progress...)
-			If win10 AndAlso config.RemoveINTELCP Then
+			If _win10 AndAlso config.RemoveINTELCP Then
 				If CanDeprovisionPackageForAllUsersAsync() Then
 					CleanupEngine.RemoveAppx1809("IntelGraphicsControlPanel")
 					CleanupEngine.RemoveAppx1809("IntelGraphicsExperience")
@@ -6793,7 +6793,7 @@ Namespace Display_Driver_Uninstaller
 			'--------------------------
 			Application.Log.AddMessage("Power Settings Cleanup")
 			Try
-				If winxp = False Then
+				If _winxp = False Then
 					Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM", False)
 						If subregkey IsNot Nothing Then
 							For Each child2 As String In subregkey.GetSubKeyNames()
@@ -7182,7 +7182,7 @@ Namespace Display_Driver_Uninstaller
 
 			'Special Cleanup For Intel PnpResources
 			Try
-				If win8higher Then
+				If _isWindows8OrHigher Then
 					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKCR", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
@@ -7301,18 +7301,18 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 			  (Environment.SpecialFolder.ProgramFiles) + "\Intel"
-			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In FileIO.GetDirectories(filePath)
+			If _fileIo.ExistsDir(filePath) Then
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "Media SDK", "Media Resource", "Intel Arc Control") Then
 							Delete(child)
 						End If
 					End If
 				Next
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If _fileIo.CountDirectories(filePath) = 0 Then
 					Delete(filePath)
 				Else
-					For Each data As String In FileIO.GetDirectories(filePath)
+					For Each data As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
@@ -7321,8 +7321,8 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 		 (Environment.SpecialFolder.CommonApplicationData) + "\Intel"
-			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In FileIO.GetDirectories(filePath)
+			If _fileIo.ExistsDir(filePath) Then
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "shadercache", "ags", "gfxinstaller", "IGN") Or
 					  StrContainsAny(child, True, "gcc") AndAlso config.RemoveINTELCP Then
@@ -7332,12 +7332,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					End If
 				Next
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If _fileIo.CountDirectories(filePath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In FileIO.GetDirectories(filePath)
+					For Each data As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
@@ -7347,18 +7347,18 @@ Namespace Display_Driver_Uninstaller
 
 			If IntPtr.Size = 8 Then
 				filePath = Application.Paths.ProgramFilesx86 + "Intel"
-				If FileIO.ExistsDir(filePath) Then
-					For Each child As String In FileIO.GetDirectories(filePath)
+				If _fileIo.ExistsDir(filePath) Then
+					For Each child As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
 							If StrContainsAny(child, True, "Media SDK", "Media Resource", "Intel(R) Processor Graphics") Then
 								Delete(child)
 							End If
 						End If
 					Next
-					If FileIO.CountDirectories(filePath) = 0 Then
+					If _fileIo.CountDirectories(filePath) = 0 Then
 						Delete(filePath)
 					Else
-						For Each data As String In FileIO.GetDirectories(filePath)
+						For Each data As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
@@ -7370,7 +7370,7 @@ Namespace Display_Driver_Uninstaller
 	(Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs"
 			Try
 
-				For Each child As String In FileIO.GetFiles(filePath)
+				For Each child As String In _fileIo.GetFiles(filePath)
 					If IsNullOrWhitespace(child) Then Continue For
 					If StrContainsAny(child, True, "Intel Arc Control") Then
 						Delete(child)
@@ -7382,17 +7382,17 @@ Namespace Display_Driver_Uninstaller
 
 			filePath = Environment.GetFolderPath _
 	(Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\Intel"
-			If FileIO.ExistsDir(filePath) Then
-				For Each child As String In FileIO.GetDirectories(filePath)
+			If _fileIo.ExistsDir(filePath) Then
+				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) Then Continue For
 					If StrContainsAny(child, True, "Intel Arc Control") Then
 						Delete(child)
 					End If
 				Next
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If _fileIo.CountDirectories(filePath) = 0 Then
 					Delete(filePath)
 				Else
-					For Each data As String In FileIO.GetDirectories(filePath)
+					For Each data As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
@@ -7403,7 +7403,7 @@ Namespace Display_Driver_Uninstaller
 	(Environment.SpecialFolder.CommonApplicationData) + "\Microsoft\Windows\Start Menu\Programs\Startup"
 			Try
 
-				For Each child As String In FileIO.GetFiles(filePath)
+				For Each child As String In _fileIo.GetFiles(filePath)
 					If IsNullOrWhitespace(child) Then Continue For
 					If StrContainsAny(child, True, "Intel Arc Control") Then
 						Delete(child)
@@ -7413,21 +7413,21 @@ Namespace Display_Driver_Uninstaller
 				Application.Log.AddException(ex)
 			End Try
 
-			For Each filepaths As String In FileIO.GetDirectories(config.Paths.UserPath)
+			For Each filepaths As String In _fileIo.GetDirectories(config.Paths.UserPath)
 				If IsNullOrWhitespace(filepaths) Then Continue For
-				For Each child As String In FileIO.GetDirectories(filepaths)
+				For Each child As String In _fileIo.GetDirectories(filepaths)
 					If IsNullOrWhitespace(child) Then Continue For
 					If StrContainsAny(child, True, "intelgraphicsprofiles") Then
 						Delete(child)
 					End If
 				Next
 				filePath = filepaths + "\AppData\LocalLow\Intel"
-				If winxp Then
+				If _winxp Then
 					filePath = filepaths + "\Local Settings\Application Data\Intel"  'need check in the future.
 				End If
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If StrContainsAny(child, True, "shadercache") Then
 
@@ -7436,12 +7436,12 @@ Namespace Display_Driver_Uninstaller
 								End If
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -7454,9 +7454,9 @@ Namespace Display_Driver_Uninstaller
 
 				filePath = filepaths + "\AppData\Local\Intel"
 
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If StrContainsAny(child, True, "gcc", "games", "cuipromotions", "ags", "ign") AndAlso config.RemoveINTELCP Then
 
@@ -7465,12 +7465,12 @@ Namespace Display_Driver_Uninstaller
 								End If
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -7482,22 +7482,22 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				filePath = filepaths + "\AppData\Local\D3DSCache"
-				If winxp Then
+				If _winxp Then
 					filePath = filepaths + "\Local Settings\Application Data\D3DSCache"
 				End If
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIo.ExistsDir(filePath) Then
 					Try
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								Delete(child)
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIo.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIo.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -7896,7 +7896,7 @@ Namespace Display_Driver_Uninstaller
 
 			If config.RemoveVulkan Then
 				FilePath = config.Paths.ProgramFiles + "VulkanRT"
-				If FileIO.ExistsDir(FilePath) Then
+				If _fileIo.ExistsDir(FilePath) Then
 
 					Delete(FilePath)
 
@@ -7904,7 +7904,7 @@ Namespace Display_Driver_Uninstaller
 
 				If IntPtr.Size = 8 Then
 					FilePath = Application.Paths.ProgramFilesx86 + "VulkanRT"
-					If FileIO.ExistsDir(FilePath) Then
+					If _fileIo.ExistsDir(FilePath) Then
 
 						Delete(FilePath)
 
@@ -7939,8 +7939,8 @@ Namespace Display_Driver_Uninstaller
 
 		Private Sub Delete(ByVal filename As String)
 			Dim CleanupEngine As New CleanupEngine
-			If FileIO.ExistsFile(filename) OrElse FileIO.ExistsDir(filename) Then
-				FileIO.Delete(filename)
+			If _fileIo.ExistsFile(filename) OrElse _fileIo.ExistsDir(filename) Then
+				_fileIo.Delete(filename)
 			End If
 			CleanupEngine.RemoveSharedDlls(filename)
 		End Sub

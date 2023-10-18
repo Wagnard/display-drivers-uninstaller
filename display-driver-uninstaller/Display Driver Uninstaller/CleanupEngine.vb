@@ -11,8 +11,8 @@ Imports System.Threading.Tasks
 Namespace Display_Driver_Uninstaller
 
 	Public Class CleanupEngine
-		Private Shared ListLock As Object = New Object()
-		Private Shared REGLOCK As Object = New Object()
+		Private Shared _listLock As Object = New Object()
+		Private Shared _registryLock As Object = New Object()
 
 		'	Private win8higher As Boolean = frmMain.win8higher
 
@@ -22,7 +22,7 @@ Namespace Display_Driver_Uninstaller
 
 
 		Public Sub Deletesubregkey(ByRef regkeypath As RegistryKey, ByVal child As String, Optional ByVal throwOnMissingSubKey As Boolean = True)
-			SyncLock REGLOCK
+			SyncLock _registryLock
 				Dim fixregacls As Boolean = False
 				If (regkeypath IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child)) Then
 					Try
@@ -127,8 +127,8 @@ Namespace Display_Driver_Uninstaller
 
 		Public Sub RemoveAppx1809(ByVal AppxToRemove As String)
 			Dim ServiceInstaller As New ServiceInstaller
-			Dim win10 As Boolean = frmMain.win10
-			Dim win10_1809 As Boolean = frmMain.win10_1809
+			Dim win10 As Boolean = frmMain.IsWindows10
+			Dim win10_1809 As Boolean = frmMain.IsWindows10_1809
 			Dim WasRemoved As Boolean = False
 			If win10 Then
 				If WindowsIdentity.GetCurrent().IsSystem Then
@@ -346,8 +346,8 @@ Namespace Display_Driver_Uninstaller
 
 		Public Sub RemoveAppx(ByVal AppxToRemove As String)
 			Dim ServiceInstaller As New ServiceInstaller
-			Dim win10 As Boolean = frmMain.win10
-			Dim win10_1809 As Boolean = frmMain.win10_1809
+			Dim win10 As Boolean = frmMain.IsWindows10
+			Dim win10_1809 As Boolean = frmMain.IsWindows10_1809
 			Dim WasRemoved As Boolean = False
 			If win10 Then
 				If WindowsIdentity.GetCurrent().IsSystem Then
@@ -607,7 +607,7 @@ Namespace Display_Driver_Uninstaller
 																If regkey4 IsNot Nothing Then
 																	Try
 																		Deletesubregkey(regkey4, typelib)
-																		SyncLock ListLock
+																		SyncLock _listLock
 																			typelibList.Add(typelib)
 																		End SyncLock
 																	Catch exARG As ArgumentException
@@ -626,7 +626,7 @@ Namespace Display_Driver_Uninstaller
 
 														Try
 															Deletesubregkey(crkey, wantedvalue)
-															SyncLock ListLock
+															SyncLock _listLock
 																childlist.Add(wantedvalue)
 															End SyncLock
 														Catch exARG As ArgumentException
@@ -788,7 +788,7 @@ Namespace Display_Driver_Uninstaller
 																If regkey4 IsNot Nothing Then
 																	Try
 																		Deletesubregkey(regkey4, typelib)
-																		SyncLock ListLock
+																		SyncLock _listLock
 																			typelibList.Add(typelib)
 																		End SyncLock
 																	Catch exARG As ArgumentException
@@ -806,7 +806,7 @@ Namespace Display_Driver_Uninstaller
 													If regkeyC IsNot Nothing Then
 														Try
 															Deletesubregkey(regkeyC, wantedvalue)
-															SyncLock ListLock
+															SyncLock _listLock
 																childlist.Add(wantedvalue)
 															End SyncLock
 														Catch exARG As ArgumentException
@@ -1640,14 +1640,12 @@ Namespace Display_Driver_Uninstaller
 
 		Public Sub SetServiceStartupType(ByVal service As String, value As String)
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services\" & service, True)
-				If regkey IsNot Nothing Then
-					regkey.SetValue("Start", value, RegistryValueKind.DWord)
-				End If
+				regkey?.SetValue("Start", value, RegistryValueKind.DWord)
 			End Using
 		End Sub
 
 		Public Sub PrePnplockdownfiles(ByVal oeminf As String, ByVal config As ThreadSettings)
-			Dim win8higher = frmMain.win8higher
+			Dim win8higher = frmMain.IsWindows8OrHigher
 			Dim processinfo As New ProcessStartInfo
 			Dim process As New Process
 			Dim sourceValue As String
@@ -1682,8 +1680,8 @@ Namespace Display_Driver_Uninstaller
 
 		Public Sub Pnplockdownfiles(ByVal driverfiles As String(), ByVal config As ThreadSettings)
 
-			Dim winxp = frmMain.winxp
-			Dim win8higher = frmMain.win8higher
+			Dim winxp = frmMain.IsWindowsXp
+			Dim win8higher = frmMain.IsWindows8OrHigher
 			Dim processinfo As New ProcessStartInfo
 			Dim process As New Process
 
@@ -2332,7 +2330,7 @@ Namespace Display_Driver_Uninstaller
 															If StrContainsAny(value, True, clsIdle) Then
 																Try
 																	Deletesubregkey(regkey, child)
-																	SyncLock ListLock
+																	SyncLock _listLock
 																		typelibList.Add(child)
 																	End SyncLock
 																	Application.Log.AddMessage(child + " for " + clsIdle)
@@ -2542,7 +2540,7 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Public Sub Folderscleanup(ByVal driverfiles As String(), ByVal config As ThreadSettings)
-			Dim winxp = frmMain.winxp
+			Dim winxp = frmMain.IsWindowsXp
 
 			Dim TaskList = New List(Of Tasks.Task)()
 
@@ -2819,7 +2817,7 @@ Namespace Display_Driver_Uninstaller
 
 				If StrContainsAny(oem.Provider, True, CurrentProvider) Then
 					'before removing the oem we try to get the original inf name (win8+)
-					If frmMain.win8higher Then
+					If frmMain.IsWindows8OrHigher Then
 						If MyRegistry.OpenSubKey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverInfFiles\" & oem.FileName) IsNot Nothing Then
 							Try
 								catalog = MyRegistry.OpenSubKey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverInfFiles\" & oem.FileName).GetValue("Active").ToString
@@ -2861,7 +2859,7 @@ Namespace Display_Driver_Uninstaller
 						End If
 				End If
 				'check if the oem was removed to process to the pnplockdownfile if necessary
-				If frmMain.win8higher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
+				If frmMain.IsWindows8OrHigher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
 					If (config.RemoveAudioBus = False OrElse frmMain.donotremoveamdhdaudiobusfiles) AndAlso StrContainsAny(catalog, True, "amdkmafd") Then Continue For
 					PrePnplockdownfiles(catalog, config)
 				End If
@@ -2874,7 +2872,7 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Public Sub Fixregistrydriverstore(ByVal config As ThreadSettings)
-			Dim win8higher As Boolean = frmMain.win8higher
+			Dim win8higher As Boolean = frmMain.IsWindows8OrHigher
 			Dim FileIO As New FileIO
 
 			ImpersonateLoggedOnUser.Taketoken()
@@ -2890,7 +2888,7 @@ Namespace Display_Driver_Uninstaller
 					Dim infslist As String = ""
 					For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", Microsoft.VisualBasic.FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
 						If Not IsNullOrWhitespace(infs) Then
-							infslist = infslist + infs
+							infslist += infs
 						End If
 					Next
 					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverInfFiles", True)

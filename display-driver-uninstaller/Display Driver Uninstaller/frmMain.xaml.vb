@@ -22,37 +22,84 @@ Imports System.Security.Principal
 Imports System.Reflection
 Imports System.Text
 Imports WinForm = System.Windows.Forms
-Imports Microsoft.VisualBasic.Logging
 Imports Display_Driver_Uninstaller.Win32
 
 Namespace Display_Driver_Uninstaller
 
 	Public Class frmMain
-		Friend Shared cleaningThread As Tasks.Task = Nothing
-		Friend Shared workThread As Tasks.Task = Nothing
+		Private Shared _cleaningTask As Tasks.Task = Nothing
+		Private Shared _workTask As Tasks.Task = Nothing
 
-		Dim identity As WindowsIdentity = WindowsIdentity.GetCurrent()
-		Dim principal As WindowsPrincipal = New WindowsPrincipal(identity)
-		Dim processinfo As New ProcessStartInfo
-		Dim process As New Process
+		Private Shared _isWindows8OrHigher As Boolean = Application.Settings.WinVersion > OSVersion.Win7
+		Private Shared _isWindows10 As Boolean = Application.Settings.WinVersion = OSVersion.Win10
+		Private Shared _isWindows10_1809 As Boolean = Application.Settings.Win10_1809
+		Private Shared _isWindowsXp As Boolean = Application.Settings.WinVersion < OSVersion.WinVista
+		Private Shared _sharedLogBox As ListBox
+		Private Shared _donotremoveamdhdaudiobusfiles As Boolean = True
 
-		Public Shared win8higher As Boolean = Application.Settings.WinVersion > OSVersion.Win7
-		Public Shared win10 As Boolean = Application.Settings.WinVersion = OSVersion.Win10
-		Public Shared win10_1809 As Boolean = Application.Settings.Win10_1809
-		Public Shared winxp As Boolean = Application.Settings.WinVersion < OSVersion.WinVista
-		Public Shared SharedlbLog As ListBox
+		Private _checkUpdate As New CheckUpdate
+		Private _cleanupEngine As New CleanupEngine
+		Private _serviceInstaller As New ServiceInstaller
+		Private _gpuCleanup As New GPUCleanup
+		Private _audioCleanup As New AUDIOCleanup
+		Private _enduro As Boolean = False
 
-		Dim sysdrv As String = System.Environment.GetEnvironmentVariable("systemdrive").ToLower
-		Dim reply As String = Nothing
-		Dim reply2 As String = Nothing
+		Friend Shared Property CleaningTask As Tasks.Task
+			Get
+				Return _cleaningTask
+			End Get
+			Set(value As Tasks.Task)
+				_cleaningTask = value
+			End Set
+		End Property
+		Friend Shared Property WorkTask As Tasks.Task
+			Get
+				Return _workTask
+			End Get
+			Set(value As Tasks.Task)
+				_workTask = value
+			End Set
+		End Property
+		Public Shared Property DoNotRemoveAmdHdAudioBusFiles As Boolean
+			Get
+				Return _donotremoveamdhdaudiobusfiles
+			End Get
+			Set(value As Boolean)
+				_donotremoveamdhdaudiobusfiles = value
+			End Set
+		End Property
 
-		Dim CheckUpdate As New CheckUpdate
-		Dim CleanupEngine As New CleanupEngine
-		Dim ServiceInstaller As New ServiceInstaller
-		Dim GPUCleanup As New GPUCleanup
-		Dim AUDIOCleanup As New AUDIOCleanup
-		Dim enduro As Boolean = False
-		Public Shared donotremoveamdhdaudiobusfiles As Boolean = True
+		Public Shared ReadOnly Property IsWindows8OrHigher As Boolean
+			Get
+				Return _isWindows8OrHigher
+			End Get
+		End Property
+		Public Shared ReadOnly Property IsWindows10 As Boolean
+			Get
+				Return _isWindows10
+			End Get
+		End Property
+
+		Public Shared ReadOnly Property IsWindows10_1809 As Boolean
+			Get
+				Return _isWindows10_1809
+			End Get
+		End Property
+
+		Public Shared ReadOnly Property IsWindowsXp As Boolean
+			Get
+				Return _isWindowsXp
+			End Get
+		End Property
+
+		Public Shared Property SharedLogBox As ListBox
+			Get
+				Return _sharedLogBox
+			End Get
+			Set(value As ListBox)
+				_sharedLogBox = value
+			End Set
+		End Property
 
 		Private Function GPUIdentify() As GPUVendor
 			Dim compatibleIDs() As String
@@ -333,7 +380,7 @@ Namespace Display_Driver_Uninstaller
 				cbSelectedType.SelectedIndex = 0
 				If Not Application.LaunchOptions.Silent Then
 					If WinForm.SystemInformation.BootMode <> Forms.BootMode.FailSafe Then
-						CheckUpdate.CheckUpdates()
+						_checkUpdate.CheckUpdates()
 					End If
 				End If
 
@@ -369,7 +416,7 @@ Namespace Display_Driver_Uninstaller
 															Dim regValue As String = childRegKey.GetValue("Service", String.Empty).ToString
 
 															If Not IsNullOrWhitespace(regValue) AndAlso StrContainsAny(regValue, True, "amdkmdap") Then
-																enduro = True
+																_enduro = True
 																UpdateTextMethod("System seems to be an AMD Enduro (Intel)")
 															End If
 														End If
@@ -405,9 +452,9 @@ Namespace Display_Driver_Uninstaller
 				If Application.LaunchOptions.HasCleanArg Then
 					Dim config As New ThreadSettings(True)
 
-					workThread = New Tasks.Task(Sub() ThreadTask(config))
+					WorkTask = New Tasks.Task(Sub() ThreadTask(config))
 
-					workThread.Start()
+					WorkTask.Start()
 				End If
 
 			Catch ex As Exception
@@ -457,7 +504,7 @@ Namespace Display_Driver_Uninstaller
 
 		Private Sub frmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
 			Try
-				If cleaningThread IsNot Nothing AndAlso Not cleaningThread.IsCompleted Then
+				If CleaningTask IsNot Nothing AndAlso Not CleaningTask.IsCompleted Then
 					e.Cancel = True
 					Exit Sub
 				End If
@@ -488,9 +535,9 @@ Namespace Display_Driver_Uninstaller
 
 				Select Case config.SelectedType
 					Case CleanType.GPU
-						GPUCleanup.Start(config)
+						_gpuCleanup.Start(config)
 					Case CleanType.Audio
-						AUDIOCleanup.Start(config)
+						_audioCleanup.Start(config)
 				End Select
 
 			Catch ex As Exception
@@ -593,10 +640,10 @@ Namespace Display_Driver_Uninstaller
 
 						StartThread(config)
 
-						While Not cleaningThread.IsCompleted
+						While Not CleaningTask.IsCompleted
 							autoresetevent.WaitOne(200)
 						End While
-						cleaningThread = Nothing
+						CleaningTask = Nothing
 					End If
 
 
@@ -608,10 +655,10 @@ Namespace Display_Driver_Uninstaller
 
 						StartThread(config)
 
-						While Not cleaningThread.IsCompleted
+						While Not CleaningTask.IsCompleted
 							autoresetevent.WaitOne(200)
 						End While
-						cleaningThread = Nothing
+						CleaningTask = Nothing
 					End If
 
 					If config.CleanIntel Then
@@ -622,10 +669,10 @@ Namespace Display_Driver_Uninstaller
 
 						StartThread(config)
 
-						While Not cleaningThread.IsCompleted
+						While Not CleaningTask.IsCompleted
 							autoresetevent.WaitOne(200)
 						End While
-						cleaningThread = Nothing
+						CleaningTask = Nothing
 					End If
 
 					If config.CleanRealtek Then
@@ -636,10 +683,10 @@ Namespace Display_Driver_Uninstaller
 
 						StartThread(config)
 
-						While Not cleaningThread.IsCompleted
+						While Not CleaningTask.IsCompleted
 							autoresetevent.WaitOne(200)
 						End While
-						cleaningThread = Nothing
+						CleaningTask = Nothing
 					End If
 
 					If config.CleanSoundBlaster Then
@@ -650,7 +697,7 @@ Namespace Display_Driver_Uninstaller
 
 						StartThread(config)
 
-						While Not cleaningThread.IsCompleted
+						While Not CleaningTask.IsCompleted
 							autoresetevent.WaitOne(200)
 						End While
 					End If
@@ -706,17 +753,17 @@ Namespace Display_Driver_Uninstaller
 				Application.Log.Add(logEntry)
 				'End If
 
-				If cleaningThread IsNot Nothing AndAlso Not cleaningThread.IsCompleted Then
+				If CleaningTask IsNot Nothing AndAlso Not CleaningTask.IsCompleted Then
 					Throw New ArgumentException("cleaningThread", "Thread already exists and is busy!")
 				End If
 
-				cleaningThread = New Tasks.Task(Sub() CleaningThread_Work(config))
+				CleaningTask = New Tasks.Task(Sub() CleaningThread_Work(config))
 
 
-				cleaningThread.Start()
+				CleaningTask.Start()
 
 			Catch ex As Exception
-				cleaningThread = Nothing
+				CleaningTask = Nothing
 				Application.Log.AddException(ex, "Launching cleaning thread failed!")
 			End Try
 		End Sub
@@ -1076,12 +1123,12 @@ Namespace Display_Driver_Uninstaller
 		End Function
 
 		Public Shared Sub UpdateTextMethod(ByVal strMessage As String)
-			If Not SharedlbLog.Dispatcher.CheckAccess() Then
-				SharedlbLog.Dispatcher.Invoke(Sub() UpdateTextMethod(strMessage))
+			If Not SharedLogBox.Dispatcher.CheckAccess() Then
+				SharedLogBox.Dispatcher.Invoke(Sub() UpdateTextMethod(strMessage))
 			Else
-				SharedlbLog.Items.Add(DateTime.Now.ToString("HH:mm:ss") + " - " + strMessage)
-				SharedlbLog.SelectedIndex = SharedlbLog.Items.Count - 1
-				SharedlbLog.ScrollIntoView(SharedlbLog.SelectedItem)
+				SharedLogBox.Items.Add(DateTime.Now.ToString("HH:mm:ss") + " - " + strMessage)
+				SharedLogBox.SelectedIndex = SharedLogBox.Items.Count - 1
+				SharedLogBox.ScrollIntoView(SharedLogBox.SelectedItem)
 			End If
 		End Sub
 
@@ -1110,17 +1157,17 @@ Namespace Display_Driver_Uninstaller
 		End Function
 
 		Private Sub StartService(ByVal service As String)
-			ServiceInstaller.StartService(service)
+			_serviceInstaller.StartService(service)
 		End Sub
 		Private Function CheckServiceStartupType(ByVal service As String) As String
-			Return CleanupEngine.CheckServiceStartupType(service)
+			Return _cleanupEngine.CheckServiceStartupType(service)
 		End Function
 
 		Private Sub SetServiceStartupType(ByVal service As String, value As String)
-			CleanupEngine.SetServiceStartupType(service, value)
+			_cleanupEngine.SetServiceStartupType(service, value)
 		End Sub
 		Private Sub StopService(ByVal service As String)
-			ServiceInstaller.StopService(service)
+			_serviceInstaller.StopService(service)
 		End Sub
 
 		' "Universal" solution, can be used for Nvidia/Intel too
@@ -1275,11 +1322,11 @@ Namespace Display_Driver_Uninstaller
 
 		End Sub
 		Private Sub Cleandriverstore(ByVal config As ThreadSettings)
-			CleanupEngine.Cleandriverstore(config)
+			_cleanupEngine.Cleandriverstore(config)
 		End Sub
 
 		Private Sub frmMain_Initialized(sender As Object, e As EventArgs) Handles MyBase.Initialized
-			SharedlbLog = lbLog
+			SharedLogBox = lbLog
 		End Sub
 
 		Private Sub lblOffer_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles lblOffer.MouseDown

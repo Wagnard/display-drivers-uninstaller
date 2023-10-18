@@ -4,11 +4,11 @@ Imports Microsoft.Win32
 Namespace Display_Driver_Uninstaller
 	Public Class AUDIOCleanup
 		'todo
-		Dim CleanupEngine As New CleanupEngine
-		Dim FileIO As New FileIO
+		Private _cleanupEngine As New CleanupEngine
+		Private _fileIO As New FileIO
 
 		Public Sub Start(ByVal config As ThreadSettings)
-			Dim win10 As Boolean = frmMain.win10
+			Dim win10 As Boolean = frmMain.IsWindows10
 			Dim vendidexpected As String = ""
 			Dim VendidSC As String() = Nothing   ' "SoftwareComponent" Vendor ID
 
@@ -122,7 +122,7 @@ Namespace Display_Driver_Uninstaller
 
 			System.Threading.Thread.Sleep(10)
 
-			CleanupEngine.Cleandriverstore(config)
+			_cleanupEngine.Cleandriverstore(config)
 
 			Select Case config.SelectedAUDIO
 				Case AudioVendor.Realtek
@@ -139,7 +139,7 @@ Namespace Display_Driver_Uninstaller
 		Private Sub CleanRealtekserviceprocess(ByVal config As ThreadSettings)
 			Application.Log.AddMessage("Cleaning Process/Services...")
 
-			CleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\REALTEK\services.cfg"), config)
+			_cleanupEngine.Cleanserviceprocess(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\REALTEK\services.cfg"), config)
 
 			KillProcess("RtkNGUI64", "RtkAudUService64", "audiodg")
 			Application.Log.AddMessage("Process/Services CleanUP Complete")
@@ -147,7 +147,7 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Private Sub CleanRealtek(ByVal config As ThreadSettings)
-			Dim win10 As Boolean = frmMain.win10
+			Dim win10 As Boolean = frmMain.IsWindows10
 			Dim packages As String()
 			Dim wantedvalue As String = Nothing
 
@@ -156,16 +156,16 @@ Namespace Display_Driver_Uninstaller
 			'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
 			If win10 Then
 				If CanDeprovisionPackageForAllUsersAsync() Then
-					CleanupEngine.RemoveAppx1809("RealtekAudioControl")
+					_cleanupEngine.RemoveAppx1809("RealtekAudioControl")
 				Else
-					CleanupEngine.RemoveAppx("RealtekAudioControl")
+					_cleanupEngine.RemoveAppx("RealtekAudioControl")
 				End If
 			End If
 			Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
-			CleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\classroot.cfg"), config)  '// add each line as String Array.
+			_cleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\classroot.cfg"), config)  '// add each line as String Array.
 
-			CleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\clsidleftover.cfg"))
+			_cleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\clsidleftover.cfg"))
 
 			Application.Log.AddMessage("Removing known Packages")
 
@@ -332,12 +332,12 @@ Namespace Display_Driver_Uninstaller
 
 			Application.Log.AddMessage("Cleaning Directories (Please Wait...)")
 
-			CleanupEngine.Folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\REALTEK\driverfiles.cfg"), config)
+			_cleanupEngine.Folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\REALTEK\driverfiles.cfg"), config)
 
 			filePath = config.Paths.ProgramFiles + "Realtek"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIO.ExistsDir(filePath) Then
 
-				For Each child As String In FileIO.GetDirectories(filePath)
+				For Each child As String In _fileIO.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
 						If StrContainsAny(child, True, "audio") Then
 
@@ -346,12 +346,12 @@ Namespace Display_Driver_Uninstaller
 						End If
 					End If
 				Next
-				If FileIO.CountDirectories(filePath) = 0 Then
+				If _fileIO.CountDirectories(filePath) = 0 Then
 
 					Delete(filePath)
 
 				Else
-					For Each data As String In FileIO.GetDirectories(filePath)
+					For Each data As String In _fileIO.GetDirectories(filePath)
 						If IsNullOrWhitespace(data) Then Continue For
 						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 					Next
@@ -359,12 +359,12 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 			filePath = config.Paths.SysWOW64 + "RTCOM"
-			If FileIO.ExistsDir(filePath) Then
+			If _fileIO.ExistsDir(filePath) Then
 				If filePath IsNot Nothing Then
-					If FileIO.CountDirectories(filePath) = 0 Then
+					If _fileIO.CountDirectories(filePath) = 0 Then
 						Delete(filePath)
 					Else
-						For Each data As String In FileIO.GetDirectories(filePath)
+						For Each data As String In _fileIO.GetDirectories(filePath)
 							If IsNullOrWhitespace(data) Then Continue For
 							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 						Next
@@ -376,10 +376,10 @@ Namespace Display_Driver_Uninstaller
 			'64Bit zone
 			If IntPtr.Size = 8 Then
 				filePath = config.Paths.ProgramFilesx86 + "Realtek"
-				If FileIO.ExistsDir(filePath) Then
+				If _fileIO.ExistsDir(filePath) Then
 					If filePath IsNot Nothing Then
 
-						For Each child As String In FileIO.GetDirectories(filePath)
+						For Each child As String In _fileIO.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
 								If StrContainsAny(child, True, "Audio") Then
 
@@ -388,12 +388,12 @@ Namespace Display_Driver_Uninstaller
 								End If
 							End If
 						Next
-						If FileIO.CountDirectories(filePath) = 0 Then
+						If _fileIO.CountDirectories(filePath) = 0 Then
 
 							Delete(filePath)
 
 						Else
-							For Each data As String In FileIO.GetDirectories(filePath)
+							For Each data As String In _fileIO.GetDirectories(filePath)
 								If IsNullOrWhitespace(data) Then Continue For
 								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
 							Next
@@ -430,16 +430,16 @@ Namespace Display_Driver_Uninstaller
 		End Function
 
 		Private Sub Delete(ByVal filename As String)
-			FileIO.Delete(filename)
-			CleanupEngine.RemoveSharedDlls(filename)
+			_fileIO.Delete(filename)
+			_cleanupEngine.RemoveSharedDlls(filename)
 		End Sub
 
 		Private Sub Deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String)
-			CleanupEngine.Deletesubregkey(value1, value2)
+			_cleanupEngine.Deletesubregkey(value1, value2)
 		End Sub
 
 		Private Sub Deletevalue(ByVal value1 As RegistryKey, ByVal value2 As String)
-			CleanupEngine.Deletevalue(value1, value2)
+			_cleanupEngine.Deletevalue(value1, value2)
 		End Sub
 	End Class
 End Namespace

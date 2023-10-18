@@ -12,8 +12,7 @@ Imports System.Runtime.InteropServices
 Namespace Display_Driver_Uninstaller
 
 	Class Application
-		Dim CleanupEngine As New CleanupEngine
-		Dim FileIO As New FileIO
+		Private _fileIo As New FileIO
 #Region "Visit links URLs"
 
 		Private Const URL_DONATE As String = "https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=KAQAJ6TNR9GQE&lc=CA&item_name=Display%20Driver%20Uninstaller%20%28DDU%29&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"
@@ -153,7 +152,7 @@ Namespace Display_Driver_Uninstaller
 		Private Sub ExtractEnglishLangFile(ByVal fileName As String, ByVal langEng As Languages.LanguageOption)
 			Try
 				Using stream As Stream = Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("English.xml")
-					If FileIO.ExistsFile(fileName) Then
+					If _fileIo.ExistsFile(fileName) Then
 						Using fsEnglish As FileStream = File.Open(fileName, FileMode.Open, FileAccess.Read, FileShare.None)
 							If CompareStreams(stream, fsEnglish) Then
 								Return
@@ -259,13 +258,13 @@ Namespace Display_Driver_Uninstaller
 
 		Private Sub AppClosing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs)
 			Try
-				If frmMain.workThread IsNot Nothing Then                    ' workThread running, cleaning in progress!
+				If frmMain.WorkTask IsNot Nothing Then                    ' workThread running, cleaning in progress!
 					' Should take few milliseconds...	
-					If frmMain.workThread.Status = Tasks.TaskStatus.Running Then Thread.Sleep(200)
-					If frmMain.workThread.Status = Tasks.TaskStatus.Running Then Thread.Sleep(2000)
+					If frmMain.WorkTask.Status = Tasks.TaskStatus.Running Then Thread.Sleep(200)
+					If frmMain.WorkTask.Status = Tasks.TaskStatus.Running Then Thread.Sleep(2000)
 
 					' workThread still running!
-					If frmMain.workThread.Status = Tasks.TaskStatus.Running Then
+					If frmMain.WorkTask.Status = Tasks.TaskStatus.Running Then
 						e.Cancel = True
 						Exit Sub
 					End If
@@ -359,24 +358,24 @@ Namespace Display_Driver_Uninstaller
 			info.Type = LogType.Event
 			info.Separator = " = "
 
-			info.Add(If(FileIO.ExistsFile(Paths.AppExeFile), "[Found]", "[Not found]") + " AppExeFile", Paths.AppExeFile)
-			info.Add(If(FileIO.ExistsDir(Paths.AppBase), "[Found]", "[Not found]") + " AppBase", Paths.AppBase)
-			info.Add(If(FileIO.ExistsDir(Paths.Settings), "[Found]", "[Not found]") + " Settings", Paths.Settings)
-			info.Add(If(FileIO.ExistsDir(Paths.Logs), "[Found]", "[Not found]") + " Logs", Paths.Logs)
-			info.Add(If(FileIO.ExistsDir(Paths.Language), "[Found]", "[Not found]") + " Language", Paths.Language)
+			info.Add(If(_fileIo.ExistsFile(Paths.AppExeFile), "[Found]", "[Not found]") + " AppExeFile", Paths.AppExeFile)
+			info.Add(If(_fileIo.ExistsDir(Paths.AppBase), "[Found]", "[Not found]") + " AppBase", Paths.AppBase)
+			info.Add(If(_fileIo.ExistsDir(Paths.Settings), "[Found]", "[Not found]") + " Settings", Paths.Settings)
+			info.Add(If(_fileIo.ExistsDir(Paths.Logs), "[Found]", "[Not found]") + " Logs", Paths.Logs)
+			info.Add(If(_fileIo.ExistsDir(Paths.Language), "[Found]", "[Not found]") + " Language", Paths.Language)
 			info.Add(KvP.Empty)
-			info.Add(If(FileIO.ExistsDir(Paths.ProgramFiles), "[Found]", "[Not found]") + " ProgramFiles", Paths.ProgramFiles)
-			info.Add(If(FileIO.ExistsDir(Paths.ProgramFilesx86), "[Found]", "[Not found]") + " ProgramFilesx86", Paths.ProgramFilesx86)
+			info.Add(If(_fileIo.ExistsDir(Paths.ProgramFiles), "[Found]", "[Not found]") + " ProgramFiles", Paths.ProgramFiles)
+			info.Add(If(_fileIo.ExistsDir(Paths.ProgramFilesx86), "[Found]", "[Not found]") + " ProgramFilesx86", Paths.ProgramFilesx86)
 			info.Add(KvP.Empty)
-			info.Add(If(FileIO.ExistsDir(Paths.Roaming), "[Found]", "[Not found]") + " Roaming", Paths.Roaming)
-			info.Add(If(FileIO.ExistsDir(Paths.AppBaseRoaming), "[Found]", "[Not found]") + " AppBaseRoaming", Paths.AppBaseRoaming)
+			info.Add(If(_fileIo.ExistsDir(Paths.Roaming), "[Found]", "[Not found]") + " Roaming", Paths.Roaming)
+			info.Add(If(_fileIo.ExistsDir(Paths.AppBaseRoaming), "[Found]", "[Not found]") + " AppBaseRoaming", Paths.AppBaseRoaming)
 			info.Add(KvP.Empty)
-			info.Add(If(FileIO.ExistsDir(Paths.SystemDrive), "[Found]", "[Not found]") + " SystemDrive", Paths.SystemDrive)
-			info.Add(If(FileIO.ExistsDir(Paths.WinDir), "[Found]", "[Not found]") + " WinDir", Paths.WinDir)
-			info.Add(If(FileIO.ExistsDir(Paths.UserPath), "[Found]", "[Not found]") + " UserPath", Paths.UserPath)
-			info.Add(If(FileIO.ExistsDir(Paths.System32), "[Found]", "[Not found]") + " System32", Paths.System32)
+			info.Add(If(_fileIo.ExistsDir(Paths.SystemDrive), "[Found]", "[Not found]") + " SystemDrive", Paths.SystemDrive)
+			info.Add(If(_fileIo.ExistsDir(Paths.WinDir), "[Found]", "[Not found]") + " WinDir", Paths.WinDir)
+			info.Add(If(_fileIo.ExistsDir(Paths.UserPath), "[Found]", "[Not found]") + " UserPath", Paths.UserPath)
+			info.Add(If(_fileIo.ExistsDir(Paths.System32), "[Found]", "[Not found]") + " System32", Paths.System32)
 			If IntPtr.Size = 8 Then
-				info.Add(If(FileIO.ExistsDir(Paths.SysWOW64), "[Found]", "[Not found]") + " SysWOW64", Paths.SysWOW64)
+				info.Add(If(_fileIo.ExistsDir(Paths.SysWOW64), "[Found]", "[Not found]") + " SysWOW64", Paths.SysWOW64)
 			End If
 
 			Application.Log.Add(info)
@@ -489,14 +488,14 @@ Namespace Display_Driver_Uninstaller
 				End Try
 
 				'Verify is there is missing files in DDU\settings folder (only check for 2 atm)
-				If Not FileIO.ExistsFile(Application.Paths.AppBase & "settings\NVIDIA\services.cfg") Then
+				If Not _fileIo.ExistsFile(Application.Paths.AppBase & "settings\NVIDIA\services.cfg") Then
 					Microsoft.VisualBasic.MsgBox(Application.Paths.AppBase & "settings\NVIDIA\services.cfg does not exist. please reinstall or extract DDU correctly", MsgBoxStyle.Critical)
 					Log.SaveToFile()
 					Me.Shutdown(0)
 					Exit Sub
 				End If
 
-				If Not FileIO.ExistsFile(Application.Paths.AppBase & "settings\AMD\services.cfg") Then
+				If Not _fileIo.ExistsFile(Application.Paths.AppBase & "settings\AMD\services.cfg") Then
 					Microsoft.VisualBasic.MsgBox(Application.Paths.AppBase & "settings\AMD\services.cfg does not exist. please reinstall or extract DDU correctly", MsgBoxStyle.Critical)
 					Log.SaveToFile()
 					Me.Shutdown(0)
