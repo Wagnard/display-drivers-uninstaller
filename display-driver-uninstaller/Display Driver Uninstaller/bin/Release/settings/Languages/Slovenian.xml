@@ -8,21 +8,21 @@
 	<frmMain Text="Display Driver Uninstaller (DDU)">
 		<btnCleanRestart>
 			<Text>
-				Počisti in vnovič zaženi
+				Počisti in znova zaženi
 				(Zelo priporočljivo)
 			</Text>
 			<Tooltip>
-				Odstrani trenutne in prejšnje gonilnike, nato vnovič zažene računalnik.
+				Odstrani trenutne in prejšnje gonilnike, nato znova zažene računalnik.
 				(Zelo priporočljivo)
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
 			<Text>
-				Počisti in vnovič NE zaženi
+				Počisti in znova NE zaženi
 				(Lahko povzroči težave, kot je črni zaslon)
 			</Text>
 			<Tooltip>
-				Odstrani trenutne in prejšnje gonilnike, vendar vnovič ne zažene računalnika.
+				Odstrani trenutne in prejšnje gonilnike, vendar znova ne zažene računalnika.
 				(Lahko povzroči težave, kot je črni zaslon)
 			</Tooltip>
 		</btnClean>
@@ -120,22 +120,31 @@
 		</VisitGeforceMenuItem>
 
 		<Messages>
-			<Text1>Na voljo so posodobitve! Obiščem zdaj spletno stran DDU?</Text1>
+			<Text1>Na voljo so posodobitve! Želite zdaj obiskati spletno stran DDU?</Text1>
 			<Text2>Pričakujte omejeno podporo pri starejših različicah od zadnje. Pred prijavo napak posodobite na novejšo različico.</Text2>
 			<Text3>DDU ne uporabljate s skrbniškimi pravicami. Aplikacija se bo zdaj zaprla.</Text3>
 			<Text4>PAExec ni mogoče najti. Prosimo, glejte dnevnik.</Text4>
 			<Text5>Display Driver Uninstaller (DDU) veliko spreminja vaš register. DDU bo samodejno ustvaril obnovitveno točko sistema (samo v običajnem načinu).</Text5>
 			<Text6>V enem od modulov je prišlo do težave. Pošljite dnevnike DDU razvijalcu programa.</Text6>
 			<Text7>DDU je zaznal, da imate prenosnik AMD (Enduro ali enakovreden). DDU še ni v celoti združljiv in preizkušen s sistemi Enduro. Uporabite na lastno odgovornost.</Text7>
-			<Text8>DDU je zaznal, da NISTE v varnem načinu... Za boljše čiščenje brez težav je priporočljivo, da vnovič zaženete računalnik v varnem načinu.</Text8>
-			<Text9>Nastavitve Windows 'Namestitev naprave' so bile spremenjene v NE namesti samodejno gonilnike..</Text9>
+			<Text8>DDU je zaznal, da NISTE v varnem načinu... Za boljše čiščenje brez težav je priporočljivo, da znova zaženete računalnik v varnem načinu.</Text8>
+			<Text9>Nastavitve Windows 'Namestitev naprave' so bile spremenjene v 'NE namesti samodejno gonilnike'.</Text9>
 			<Text10>Čista odstranitev je dokončana. Ali želite zdaj zapreti program?</Text10>
-			<Text11>Windows 'Nastavitve namestitve naprave' so bile spremenjene v Samodejno namesti gonilnike.</Text11>
-			<Text12>Niste v varnem načinu. Zelo priporočljivo je, da vnovič zaženete računalnik v varnem načinu, v izogib morebitnih težav. Ali želite zdaj vnovič zagnati računalnik v varnem načinu?</Text12>
+			<Text11>Windows 'Nastavitve namestitve naprave' so bile spremenjene v 'Samodejno namesti gonilnike'.</Text11>
+			<Text12>Niste v varnem načinu. Zelo priporočljivo je, da znova zaženete računalnik v varnem načinu, v izogib morebitnih težav. Ali želite zdaj znova zagnati računalnik v varnem načinu?</Text12>
 			<Text13>To morate izbrati na modrem zaslonu: Odpravljanje težav -&gt; Napredne možnosti -&gt; Nastavitve zagona.</Text13>
-			<Text14>Ponovni zagon je na čakanju. Preden uporabite DDU, vnovič zaženite računalnik</Text14>
-			<Text15>Ni bilo opravljenih sprememb. Windows 'Nastavitve namestitve naprave' so bile že nastavljene na Privzeto.</Text15>
+			<Text14>Ponovni zagon je na čakanju. Preden uporabite DDU, znova zaženite računalnik</Text14>
+			<Text15>Ni bilo opravljenih sprememb. Windows 'Nastavitve namestitve naprave' so bile že nastavljene na 'Privzeto'.</Text15>
 			<Text16>V sistemu Windows je prišlo do kritične napake, ki preprečuje pravilno odstranitev gonilnikov. Kot varnostni ukrep DDU ne bo nadaljeval z odstranjevanjem datotek in registra. Pred uporabo DDU morate odpraviti težave s sistemom.</Text16>
+			<Text17>Zdi se, da ste prvič zagnali DDU.
+				
+					Pred uporabo se seznanite z naslednjim:
+					1: Odvisno od vaših težav in nastavitev lahko pomaga ali poslabša stvari.
+					2: Moral bi imeti varnostno kopijo.
+					3: Preberite licenco, Readme in ToS.
+					4: Ne odgovarjamo za kakršno koli škodo ali kakršno koli izgubo podatkov.
+					5: Vedno smo pripravljeni pomagati, če pride do težav.
+			</Text17>
 		</Messages>
 		<Options_Type>
 			<Options1>---Izberi vrsto naprave---</Options1>
@@ -155,10 +164,10 @@
 		</Options_AUDIO>
 		<UpdateLog>
 			<Text1>Izvedba čiščenja Shramb gonilnikov (Izbriši OEM korak)...</Text1>
-			<Text2>Čiščenje imenika</Text2>
+			<Text2>Čiščenje mape</Text2>
 			<Text3>Čiščenje znanih ključev v Registru... Lahko vzame minuto ali dve.</Text3>
-			<Text4>Čiščenje UpdatusUser računa uporabnikov, če je prisoten.</Text4>
-			<Text5>Čiščenje imenika</Text5>
+			<Text4>Čiščenje računa 'UpdatusUser' uporabnikov, če je prisoten.</Text4>
+			<Text5>Čiščenje mape</Text5>
 			<Text6>Začetek čiščenja Registra</Text6>
 			<Text7>Dokončano čiščenje Registra</Text7>
 			<Text8>Začetek odstranitve NVIDIA Optimus UpperFilter, če je prisoten.</Text8>
@@ -171,7 +180,7 @@
 			<Text15>Različica zaznanega gonilnika</Text15>
 			<Text16>INF</Text16>
 			<Text17>INF oddelek</Text17>
-			<Text18>Grafični procesor (GPE) ni pravilno nameščen</Text18>
+			<Text18>Grafični procesor ni pravilno nameščen</Text18>
 			<Text19>Brisanje nekaterih posebnih map lahko traja nekaj časa...</Text19>
 			<Text20>Čiščenje se je začelo...</Text20>
 			<Text21>Odstranjevanje</Text21>
@@ -180,9 +189,9 @@
 			<Text24>Odstranjene GPE iz Upravitelja naprav.</Text24>
 			<Text25>Izvedba odstranitve SetupAPI Avdio krmilnika.</Text25>
 			<Text26>HD zvočne kartice so odstranjene!</Text26>
-			<Text27>USB katica 3D Vision je odstranjena iz Upravitelkja naprav.</Text27>
+			<Text27>USB kartica '3D Vision' je odstranjena iz 'Upravitelja naprav'.</Text27>
 			<Text28>Monitorji in skriti monitorji so odstranjeni!</Text28>
-			<Text29>SetupAPI odstranitev je dokončana</Text29>
+			<Text29>Odstranitev SetupAPI je dokončana</Text29>
 			<Text30>Začetek čiščenja območja S-1-5-xx</Text30>
 			<Text31>Konec čiščenja območja S-1-5-xx</Text31>
 			<Text32>Začetek čiščenja ClassesRoot ,Installer\Products</Text32>
@@ -193,7 +202,7 @@
 			<Text37>Konec čiščenja CurrentUser ,Installer\Products</Text37>
 			<Text38>Čiščenje procesov/storitev...</Text38>
 			<Text39>Čiščenje procesovi/storitev je dokončano</Text39>
-			<Text40>Izbrisan.</Text40>
+			<Text40>Izbrisano.</Text40>
 			<Text41>Vrednost je odstranjena.</Text41>
 			<Text42>Datoteka je izbrisana.</Text42>
 		</UpdateLog>
@@ -240,7 +249,7 @@
 			<Text>Odstrani uporabljenega in neobstoječe monitorje (priporočeno)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>Odstrani AMD zvočno vodilo</Text>
+			<Text>Odstrani zvočno vodilo AMD</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
 			<Text>Odstrani mapo gonilnikov "C:\AMD" (NI priporočljivo)</Text>
@@ -261,9 +270,19 @@
 		<lblRemGFE>
 			<Text>Odstrani GeForce Experience (GFE)</Text>
 		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>Odstrani oddajanje NVIDIA</Text>
+		</lblRemNVBROADCAST>
 		<lblRemNVCP>
 			<Text>(DCH gonilnik) Odstrani nameščeno nadzorno ploščo NVIDIA iz Microsoft trgovine</Text>
 		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>Obdrži nadzorno ploščo 'NVIDIA Globalno' / Nastavitve programa.</Text>
+			<Tooltip>
+				Če ste naleteli na težave, zaradi katerih ste za čiščenje uporabili DDU, priporočamo, da se izognete izbiri te možnosti.
+				Ta možnost ni namenjena odpravljanju težav in morda ne bo odpravila težave, ki jo imate."
+			</Tooltip>
+		</lblKeepNVCPopt>
 		<lblRemINTELCP>
 			<Text>(DCH gonilnik) Odstrani nameščeno nadzorno ploščo INTEL iz Microsoft trgovine</Text>
 		</lblRemINTELCP>
@@ -271,7 +290,7 @@
 			<Text>(DCH gonilnik) Odstrani nameščeno nadzorno ploščo AMD iz Microsoft trgovine</Text>
 		</lblRemAMDCP>
 		<lblRemCrimsonCache>
-			<Text>Odstrani mapo predpomnilnika AMD Crimson Shader</Text>
+			<Text>Odstrani mapo predpomnilnika 'AMD Crimson Shader'</Text>
 			<Tooltip>
 				Priporočljivo, če obstaja grafična nepravilnost (hitrost ali okvara slike), ki je posledica poškodovanih podatkov predpomnilnika AMD Crimson Shader.
 				Priporočamo tudi, če preklopite na drugo znamko grafične kartice, kot je NVIDIA.
@@ -282,9 +301,9 @@
 			<Tooltip>Ni priporočljivo, če imate dve različni grafični kartici, ki lahko uporabljata Vulkan API.</Tooltip>
 		</lblVulkan>
     <lblPreventWinUpdate>
-      <Text>Prepreči prenos gonilnikov iz "Windows update", ko "Windows" išče gonilnik naprave.</Text>
+      <Text>Prepreči prenos gonilnikov iz 'Windows update', ko OS Windows išče gonilnik naprave.</Text>
       <Tooltip>Preprosto povedano, bo ta možnost preprečila, da "Windows/Device Manager" preverja posodobitve v "Windows Update". 
-               Opomba: To ne preprečuje "Windows Update" prenos/namestitev novih gonilnikov. 
+               Opomba: To ne preprečuje 'Windows Update' prenos/namestitev novih gonilnikov. 
                Opomba2: Prav tako je *ZELO* priporočeno, da povrnete to spremembo, ko končate z uporabo programa DDU in ponovno namestite gonilnik vašega grafičnega procesorja (GPE) ali imate težave z namestitvijo druge naprave.</Tooltip>
      </lblPreventWinUpdate>
   </frmOptions>
@@ -293,10 +312,15 @@
 		<btnAccept>
 			<Text>Zaženi</Text>
 			<Text2>
-				Vnovič zaženi računalnik v
+				Znova zaženi računalnik v
 				Varnem načinu
 			</Text2>
 		</btnAccept>
+		<btnWuRestore>
+			<Text>
+				Nastavi nastavitve namestitve naprave Windows na 'Privzeto' in nato 'Zapri'
+			</Text>
+		</btnWuRestore>
 		<btnClose>
 			<Text>Zapri</Text>
 		</btnClose>
@@ -306,13 +330,13 @@
 		<lblNotSafeMode>
 			<Text>
 				Niste v varnem načinu. Zelo priporočljivo je, da
-				vnovič zaženete PC v varnem načinu, v izogib morebitnim težavam.
+				znova zaženete PC v varnem načinu, v izogib morebitnim težavam.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Pomembna opomba za uporabnike Windows 8/8.1/10:
-				Vaše Windows "GESLO" je obvezno! (PIN koda NE deluje v varnem načinu)
+				Pomembna opomba za uporabnike Windows 8/8.1/10/11:
+				*Morda* bo potrebno vaše "GESLO" za Windows! (PIN *morda* NE deluje v varnem načinu)
 				Takoj ustavite, če ste ga izgubili ali ga ne poznate!
 			</Text>
 		</lblWinPasswordWarn>
@@ -338,7 +362,7 @@
 			<Text>Možnosti</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>Kopiranje omogočeno</Text>
+			<Text>Kopiranje je omogočeno</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
@@ -384,14 +408,23 @@
 			<Text>
         Velika zahvala naslednjemu pokrovitelju in tudi tistim, ki niso na seznamu!
 
-        -honnmaguro    (že od 16.03.2018)
- 		-ZaoDaDong     (že od 06.02.2019)
-		-Alberto Bursi (dolgo časa donator/podpornik)
-	    -Kaseb (že od 2019-09-05)
-		-Frank Brown (že od 2019-10-31		
-	    -Sergey Bolshakow (že od 2020-09-10)
-		-James Tiller (Since 2021-04-03)
-		-Paulo Henrique (Since 2021-04-19)
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Chris Ross
+				-Fabio
+				-Matti Metsikko
+				-mikalonia - mika
+				-ChaosDMNS
+				-Eduardo Macias
+				
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -399,17 +432,17 @@
 	<Misc>
 		<About>
 			<Text>
-				Display Driver Uninstaller (DDU)/Čistilec je bil ustvarjen za grafične (GPE) gonilnike. (NVIDIA/AMD)
+				Display Driver Uninstaller (DDU)/Čistilec je bil ustvarjen za gonilnike grafične kartice (GPE) . (NVIDIA/AMD)
 
-				Kaj naredi je, da odstrani grafične/GPE gonilnike iz Upravitelja naprav Windows ter odstrani trenutne in
+				Kaj naredi je, da odstrani grafične/GPE gonilnike iz 'Upravitelja naprav Windows' ter odstrani trenutne in
 				prejšnje gonilnike iz shrambe gonilnikov Windows, skupaj z odstranitvijo NVIDIA/AMD storitev.
 
 				Trenutni učinek po uporabi tega orodja bo podoben kot, če bi bil sistem Windows v stanju "Na novo nameščen".
 
 				To orodje deluje podobno kot "Driver Sweeper"*in ima vse zgoraj dodatno omenjeno.
 
-				Če imate težave pri nameščanju starejšega ali novejšega gonilnika, ga preizkusite, ker ima nekaj poročil, 
-                ki jih lahko popravi.
+				Če imate kakršne koli težave pri namestitvi starejšega ali novejšega gonilnika, ga poskusite, saj obstajajo 
+				poročila, da odpravlja te težave.
 
 				PRIPOROČENA UPORABA:
 
@@ -467,7 +500,7 @@
 		<Translator>
 			<User>Jadran Rudec</User>
 			<Details>jrudec@gmail.com</Details>
-			<LastUpdate>05/09/2019</LastUpdate>
+			<LastUpdate>13/12/2023</LastUpdate>
 		</Translator>
 
 		<Translator2>
