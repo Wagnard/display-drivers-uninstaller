@@ -3005,7 +3005,7 @@ Namespace Display_Driver_Uninstaller
 					Try
 						For Each child As String In _fileIo.GetDirectories(filePath)
 							If IsNullOrWhitespace(child) = False Then
-								If StrContainsAny(child, True, "cn", "fuel", "dvr", "radeonsoftware", "link") Or
+								If StrContainsAny(child, True, "cn", "fuel", "dvr", "wvr", "openvr", "radeonsoftware", "link") Or
 							 removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Then
 
 									Delete(child)

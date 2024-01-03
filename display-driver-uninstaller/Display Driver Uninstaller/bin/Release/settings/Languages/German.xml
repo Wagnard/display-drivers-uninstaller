@@ -18,7 +18,7 @@
 		</btnCleanRestart>
 		<btnClean>
 			<Text>
-				Reinigen undd NICHT neu starten
+				Reinigen und NICHT neu starten
 				(kann Probleme wie einen schwarzen Bildschirm verursachen)
 			</Text>
 			<Tooltip>
@@ -497,7 +497,7 @@
 
 		<Translator2>
 			<User>_rk_</User>
-			<LastUpdate>28/08/2023</LastUpdate>
+			<LastUpdate>02/01/2024</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
 

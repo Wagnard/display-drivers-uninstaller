@@ -110,7 +110,7 @@
 			<Text>Посетить сайт SVN</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-			<Text>Посетить тему Nvidia на Guru3d</Text>
+			<Text>Посетить тему NVIDIA на Guru3d</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
 			<Text>Посетить тему AMD на Guru3d</Text>
@@ -153,7 +153,7 @@
 		</Options_Type>
 		<Options_GPU>
 			<Options1>---Выберите производителя---</Options1>
-			<Options2>Nvidia</Options2>
+			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>Intel</Options4>
 		</Options_GPU>
@@ -216,7 +216,7 @@
 			<Text>Показывать предложения от наших партнёров (реклама)</Text>
 		</lblOffer>
 		<lblNvidiaspecific>
-			<Text>Параметры драйверов Nvidia</Text>
+			<Text>Параметры драйверов NVIDIA</Text>
 		</lblNvidiaspecific>
 		<lblAmdspecific>
 			<Text>Параметры драйверов AMD</Text>
@@ -270,9 +270,19 @@
 		<lblRemGFE>
 			<Text>Удалять GeForce Experience (GFE)</Text>
 		</lblRemGFE>
+				<lblRemNVBROADCAST>
+			<Text>Удалять NVIDIA Broadcast</Text>
+		</lblRemNVBROADCAST>
 		<lblRemNVCP>
-			<Text>(DCH-драйвер) Удалять Панель управления Nvidia, установленную из Microsoft Store</Text>
+			<Text>(DCH-драйвер) Удалять Панель управления NVIDIA, установленную из Microsoft Store</Text>
 		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>Сохранить глобальную Панель управления NVIDIA / Настройки программы.</Text>
+			<Tooltip>
+				Если вы столкнулись с проблемами, которые привели к использованию DDU для очистки, рекомендуется избегать выбора этого параметра.
+				Этот параметр не предназначен для устранения проблем и может не решить проблему, с которой вы столкнулись."
+			</Tooltip>
+		</lblKeepNVCPopt>
 		<lblRemINTELCP>
 			<Text>(DCH-драйвер) Удалять Панель управления Intel, установленную из Microsoft Store</Text>
 		</lblRemINTELCP>
@@ -283,7 +293,7 @@
 			<Text>Удалять папку с кэшем шейдеров AMD Crimson</Text>
 			<Tooltip>
 				Рекомендуется при графических аномалиях (скорость или визуальные искажения) из-за повреждённых данных кэша шейдеров.
-				Также рекомендуется при переходе на видеокарту другой фирмы, например Nvidia.
+				Также рекомендуется при переходе на видеокарту другой фирмы, например NVIDIA.
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
@@ -416,9 +426,9 @@
 	<Misc>
 		<About>
 			<Text>
-				Display Driver Uninstaller (DDU) - утилита для удаления видеодрайверов Nvidia, AMD, Intel.
+				Display Driver Uninstaller (DDU) - утилита для удаления видеодрайверов NVIDIA, AMD, Intel.
 
-				Удаляет текущие и предыдущие видеодрайверы из диспетчера устройств и хранилища драйверов Windows. Также удаляются службы Nvidia и AMD.
+				Удаляет текущие и предыдущие видеодрайверы из диспетчера устройств и хранилища драйверов Windows. Также удаляются службы NVIDIA и AMD.
 
 				С помощью DDU вы можете решить проблемы с установкой более старой или более новой версии драйвера. Установка драйверов после использования DDU подобна "чистой" установке.
 
@@ -432,7 +442,7 @@
 
 				- Мы хотели бы получать от вас обратную связь. Сообщите нам, успешным или нет было применение утилиты. Если были проблемы с видеодрайвером, и DDU помог их решить, поделитесь результатом.
 
-				Имейте в виду, что Nvidia, AMD, Microsoft не имеют отношения к этой программе, эти компании не несут ответственность за любые повреждения или ошибки, вызванные DDU в вашей системе.
+				Имейте в виду, что NVIDIA, AMD, Microsoft не имеют отношения к этой программе, эти компании не несут ответственность за любые повреждения или ошибки, вызванные DDU в вашей системе.
 
 				-----
 
@@ -465,7 +475,7 @@
 
 				Используя программу DDU, вы отказываетесь от претензий к её создателям в случае возникновения неполадок или ошибок в системе.
 
-				Используя DDU, вы признаёте, что компании Nvidia ("Nvidia, GeForce"), Advanced Micro Devices ("AMD, Radeon")
+				Используя DDU, вы признаёте, что компании NVIDIA ("NVIDIA, GeForce"), Advanced Micro Devices ("AMD, Radeon")
 				и Intel не имеют ничего общего с этой программой и не являются партнёрами DDU или её создателей.
 			</Text>
 		</Tos>
@@ -479,7 +489,7 @@
 
 		<Translator2>
 			<User>Danis Miryasov (miryasov.danis@yandex.ru)</User>
-			<LastUpdate>14.03.2023</LastUpdate>
+			<LastUpdate>19.12.2023</LastUpdate>
 		</Translator2>
 		<Translator3>
 			<User>Dmitry Yerokhin (erodim@mail.ru)</User>
