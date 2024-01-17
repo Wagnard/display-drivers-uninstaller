@@ -557,6 +557,25 @@ Namespace Display_Driver_Uninstaller
 						End If
 						Application.Log.AddMessage("SetupAPI: Remove NVIDIA SHIELD Wireless Controller Trackpad Complete.")
 
+						'NVIDIA Platform Controllers and Framework
+						Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA Platform Controllers and Framework")
+						found = SetupAPI.GetDevices("SoftwareDevice", Nothing, False)
+						If found IsNot Nothing AndAlso found.Count > 0 Then
+							For Each d As SetupAPI.Device In found
+								If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+									For Each HwID As String In d.HardwareIDs
+										If IsNullOrWhitespace(HwID) Then Continue For
+										If StrContainsAny(HwID, True, "ACPI\NVDA0820") Then
+											SetupAPI.UninstallDevice(d)
+											Exit For
+										End If
+									Next
+								End If
+							Next
+							found.Clear()
+						End If
+						Application.Log.AddMessage("SetupAPI: Remove NVIDIA Platform Controllers and Framework Complete.")
+
 						If config.RemoveNVBROADCAST Then
 							' NVIDIA Broadcast(Wave Extensible) (WDM) Removal
 							Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA Broadcast Audio Device (Wave Extensible) (WDM).")
