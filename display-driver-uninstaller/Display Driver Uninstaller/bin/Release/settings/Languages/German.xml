@@ -308,7 +308,7 @@
      </lblPreventWinUpdate>
   </frmOptions>
 
-	<frmLaunch Text="Startoptionen">
+	<frmLaunch Text="Startoption">
 		<btnAccept>
 			<Text>Starten</Text>
 			<Text2>
@@ -325,7 +325,7 @@
 			<Text>Schließen</Text>
 		</btnClose>
 		<lblLaunchOption>
-			<Text>Startoptionen</Text>
+			<Text>Startoption</Text>
 		</lblLaunchOption>
 		<lblNotSafeMode>
 			<Text>
@@ -423,6 +423,7 @@
 				-Matti Metsikko
 				-mikalonia - mika
 				-ChaosDMNS
+				-Eduardo Macias
 				
 			</Text>
 		</lblPatron>
@@ -497,7 +498,7 @@
 
 		<Translator2>
 			<User>_rk_</User>
-			<LastUpdate>02/01/2024</LastUpdate>
+			<LastUpdate>20/01/2024</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
 

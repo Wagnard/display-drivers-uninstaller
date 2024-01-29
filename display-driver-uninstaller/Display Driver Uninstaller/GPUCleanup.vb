@@ -726,7 +726,7 @@ Namespace Display_Driver_Uninstaller
 					Application.Log.AddMessage("SetupAPI: Remove Monitor(s) Complete .")
 				End If
 
-				If config.SelectedGPU = GPUVendor.AMD AndAlso config.RemoveAMDKMPFD Then
+				If config.SelectedGPU = GPUVendor.AMD AndAlso config.RemoveAMDKMPFD AndAlso (config.Restart OrElse config.Shutdown) Then
 					Try
 						UpdateTextMethod("Start - Check for AMDKMPFD system device.")
 						Application.Log.AddMessage("Executing SetupAPI: check AMDKMPFD system device started")
@@ -4605,7 +4605,7 @@ Namespace Display_Driver_Uninstaller
 																							Application.Log.AddException(ex)
 																						End Try
 																					End If
-																					If StrContainsAny(ValueName, True, "display.driver", "hdaudio.driver", "nvabhub", "msvcruntime", "NGXCore", "USBC") Then
+																					If StrContainsAny(ValueName, True, "NVDisplaySessionContainer", "NVDisplayPluginWatchdog", "nvdisplaycontainer", "display.controlPanel", "display.driver", "hdaudio.driver", "nvabhub", "msvcruntime", "NGXCore", "USBC") Then
 																						Try
 																							Deletevalue(regkey5, ValueName)
 																						Catch ex As Exception
