@@ -268,7 +268,7 @@
 			<Text>Automatically check for DDU updates on startup (Recommended)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Remove GeForce Experience (GFE)</Text>
+			<Text>Remove GeForce Experience (GFE) / NVIDIA App</Text>
 		</lblRemGFE>
 		<lblRemNVBROADCAST>
 			<Text>Remove NVIDIA Broadcast</Text>

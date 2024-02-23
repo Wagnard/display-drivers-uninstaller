@@ -569,7 +569,7 @@ Namespace Display_Driver_Uninstaller
 
 							For Each croot As String In classroots
 								If IsNullOrWhitespace(croot) Then Continue For
-								If StrContainsAny(croot, True, "GeforceExperience") AndAlso Not config.RemoveGFE Then
+								If StrContainsAny(croot, True, "GeforceExperience", "nvidiaapp") AndAlso Not config.RemoveGFE Then
 									'do nothing
 								Else
 									If child.ToLower.StartsWith(croot.ToLower, StringComparison.OrdinalIgnoreCase) Then

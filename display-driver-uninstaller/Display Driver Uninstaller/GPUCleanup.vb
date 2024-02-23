@@ -4320,6 +4320,8 @@ Namespace Display_Driver_Uninstaller
 							 child.ToLower.Contains("_display.controlpanel") Or
 							 child.ToLower.Contains("_display.driver") Or
 							 child.ToLower.Contains("_display.gfexperience") AndAlso removegfe Or
+							 child.ToLower.Contains("_display.nvapp") AndAlso removegfe Or
+							 child.ToLower.Contains("nvdlisr") AndAlso removegfe Or
 							 child.ToLower.Contains("_display.nvirusb") Or
 							 child.ToLower.Contains("_display.physx") AndAlso removephysx Or
 							 child.ToLower.Contains("_frameviewsdk") AndAlso removegfe Or
@@ -4408,11 +4410,13 @@ Namespace Display_Driver_Uninstaller
 						 child.ToLower.Contains("_frameviewsdk") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_gpxcommon.oss") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_display.gfexperience") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("_display.nvapp") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_display.nvirusb") Or
 						 child.ToLower.Contains("_nvabhub") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_display.physx") AndAlso config.RemovePhysX Or
 						 child.ToLower.Contains("_display.update") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_osc") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("nvdlisr") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("_display.nview") Or
 						 child.ToLower.Contains("_display.nvwmi") Or
 						 child.ToLower.Contains("_display.gamemonitor") AndAlso config.RemoveGFE Or
@@ -4564,7 +4568,7 @@ Namespace Display_Driver_Uninstaller
 														For Each child3 As String In regkey3.GetSubKeyNames()
 															If IsNullOrWhitespace(child3) Then Continue For
 
-															If StrContainsAny(child3, True, "gfeclient", "gfexperience", "nvbackend", "nvscaps", "shadowplay", "ledvisualizer", "nvUpdate", "nvcontainer") AndAlso Not removegfe Or
+															If StrContainsAny(child3, True, "gfeclient", "gfexperience", "nvbackend", "nvscaps", "shadowplay", "ledvisualizer", "nvUpdate", "nvcontainer", "NvApp") AndAlso Not removegfe Or
 														   StrContainsAny(child3, True, "nvbroadcast") AndAlso Not removenvbroadcast Then
 																'do nothing
 															Else
@@ -4598,7 +4602,7 @@ Namespace Display_Driver_Uninstaller
 																			If regkey5 IsNot Nothing Then
 																				For Each ValueName As String In regkey5.GetValueNames
 																					If IsNullOrWhitespace(ValueName) Then Continue For
-																					If StrContainsAny(ValueName, True, "ansel", "display.gfexperience", "display.update", "display.optimus", "frameviewsdk", "gfexperience", "gpxcommon.oss", "nvbackend", "nvcontainer", "nvmoduletracker", "nvnodejs", "nvplugin.watchdog", "nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio") AndAlso config.RemoveGFE Then
+																					If StrContainsAny(ValueName, True, "ansel", "display.gfexperience", "display.nvapp", "nvdlisr", "display.update", "display.optimus", "frameviewsdk", "gfexperience", "gpxcommon.oss", "nvbackend", "nvcontainer", "nvmoduletracker", "nvnodejs", "nvplugin.watchdog", "nvtelemetry", "nvvhci", "osc", "shadowplay", "shieldwirelesscontroller", "update.core", "virtualaudio") AndAlso config.RemoveGFE Then
 																						Try
 																							Deletevalue(regkey5, ValueName)
 																						Catch ex As Exception
@@ -4752,7 +4756,7 @@ Namespace Display_Driver_Uninstaller
 															For Each child3 As String In regkey3.GetSubKeyNames()
 																If IsNullOrWhitespace(child3) Then Continue For
 
-																If StrContainsAny(child3, True, "gfeclient", "gfexperience", "nvbackend", "nvscaps", "shadowplay", "ledvisualizer") Then
+																If StrContainsAny(child3, True, "gfeclient", "gfexperience", "nvbackend", "nvscaps", "shadowplay", "ledvisualizer", "nvapp") Then
 																	'do nothing
 																Else
 																	Try
@@ -5087,7 +5091,7 @@ Namespace Display_Driver_Uninstaller
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
 						If IsNullOrWhitespace(child) Then Continue For
-						If StrContainsAny(child, True, "nvcontainer.exe", "nvidia geforce experience", "nvnodejslauncher", "nvidia share.exe", "nvidia web helper.exe", "nvidia.steamlauncher.exe", "nvoawrappercache.exe", "nvprofileupdater", "nvshim", "nvsphelper", "nvstreamer", "nvtelemetrycontainer", "nvtmmon", "nvtmrep", "oawrapper") AndAlso removegfe Then
+						If StrContainsAny(child, True, "nvidia app", "nvidia overlay", "nvdlisrwrapper", "nvcontainer.exe", "nvidia geforce experience", "nvnodejslauncher", "nvidia share.exe", "nvidia web helper.exe", "nvidia.steamlauncher.exe", "nvoawrappercache.exe", "nvprofileupdater", "nvshim", "nvsphelper", "nvstreamer", "nvtelemetrycontainer", "nvtmmon", "nvtmrep", "oawrapper") AndAlso removegfe Then
 							Try
 								Deletesubregkey(regkey, child)
 							Catch ex As Exception
@@ -5835,7 +5839,7 @@ Namespace Display_Driver_Uninstaller
 				If filePath IsNot Nothing Then
 					For Each child As String In _fileIo.GetDirectories(filePath)
 						If IsNullOrWhitespace(child) = False Then
-							If StrContainsAny(child, True, "DXCache") Then
+							If StrContainsAny(child, True, "DXCache", "GLCache") Then
 
 								Delete(child)
 
@@ -6043,6 +6047,8 @@ Namespace Display_Driver_Uninstaller
 							 (child.ToLower.Contains("nv_cache") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("gfnruntimesdk") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("frameviewsdk") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("nvidia app") AndAlso config.RemoveGFE) Or
+							 (child.ToLower.Contains("nvidia overlay") AndAlso config.RemoveGFE) Or
 							 (child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
 
 
@@ -6201,7 +6207,10 @@ Namespace Display_Driver_Uninstaller
 					 (child.ToLower.Contains("nvbackend") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("displaydriverras") AndAlso config.RemoveGFE) Or
 					 (child.ToLower.Contains("nvprofileupdaterplugin") AndAlso config.RemoveGFE) Or
-					 child.ToLower.Contains("nvidia broadcast") AndAlso config.RemoveNVBROADCAST Or
+					 (child.ToLower.Contains("nvapp-updateframework") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvidia app") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("frameviewsdk") AndAlso config.RemoveGFE) Or
+					 (child.ToLower.Contains("nvidia broadcast") AndAlso config.RemoveNVBROADCAST) Or
 					 (child.ToLower.Contains("nvstreamsvc") AndAlso config.RemoveGFE) Then
 
 							Delete(child)
@@ -6253,6 +6262,7 @@ Namespace Display_Driver_Uninstaller
 				For Each child As String In _fileIo.GetFiles(filePath)
 					If IsNullOrWhitespace(child) Then Continue For
 					If child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE Or
+					   child.ToLower.Contains("nvidia.lnk") AndAlso config.RemoveGFE Or
 				   child.ToLower.Contains("nvidia broadcast") AndAlso config.RemoveNVBROADCAST Then
 
 						Delete(child)
@@ -6299,6 +6309,7 @@ Namespace Display_Driver_Uninstaller
 					   child.ToLower.Contains("nvab") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("netservice") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE Or
+					   child.ToLower.Contains("nvidia app") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvstreamc") AndAlso config.RemoveGFE Or
 					   child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE Or
 					   child.ToLower.EndsWith("\physx") AndAlso config.RemovePhysX Or
@@ -6352,6 +6363,8 @@ Namespace Display_Driver_Uninstaller
 								   child2.ToLower.Contains("display.update") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("display.gamemonitor") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("display.nvapp") AndAlso config.RemoveGFE Or
+								   child2.ToLower.Contains("nvdlisr") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("nvidia.update") AndAlso config.RemoveGFE Or
 								   child2.ToLower.Contains("installer2\installer") AndAlso config.RemoveGFE AndAlso config.RemovePhysX Or
 								   child2.ToLower.Contains("network.service") AndAlso config.RemoveGFE Or
@@ -6481,6 +6494,7 @@ Namespace Display_Driver_Uninstaller
 						 child.ToLower.Contains("frameviewsdk") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("netservice") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvidia geforce experience") AndAlso config.RemoveGFE Or
+						 child.ToLower.Contains("nvidia app") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvstreamc") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE Or
 						 child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE Or
