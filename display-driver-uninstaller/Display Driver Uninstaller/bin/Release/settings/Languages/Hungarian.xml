@@ -268,7 +268,7 @@
 			<Text>Automatikusan ellenőrizze a DDU frissítéseket indításkor. (ajánlott)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>GeForce Experience (GFE) eltávolítása</Text>
+			<Text>GeForce Experience (GFE) / NVIDIA App eltávolítása</Text>
 		</lblRemGFE>
 		<lblRemNVBROADCAST>
 			<Text>NVIDIA Broadcast eltávolítása</Text>
@@ -423,6 +423,8 @@
 				-Matti Metsikko
 				-mikalonia - mika
 				-ChaosDMNS
+				-Eduardo Macias
+				-Peter Le
 				
 			</Text>
 		</lblPatron>
