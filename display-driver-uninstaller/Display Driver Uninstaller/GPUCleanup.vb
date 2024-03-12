@@ -5541,7 +5541,7 @@ Namespace Display_Driver_Uninstaller
 						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 							If regkey2 IsNot Nothing Then
 								If Not IsNullOrWhitespace(regkey2.GetValue("Description", String.Empty).ToString) Then
-									If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NVIDIA Profile Updater", "NVIDIA telemetry monitor", "NVIDIA crash and telemetry reporter", "batteryboost", "nvngx") AndAlso config.RemoveGFE Then
+									If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NVIDIA Profile Updater", "NVIDIA telemetry monitor", "NVIDIA crash and telemetry reporter", "batteryboost", "nvngx", "NVIDIA App SelfUpdate") AndAlso config.RemoveGFE Then
 										Deletesubregkey(regkey, child)
 									End If
 								End If
@@ -5557,7 +5557,7 @@ Namespace Display_Driver_Uninstaller
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames
 								If IsNullOrWhitespace(child) Then Continue For
-								If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NvBatteryBoostCheckOnLogon", "nvngx") AndAlso config.RemoveGFE Then
+								If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NvBatteryBoostCheckOnLogon", "nvngx", "NVIDIA App SelfUpdate") AndAlso config.RemoveGFE Then
 									For Each ScheduleChild As String In schedule.GetSubKeyNames
 										If IsNullOrWhitespace(ScheduleChild) Then Continue For
 										Try
