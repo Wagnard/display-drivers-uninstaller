@@ -4818,7 +4818,7 @@ Namespace Display_Driver_Uninstaller
 					For Each child As String In regkey.GetValueNames()
 						If IsNullOrWhitespace(child) Then Continue For
 						If StrContainsAny(child, True, "gfexperience.exe", "nvidia app") AndAlso removegfe Or
-							StrContainsAny(child, True, "nvidia broadcast") AndAlso config.RemoveNVBROADCAST Then
+							(StrContainsAny(child, True, "nvidia broadcast") AndAlso config.RemoveNVBROADCAST) Then
 							Deletevalue(regkey, child)
 						End If
 					Next
