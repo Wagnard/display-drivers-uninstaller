@@ -4817,7 +4817,8 @@ Namespace Display_Driver_Uninstaller
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetValueNames()
 						If IsNullOrWhitespace(child) Then Continue For
-						If StrContainsAny(child, True, "gfexperience.exe") AndAlso removegfe Then
+						If StrContainsAny(child, True, "gfexperience.exe", "nvidia app") AndAlso removegfe Or
+							StrContainsAny(child, True, "nvidia broadcast") AndAlso config.RemoveNVBROADCAST Then
 							Deletevalue(regkey, child)
 						End If
 					Next
@@ -6838,7 +6839,7 @@ Namespace Display_Driver_Uninstaller
 														If IsNullOrWhitespace(Keyname) Then Continue For
 
 														If StrContainsAny(Keyname, True, "nvstlink.exe", "nvstview.exe", "nvcpluir.dll", "nvcplui.exe", "mcu.exe") Or
-													 (StrContainsAny(Keyname, True, "gfexperience.exe", "nvidia share.exe") AndAlso config.RemoveGFE) Then
+													 (StrContainsAny(Keyname, True, "gfexperience.exe", "nvidia share.exe", "nvidia app") AndAlso config.RemoveGFE) Then
 															Try
 																Deletevalue(regkey2, Keyname)
 															Catch ex As Exception
