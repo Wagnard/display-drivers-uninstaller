@@ -5762,14 +5762,11 @@ Namespace Display_Driver_Uninstaller
 			filePath = config.Paths.UserPath + "Public\Desktop"
 			If _fileIo.ExistsDir(filePath) Then
 				If filePath IsNot Nothing Then
-					For Each child As String In _fileIo.GetFiles(filePath)
-						If IsNullOrWhitespace(child) = False Then
-							If (StrContainsAny(child, True, "geforce experience.lnk") AndAlso config.RemoveGFE) Or
-							(StrContainsAny(child, True, "3d vision photo viewer")) Then
-
-								Delete(child)
-
-							End If
+					For Each child As String In _fileIo.GetFiles(filePath, "*.lnk")
+						If IsNullOrWhitespace(child) Then Continue For
+						If (StrContainsAny(DesktopIconRemover.GetShortcutTargetPath(child), True, "GeForce Experience.exe", "NVIDIA App.exe") AndAlso config.RemoveGFE) Or
+							(StrContainsAny(DesktopIconRemover.GetShortcutTargetPath(child), True, "3d vision photo viewer")) Then
+							Delete(child)
 						End If
 					Next
 				End If
@@ -6260,11 +6257,10 @@ Namespace Display_Driver_Uninstaller
 
 					End If
 				Next
-				For Each child As String In _fileIo.GetFiles(filePath)
+				For Each child As String In _fileIo.GetFiles(filePath, "*.lnk")
 					If IsNullOrWhitespace(child) Then Continue For
-					If child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE Or
-					   child.ToLower.Contains("nvidia.lnk") AndAlso config.RemoveGFE Or
-				   child.ToLower.Contains("nvidia broadcast") AndAlso config.RemoveNVBROADCAST Then
+					If (StrContainsAny(DesktopIconRemover.GetShortcutTargetPath(child), True, "GeForce Experience.exe", "NVIDIA App.exe") AndAlso config.RemoveGFE) Or
+						StrContainsAny(DesktopIconRemover.GetShortcutTargetPath(child), True, "nvidia broadcast") AndAlso config.RemoveNVBROADCAST Then
 
 						Delete(child)
 
