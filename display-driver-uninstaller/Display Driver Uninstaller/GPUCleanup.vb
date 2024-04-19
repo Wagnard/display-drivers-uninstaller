@@ -7461,7 +7461,7 @@ Namespace Display_Driver_Uninstaller
 			If _fileIo.ExistsDir(filePath) Then
 				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
-						If StrContainsAny(child, True, "Media SDK", "Media Resource", "Intel Arc Control", "ACMirageCache") Then
+						If StrContainsAny(child, True, "Media SDK", "Media Resource", "Intel Arc Control", "ACMirageCache", "Intel(R) Arc Software & Drivers", "PrebuiltShaderBinaries") Then
 							Delete(child)
 						End If
 					End If
