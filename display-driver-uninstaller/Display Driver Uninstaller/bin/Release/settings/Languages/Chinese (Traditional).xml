@@ -47,7 +47,8 @@
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
 			<Text>
-				將 Windows Update 自動安裝驅動程式設成預設值
+				將 Windows 裝置安裝設定設成預設值
+                                （自動安裝驅動程式）  
 			</Text>
 		</btnWuRestore>
 		<lblWinVersion>
@@ -135,6 +136,15 @@
 			<Text14>現有等待中的重新啟動程序，請在使用 DDU 前先重新啟動。</Text14>
 			<Text15>系統未變更。Windows 裝置安裝設定已回復預設值。</Text15>
 			<Text16>正常移除驅動程式時 Windows 發生嚴重錯誤。為確保安全，DDU 將停止刪除檔案及登錄碼。您必須在使用 DDU 前修正系統問題。</Text16>
+			<Text17>這似乎是您第一次啟動 DDU。
+				
+					在使用之前，請知道以下事項：
+					1: 根據您的問題和配置，可能有幫助或使情況變得更糟。
+					2: 您應該有備份。
+					3: 您應該閱讀授權、Readme 和服務條款。
+					4: 我們不對任何損壞或資料遺失負責。
+					5: 如果有問題，我們隨時樂意提供幫助。
+			</Text17>
 		</Messages>
 		<Options_Type>
 			<Options1>---選擇裝置類型---</Options1>
@@ -145,7 +155,7 @@
 			<Options1>---選擇裝置---</Options1>
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
-			<Options4>Intel</Options4>
+			<Options4>INTEL</Options4>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---選擇裝置---</Options1>
@@ -212,6 +222,9 @@
 		<lblAmdspecific>
 			<Text>AMD 專用選項</Text>
 		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>INTEL 專用選項</Text>
+		</lblINTELspecific>
 		<lblAdvancedO>
 			<Text>進階選項（請自行承擔修改所帶來的後果）</Text>
 		</lblAdvancedO>
@@ -261,6 +274,25 @@
 		<lblRemGFE>
 			<Text>移除 GeForce Experience (GFE)</Text>
 		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>移除 NVIDIA Broadcast</Text>
+		</lblRemNVBROADCAST>
+		<lblRemNVCP>
+			<Text>(DCH 驅動程式) 移除從 Microsoft Store 安裝的 NVIDIA 控制台</Text>
+		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>保留 NVIDIA 控制台的全局/程式設定。</Text>
+			<Tooltip>
+				如果您遇到需要使用 DDU 進行清理的問題，我們建議避免選擇此選項。
+				此選項不是為了解決問題，可能無法解決您正在遇到的問題。
+			</Tooltip>
+		</lblKeepNVCPopt>
+		<lblRemINTELCP>
+			<Text>(DCH 驅動程式) 移除從 Microsoft Store 安裝的 INTEL 控制台</Text>
+		</lblRemINTELCP>
+		<lblRemAMDCP>
+			<Text>(DCH 驅動程式) 移除從 Microsoft Store 安裝的 AMD 控制台</Text>
+		</lblRemAMDCP>
 		<lblRemCrimsonCache>
 			<Text>移除 AMD Crimson Shader Cache 資料夾</Text>
 			<Tooltip>
@@ -287,6 +319,11 @@
 				重新啟動至安全模式
 			</Text2>
 		</btnAccept>
+		<btnWuRestore>
+			<Text>
+				將 Windows 裝置安裝設定設成預設值後關閉
+			</Text>
+		</btnWuRestore>
 		<btnClose>
 			<Text>關閉</Text>
 		</btnClose>
@@ -374,12 +411,23 @@
 			<Text>
         非常感謝以下的贊助者們，也十分感謝有捐助但未列在此處的各位！
 
-        - honnmaguro (自 2018-03-16)
-		-Kaseb (Since 2019-09-05)
-		-Frank Brown (Since 2019-10-31)
-		-Sergey Bolshakow (Since 2020-09-10)
-		-James Tiller (Since 2021-04-03)
-		-Paulo Henrique (Since 2021-04-19)
+                                -Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Chris Ross
+				-Fabio
+				-Matti Metsikko
+				-mikalonia - mika
+				-ChaosDMNS
+				-Eduardo Macias
+				-Peter Le
       </Text>
 		</lblPatron>
 	</frmAbout>
@@ -409,7 +457,7 @@
 				- 若本工具成功解決您（曾）遇到的驅動程式障礙，歡迎分享結果。
 
 				請記住，NVIDIA、AMD、或 Microsoft 都不對您或您的電腦的任何損失與損害負上任何責任，
-				因此 DDU 創始人及其團隊也不付負上任何責任。
+				因此 DDU 創始人及其團隊也不負上任何責任。
 				-------------------------------
 
 				由 Wagnard 創始。
@@ -450,14 +498,22 @@
 	<LanguageTranslators>
 	
 		<Translator>
+			<User>Danfong Hsieh（謝慶憲）</User>
+			<Details>
+				Chinese (Traditional) translator 正體中文譯者
+			</Details>
+			<LastUpdate>22/04/2024</LastUpdate>
+		</Translator>
+		
+		<Translator1>
 			<User>Hugwalk</User>
 			<Details>
 				Chinese (Traditional) translator 正體中文譯者
 				感謝 pan93412 的協助。
-				以丹楓之版本作為參考製作出目前版本。
+				以謝慶憲之版本作為參考製作出目前版本。
 			</Details>
 			<LastUpdate>30/01/2019</LastUpdate>
-		</Translator>
+		</Translator1>
 
 		<Translator2>
 			<User>pan93412</User>
@@ -466,14 +522,6 @@
 			</Details>
 			<LastUpdate>30/01/2019</LastUpdate>
 		</Translator2>
-
-		<Translator3>
-			<User>Danfong Hsieh（丹楓）</User>
-			<Details>
-				Chinese (Traditional) translator 正體中文譯者
-			</Details>
-			<LastUpdate>10/06/2016</LastUpdate>
-		</Translator3>
 				
 	</LanguageTranslators>
 
