@@ -19,7 +19,7 @@
 		<btnClean>
 			<Text>
 				Nettoyer et NE PAS redémarrer
-(Risque de problèmes d'écran noir)
+				(Risque de problèmes d'écran noir)
 			</Text>
 			<Tooltip>
 			Désinstaller les pilotes actuels et anciens, mais ne pas redémarrer l'ordinateur.
@@ -38,7 +38,7 @@
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
 			<Text>
-				Supprimer le cache et fichiers de l'installateur du pilote GeForce Experience.
+				Supprimer le cache et fichiers de l'installateur du pilote "GeForce Experience".
 				(Note : Les pilotes ne seront pas supprimés)
 			</Text>
 			<Tooltip>
@@ -68,15 +68,15 @@
 		</lblLanguage>
 
 		<lblUpdate>
-<Text>Vérifier les mises à jour...</Text>
+			<Text>Vérifier les mises à jour...</Text>
 			<Text2>Aucune mise à jour trouvée. Le programme est à jour.</Text2>
 			<Text3>Mises à jour trouvées ! Prévoir une aide limitée avec la version plus ancienne que la plus récente.</Text3>
-<Text4>Impossible de rechercher les mises à jour !</Text4>
+			<Text4>Impossible de rechercher les mises à jour !</Text4>
 		</lblUpdate>
 
 		<lblOffer>
-			<Text>Offres de nos partenaires (Recommandé).</Text>
-			<Tooltip>Vous pouvez les désactiver dans le menu options.</Tooltip>
+			<Text>Offres de nos partenaires (Recommandé)</Text>
+			<Tooltip>Vous pouvez les désactiver dans le menu Options.</Tooltip>
 		</lblOffer>
 
 		<OptionsMenuItem>
@@ -110,7 +110,7 @@
 			<Text>Visiter le site web de SVN</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
-<Text>Visiter le forum Guru3d NVIDIA</Text>
+			<Text>Visiter le forum Guru3d NVIDIA</Text>
 		</VisitGuru3DNvidiaMenuItem>
 		<VisitGuru3DAMDMenuItem>
 			<Text>Visiter le forum Guru3d AMD</Text>
@@ -124,7 +124,7 @@
 			<Text2>Prévoyez un soutien limité pour les versions plus anciennes que la plus récente. Vérifiez la version la plus récente avant de signaler les bogues.</Text2>
 			<Text3>Vous n'utilisez pas DDU avec des droits Administrateur. L'application va maintenant se fermer.</Text3>
 <Text4>Impossible de trouver PAExec. Veuillez vous référer au journal.</Text4>
-			<Text5>Display Driver Uninstaller (DDU) modifie souvent votre registre. DDU tentera de créer un point de restauration du système automatiquement (Mode normal uniquement).</Text5>
+			<Text5>Display Driver Uninstaller (DDU) modifie souvent votre Registre. DDU tentera de créer un point de restauration du système automatiquement (Mode normal uniquement).</Text5>
 <Text6>Un problème est survenu dans l'un des modules, envoyez les journaux de DDU au développeur.</Text6>
 			<Text7>DDU a détecté que vous aviez un PC portable à switch AMD (Enduro ou équivalent), DDU n'est pas encore tout à fait compatible et testé avec les systèmes Enduro. Utilisez-le à vos risques et périls.</Text7>
 			<Text8>DDU a détecté que vous n'êtes PAS en mode sans échec... Pour un nettoyage sans erreur, il est recommandé de redémarrer en mode sans échec.</Text8>
@@ -132,10 +132,10 @@
 			<Text10>Désinstallation parfaite terminée ! Voulez-vous quitter maintenant ?</Text10>
 			<Text11>Les préférences d'installation des composants de Windows ont été modifiées pour installer automatiquement les pilotes.</Text11>
 			<Text12>Vous n'êtes pas en mode sans échec. Il est vivement recommandé de redémarrer en mode sans échec pour éviter tout problème éventuel. Redémarrer en mode sans échec maintenant ?</Text12>
-			<Text13>Voici ce que vous devez sélectionner à l'écran bleu de récupération : Dépannage -&gt; advanced options -&gt; startup Settings.</Text13>
+			<Text13>Voici ce que vous devez sélectionner à l'écran bleu de récupération : Dépannage -&gt; Advanced options -&gt; Startup Settings.</Text13>
 			<Text14>Il y a un redémarrage en cours, veuillez redémarrer avant d'utiliser DDU.</Text14>
 			<Text15>Aucune modification n'a été effectuée. Les paramètres d'installation des composants Windows étaient déjà réglés sur Défaut.</Text15>
-			<Text16>Une erreur critique est survenue dans Windows qui empêche la suppression correcte des pilotes. Par mesure de sécurité, DDU ne poursuivra pas la suppression des fichiers et du registre. Il faut résoudre le(s) problème(s) de votre système avant d'utiliser DDU.</Text16>
+			<Text16>Une erreur critique est survenue dans Windows qui empêche la suppression correcte des pilotes. Par mesure de sécurité, DDU ne poursuivra pas la suppression des fichiers et du Registre. Il faut résoudre le(s) problème(s) de votre système avant d'utiliser DDU.</Text16>
 			<Text17>Il semble que ce soit la première fois que vous lancez DDU.
 				
 					Avant de l'utiliser, vous devez lire ce qui suit :
@@ -165,11 +165,11 @@
 		<UpdateLog>
 			<Text1>Exécution du Nettoyage du stockage des pilotes (Supprimer OEM)...</Text1>
 			<Text2>Dossier de nettoyage</Text2>
-			<Text3>Nettoyage des clés-reg... Peut prendre une minute ou deux.</Text3>
+			<Text3>Nettoyage des Clés-Reg... Peut prendre une minute ou deux.</Text3>
 			<Text4>Nettoyer la mise à jour du compte utilisateur, si présent.</Text4>
 			<Text5>Dossier de nettoyage</Text5>
-			<Text6>Démarre le nettoyage du registre</Text6>
-			<Text7>Fin du nettoyage du registre</Text7>
+			<Text6>Démarre le nettoyage du Registre</Text6>
+			<Text7>Fin du nettoyage du Registre</Text7>
 			<Text8>Lancer la suppression de NVIDIA Optimus UpperFilter si présent.</Text8>
 			<Text9>Recherche d'un nouveau matériel...</Text9>
 			<Text10>Désinstallation parfaitement terminée !</Text10>
@@ -182,7 +182,7 @@
 			<Text17>Section INF </Text17>
 			<Text18>Le GPU n'est pas installé correctement</Text18>
 			<Text19>Suppression de certains dossiers spéciaux, cela peut durer longtemps...</Text19>
-			<Text20>Nettoyage commencé...</Text20>
+			<Text20>Nettoyage commencé…</Text20>
 			<Text21>Désinstallation</Text21>
 			<Text22>pilote</Text22>
 			<Text23>Exécuter la suppression de SetupAPI, veuillez patienter (cela peut durer quelques minutes)</Text23>
@@ -200,7 +200,7 @@
 			<Text35>Fin du nettoyage d’installation\produits Localmachine</Text35>
 			<Text36>Début du nettoyage d’installation\produits Currentuser</Text36>
 			<Text37>Fin Début du nettoyage d’installation\produits Currentuser</Text37>
-			<Text38>Nettoyage de Processus/Services...</Text38>
+			<Text38>Nettoyage de Processus/Services…</Text38>
 			<Text39>Fin du nettoyage de Processus/Services</Text39>
 			<Text40>Supprimer</Text40>
 			<Text41>Valeur retirée.</Text41>
@@ -268,7 +268,7 @@
 			<Text>Rechercher automatiquement les mises à jour DDU au démarrage (Recommandé)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Supprimer GeForce Experience (GFE)</Text>
+			<Text>Supprimer GeForce Experience (GFE)/ NVIDIA App</Text>
 		</lblRemGFE>
 		<lblRemNVBROADCAST>
 			<Text>Supprimer NVIDIA Broadcast</Text>
@@ -276,6 +276,13 @@
 		<lblRemNVCP>
 			<Text>Supprimer NVIDIA (Pilote DCH) du Panneau de Configuration du Microsoft Store</Text>
 		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>Conserver le Panneau de Contrôle Global NVIDIA / Paramètres du Programme.</Text>
+			<Tooltip>
+				Si vous avez rencontré des problèmes qui vous ont amené à utiliser DDU pour le nettoyage, nous recommandons de ne pas choisir cette option.
+				Cette option n'est pas conçue pour résoudre les problèmes et peut ne pas résoudre le problème que vous rencontrez."
+			</Tooltip>
+		</lblKeepNVCPopt>
 		<lblRemINTELCP>
 			<Text>Supprimer INTEL (Pilote DCH) du Panneau de Configuration du Microsoft Store</Text>
 		</lblRemINTELCP>
@@ -309,6 +316,11 @@
 				Mode Sans Échec
 			</Text2>
 		</btnAccept>
+		<btnWuRestore>
+			<Text>
+				Régler les paramètres d'installation des périphériques Windows sur la valeur par défaut et fermer
+			</Text>
+		</btnWuRestore>
 		<btnClose>
 			<Text>Fermer</Text>
 		</btnClose>
@@ -410,6 +422,10 @@ Votre " MOT DE PASSE " Windows *peut* être requis ! (Le PIN *pourrait* NE PAS f
 				-Fabio
 				-Matti Metsikko
 				-mikalonia - mika
+				-ChaosDMNS
+				-Eduardo Macias
+				-Peter Le
+				-Kater Willschie
 				
 			</Text>
 		</lblPatron>
@@ -427,17 +443,20 @@ Votre " MOT DE PASSE " Windows *peut* être requis ! (Le PIN *pourrait* NE PAS f
 
 				Cet outil agit comme "Driver Sweeper"*, et possède tous les avantages mentionnés ci-dessus.
 
-				Si vous rencontrez des problèmes à installer un ancien ou nouveau pilote, essayez-le car certains rapports indiquent qu'il résout ces problèmes.
+				Si vous rencontrez des problèmes à installer un ancien ou nouveau pilote, essayez-le car certains rapports indiquent qu'il résout
+				 ces problèmes.
 
 				UTILISATION RECOMMANDÉE :
 
-				- L'outil peut être utilisé en mode normal, mais pour une stabilité absolue lors de l'utilisation de DDU, le mode sans échec est toujours le meilleur.
+				- L'outil peut être utilisé en mode normal, mais pour une stabilité absolue lors de l'utilisation de DDU, le mode sans échec est
+				 toujours le meilleur.
 
 				- Nous aimerions recueillir les réactions de chacun, dites-nous si cela a été un succès ou non.
 
 				- Faites une sauvegarde ou un point de restauration du système (mais normalement cela devrait être assez sûr).
 
-				- Si vous avez ou avez eu un problème de pilote et que cet outil vous a aidé à résoudre certains problèmes que vous aviez ou avez actuellement, veuillez partager votre résultat.				
+				- Si vous avez ou avez eu un problème de pilote et que cet outil vous a aidé à résoudre certains problèmes que vous aviez ou avez
+				 actuellement, veuillez partager votre résultat.				
 
 				Gardez à l'esprit que NVIDIA, AMD et Microsoft ne peuvent être tenus pour responsables des dommages subis
 				par vous ou à votre ordinateur et ne sont en aucun cas affiliés à DDU, ou à ses créateurs.
@@ -472,7 +491,8 @@ Votre " MOT DE PASSE " Windows *peut* être requis ! (Le PIN *pourrait* NE PAS f
 
 				En utilisant DDU, vous acceptez de ne pas accuser DDU ou ses créateurs, et ses affiliés, d'endommager ou d'affecter négativement votre PC.
 
-				En utilisant DDU, vous reconnaissez que NVIDIA ("NVIDIA, GeForce") et Advanced Micro Devices ("AMD, Radeon") n'ont rien à voir avec ce programme, et ne sont en aucun cas affiliés à DDU ou à ses créateurs.
+				En utilisant DDU, vous reconnaissez que NVIDIA ("NVIDIA, GeForce") et Advanced Micro Devices ("AMD, Radeon") n'ont
+				 rien à voir avec ce programme, et ne sont en aucun cas affiliés à DDU ou à ses créateurs.
 			</Text>
 		</Tos>
 	</Misc>
@@ -490,8 +510,8 @@ Votre " MOT DE PASSE " Windows *peut* être requis ! (Le PIN *pourrait* NE PAS f
 		</Translator2>
 
 		<Translator3>
-			<User>Talex v18.0.5.2</User>
-			<LastUpdate>20/07/2022</LastUpdate>
+			<User>Talex v18.0.7.7</User>
+			<LastUpdate>22/06/2024</LastUpdate>
 		</Translator3>
 	</LanguageTranslators>
 
