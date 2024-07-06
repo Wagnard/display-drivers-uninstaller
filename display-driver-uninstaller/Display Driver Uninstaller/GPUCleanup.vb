@@ -7481,7 +7481,7 @@ Namespace Display_Driver_Uninstaller
 			If _fileIo.ExistsDir(filePath) Then
 				For Each child As String In _fileIo.GetDirectories(filePath)
 					If IsNullOrWhitespace(child) = False Then
-						If StrContainsAny(child, True, "shadercache", "ags", "gfxinstaller", "IGN") Or
+						If StrContainsAny(child, True, "shadercache", "ags", "gfxinstaller", "IGN", "FWUpdateService") Or
 					  StrContainsAny(child, True, "gcc") AndAlso config.RemoveINTELCP Then
 
 							Delete(child)
