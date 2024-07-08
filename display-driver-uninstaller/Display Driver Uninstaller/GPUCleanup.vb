@@ -652,8 +652,6 @@ Namespace Display_Driver_Uninstaller
 							Next
 							found.Clear()
 						End If
-						UpdateTextMethod("End - Check for AMD-OpenCL system device.")
-						Application.Log.AddMessage("SetupAPI: Check AMD-OpenCL system device Complete .")
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 					End Try
