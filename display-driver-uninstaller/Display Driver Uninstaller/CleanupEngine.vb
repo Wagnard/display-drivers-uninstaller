@@ -2838,7 +2838,7 @@ Namespace Display_Driver_Uninstaller
 							End If
 
 							If config.SelectedType = CleanType.GPU AndAlso config.SelectedGPU = GPUVendor.Intel Then
-								If StrContainsAny(oem.Class, True, "softwarecomponent", "system") AndAlso StrContainsAny(oem.Catalog, True, "igdlh.cat", "Intel_NF_I2C.cat") Then
+								If StrContainsAny(oem.Class, True, "softwarecomponent", "system") AndAlso StrContainsAny(oem.Catalog, True, "igdlh.cat", "Intel_NF_I2C.cat", "IntelGFXFwUpdate.cat") Then
 									SetupAPI.RemoveInf(oem, False)
 									Continue For
 								End If

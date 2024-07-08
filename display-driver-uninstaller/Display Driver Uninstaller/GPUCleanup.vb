@@ -642,9 +642,25 @@ Namespace Display_Driver_Uninstaller
 						"CT_28bb0e51-b4b0-4509-9e51-78d48daae82b",
 						"VIDEO\INTC_HECI_2"}
 
+					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
+					Try
+						If found IsNot Nothing AndAlso found.Count > 0 Then
+							For Each d As SetupAPI.Device In found
+								If d IsNot Nothing AndAlso StrContainsAny(d.Description, True, "Intel(R) Graphics firmware update service") Then
+									SetupAPI.UninstallDevice(d)
+								End If
+							Next
+							found.Clear()
+						End If
+						UpdateTextMethod("End - Check for AMD-OpenCL system device.")
+						Application.Log.AddMessage("SetupAPI: Check AMD-OpenCL system device Complete .")
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+
 					'Removing Intel WIdI bus Enumerator
 					Application.Log.AddMessage("Executing SetupAPI: Remove Intel WIdI bus Enumerator, CTA and NF I2C system driver.")
-					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
+					found = SetupAPI.GetDevices("system", Nothing, False)
 					If found IsNot Nothing AndAlso found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
 							If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
