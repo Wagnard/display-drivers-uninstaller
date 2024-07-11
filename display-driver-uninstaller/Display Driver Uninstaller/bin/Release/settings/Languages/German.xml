@@ -424,6 +424,8 @@
 				-mikalonia - mika
 				-ChaosDMNS
 				-Eduardo Macias
+				-Peter Le
+				-Kater Willschie
 				
 			</Text>
 		</lblPatron>
@@ -434,25 +436,30 @@
 			<Text>
 				Display Driver Uninstaller (DDU) / Cleaner gemacht für Anzeige- (GPU-) Treiber (NVIDIA/AMD)
 
-				Was es bewirkt, der Anzeige-/GPU-Treiber wird aus dem Geräte-Manager entfernt und der aktuelle sowie alle vorhergehendenden Treiber aus dem Windows-Driver Store zusammen mit dem Entfernen der Dienste von NVIDIA/AMD.
+				Was es bewirkt, der Anzeige-/GPU-Treiber wird aus dem Geräte-Manager entfernt und der aktuelle sowie alle
+				vorhergehenden Treiber aus dem Windows-Driver Store zusammen mit dem Entfernen der Dienste von NVIDIA/AMD.
 
 				Der aktuelle Effekt nach der Verwendung dieses Tools ist vergleichbar mit dem, wenn sich Windows im Zustand einer Neuinstallation ("Fresh Install") befindet.
 
 				Dieses Tool funktioniert ähnlich wie "Driver Sweeper"* und verfügt über alle oben genannten Extras.
 
-				Wenn Sie irgendwelche Probleme mit der Installation eines älteren oder neueren Treibers haben, probieren Sie es aus, denn es gibt einige Berichte, dass diese Probleme dadurch behoben werden.
+				Wenn Sie irgendwelche Probleme mit der Installation eines älteren oder neueren Treibers haben, probieren Sie
+				es aus, denn es gibt einige Berichte, dass diese Probleme dadurch behoben werden.
 
 				EMPFOHLENE NUTZUNG:
 
-				- Das Tool kann im normalen Modus verwendet werden, aber für absolute Stabilität bei der Verwendung von DDU ist der abgesicherte Modus immer die beste Wahl.
+				- Das Tool kann im normalen Modus verwendet werden, aber für absolute Stabilität bei der Verwendung von DDU
+				  ist der abgesicherte Modus immer die beste Wahl.
 
 				- Wir würden gerne Feedback von allen sammeln, sagen Sie uns, ob es erfolgreich war oder nicht.
 
 				- Erstellen Sie ein Backup oder einen Systemwiederherstellungspunkt (normalerweise sollte es aber ziemlich sicher sein).
 
-				- Wenn Sie ein Treiberproblem haben oder hatten und dieses Tool Ihnen bei einigen Problemen geholfen hat, die Sie hatten oder derzeit haben, teilen Sie bitte Ihr Resultat mit.
+				- Wenn Sie ein Treiberproblem haben oder hatten und dieses Tool Ihnen bei einigen Problemen geholfen hat, die
+				  Sie hatten oder derzeit haben, teilen Sie bitte Ihr Resultat mit.
 
-				Beachten Sie, dass weder NVIDIA, AMD noch Microsoft für irgendwelche Schäden an Ihnen oder Ihrem Computer verantwortlich gemacht werden können und in keiner Weise mit DDU oder dessen Urhebern verbunden sind.
+				Beachten Sie, dass weder NVIDIA, AMD noch Microsoft für irgendwelche Schäden an Ihnen oder Ihrem Computer
+				verantwortlich gemacht werden können und in keiner Weise mit DDU oder dessen Urhebern verbunden sind.
 				-------------------------------
 
 				Created by Wagnard.
@@ -475,7 +482,7 @@
 				*DDU, dessen Urheber und Partner sind in keiner Weise mit "Driver Sweeper" oder dessen Urhebern verbunden.
 			</Text>
 		</About>
-		
+
 		<Tos>
 			<Text>
 				NUTZUNGSVEREINBARUNG - Display Driver Uninstaller ("DDU")
@@ -484,7 +491,8 @@
 
 				Durch die Verwendung von DDU erklären Sie sich damit einverstanden, DDU oder dessen Urheber und Partner, nicht zu beschuldigen, Ihren PC zu beschädigen oder negativ zu beeinflussen.
 
-				Durch die Verwendung von DDU erkennen Sie an, dass weder NVIDIA ("NVIDIA, GeForce") noch Advanced Micro Devices ("AMD, Radeon") irgendetwas mit diesem Programm zu tun zu haben und in keiner Weise mit DDU oder dessen Urhebern verbunden sind.
+				Durch die Verwendung von DDU erkennen Sie an, dass weder NVIDIA ("NVIDIA, GeForce") noch Advanced Micro Devices
+				("AMD, Radeon") irgendetwas mit diesem Programm zu tun zu haben und in keiner Weise mit DDU oder dessen Urhebern verbunden sind.
 			</Text>
 		</Tos>
 	</Misc>
@@ -498,7 +506,7 @@
 
 		<Translator2>
 			<User>_rk_</User>
-			<LastUpdate>20/01/2024</LastUpdate>
+			<LastUpdate>11/07/2024</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
 
