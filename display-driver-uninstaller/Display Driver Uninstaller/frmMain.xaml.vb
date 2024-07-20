@@ -227,6 +227,13 @@ Namespace Display_Driver_Uninstaller
 		Private Sub cbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
 			If Application.Settings.SelectedLanguage IsNot Nothing Then
 				Languages.Load(Application.Settings.SelectedLanguage)
+
+				If Application.Settings.SelectedLanguage.ToString().ToLower = "he-il" Then
+					Application.Settings.FlowControl = FlowDirection.RightToLeft
+				Else
+					Application.Settings.FlowControl = FlowDirection.LeftToRight
+				End If
+
 				Languages.TranslateForm(Me)
 
 				GetGPUDetails(False)

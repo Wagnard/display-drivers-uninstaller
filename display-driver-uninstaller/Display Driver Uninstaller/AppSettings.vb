@@ -1,6 +1,5 @@
 ﻿Imports System.IO
 Imports System.Xml
-Imports System.Windows
 Imports System.Reflection
 Imports System.Collections.ObjectModel
 
@@ -79,6 +78,7 @@ Namespace Display_Driver_Uninstaller
 		Private m_appname As DependencyProperty = RegDP("AppName", GetType(String), GetType(AppSettings), "Display Driver Uninstaller")
 		Private m_appversion As DependencyProperty = RegDP("AppVersion", GetType(Version), GetType(AppSettings), New Version(0, 0, 0, 0))
 		Private m_languageOptions As ObservableCollection(Of Languages.LanguageOption)
+		Private m_flowControl As DependencyProperty = RegDP("FlowControl", GetType(FlowDirection), GetType(AppSettings), FlowDirection.LeftToRight)
 		Private m_gpuSelected As DependencyProperty = RegDP("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
 		Private m_audioSelected As DependencyProperty = RegDP("SelectedAUDIO", GetType(AudioVendor), GetType(AppSettings), AudioVendor.Realtek)
 		Private m_cleanType As DependencyProperty = RegDP("SelectedType", GetType(CleanType), GetType(AppSettings), CleanType.None)
@@ -109,13 +109,13 @@ Namespace Display_Driver_Uninstaller
 		Private m_remNVBROADCAST As DependencyProperty = RegDP("RemoveNVBROADCAST", GetType(Boolean), GetType(AppSettings), True)
 		Private m_remINTELCP As DependencyProperty = RegDP("RemoveINTELCP", GetType(Boolean), GetType(AppSettings), True)
 		Private m_remAMDCP As DependencyProperty = RegDP("RemoveAMDCP", GetType(Boolean), GetType(AppSettings), True)
+		Private m_removevulkan As DependencyProperty = RegDP("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
 
 		' Settings
 		Private m_UseRoamingCfg As DependencyProperty = RegDP("UseRoamingConfig", GetType(Boolean), GetType(AppSettings), False)
 		Private m_CheckUpdates As DependencyProperty = RegDP("CheckUpdates", GetType(Boolean), GetType(AppSettings), True)
 		Private m_createRestorePoint As DependencyProperty = RegDP("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
 		Private m_saveLogs As DependencyProperty = RegDP("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
-		Private m_removevulkan As DependencyProperty = RegDP("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
 		Private m_showoffer As DependencyProperty = RegDP("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
 		Private m_enablesafemodedialog As DependencyProperty = RegDP("EnableSafeModeDialog", GetType(Boolean), GetType(AppSettings), False)
 		Private m_PreventWinUpdate As DependencyProperty = RegDP("PreventWinUpdate", GetType(Boolean), GetType(AppSettings), False)
@@ -198,6 +198,15 @@ Namespace Display_Driver_Uninstaller
 			Get
 				Return m_languageOptions
 			End Get
+		End Property
+
+		Public Property FlowControl As FlowDirection
+			Get
+				Return CType(GetValue(m_flowControl), FlowDirection)
+			End Get
+			Set(value As FlowDirection)
+				SetValue(m_flowControl, value)
+			End Set
 		End Property
 
 		Public Property SelectedGPU As GPUVendor
