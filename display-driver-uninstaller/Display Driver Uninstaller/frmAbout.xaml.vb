@@ -46,6 +46,7 @@ Namespace Display_Driver_Uninstaller
 		Private Sub frmAbout_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
 			Languages.TranslateForm(Me, False)
 			lblVersion.Content = Application.Settings.AppVersion.ToString
+			FlowDirection = Application.Settings.FlowControl
 		End Sub
 
 		Private Sub btnClose_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnClose.Click

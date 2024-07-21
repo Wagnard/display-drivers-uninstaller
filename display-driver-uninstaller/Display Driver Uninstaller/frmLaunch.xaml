@@ -30,13 +30,13 @@
 		</Border>
 
 		<DockPanel Grid.Row="1" Grid.Column="0" Margin="10">
-			<Label DockPanel.Dock="Top" Name="lblLaunchOption" Content="lblLaunchOption" Padding="0" FontSize="14" HorizontalAlignment="Left" />
-			<ComboBox DockPanel.Dock="Top" x:Name="cbBootOption" SelectedIndex="0" Grid.Row="2" />
+			<Label DockPanel.Dock="Top" Name="lblLaunchOption" Content="lblLaunchOption" Padding="0" FontSize="14" HorizontalAlignment="Left" FlowDirection="{Binding Path=Settings.FlowControl}"/>
+			<ComboBox DockPanel.Dock="Top" x:Name="cbBootOption" SelectedIndex="0" Grid.Row="2" FlowDirection="{Binding Path=Settings.FlowControl}"/>
 		</DockPanel>
 		<DockPanel Grid.Row="2" Grid.ColumnSpan="2">
-			<Label DockPanel.Dock="Top" Name="lblNotSafeMode" Content="lblNotSafeMode" Grid.Row="3" Margin="6" Foreground="Black" FontSize="13" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center" />
+			<Label DockPanel.Dock="Top" Name="lblNotSafeMode" Content="lblNotSafeMode" Grid.Row="3" Margin="6" Foreground="Black" FontSize="13" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center" FlowDirection="{Binding Path=Settings.FlowControl}"/>
 			<Label DockPanel.Dock="Top" Name="lblWinPasswordWarn" Content="lblWinPasswordWarn" Grid.Row="3" Margin="6" Foreground="#FFEB0000" FontSize="13" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center"
-				   Visibility="{Binding Path=Settings.WinVersion, Mode=OneWay, Converter={StaticResource ValueToVis}, ConverterParameter={x:Static local:OSVersion.Win8}}"/>
+				   Visibility="{Binding Path=Settings.WinVersion, Mode=OneWay, Converter={StaticResource ValueToVis}, ConverterParameter={x:Static local:OSVersion.Win8}}" FlowDirection="{Binding Path=Settings.FlowControl}"/>
 		</DockPanel>
 
 		<Border Grid.Row="3" BorderBrush="Black" BorderThickness="1" Margin="-1,0,-1,-1" Grid.ColumnSpan="2">
@@ -46,17 +46,17 @@
 					<ColumnDefinition Width="Auto" />
 					<ColumnDefinition Width="*" />
 				</Grid.ColumnDefinitions>
-				<Button x:Name="btnAccept" Grid.Column="0" HorizontalAlignment="Left" MinWidth="100" MaxWidth="200" Height="40" Margin="6.5,-1,0,0">
+				<Button x:Name="btnAccept" Grid.Column="0" HorizontalAlignment="Left" MinWidth="100" MaxWidth="200" Height="40" Margin="6.5,-1,0,0" FlowDirection="{Binding Path=Settings.FlowControl}">
 					<Button.Content>
 						<TextBlock Text="btnAccept" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
 					</Button.Content>
 				</Button>
-				<Button x:Name="btnWuRestore" Visibility="{Binding Path=Settings.PreventWinUpdate, Mode=OneWay, Converter={StaticResource BoolToVis}, FallbackValue=Visible}" Grid.Column="1" HorizontalAlignment="Center" Width="Auto" MinWidth="100" MaxWidth="200" Height="40" >
+				<Button x:Name="btnWuRestore" Visibility="{Binding Path=Settings.PreventWinUpdate, Mode=OneWay, Converter={StaticResource BoolToVis}, FallbackValue=Visible}" Grid.Column="1" HorizontalAlignment="Center" Width="Auto" MinWidth="100" MaxWidth="200" Height="40" FlowDirection="{Binding Path=Settings.FlowControl}">
 						<Button.Content>
 						<TextBlock Text="btnWuRestore" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
 					</Button.Content>
 				</Button>
-				<Button x:Name="btnClose" Grid.Column="2" Content="btnClose" HorizontalAlignment="Right" MinWidth="100" MaxWidth="200" Height="40" IsCancel="True" Margin="0,0,6.5,0" />
+				<Button x:Name="btnClose" Grid.Column="2" Content="btnClose" HorizontalAlignment="Right" MinWidth="100" MaxWidth="200" Height="40" IsCancel="True" Margin="0,0,6.5,0" FlowDirection="{Binding Path=Settings.FlowControl}"/>
 			</Grid>
 		</Border>
 	</Grid>

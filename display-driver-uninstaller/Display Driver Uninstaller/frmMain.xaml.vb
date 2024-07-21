@@ -228,7 +228,7 @@ Namespace Display_Driver_Uninstaller
 			If Application.Settings.SelectedLanguage IsNot Nothing Then
 				Languages.Load(Application.Settings.SelectedLanguage)
 
-				If Application.Settings.SelectedLanguage.ToString().ToLower = "he-il" Then
+				If StrContainsAny(Application.Settings.SelectedLanguage.ToString(), True, "he-il", "fa-ir", "ar-ye") Then
 					Application.Settings.FlowControl = FlowDirection.RightToLeft
 				Else
 					Application.Settings.FlowControl = FlowDirection.LeftToRight

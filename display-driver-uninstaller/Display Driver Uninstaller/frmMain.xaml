@@ -67,7 +67,7 @@
 		</Style>
 	</Window.Style>
 
-	<Grid>
+	<Grid FlowDirection="{Binding Path=Settings.FlowControl}">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto" MinWidth="200" MaxWidth="350" />
 			<ColumnDefinition Width="*" />

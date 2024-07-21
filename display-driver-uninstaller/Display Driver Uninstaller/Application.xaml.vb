@@ -465,6 +465,11 @@ Namespace Display_Driver_Uninstaller
 				' Now we have translated messages available
 				SelectLanguage()
 
+				If StrContainsAny(Application.Settings.SelectedLanguage.ToString(), True, "he-il", "fa-ir", "ar-ye") Then
+					Application.Settings.FlowControl = FlowDirection.RightToLeft
+				Else
+					Application.Settings.FlowControl = FlowDirection.LeftToRight
+				End If
 
 				' Useful on next steps
 				GetOSVersion()
