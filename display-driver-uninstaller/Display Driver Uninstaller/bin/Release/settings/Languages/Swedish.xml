@@ -402,7 +402,7 @@
 			<Text>Donatorer</Text>
 		</btnPatron>
 		<lblTranslators>
-			<Text>Stort tack till följande översättare och även till de som inte listas!</Text>
+			<Text>Big thanks to the following translators and also those who aren't listed!</Text>
 		</lblTranslators>
 		<lblPatron>
 			<Text>
@@ -425,6 +425,7 @@
 				-ChaosDMNS
 				-Eduardo Macias
 				-Peter Le
+				-Kater Willschie
 				
 			</Text>
 		</lblPatron>
@@ -500,7 +501,7 @@ Tack till Helge Klein (http://helgeklein.com/setacl/) : för tillståndet att an
 		<Translator>
 			<User>Hans Eriksson</User>
 			<Details>hanseriksson980@gmail.com</Details>
-			<LastUpdate>30/03/2024</LastUpdate>
+			<LastUpdate>04/08/2024</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
