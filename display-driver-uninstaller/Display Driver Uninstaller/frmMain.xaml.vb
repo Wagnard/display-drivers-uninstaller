@@ -169,15 +169,16 @@ Namespace Display_Driver_Uninstaller
 
 		Private Sub CloseDDU()
 			If Not Dispatcher.CheckAccess() Then
-				Dispatcher.BeginInvoke(Sub() CloseDDU())
-			Else
-				SaveData()
-				Try
-					Close()
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
+				Dispatcher.Invoke(Sub() CloseDDU())
+				Return
 			End If
+
+			SaveData()
+			Try
+				Close()
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			End Try
 		End Sub
 
 
@@ -192,7 +193,7 @@ Namespace Display_Driver_Uninstaller
 
 			KillGPUStatsProcesses()
 
-			PreCleaning(config)
+			PreCleaning()
 			StartThread(config)
 		End Sub
 
@@ -204,7 +205,7 @@ Namespace Display_Driver_Uninstaller
 
 			KillGPUStatsProcesses()
 
-			PreCleaning(config)
+			PreCleaning()
 			StartThread(config)
 		End Sub
 
@@ -216,7 +217,7 @@ Namespace Display_Driver_Uninstaller
 
 			KillGPUStatsProcesses()
 
-			PreCleaning(config)
+			PreCleaning()
 			StartThread(config)
 		End Sub
 
@@ -636,7 +637,7 @@ Namespace Display_Driver_Uninstaller
 			Try
 				config.PreventClose = True
 
-				PreCleaning(config)
+				PreCleaning()
 
 				If config.HasCleanArg Then
 					If config.CleanAmd Then
@@ -736,16 +737,17 @@ Namespace Display_Driver_Uninstaller
 			End Try
 		End Sub
 
-		Private Sub PreCleaning(ByVal config As ThreadSettings)
+		Private Sub PreCleaning()
 			If Not Me.Dispatcher.CheckAccess() Then
-				Me.Dispatcher.BeginInvoke(Sub() PreCleaning(config))
-			Else
-				EnableControls(False)
-
-				'EnableDriverSearch(True, True)
-				SystemRestore()
-
+				Me.Dispatcher.Invoke(Sub() PreCleaning())
+				Return
 			End If
+
+			EnableControls(False)
+
+			'EnableDriverSearch(True, True)
+			SystemRestore()
+
 		End Sub
 
 		Private Sub StartThread(ByVal config As ThreadSettings)
@@ -949,11 +951,12 @@ Namespace Display_Driver_Uninstaller
 
 		Public Sub EnableControls(ByVal enabled As Boolean)
 			If Not Me.Dispatcher.CheckAccess() Then
-				Me.Dispatcher.BeginInvoke(Sub() EnableControls(enabled))
-			Else
-				'	Me.IsEnabled = enabled
+				Me.Dispatcher.Invoke(Sub() EnableControls(enabled))
+				Return
+			End If
+			'	Me.IsEnabled = enabled
 
-				Dim uiContent As UIElement = TryCast(Me.Content, UIElement)
+			Dim uiContent As UIElement = TryCast(Me.Content, UIElement)
 
 				If uiContent IsNot Nothing Then
 					uiContent.IsEnabled = enabled
@@ -965,7 +968,6 @@ Namespace Display_Driver_Uninstaller
 					MenuStrip1.IsEnabled = enabled
 				End If
 
-			End If
 		End Sub
 
 		Private Sub SystemRestore()

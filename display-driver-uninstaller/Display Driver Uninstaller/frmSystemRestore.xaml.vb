@@ -13,7 +13,7 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Private Sub CreateSystemRestore()
-			Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
+
 			canClose2.Reset()
 
 			Try
@@ -40,10 +40,10 @@ Namespace Display_Driver_Uninstaller
 
 				'Added a timer here because some recent windows 10 update would not create the restore point if we reboot immediately after we try to create.
 				'This also avoid some VSS error message in the event log.
+				Using objAuto As AutoResetEvent = New AutoResetEvent(False)
+					objAuto.WaitOne(5000)
 
-				objAuto.WaitOne(5000)
-
-
+				End Using
 				'Application.Log.AddMessage("Trying to Create a System Restored Point")
 				'Dim oScope As New ManagementScope("\\localhost\root\default")
 				'Dim oPath As New ManagementPath("SystemRestore")
@@ -100,19 +100,21 @@ Namespace Display_Driver_Uninstaller
 
 		Public Sub Dispose() Implements IDisposable.Dispose
 			Dispose(True)
+			canClose2?.Dispose()
 			GC.SuppressFinalize(Me)
 		End Sub
 
 		Private Sub CloseDDU()
 			If Not Dispatcher.CheckAccess() Then
-				Dispatcher.BeginInvoke(Sub() CloseDDU())
-			Else
-				Try
-					Me.Close()
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
+				Dispatcher.Invoke(Sub() CloseDDU())
+				Return
 			End If
+
+			Try
+				Me.Close()
+			Catch ex As Exception
+				Application.Log.AddException(ex)
+			End Try
 		End Sub
 
 	End Class
