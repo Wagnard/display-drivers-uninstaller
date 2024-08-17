@@ -220,6 +220,7 @@
 					<ColumnDefinition Width="*" />
 					<ColumnDefinition Width="96" />
 					<ColumnDefinition Width="99.362"/>
+					<ColumnDefinition Width="33.362"/>
 				</Grid.ColumnDefinitions>
 
 				<TextBlock x:Name="lblDonate" Grid.Column="0" Text="lblDonate" FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Margin="6,5.585,6,5.584" />
@@ -235,6 +236,13 @@
 					<Button.Template>
 						<ControlTemplate>
 							<Image Source="Resources/become_a_patron_button.png"/>
+						</ControlTemplate>
+					</Button.Template>
+				</Button>
+				<Button x:Name="imgDiscord" Grid.Column="3" Width="32" Margin="0,0,3.362,0" HorizontalAlignment="right" MaxHeight="32" >
+					<Button.Template>
+						<ControlTemplate>
+							<Image Source="Resources/discord@2x.png"/>
 						</ControlTemplate>
 					</Button.Template>
 				</Button>

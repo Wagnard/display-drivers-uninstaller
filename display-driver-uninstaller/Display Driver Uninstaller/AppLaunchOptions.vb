@@ -55,6 +55,7 @@ Namespace Display_Driver_Uninstaller
 		' Remember to update HasLinkArg and LoadArgs() !
 		Public VisitDonate As Boolean = False
 		Public VisitPatron As Boolean = False
+		Public VisitDiscord As Boolean = False
 		Public VisitSVN As Boolean = False
 		Public VisitGuru3DNvidia As Boolean = False
 		Public VisitGuru3DAMD As Boolean = False
@@ -66,6 +67,7 @@ Namespace Display_Driver_Uninstaller
 			Get
 				If VisitDonate OrElse
 			 VisitPatron OrElse
+			 VisitDiscord OrElse
 			 VisitSVN OrElse
 			 VisitGuru3DNvidia OrElse
 			 VisitGuru3DAMD OrElse
@@ -93,6 +95,7 @@ Namespace Display_Driver_Uninstaller
 						Case StrContainsAny(Argument, True, "-processkilled") : Application.Settings.ProcessKilled = True
 						Case StrContainsAny(Argument, True, "-visitdonate") : VisitDonate = True
 						Case StrContainsAny(Argument, True, "-visitpatron") : VisitPatron = True
+						Case StrContainsAny(Argument, True, "-visitdiscord") : VisitDiscord = True
 						Case StrContainsAny(Argument, True, "-visitsvn") : VisitSVN = True
 						Case StrContainsAny(Argument, True, "-visitguru3dnvidia") : VisitGuru3DNvidia = True
 						Case StrContainsAny(Argument, True, "-visitguru3damd") : VisitGuru3DAMD = True

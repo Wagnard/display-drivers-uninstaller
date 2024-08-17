@@ -251,9 +251,12 @@ Namespace Display_Driver_Uninstaller
 		Private Sub imgPatron_Click(sender As Object, e As EventArgs) Handles imgPatron.Click
 			WinAPI.OpenVisitLink(" -visitpatron")
 		End Sub
+		Private Sub imgDiscord_Click(sender As Object, e As EventArgs) Handles imgDiscord.Click
+			WinAPI.OpenVisitLink(" -visitdiscord")
+		End Sub
 
 		Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomeMenuItem.Click
-			WinAPI.OpenVisitLink(" -visitdduhome")
+			WinAPI.OpenVisitLink(" -visitdiscord")
 		End Sub
 
 		Private Sub OptionsMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles OptionsMenuItem.Click
