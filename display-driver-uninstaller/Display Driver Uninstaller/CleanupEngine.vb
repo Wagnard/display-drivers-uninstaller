@@ -129,7 +129,6 @@ Namespace Display_Driver_Uninstaller
 			Dim ServiceInstaller As New ServiceInstaller
 			Dim win10 As Boolean = frmMain.IsWindows10
 			Dim win10_1809 As Boolean = frmMain.IsWindows10_1809
-			Dim WasRemoved As Boolean = False
 			If win10 Then
 				If WindowsIdentity.GetCurrent().IsSystem Then
 					ImpersonateLoggedOnUser.ReleaseToken()  'Will not work if we impersonate "SYSTEM"
@@ -192,6 +191,7 @@ Namespace Display_Driver_Uninstaller
 					Dim deploymentOperation As IAsyncOperationWithProgress(Of DeploymentResult, DeploymentProgress)
 
 					For Each package In packages
+						Dim WasRemoved As Boolean = False
 						If package IsNot Nothing Then
 							If IsNullOrWhitespace(package.Id.FullName) Then Continue For
 							If StrContainsAny(package.Id.FullName, True, AppxToRemove) Then
@@ -205,7 +205,6 @@ Namespace Display_Driver_Uninstaller
 											Dim deploymentResult As DeploymentResult = deploymentOperation.GetResults()
 											Application.Log.AddMessage(package.Id.FullName + " package deprovision failed." & deploymentResult.ExtendedErrorCode.ToString & deploymentResult.ErrorText)
 											DeploymentEnded = True
-											WasRemoved = False
 										ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
 
 											Application.Log.AddMessage(package.Id.FullName + "  package deprovisioned.")
@@ -226,7 +225,6 @@ Namespace Display_Driver_Uninstaller
 										Dim deploymentResult As DeploymentResult = deploymentOperation.GetResults()
 										Application.Log.AddMessage(package.Id.FullName + " package removal failed." & deploymentResult.ExtendedErrorCode.ToString & deploymentResult.ErrorText)
 										DeploymentEnded = True
-										WasRemoved = False
 									ElseIf deploymentOperation.Status = Windows.Foundation.AsyncStatus.Completed Then
 
 										Application.Log.AddMessage(package.Id.FullName + " package removed.")
@@ -256,6 +254,41 @@ Namespace Display_Driver_Uninstaller
 										End If
 									End Using
 
+									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services\bam\State\UserSettings", True)
+										If regkey IsNot Nothing Then
+											For Each child As String In regkey.GetSubKeyNames
+												If IsNullOrWhitespace(child) Then Continue For
+												For Each ValueName As String In regkey.OpenSubKey(child, True).GetValueNames
+													If IsNullOrWhitespace(ValueName) Then Continue For
+													If StrContainsAny(ValueName, True, package.Id.FamilyName) Then  'Not working need fixing
+														Try
+															Deletevalue(regkey.OpenSubKey(child, True), ValueName)
+														Catch ex As Exception
+															Application.Log.AddException(ex)
+														End Try
+													End If
+												Next
+											Next
+										End If
+									End Using
+
+									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\AppModel\StateRepository\Cache\PackageFamily", True)
+										If regkey IsNot Nothing Then
+											Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, "Index\PackageFamilyName\" + package.Id.FamilyName)
+												If subregkey IsNot Nothing Then
+													For Each child As String In subregkey.GetSubKeyNames
+														If IsNullOrWhitespace(child) Then Continue For
+														Try
+															Deletesubregkey(regkey.OpenSubKey("data", True), child)
+															Deletesubregkey(regkey.OpenSubKey("Index\PackageFamilyName", True), package.Id.FamilyName)
+														Catch ex As Exception
+															Application.Log.AddException(ex)
+														End Try
+													Next
+												End If
+											End Using
+										End If
+									End Using
 
 									'Win 10 (1803)
 									For Each regkeyusers As String In Registry.Users.GetSubKeyNames
@@ -1489,7 +1522,7 @@ Namespace Display_Driver_Uninstaller
 				If regkey IsNot Nothing Then
 					For Each service As String In services
 						If IsNullOrWhitespace(service) Then Continue For
-						If (config.RemoveAudioBus = False OrElse frmMain.donotremoveamdhdaudiobusfiles) AndAlso StrContainsAny(service, True, "amdkmafd") Then Continue For
+						If (config.RemoveAudioBus = False OrElse frmMain.DoNotRemoveAmdHdAudioBusFiles) AndAlso StrContainsAny(service, True, "amdkmafd") Then Continue For
 						If (config.RemoveAMDKMPFD = False Or config.NotPresentAMDKMPFD = False) AndAlso StrContainsAny(service, True, "amdkmpfd") Then Continue For
 						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
 							If regkey2 IsNot Nothing Then
@@ -2124,38 +2157,37 @@ Namespace Display_Driver_Uninstaller
 									End If
 
 									Using subregkey2 As RegistryKey = MyRegistry.OpenSubKey(subregkey, "LocalServer32", False)
-									If subregkey2 IsNot Nothing Then
-										wantedvalue = TryCast(subregkey2.GetValue("", String.Empty), String)
-										If Not IsNullOrWhitespace(wantedvalue) Then
+										If subregkey2 IsNot Nothing Then
+											wantedvalue = TryCast(subregkey2.GetValue("", String.Empty), String)
+											If Not IsNullOrWhitespace(wantedvalue) Then
 
-											If StrContainsAny(wantedvalue, True, clsidleftover) Then
-
-												appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
-												If Not IsNullOrWhitespace(appid) Then
-													Try
-														Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\AppID", True), appid)
-													Catch exARG As ArgumentException
-														'Do nothing, can happen (Not found)
-													Catch ex As Exception
-														Application.Log.AddException(ex)
-													End Try
-												End If
-
-												Using subregkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\TypeLib")
-													If subregkey3 IsNot Nothing Then
-														typelib = TryCast(subregkey3.GetValue("", String.Empty), String)
-														If Not IsNullOrWhitespace(typelib) Then
-															Try
-																Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\TypeLib", True), typelib)
-																typelibList.Add(typelib)
-															Catch exARG As ArgumentException
-																'Do nothing, can happen (Not found)
-															Catch ex As Exception
-																Application.Log.AddException(ex)
-															End Try
-														End If
+												If StrContainsAny(wantedvalue, True, clsidleftover) Then
+													appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
+													If Not IsNullOrWhitespace(appid) Then
+														Try
+															Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\AppID", True), appid)
+														Catch exARG As ArgumentException
+															'Do nothing, can happen (Not found)
+														Catch ex As Exception
+															Application.Log.AddException(ex)
+														End Try
 													End If
-												End Using
+
+													Using subregkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\TypeLib")
+														If subregkey3 IsNot Nothing Then
+															typelib = TryCast(subregkey3.GetValue("", String.Empty), String)
+															If Not IsNullOrWhitespace(typelib) Then
+																Try
+																	Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\TypeLib", True), typelib)
+																	typelibList.Add(typelib)
+																Catch exARG As ArgumentException
+																	'Do nothing, can happen (Not found)
+																Catch ex As Exception
+																	Application.Log.AddException(ex)
+																End Try
+															End If
+														End If
+													End Using
 
 
 													'here I remove the mediafoundationkeys if present
@@ -2830,7 +2862,7 @@ Namespace Display_Driver_Uninstaller
 						End If
 					End If
 
-					If StrContainsAny(oem.Class, True, "display", "media", "extension", "softwarecomponent", "CTA Driver Devices", "system", "SoftwareDevice") Then
+					If StrContainsAny(oem.Class, True, "display", "media", "extension", "softwarecomponent", "CTA Driver Devices", "system", "SoftwareDevice", "USB") Then
 						If Not ((Not config.RemoveNVBROADCAST AndAlso StrContainsAny(oem.Catalog, True, "nvrtxvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvswcfilter")) Or ((Not config.RemoveAMDKMPFD Or Not config.NotPresentAMDKMPFD) AndAlso StrContainsAny(oem.Catalog, True, "amdkmpfd"))) Then
 							If StrContainsAny(oem.Class, True, "Extension") AndAlso StrContainsAny(oem.Catalog, True, "extinf.cat", "HdBusExt.cat", "amdpcibridgeextension.cat", "igdlh.cat") Then
 								SetupAPI.RemoveInf(oem, False)
@@ -2860,7 +2892,7 @@ Namespace Display_Driver_Uninstaller
 				End If
 				'check if the oem was removed to process to the pnplockdownfile if necessary
 				If frmMain.IsWindows8OrHigher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
-					If (config.RemoveAudioBus = False OrElse frmMain.donotremoveamdhdaudiobusfiles) AndAlso StrContainsAny(catalog, True, "amdkmafd") Then Continue For
+					If (config.RemoveAudioBus = False OrElse frmMain.DoNotRemoveAmdHdAudioBusFiles) AndAlso StrContainsAny(catalog, True, "amdkmafd") Then Continue For
 					PrePnplockdownfiles(catalog, config)
 				End If
 			Next
@@ -2868,9 +2900,7 @@ Namespace Display_Driver_Uninstaller
 			UpdateTextMethod("Driver Store cleanUP complete.")
 
 			Application.Log.AddMessage("Driver Store CleanUP Complete.")
-
 		End Sub
-
 		Public Sub Fixregistrydriverstore(ByVal config As ThreadSettings)
 			Dim win8higher As Boolean = frmMain.IsWindows8OrHigher
 			Dim FileIO As New FileIO
@@ -2952,7 +2982,7 @@ Namespace Display_Driver_Uninstaller
 									Dim dirinfo As New System.IO.DirectoryInfo(child)
 									If dirinfo.Name.ToLower.StartsWith("c030") Or
 								 StrContainsAny(dirinfo.Name, True, "atihdwt6.inf") Or
-								 (config.RemoveAudioBus AndAlso frmMain.donotremoveamdhdaudiobusfiles = False) AndAlso StrContainsAny(dirinfo.Name, True, "amdkmafd.inf") Then
+								 (config.RemoveAudioBus AndAlso frmMain.DoNotRemoveAmdHdAudioBusFiles = False) AndAlso StrContainsAny(dirinfo.Name, True, "amdkmafd.inf") Then
 										Try
 											Delete(child)
 										Catch ex As Exception
