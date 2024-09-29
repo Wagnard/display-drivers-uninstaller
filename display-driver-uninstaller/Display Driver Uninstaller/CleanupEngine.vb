@@ -260,16 +260,18 @@ Namespace Display_Driver_Uninstaller
 										If regkey IsNot Nothing Then
 											For Each child As String In regkey.GetSubKeyNames
 												If IsNullOrWhitespace(child) Then Continue For
-												For Each ValueName As String In regkey.OpenSubKey(child, True).GetValueNames
-													If IsNullOrWhitespace(ValueName) Then Continue For
-													If StrContainsAny(ValueName, True, packageIdFamilyName) Then  'Not working need fixing
-														Try
-															Deletevalue(regkey.OpenSubKey(child, True), ValueName)
-														Catch ex As Exception
-															Application.Log.AddException(ex)
-														End Try
-													End If
-												Next
+												Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
+													For Each ValueName As String In regkey2.GetValueNames
+														If IsNullOrWhitespace(ValueName) Then Continue For
+														If StrContainsAny(ValueName, True, packageIdFamilyName) Then  'Not working need fixing
+															Try
+																Deletevalue(regkey2, ValueName)
+															Catch ex As Exception
+																Application.Log.AddException(ex)
+															End Try
+														End If
+													Next
+												End Using
 											Next
 										End If
 									End Using
