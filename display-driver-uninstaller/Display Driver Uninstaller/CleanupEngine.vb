@@ -11,8 +11,8 @@ Imports System.Threading.Tasks
 Namespace Display_Driver_Uninstaller
 
 	Public Class CleanupEngine
-		Private Shared _listLock As Object = New Object()
-		Private Shared _registryLock As Object = New Object()
+		Private Shared ReadOnly _listLock As Object = New Object()
+		Private Shared ReadOnly _registryLock As Object = New Object()
 
 		'	Private win8higher As Boolean = frmMain.win8higher
 
@@ -243,16 +243,11 @@ Namespace Display_Driver_Uninstaller
 									'Win 10 (1809)
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
 										If regkey IsNot Nothing Then
-											For Each ValueName As String In regkey.GetValueNames
-												If IsNullOrWhitespace(ValueName) Then Continue For
-												If StrContainsAny(ValueName, True, packageIdFamilyName) Then  'Not working need fixing
-													Try
-														Deletevalue(regkey, ValueName)
-													Catch ex As Exception
-														Application.Log.AddException(ex)
-													End Try
-												End If
-											Next
+											Try
+												Deletevalue(regkey, packageIdFamilyName, False)
+											Catch ex As Exception
+												Application.Log.AddException(ex)
+											End Try
 										End If
 									End Using
 
@@ -261,16 +256,11 @@ Namespace Display_Driver_Uninstaller
 											For Each child As String In regkey.GetSubKeyNames
 												If IsNullOrWhitespace(child) Then Continue For
 												Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
-													For Each ValueName As String In regkey2.GetValueNames
-														If IsNullOrWhitespace(ValueName) Then Continue For
-														If StrContainsAny(ValueName, True, packageIdFamilyName) Then  'Not working need fixing
-															Try
-																Deletevalue(regkey2, ValueName)
-															Catch ex As Exception
-																Application.Log.AddException(ex)
-															End Try
-														End If
-													Next
+													Try
+														Deletevalue(regkey2, packageIdFamilyName, False)
+													Catch ex As Exception
+														Application.Log.AddException(ex)
+													End Try
 												End Using
 											Next
 										End If
@@ -303,7 +293,7 @@ Namespace Display_Driver_Uninstaller
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\PolicyCache", True)
 										If regkey IsNot Nothing Then
 											Try
-												Deletesubregkey(regkey, packageIdFamilyName)
+												Deletesubregkey(regkey, packageIdFamilyName, False)
 											Catch ex As Exception
 												Application.Log.AddException(ex)
 											End Try
@@ -313,9 +303,7 @@ Namespace Display_Driver_Uninstaller
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.CurrentUser, "Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\PolicyCache", True)
 										If regkey IsNot Nothing Then
 											Try
-												Deletesubregkey(regkey, packageIdFamilyName)
-											Catch argEx As ArgumentException
-
+												Deletesubregkey(regkey, packageIdFamilyName, False)
 											Catch ex As Exception
 												Application.Log.AddException(ex)
 											End Try
@@ -325,7 +313,7 @@ Namespace Display_Driver_Uninstaller
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.CurrentUser, "Software\Microsoft\Windows\CurrentVersion\BackgroundAccessApplications", True)
 										If regkey IsNot Nothing Then
 											Try
-												Deletesubregkey(regkey, packageIdFamilyName)
+												Deletesubregkey(regkey, packageIdFamilyName, False)
 											Catch ex As Exception
 												Application.Log.AddException(ex)
 											End Try
@@ -338,9 +326,7 @@ Namespace Display_Driver_Uninstaller
 												If IsNullOrWhitespace(child) Then Continue For
 												If StrContainsAny(child, True, packageIdFamilyName) Then
 													Try
-														Deletevalue(regkey, child)
-													Catch argEx As ArgumentException
-
+														Deletevalue(regkey, child, False)
 													Catch ex As Exception
 														Application.Log.AddException(ex)
 													End Try
@@ -355,9 +341,7 @@ Namespace Display_Driver_Uninstaller
 												If IsNullOrWhitespace(child) Then Continue For
 												If StrContainsAny(child, True, packageIdFamilyName) Then
 													Try
-														Deletesubregkey(regkey, child)
-													Catch argEx As ArgumentException
-
+														Deletesubregkey(regkey, child, False)
 													Catch ex As Exception
 														Application.Log.AddException(ex)
 													End Try
@@ -369,9 +353,7 @@ Namespace Display_Driver_Uninstaller
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Appx\AppxAllUserStore\Deprovisioned", True)
 										If regkey IsNot Nothing Then
 											Try
-												Deletesubregkey(regkey, packageIdFamilyName)
-											Catch argEx As ArgumentException
-
+												Deletesubregkey(regkey, packageIdFamilyName, False)
 											Catch ex As Exception
 												Application.Log.AddException(ex)
 											End Try
@@ -381,9 +363,7 @@ Namespace Display_Driver_Uninstaller
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, ".DEFAULT\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData", True)
 										If regkey IsNot Nothing Then
 											Try
-												Deletesubregkey(regkey, packageIdFamilyName)
-											Catch argEx As ArgumentException
-
+												Deletesubregkey(regkey, packageIdFamilyName, False)
 											Catch ex As Exception
 												Application.Log.AddException(ex)
 											End Try
@@ -393,9 +373,7 @@ Namespace Display_Driver_Uninstaller
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, "S-1-5-18\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData", True)
 										If regkey IsNot Nothing Then
 											Try
-												Deletesubregkey(regkey, packageIdFamilyName)
-											Catch argEx As ArgumentException
-
+												Deletesubregkey(regkey, packageIdFamilyName, False)
 											Catch ex As Exception
 												Application.Log.AddException(ex)
 											End Try
@@ -405,9 +383,7 @@ Namespace Display_Driver_Uninstaller
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, "S-1-5-19\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData", True)
 										If regkey IsNot Nothing Then
 											Try
-												Deletesubregkey(regkey, packageIdFamilyName)
-											Catch argEx As ArgumentException
-
+												Deletesubregkey(regkey, packageIdFamilyName, False)
 											Catch ex As Exception
 												Application.Log.AddException(ex)
 											End Try
@@ -417,9 +393,7 @@ Namespace Display_Driver_Uninstaller
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, "S-1-5-20\Software\Classes\Local Settings\Software\Microsoft\Windows\CurrentVersion\AppModel\SystemAppData", True)
 										If regkey IsNot Nothing Then
 											Try
-												Deletesubregkey(regkey, packageIdFamilyName)
-											Catch argEx As ArgumentException
-
+												Deletesubregkey(regkey, packageIdFamilyName, False)
 											Catch ex As Exception
 												Application.Log.AddException(ex)
 											End Try
@@ -744,9 +718,9 @@ Namespace Display_Driver_Uninstaller
 			End Using
 		End Sub
 
-		Public Sub Deletevalue(ByVal regkeypath As RegistryKey, ByVal child As String)
+		Public Sub Deletevalue(ByVal regkeypath As RegistryKey, ByVal child As String, Optional ByVal throwOnMissingValue As Boolean = True)
 			If regkeypath IsNot Nothing AndAlso Not IsNullOrWhitespace(child) Then
-				regkeypath.DeleteValue(child)
+				regkeypath.DeleteValue(child, throwOnMissingValue)
 
 				Application.Log.AddMessage(regkeypath.ToString & "\" & child & " - " & UpdateTextMethodmessagefn(40))
 			End If
