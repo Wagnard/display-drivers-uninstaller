@@ -9,11 +9,11 @@
 		<btnCleanRestart>
 			<Text>
 				Rimuovi driver selezionato e riavvia il computer
-				(Raccomandato)
+				(raccomandato)
 			</Text>
 			<Tooltip>
 				Rimuovi driver selezionato e successivamente riavvia il computer in modalità normale.
-				(Raccomandato)
+				(raccomandato)
 			</Tooltip>
 		</btnCleanRestart>
 		<btnClean>
@@ -29,7 +29,7 @@
 		<btnCleanShutdown>
 			<Text>
 				Rimuovi driver selezionato e spegni il computer
-				(Utile per installare un nuovo componente hardware)
+				(utile per installare un nuovo componente hardware)
 			</Text>
 			<Tooltip>
 				Rimuovi driver selezionato e spegne il computer.
@@ -58,13 +58,13 @@
 			<Text>*** Ti piace DDU? Fai una donazione, supporterai gli sviluppatori. ***</Text>
 		</lblDonate>
 		<lblLog>
-			<Text>Log</Text>
+			<Text>Registro eventi</Text>
 		</lblLog>
 		<lblSelectedGPU>
 			<Text>Seleziona driver video</Text>
 		</lblSelectedGPU>
 		<lblLanguage>
-			<Text>Seleziona lingua interfaccia:</Text>
+			<Text>Lingua interfaccia programma:</Text>
 		</lblLanguage>
 
 		<lblUpdate>
@@ -177,7 +177,7 @@
 			<Text12>GPU #</Text12>
 			<Text13>Rilevata</Text13>
 			<Text14>GPU DeviceId</Text14>
-			<Text15>Versioni driver rilevate</Text15>
+			<Text15>Versione driver rilevata</Text15>
 			<Text16>INF</Text16>
 			<Text17>Sezione INF</Text17>
 			<Text18>GPU non installata correttamente</Text18>
@@ -301,7 +301,7 @@
 			<Tooltip>Non raccomandato se si dispone di 2 GPU differenti che usano le API Vulkan.</Tooltip>
 		</lblVulkan>
 	<lblPreventWinUpdate>
-      <Text>Quando Windows cerca un driver per il dispositivo impedisci il download dei driver da "Windows Update" </Text>
+      <Text>Quando Windows cerca un driver dispositivo impedisci il download dei driver da "Windows Update" </Text>
       <Tooltip>Abilitando questa opzione non permetterai a "Windows Update" di verificare gli aggiornamenti dei driver.
                NOTA 1: questa opzione non impedirà a "Windows Update" di scaricare/installare nuovi driver.
                NOTA 2: inoltre, è *FORTEMENTE RACCOMANDATO* dopo aver terminato l'uso di DDU e reinstallato i driver riattivare la verifica degli aggiornamenti dei driver in "Windows Update" o potresti avere problemi con l'installazione di altri dispositivi.</Tooltip>
