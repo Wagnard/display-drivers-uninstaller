@@ -2,8 +2,6 @@
 Imports System.Text
 Imports System.ComponentModel
 Imports System.Runtime.InteropServices
-Imports System.Security.AccessControl
-Imports System.Security.Principal
 Imports Display_Driver_Uninstaller.Win32
 Imports Microsoft.Win32
 Imports System.Threading

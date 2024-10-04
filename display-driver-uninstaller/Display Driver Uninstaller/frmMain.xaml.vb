@@ -169,7 +169,7 @@ Namespace Display_Driver_Uninstaller
 
 		Private Sub CloseDDU()
 			If Not Dispatcher.CheckAccess() Then
-				Dispatcher.Invoke(Sub() CloseDDU())
+				Dispatcher.BeginInvoke(Sub() CloseDDU())
 				Return
 			End If
 
