@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME            "Display Driver Uninstaller"
-!define PRODUCT_VERSION         "18.0.8.2"
+!define PRODUCT_VERSION         "18.0.8.3"
 
 !define PRODUCT_PUBLISHER       "Wagnardsoft"
 !define PRODUCT_WEB_SITE        "https://www.wagnardsoft.com"
@@ -46,16 +46,61 @@
 ; Language files
 !insertmacro MUI_LANGUAGE "English"
 !insertmacro MUI_LANGUAGE "Italian"
+!insertmacro MUI_LANGUAGE "French"
+!insertmacro MUI_LANGUAGE "SimpChinese"
+!insertmacro MUI_LANGUAGE "TradChinese"
+!insertmacro MUI_LANGUAGE "German"
+!insertmacro MUI_LANGUAGE "Spanish"
+!insertmacro MUI_LANGUAGE "Japanese"
 
+; English
 LangString STR_01 ${LANG_ENGLISH}  "Web site ${PRODUCT_NAME}"
 LangString STR_02 ${LANG_ENGLISH}  "Uninstall ${PRODUCT_NAME}"
 LangString STR_03 ${LANG_ENGLISH}  "$(^Name) was successfully removed from your computer."
 LangString STR_04 ${LANG_ENGLISH}  "Are you sure you want to completely remove $(^Name) and all of its components?"
 
+; Italian
 LangString STR_01 ${LANG_ITALIAN}  "Sito web ${PRODUCT_NAME}"
 LangString STR_02 ${LANG_ITALIAN}  "Disinstalla ${PRODUCT_NAME}"
 LangString STR_03 ${LANG_ITALIAN}  "$(^Name) è stato correttamente rimosso dal computer."
 LangString STR_04 ${LANG_ITALIAN}  "Sei sicuro di voler rimuovere completamente $(^Name) e tutti i suoi componenti?"
+
+; French
+LangString STR_01 ${LANG_FRENCH} "Site web ${PRODUCT_NAME}"
+LangString STR_02 ${LANG_FRENCH} "Désinstaller ${PRODUCT_NAME}"
+LangString STR_03 ${LANG_FRENCH} "$(^Name) a été supprimé avec succès de votre ordinateur."
+LangString STR_04 ${LANG_FRENCH} "Êtes-vous sûr de vouloir complètement supprimer $(^Name) et tous ses composants ?"
+
+; Simplified Chinese
+LangString STR_01 ${LANG_SIMPCHINESE} "网站 ${PRODUCT_NAME}"
+LangString STR_02 ${LANG_SIMPCHINESE} "卸载 ${PRODUCT_NAME}"
+LangString STR_03 ${LANG_SIMPCHINESE} "$(^Name) 已成功从您的电脑中移除。"
+LangString STR_04 ${LANG_SIMPCHINESE} "您确定要完全删除 $(^Name) 及其所有组件吗？"
+
+; Traditional Chinese
+LangString STR_01 ${LANG_TRADCHINESE} "網站 ${PRODUCT_NAME}"
+LangString STR_02 ${LANG_TRADCHINESE} "卸載 ${PRODUCT_NAME}"
+LangString STR_03 ${LANG_TRADCHINESE} "$(^Name) 已成功從您的電腦中移除。"
+LangString STR_04 ${LANG_TRADCHINESE} "您確定要完全刪除 $(^Name) 及其所有組件嗎？"
+
+; German
+LangString STR_01 ${LANG_GERMAN}  "Webseite ${PRODUCT_NAME}"
+LangString STR_02 ${LANG_GERMAN}  "Deinstalliere ${PRODUCT_NAME}"
+LangString STR_03 ${LANG_GERMAN}  "$(^Name) wurde erfolgreich von Ihrem Computer entfernt."
+LangString STR_04 ${LANG_GERMAN}  "Sind Sie sicher, dass Sie $(^Name) und alle Komponenten vollständig entfernen möchten?"
+
+; Spanish
+LangString STR_01 ${LANG_SPANISH}  "Sitio web ${PRODUCT_NAME}"
+LangString STR_02 ${LANG_SPANISH}  "Desinstalar ${PRODUCT_NAME}"
+LangString STR_03 ${LANG_SPANISH}  "$(^Name) se ha eliminado correctamente de su ordenador."
+LangString STR_04 ${LANG_SPANISH}  "¿Está seguro de que desea eliminar completamente $(^Name) y todos sus componentes?"
+
+; Japanese
+LangString STR_01 ${LANG_JAPANESE}  "ウェブサイト ${PRODUCT_NAME}"
+LangString STR_02 ${LANG_JAPANESE}  "${PRODUCT_NAME} をアンインストールする"
+LangString STR_03 ${LANG_JAPANESE}  "$(^Name) はコンピュータから正常に削除されました。"
+LangString STR_04 ${LANG_JAPANESE}  "本当に $(^Name) とそのすべてのコンポーネントを完全に削除しますか？"
+
 
 
 ; MUI end ------
