@@ -13,7 +13,7 @@
 !define /date CURRENT_YEAR      "%Y"
 !define PRODUCT_COPYRIGHT       "${PRODUCT_PUBLISHER} 2021-${CURRENT_YEAR}"
 !define PRODUCT_DESCRIPTION     "${PRODUCT_NAME} setup"
-!define SOURCE_PATH             "..\..\..\..\..\..\Desktop\DDU\DDU v${PRODUCT_VERSION}"
+!define SOURCE_PATH             "C:\Users\ghisl\Desktop\DDU\DDU v${PRODUCT_VERSION}"
 
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
