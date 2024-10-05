@@ -18,19 +18,21 @@
 ; MUI 1.67 compatible ------
 !include "MUI.nsh"
 
+!define MUI_WELCOMEPAGE_TITLE_3LINES
+
 ; include new funcion (Getsize)
 !include "FileFunc.nsh"
 !include "TextFunc.nsh"
  
 ; MUI Settings
 !define MUI_ABORTWARNING
-;!define MUI_ICON "Display Driver Uninstaller\Resources\DDU.ico"
-;!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
+!define MUI_ICON "Display Driver Uninstaller\Resources\DDU.ico"
+!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
 
 ; Welcome page
 !insertmacro MUI_PAGE_WELCOME
 ; License page
-;!insertmacro MUI_PAGE_LICENSE "Licence.txt"
+!insertmacro MUI_PAGE_LICENSE "Licence.txt"
 ; Directory page
 !insertmacro MUI_PAGE_DIRECTORY
 ; Instfiles page
