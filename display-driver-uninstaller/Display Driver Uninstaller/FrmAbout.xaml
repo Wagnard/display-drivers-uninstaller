@@ -1,0 +1,186 @@
+﻿<Window x:Name="frmAbout" x:Class="Display_Driver_Uninstaller.FrmAbout"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:local="clr-namespace:Display_Driver_Uninstaller"
+	xmlns:conv="clr-namespace:Display_Driver_Uninstaller.Converters"	
+	Height="800" Width="800" SizeToContent="Manual" 
+	MinHeight="480" MinWidth="640" WindowStartupLocation="CenterOwner" ShowInTaskbar="False">
+
+    <Window.Resources>
+        <conv:IsNotNullConverter x:Key="NotNull" />
+        <conv:CountIsNotZero x:Key="NonZero" />
+        <conv:StringIsNotNullOrEmpty x:Key="StrNotNull" />
+        <conv:BooleanToVisibilityConverter x:Key="BoolToVis" TrueValue="Visible" FalseValue="Collapsed" />
+        <conv:CombiningConverter x:Key="StrNotNullToVis" Converter1="{StaticResource StrNotNull}" Converter2="{StaticResource BoolToVis}" />
+        <conv:CombiningConverter x:Key="NonZeroToVis" Converter1="{StaticResource NonZero}" Converter2="{StaticResource BoolToVis}" />
+        <conv:CombiningConverter x:Key="NotNullToVis" Converter1="{StaticResource NotNull}" Converter2="{StaticResource BoolToVis}" />
+
+        <ControlTemplate x:Key="tempText">
+            <ScrollViewer Grid.Row="2">
+                <TextBlock Text="{Binding ElementName=frmAbout, Path=Text, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Padding="10" TextWrapping="Wrap" />
+            </ScrollViewer>
+        </ControlTemplate>
+
+        <ControlTemplate x:Key="tempTranslators">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top" Text="{Binding ElementName=frmAbout, Path=Text, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Background="#28000000" Grid.Row="2" FontSize="16" FontWeight="Bold" Height="30" />
+
+                <ScrollViewer DockPanel.Dock="Top">
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding Settings.LanguageOptions}" AlternationCount="2" >
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Margin="20" >
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Translators.Count}" Value="0">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding HideTranslators}" Value="True">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
+
+                                    <!--<Grid.Style>
+										<Style TargetType="Grid">
+											<Style.Triggers>
+												<DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Path=(ItemsControl.AlternationIndex)}" Value="0">
+													<Setter Property="Background" Value="#12000000"/>
+												</DataTrigger>
+												<DataTrigger Binding="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentPresenter}}, Path=(ItemsControl.AlternationIndex)}" Value="1">
+													<Setter Property="Background" Value="#22000000"/>
+												</DataTrigger>
+											</Style.Triggers>
+										</Style>
+									</Grid.Style>-->
+
+                                    <TextBlock FontWeight="Bold" Foreground="DarkBlue" FontSize="16" >
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} ({1})">
+                                                <Binding Path="DisplayText" />
+                                                <Binding Path="ISOLanguage" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+
+                                    <ItemsControl Grid.Row="1" Margin="20,0,0,0" ItemsSource="{Binding Translators}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding User}" FontWeight="Bold" FontSize="14" />
+                                                    <TextBlock Text="{Binding Details}" FontSize="14" Visibility="{Binding Path=Details, Converter={StaticResource StrNotNullToVis}}"/>
+
+                                                    <TextBlock FontStyle="Italic" FontSize="13" Visibility="{Binding Path=LastUpdate, Converter={StaticResource NotNullToVis}}">
+														<TextBlock Text="Last update:" />
+														<TextBlock Text="{Binding LastUpdate, StringFormat='{}{0:d MMMM yyyy}'}"/>
+													</TextBlock>
+
+                                                    <TextBlock/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </Grid>
+
+                            </DataTemplate>
+
+                        </ItemsControl.ItemTemplate>
+                        <!-- for single column UI, comment below -->
+
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                    </ItemsControl>
+                </ScrollViewer>
+            </DockPanel>
+        </ControlTemplate>
+    </Window.Resources>
+
+    <Window.Style>
+        <Style TargetType="{x:Type Window}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=FrmType, Mode=OneWay, RelativeSource={RelativeSource Self}}" Value="1">
+                    <Setter Property="Title" Value="{Binding ElementName=btnAbout, Path=Content, Mode=OneWay}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=FrmType, Mode=OneWay, RelativeSource={RelativeSource Self}}" Value="2">
+                    <Setter Property="Title" Value="{Binding ElementName=btnTos, Path=Content, Mode=OneWay}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=FrmType, Mode=OneWay, RelativeSource={RelativeSource Self}}" Value="3">
+                    <Setter Property="Title" Value="{Binding ElementName=btnTranslators, Path=Content, Mode=OneWay}"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding Path=FrmType, Mode=OneWay, RelativeSource={RelativeSource Self}}" Value="4">
+                    <Setter Property="Title" Value="{Binding ElementName=btnPatron, Path=Content, Mode=OneWay}"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </Window.Style>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Image DockPanel.Dock="Top" Source="Resources/ddu_logo.png" Stretch="Uniform" Grid.Row="0" Margin="0,0,0,23"/>
+
+        <Border Grid.Row="1" BorderBrush="Black" Margin="-1,0" BorderThickness="1">
+            <ContentControl x:Name="contCtrl">
+                <ContentControl.Style>
+                    <Style TargetType="{x:Type ContentControl}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay}" Value="1">
+                                <Setter Property="Template" Value="{StaticResource tempText}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay}" Value="2">
+                                <Setter Property="Template" Value="{StaticResource tempText}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay}" Value="3">
+                                <Setter Property="Template" Value="{StaticResource tempTranslators}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay}" Value="4">
+                                <Setter Property="Template" Value="{StaticResource tempText}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ContentControl.Style>
+            </ContentControl>
+        </Border>
+
+        <DockPanel Grid.Row="2" LastChildFill="False" >
+            <DockPanel.Resources>
+                <Style TargetType="Button" >
+                    <Setter Property="MinWidth" Value="100" />
+                    <Setter Property="Padding" Value="6,0" />
+                    <Setter Property="Height" Value="30" />
+                    <Setter Property="Margin" Value="10" />
+                    <Setter Property="VerticalAlignment" Value="Center" />
+                </Style>
+            </DockPanel.Resources>
+
+            <Button DockPanel.Dock="Left" Name="btnAbout" Content="btnAbout" Visibility="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay, Converter={StaticResource NonZeroToVis}, ConverterParameter=1}" />
+            <Button DockPanel.Dock="Left" Name="btnTos" Content="btnTos" Visibility="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay, Converter={StaticResource NonZeroToVis}, ConverterParameter=2}" />
+            <Button DockPanel.Dock="Left" Name="btnTranslators" Content="btnTranslators" Visibility="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay, Converter={StaticResource NonZeroToVis}, ConverterParameter=3}" />
+            <Button DockPanel.Dock="Left" Name="btnPatron" Content="btnPatron" Visibility="{Binding ElementName=frmAbout, Path=FrmType, Mode=OneWay, Converter={StaticResource NonZeroToVis}, ConverterParameter=4}" />
+
+            <Button DockPanel.Dock="Right" Name="btnClose" Content="btnClose" IsCancel="True" />
+        </DockPanel>
+        <Label x:Name="lblVersion" Content="Label" HorizontalAlignment="Center"  Height="23" VerticalAlignment="Bottom"/>
+    </Grid>
+
+</Window>
