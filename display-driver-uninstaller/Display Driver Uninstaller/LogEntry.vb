@@ -1,6 +1,4 @@
-﻿Imports System.Collections.Specialized
-Imports System.Xml
-Imports System.ComponentModel
+﻿Imports System.ComponentModel
 
 Namespace Display_Driver_Uninstaller
 

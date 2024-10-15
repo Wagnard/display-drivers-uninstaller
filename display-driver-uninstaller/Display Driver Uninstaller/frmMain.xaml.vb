@@ -276,7 +276,7 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Private Sub OptionsMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles OptionsMenuItem.Click
-			Dim frmOptions As New frmOptions
+			Dim frmOptions As New FrmOptions
 
 			With frmOptions
 				.Owner = Me
@@ -327,7 +327,7 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Private Sub ExtendedLogMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles ExtendedLogMenuItem.Click
-			Dim frmLog As New frmLog
+			Dim frmLog As New FrmLog
 
 			With frmLog
 				.Owner = Me
@@ -490,7 +490,7 @@ Namespace Display_Driver_Uninstaller
 
 			If Application.Settings.FirstTimeLaunch AndAlso Not Application.LaunchOptions.Silent Then
 				Microsoft.VisualBasic.MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text17"), MsgBoxStyle.Information, Application.Settings.AppName)
-				Dim frmOptions As New frmOptions
+				Dim frmOptions As New FrmOptions
 
 				With frmOptions
 					.Owner = Me
@@ -802,7 +802,7 @@ Namespace Display_Driver_Uninstaller
 
 
 		Private Sub ShowAboutWindow(ByVal frmType As Int32)
-			Dim frmAbout As New frmAbout With
+			Dim frmAbout As New FrmAbout With
 		{
 		  .Owner = Me,
 		  .DataContext = Me.DataContext,
@@ -995,7 +995,7 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 			If Application.Settings.CreateRestorePoint AndAlso System.Windows.Forms.SystemInformation.BootMode = Forms.BootMode.Normal Then
-				Dim frmSystemRestore As New frmSystemRestore
+				Dim frmSystemRestore As New FrmSystemRestore
 
 				With frmSystemRestore
 					.WindowStartupLocation = WindowStartupLocation.CenterOwner

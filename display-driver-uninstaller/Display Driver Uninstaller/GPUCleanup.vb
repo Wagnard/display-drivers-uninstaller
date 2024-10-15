@@ -10,11 +10,11 @@ Namespace Display_Driver_Uninstaller
 
 	Public Class GPUCleanup
 
-		Private _fileIo As New FileIO
-		Private _winxp As Boolean = FrmMain.IsWindowsXp
-		Private _win10 As Boolean = FrmMain.IsWindows10
-		Private _isWindows8OrHigher As Boolean = FrmMain.IsWindows8OrHigher
-		Private _sysdrv As String = Application.Paths.SystemDrive
+		Private ReadOnly _fileIo As New FileIO
+		Private ReadOnly _winxp As Boolean = FrmMain.IsWindowsXp
+		Private ReadOnly _win10 As Boolean = FrmMain.IsWindows10
+		Private ReadOnly _isWindows8OrHigher As Boolean = FrmMain.IsWindows8OrHigher
+		Private ReadOnly _sysdrv As String = Application.Paths.SystemDrive
 
 		Public Sub Start(ByVal config As ThreadSettings)
 			Dim CleanupEngine As New CleanupEngine
@@ -820,15 +820,15 @@ Namespace Display_Driver_Uninstaller
 				Checkpcieroot(config)
 				Cleannvidiaserviceprocess(config)
 				Cleannvidia(config)
-				Cleannvidiafolders(config)
+				CleanNvidiaFolders(config)
 				CleanupEngine.RemoveRegDeviceSoftware("NVIDIA CoInstaller Display.Driver")
 
 			End If
 
 			If config.SelectedGPU = GPUVendor.Intel Then
-				cleanintelserviceprocess(config)
-				cleanintel(config)
-				cleanintelfolders(config)
+				CleanIntelServiceProcess(config)
+				CleanIntel(config)
+				CleanIntelFolders(config)
 			End If
 
 			CleanupEngine.Cleandriverstore(config)
@@ -1328,14 +1328,14 @@ Namespace Display_Driver_Uninstaller
 
 			Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
-			CleanupEngine.Pnplockdownfiles(driverfiles, config)   '// add each line as String Array.
+			CleanupEngine.Pnplockdownfiles(driverfiles)   '// add each line as String Array.
 
 			If config.RemoveAMDKMPFD AndAlso config.NotPresentAMDKMPFD Then
-				CleanupEngine.Pnplockdownfiles(driverfilesKMPFD, config)
+				CleanupEngine.Pnplockdownfiles(driverfilesKMPFD)
 			End If
 
-			If config.RemoveAudioBus AndAlso FrmMain.donotremoveamdhdaudiobusfiles = False Then
-				CleanupEngine.Pnplockdownfiles(driverfilesKMAFD, config)
+			If config.RemoveAudioBus AndAlso FrmMain.DoNotRemoveAmdHdAudioBusFiles = False Then
+				CleanupEngine.Pnplockdownfiles(driverfilesKMAFD)
 			End If
 
 			If config.RemoveVulkan Then
@@ -2581,19 +2581,19 @@ Namespace Display_Driver_Uninstaller
 			'Delete driver files
 			'delete OpenCL
 
-			Dim thread1 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(driverfiles, config))
+			Dim thread1 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(driverfiles))
 
 			TaskList.Add(thread1)
 
-			Threaddata1(driverfiles, config)
+			Threaddata1(driverfiles)
 
 			If config.RemoveAMDKMPFD AndAlso config.NotPresentAMDKMPFD Then
-				Dim thread2 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(driverfilesKMPFD, config))
+				Dim thread2 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(driverfilesKMPFD))
 				TaskList.Add(thread2)
 			End If
 
-			If config.RemoveAudioBus AndAlso FrmMain.donotremoveamdhdaudiobusfiles = False Then
-				Dim thread3 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(driverfilesKMAFD, config))
+			If config.RemoveAudioBus AndAlso FrmMain.DoNotRemoveAmdHdAudioBusFiles = False Then
+				Dim thread3 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(driverfilesKMAFD))
 				TaskList.Add(thread3)
 			End If
 
@@ -3222,7 +3222,7 @@ Namespace Display_Driver_Uninstaller
 							Delete(child)
 
 						End If
-						If (config.RemoveAudioBus AndAlso FrmMain.donotremoveamdhdaudiobusfiles = False) AndAlso StrContainsAny(child, True, "amdkmafd") Then
+						If (config.RemoveAudioBus AndAlso FrmMain.DoNotRemoveAmdHdAudioBusFiles = False) AndAlso StrContainsAny(child, True, "amdkmafd") Then
 
 							Delete(child)
 
@@ -3615,7 +3615,7 @@ Namespace Display_Driver_Uninstaller
 
 		End Sub
 
-		Private Sub old_Temporarynvidiaspeedup(ByVal config As ThreadSettings)   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
+		Private Sub Old_TemporaryNvidiaSpeedup(ByVal config As ThreadSettings)   'we do this to speedup the removal of the nividia display driver because of the huge time the nvidia installer files take to do unknown stuff.
 			Dim filePath As String = Nothing
 
 			Try
@@ -3783,10 +3783,10 @@ Namespace Display_Driver_Uninstaller
 			'end of deleting dcom stuff
 			Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
 
-			CleanupEngine.Pnplockdownfiles(driverfiles, config)  '// add each line as String Array.
+			CleanupEngine.Pnplockdownfiles(driverfiles)  '// add each line as String Array.
 
 			If removegfe Then
-				CleanupEngine.Pnplockdownfiles(gfedriverfiles, config) '// add each line as String Array.
+				CleanupEngine.Pnplockdownfiles(gfedriverfiles) '// add each line as String Array.
 			End If
 			'Cleaning PNPRessources.  'Will fix this later, its not efficent clean at all. (Wagnard)
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpResources\Registry\HKLM\SOFTWARE\Khronos", False)
@@ -5697,7 +5697,7 @@ Namespace Display_Driver_Uninstaller
 
 		End Sub
 
-		Private Sub Cleannvidiafolders(ByVal config As ThreadSettings)
+		Private Sub CleanNvidiaFolders(ByVal config As ThreadSettings)
 			Dim filePath As String = Nothing
 			Dim removephysx As Boolean = config.RemovePhysX
 			Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")
@@ -5709,17 +5709,17 @@ Namespace Display_Driver_Uninstaller
 				ImpersonateLoggedOnUser.Taketoken()
 			End If
 
-			Dim thread1 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(driverfiles, config))
+			Dim thread1 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(driverfiles))
 
 			TaskList.Add(thread1)
 
 			If config.RemoveGFE Then
-				Dim thread2 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(gfedriverfiles, config))
+				Dim thread2 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(gfedriverfiles))
 				TaskList.Add(thread2)
 			End If
 
 			If config.RemoveNVBROADCAST Then
-				Dim thread3 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(nvbdriverfiles, config))
+				Dim thread3 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(nvbdriverfiles))
 				TaskList.Add(thread3)
 			End If
 
@@ -6921,7 +6921,7 @@ Namespace Display_Driver_Uninstaller
 
 		End Sub
 
-		Private Sub cleanintel(ByVal config As ThreadSettings)
+		Private Sub CleanIntel(ByVal config As ThreadSettings)
 			Dim CleanupEngine As New CleanupEngine
 			Dim wantedvalue As String = Nothing
 			Dim packages As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\packages.cfg")
@@ -6951,7 +6951,7 @@ Namespace Display_Driver_Uninstaller
 				End If
 			End If
 
-			CleanupEngine.Pnplockdownfiles(driverfiles, config) '// add each line as String Array.
+			CleanupEngine.Pnplockdownfiles(driverfiles) '// add each line as String Array.
 
 			CleanupEngine.ClassRoot(classroot, config) '// add each line as String Array.
 
@@ -7425,7 +7425,7 @@ Namespace Display_Driver_Uninstaller
 
 		End Sub
 
-		Private Sub cleanintelserviceprocess(ByVal config As ThreadSettings)
+		Private Sub CleanIntelServiceProcess(ByVal config As ThreadSettings)
 			Dim CleanupEngine As New CleanupEngine
 			Dim services As String() = IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\services.cfg")
 
@@ -7445,7 +7445,7 @@ Namespace Display_Driver_Uninstaller
 
 		End Sub
 
-		Private Sub cleanintelfolders(ByVal config As ThreadSettings)
+		Private Sub CleanIntelFolders(ByVal config As ThreadSettings)
 			Dim CleanupEngine As New CleanupEngine
 			Dim filePath As String = Nothing
 			Dim driverfiles As String() = IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\driverfiles.cfg")
@@ -7457,7 +7457,7 @@ Namespace Display_Driver_Uninstaller
 
 			Application.Log.AddMessage("Cleaning Directory")
 
-			CleanupEngine.Folderscleanup(driverfiles, config)      '// add each line as String Array.
+			CleanupEngine.Folderscleanup(driverfiles)      '// add each line as String Array.
 
 			filePath = System.Environment.SystemDirectory
 			Dim files() As String = IO.Directory.GetFiles(filePath + "\", "igfxcoin*.*")
@@ -8116,12 +8116,12 @@ Namespace Display_Driver_Uninstaller
 			CleanupEngine.RemoveSharedDlls(filename)
 		End Sub
 
-		Private Sub Threaddata1(ByVal driverfiles As String(), ByVal config As ThreadSettings)
+		Private Sub Threaddata1(ByVal driverfiles As String())
 			Dim CleanupEngine As New CleanupEngine
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
 				ImpersonateLoggedOnUser.Taketoken()
 			End If
-			CleanupEngine.Folderscleanup(driverfiles, config)
+			CleanupEngine.Folderscleanup(driverfiles)
 		End Sub
 
 		Private Sub Deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String, Optional ByVal throwOnMissingSubKey As Boolean = True)

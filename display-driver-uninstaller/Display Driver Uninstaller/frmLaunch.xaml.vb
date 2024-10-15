@@ -1,23 +1,23 @@
 ﻿Namespace Display_Driver_Uninstaller
-	Public Class frmLaunch
+	Public Class FrmLaunch
 
 		Public selection As Integer = -1
 
-		Private Sub btnAccept_Click(sender As Object, e As RoutedEventArgs) Handles btnAccept.Click
+		Private Sub BtnAccept_Click(sender As Object, e As RoutedEventArgs) Handles btnAccept.Click
 			selection = cbBootOption.SelectedIndex
 
 			Me.DialogResult = True
 			Me.Close()
 		End Sub
 
-		Private Sub btnClose_Click(sender As Object, e As RoutedEventArgs) Handles btnClose.Click
+		Private Sub BtnClose_Click(sender As Object, e As RoutedEventArgs) Handles btnClose.Click
 			selection = cbBootOption.SelectedIndex
 
 			Me.DialogResult = False
 			Me.Close()
 		End Sub
 
-		Private Sub frmLaunch_ContentRendered(sender As Object, e As System.EventArgs) Handles Me.ContentRendered
+		Private Sub FrmLaunch_ContentRendered(sender As Object, e As System.EventArgs) Handles Me.ContentRendered
 			Me.Topmost = False
 			Dim Checkupdate As New CheckUpdate
 			If Application.Settings.ProcessKilled Then
@@ -28,19 +28,19 @@
 			Checkupdate.CheckUpdates()
 
 		End Sub
-		Private Sub btnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
+		Private Sub BtnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
 			FrmMain.EnableDriverSearch(True)
 			selection = cbBootOption.SelectedIndex
 
 			Me.DialogResult = False
 			Me.Close()
 		End Sub
-		Private Sub frmLaunch_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
+		Private Sub FrmLaunch_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
 			Languages.TranslateForm(Me)
 			Debug.WriteLine(Application.Settings.PreventWinUpdate)
 		End Sub
 
-		Private Sub cbBootOption_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cbBootOption.SelectionChanged
+		Private Sub CbBootOption_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cbBootOption.SelectionChanged
 			Dim tb As TextBlock = TryCast(btnAccept.Content, TextBlock)
 
 			If tb IsNot Nothing Then

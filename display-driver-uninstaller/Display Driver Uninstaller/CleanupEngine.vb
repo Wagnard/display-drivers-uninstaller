@@ -1822,7 +1822,7 @@ Namespace Display_Driver_Uninstaller
 			End Using
 		End Sub
 
-		Public Sub PrePnplockdownfiles(ByVal oeminf As String, ByVal config As ThreadSettings)
+		Public Sub PrePnplockdownfiles(ByVal oeminf As String)
 			Dim win8higher = FrmMain.IsWindows8OrHigher
 			Dim processinfo As New ProcessStartInfo
 			Dim process As New Process
@@ -1856,7 +1856,7 @@ Namespace Display_Driver_Uninstaller
 
 		End Sub
 
-		Public Sub Pnplockdownfiles(ByVal driverfiles As String(), ByVal config As ThreadSettings)
+		Public Sub Pnplockdownfiles(ByVal driverfiles As String())
 
 			Dim winxp = FrmMain.IsWindowsXp
 			Dim win8higher = FrmMain.IsWindows8OrHigher
@@ -2716,7 +2716,7 @@ Namespace Display_Driver_Uninstaller
 			Application.Log.AddMessage("END Interface CleanUP")
 		End Sub
 
-		Public Sub Folderscleanup(ByVal driverfiles As String(), ByVal config As ThreadSettings)
+		Public Sub Folderscleanup(ByVal driverfiles As String())
 			Dim winxp = FrmMain.IsWindowsXp
 
 			Dim TaskList = New List(Of Tasks.Task)()
@@ -3038,7 +3038,7 @@ Namespace Display_Driver_Uninstaller
 				'check if the oem was removed to process to the pnplockdownfile if necessary
 				If FrmMain.IsWindows8OrHigher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
 					If (config.RemoveAudioBus = False OrElse FrmMain.DoNotRemoveAmdHdAudioBusFiles) AndAlso StrContainsAny(catalog, True, "amdkmafd") Then Continue For
-					PrePnplockdownfiles(catalog, config)
+					PrePnplockdownfiles(catalog)
 				End If
 			Next
 

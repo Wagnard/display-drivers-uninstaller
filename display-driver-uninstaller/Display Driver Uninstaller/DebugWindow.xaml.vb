@@ -1,13 +1,6 @@
-﻿Imports System
-Imports System.Collections.Generic
-Imports System.Collections.ObjectModel
+﻿Imports System.Collections.ObjectModel
 Imports System.ComponentModel
 Imports System.Text
-Imports System.Windows
-Imports System.Windows.Controls
-Imports System.Windows.Data
-Imports System.Windows.Input
-Imports System.Windows.Media
 Imports Display_Driver_Uninstaller.Win32
 Imports System.Threading
 
@@ -46,7 +39,7 @@ Namespace Display_Driver_Uninstaller
 
 
 
-		Private Sub btnDisable_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
+		Private Sub BtnDisable_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
 			If listBox1.SelectedItem Is Nothing Then
 				MessageBox.Show("No selected device!")
 				Return
@@ -61,7 +54,7 @@ Namespace Display_Driver_Uninstaller
 			SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device), False)
 		End Sub
 
-		Private Sub btnEnable_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
+		Private Sub BtnEnable_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
 			If listBox1.SelectedItem Is Nothing Then
 				MessageBox.Show("No selected device!")
 				Return
@@ -76,7 +69,7 @@ Namespace Display_Driver_Uninstaller
 			SetupAPI.TEST_EnableDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device), True)
 		End Sub
 
-		Private Sub btnRemove_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
+		Private Sub BtnRemove_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
 			If listBox1.SelectedItem Is Nothing Then
 				MessageBox.Show("No selected device!")
 				Return
@@ -94,7 +87,7 @@ Namespace Display_Driver_Uninstaller
 			MessageBox.Show("Done! Check log for results.")
 		End Sub
 
-		Private Sub btnRemoveInf_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnRemoveInf.Click
+		Private Sub BtnRemoveInf_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnRemoveInf.Click
 			Dim ofd As Microsoft.Win32.OpenFileDialog = New Microsoft.Win32.OpenFileDialog()
 
 			ofd.InitialDirectory = "C:\Windows\inf"
@@ -111,7 +104,7 @@ Namespace Display_Driver_Uninstaller
 			End If
 		End Sub
 
-		Private Sub btnFindDevs_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
+		Private Sub BtnFindDevs_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
 			If Devices.Count > 0 Then
 				Devices.Clear()
 			End If
@@ -478,15 +471,15 @@ Namespace Display_Driver_Uninstaller
 			Return Nothing
 		End Function
 
-		Private Sub tbFilter_TextChanged(ByVal sender As Object, ByVal e As TextChangedEventArgs)
+		Private Sub TbFilter_TextChanged(ByVal sender As Object, ByVal e As TextChangedEventArgs)
 			UpdateFilter()
 		End Sub
 
-		Private Sub cbFilter_SelectionChanged(ByVal sender As Object, ByVal e As SelectionChangedEventArgs)
+		Private Sub CbFilter_SelectionChanged(ByVal sender As Object, ByVal e As SelectionChangedEventArgs)
 			UpdateFilter()
 		End Sub
 
-		Private Sub btnUpdate_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnUpdate.Click
+		Private Sub BtnUpdate_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnUpdate.Click
 			Dim ofd As Microsoft.Win32.OpenFileDialog = New Microsoft.Win32.OpenFileDialog()
 
 			ofd.InitialDirectory = "C:\Windows\inf"
@@ -507,7 +500,7 @@ Namespace Display_Driver_Uninstaller
 			End If
 		End Sub
 
-		Private Sub btnReScanDevices_Click(sender As Object, e As System.Windows.RoutedEventArgs) Handles btnReScanDevices.Click
+		Private Sub BtnReScanDevices_Click(sender As Object, e As System.Windows.RoutedEventArgs) Handles btnReScanDevices.Click
 			SetupAPI.ReScanDevices()
 			MessageBox.Show("Done!")
 		End Sub
@@ -541,7 +534,7 @@ Namespace Display_Driver_Uninstaller
 		Private pathThread As Thread = Nothing
 		Private cancelHandle As EventWaitHandle = New EventWaitHandle(False, EventResetMode.ManualReset)
 
-		Private Sub btnGetFiles_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnGetFiles.Click
+		Private Sub BtnGetFiles_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnGetFiles.Click
 			If String.IsNullOrEmpty(tbWildCards.Text) Then
 				tbWildCards.Text = "*"
 			End If
@@ -564,7 +557,7 @@ Namespace Display_Driver_Uninstaller
 			pathThread.Start()
 		End Sub
 
-		Private Sub btnGetFolders_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnGetFolders.Click
+		Private Sub BtnGetFolders_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnGetFolders.Click
 			If String.IsNullOrEmpty(tbWildCards.Text) Then
 				tbWildCards.Text = "*"
 			End If
@@ -640,7 +633,7 @@ Namespace Display_Driver_Uninstaller
 			Application.Current.Dispatcher.Invoke(method, Threading.DispatcherPriority.Background, args)
 		End Sub
 
-		Private Sub btnCancel_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnCancel.Click
+		Private Sub BtnCancel_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnCancel.Click
 			If pathThread IsNot Nothing AndAlso pathThread.IsAlive Then
 				cancelHandle.Set()
 			End If
@@ -653,7 +646,7 @@ Namespace Display_Driver_Uninstaller
 			Count = Current
 		End Sub
 
-		Private Sub tbPath_MouseDoubleClick(sender As System.Object, e As System.Windows.Input.MouseButtonEventArgs) Handles tbPath.MouseDoubleClick
+		Private Sub TbPath_MouseDoubleClick(sender As System.Object, e As System.Windows.Input.MouseButtonEventArgs) Handles tbPath.MouseDoubleClick
 			Using fbd As New System.Windows.Forms.FolderBrowserDialog
 				fbd.SelectedPath = tbPath.Text
 
@@ -664,7 +657,7 @@ Namespace Display_Driver_Uninstaller
 
 		End Sub
 
-		Private Sub menuFileIODelete_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles menuFileIODelete.Click
+		Private Sub MenuFileIODelete_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles menuFileIODelete.Click
 
 			If lbPaths.SelectedItem Is Nothing Then
 				Return

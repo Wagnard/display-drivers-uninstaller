@@ -75,55 +75,55 @@ Namespace Display_Driver_Uninstaller
 		Inherits DependencyObject
 
 #Region "Private Fields"
-		Private m_appname As DependencyProperty = RegDP("AppName", GetType(String), GetType(AppSettings), "Display Driver Uninstaller")
-		Private m_appversion As DependencyProperty = RegDP("AppVersion", GetType(Version), GetType(AppSettings), New Version(0, 0, 0, 0))
-		Private m_languageOptions As ObservableCollection(Of Languages.LanguageOption)
-		Private m_flowControl As DependencyProperty = RegDP("FlowControl", GetType(FlowDirection), GetType(AppSettings), FlowDirection.LeftToRight)
-		Private m_gpuSelected As DependencyProperty = RegDP("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
-		Private m_audioSelected As DependencyProperty = RegDP("SelectedAUDIO", GetType(AudioVendor), GetType(AppSettings), AudioVendor.Realtek)
-		Private m_cleanType As DependencyProperty = RegDP("SelectedType", GetType(CleanType), GetType(AppSettings), CleanType.None)
-		Private m_langSelected As DependencyProperty = RegDP("SelectedLanguage", GetType(Languages.LanguageOption), GetType(AppSettings), Nothing)
-		Private m_updateAvailable As DependencyProperty = RegDP("UpdateAvailable", GetType(UpdateStatus), GetType(AppSettings), UpdateStatus.NotAllowed)
+		Private ReadOnly m_appname As DependencyProperty = RegDP("AppName", GetType(String), GetType(AppSettings), "Display Driver Uninstaller")
+		Private ReadOnly m_appversion As DependencyProperty = RegDP("AppVersion", GetType(Version), GetType(AppSettings), New Version(0, 0, 0, 0))
+		Private ReadOnly m_languageOptions As ObservableCollection(Of Languages.LanguageOption)
+		Private ReadOnly m_flowControl As DependencyProperty = RegDP("FlowControl", GetType(FlowDirection), GetType(AppSettings), FlowDirection.LeftToRight)
+		Private ReadOnly m_gpuSelected As DependencyProperty = RegDP("SelectedGPU", GetType(GPUVendor), GetType(AppSettings), GPUVendor.Nvidia)
+		Private ReadOnly m_audioSelected As DependencyProperty = RegDP("SelectedAUDIO", GetType(AudioVendor), GetType(AppSettings), AudioVendor.Realtek)
+		Private ReadOnly m_cleanType As DependencyProperty = RegDP("SelectedType", GetType(CleanType), GetType(AppSettings), CleanType.None)
+		Private ReadOnly m_langSelected As DependencyProperty = RegDP("SelectedLanguage", GetType(Languages.LanguageOption), GetType(AppSettings), Nothing)
+		Private ReadOnly m_updateAvailable As DependencyProperty = RegDP("UpdateAvailable", GetType(UpdateStatus), GetType(AppSettings), UpdateStatus.NotAllowed)
 
-		Private m_winVersion As DependencyProperty = RegDP("WinVersion", GetType(OSVersion), GetType(AppSettings), OSVersion.Unknown)
-		Private m_winVersionText As DependencyProperty = RegDP("WinVersionText", GetType(String), GetType(AppSettings), "Unknown")
-		Private m_winIs64 As DependencyProperty = RegDP("WinIs64", GetType(Boolean), GetType(AppSettings), False)
-		Private m_processKilled As DependencyProperty = RegDP("ProcessKilled", GetType(Boolean), GetType(AppSettings), False)
-		Private m_win10_1809 As DependencyProperty = RegDP("Win10_1809", GetType(Boolean), GetType(AppSettings), False)
-		Private m_win11 As DependencyProperty = RegDP("Win11", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_winVersion As DependencyProperty = RegDP("WinVersion", GetType(OSVersion), GetType(AppSettings), OSVersion.Unknown)
+		Private ReadOnly m_winVersionText As DependencyProperty = RegDP("WinVersionText", GetType(String), GetType(AppSettings), "Unknown")
+		Private ReadOnly m_winIs64 As DependencyProperty = RegDP("WinIs64", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_processKilled As DependencyProperty = RegDP("ProcessKilled", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_win10_1809 As DependencyProperty = RegDP("Win10_1809", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_win11 As DependencyProperty = RegDP("Win11", GetType(Boolean), GetType(AppSettings), False)
 
 		' Removals
-		Private m_remMonitors As DependencyProperty = RegDP("RemoveMonitors", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_remMonitors As DependencyProperty = RegDP("RemoveMonitors", GetType(Boolean), GetType(AppSettings), True)
 
-		Private m_remCrimsonCache As DependencyProperty = RegDP("RemoveCrimsonCache", GetType(Boolean), GetType(AppSettings), True)
-		Private m_remAMDDirs As DependencyProperty = RegDP("RemoveAMDDirs", GetType(Boolean), GetType(AppSettings), True)
-		Private m_remAudioBus As DependencyProperty = RegDP("RemoveAudioBus", GetType(Boolean), GetType(AppSettings), False)
-		Private m_remAMDKMPFD As DependencyProperty = RegDP("RemoveAMDKMPFD", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_remCrimsonCache As DependencyProperty = RegDP("RemoveCrimsonCache", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_remAMDDirs As DependencyProperty = RegDP("RemoveAMDDirs", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_remAudioBus As DependencyProperty = RegDP("RemoveAudioBus", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_remAMDKMPFD As DependencyProperty = RegDP("RemoveAMDKMPFD", GetType(Boolean), GetType(AppSettings), False)
 
-		Private m_remNvidiaDirs As DependencyProperty = RegDP("RemoveNvidiaDirs", GetType(Boolean), GetType(AppSettings), True)
-		Private m_remPhysX As DependencyProperty = RegDP("RemovePhysX", GetType(Boolean), GetType(AppSettings), False)
-		Private m_rem3DtvPlay As DependencyProperty = RegDP("Remove3DTVPlay", GetType(Boolean), GetType(AppSettings), True)
-		Private m_remGFE As DependencyProperty = RegDP("RemoveGFE", GetType(Boolean), GetType(AppSettings), True)
-		Private m_remNVCP As DependencyProperty = RegDP("RemoveNVCP", GetType(Boolean), GetType(AppSettings), True)
-		Private m_keepNVCPopt As DependencyProperty = RegDP("KeepNVCPopt", GetType(Boolean), GetType(AppSettings), False)
-		Private m_remNVBROADCAST As DependencyProperty = RegDP("RemoveNVBROADCAST", GetType(Boolean), GetType(AppSettings), True)
-		Private m_remINTELCP As DependencyProperty = RegDP("RemoveINTELCP", GetType(Boolean), GetType(AppSettings), True)
-		Private m_remAMDCP As DependencyProperty = RegDP("RemoveAMDCP", GetType(Boolean), GetType(AppSettings), True)
-		Private m_removevulkan As DependencyProperty = RegDP("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_remNvidiaDirs As DependencyProperty = RegDP("RemoveNvidiaDirs", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_remPhysX As DependencyProperty = RegDP("RemovePhysX", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_rem3DtvPlay As DependencyProperty = RegDP("Remove3DTVPlay", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_remGFE As DependencyProperty = RegDP("RemoveGFE", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_remNVCP As DependencyProperty = RegDP("RemoveNVCP", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_keepNVCPopt As DependencyProperty = RegDP("KeepNVCPopt", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_remNVBROADCAST As DependencyProperty = RegDP("RemoveNVBROADCAST", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_remINTELCP As DependencyProperty = RegDP("RemoveINTELCP", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_remAMDCP As DependencyProperty = RegDP("RemoveAMDCP", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_removevulkan As DependencyProperty = RegDP("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
 
 		' Settings
-		Private m_UseRoamingCfg As DependencyProperty = RegDP("UseRoamingConfig", GetType(Boolean), GetType(AppSettings), False)
-		Private m_CheckUpdates As DependencyProperty = RegDP("CheckUpdates", GetType(Boolean), GetType(AppSettings), True)
-		Private m_createRestorePoint As DependencyProperty = RegDP("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
-		Private m_saveLogs As DependencyProperty = RegDP("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
-		Private m_showoffer As DependencyProperty = RegDP("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
-		Private m_enablesafemodedialog As DependencyProperty = RegDP("EnableSafeModeDialog", GetType(Boolean), GetType(AppSettings), False)
-		Private m_PreventWinUpdate As DependencyProperty = RegDP("PreventWinUpdate", GetType(Boolean), GetType(AppSettings), False)
-		Private m_FirstTimeLaunch As DependencyProperty = RegDP("FirstTimeLaunch", GetType(Boolean), GetType(AppSettings), False)
-		Private m_UsedBCD As DependencyProperty = RegDP("UsedBCD", GetType(Boolean), GetType(AppSettings), False)
-		Private m_RememberLastChoice As DependencyProperty = RegDP("RememberLastChoice", GetType(Boolean), GetType(AppSettings), False)
-		Private m_LastSelectedGPUIndex As DependencyProperty = RegDP("LastSelectedGPUIndex", GetType(Integer), GetType(AppSettings), 0)
-		Private m_LastSelectedTypeIndex As DependencyProperty = RegDP("LastSelectedTypeIndex", GetType(Integer), GetType(AppSettings), 0)
+		Private ReadOnly m_UseRoamingCfg As DependencyProperty = RegDP("UseRoamingConfig", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_CheckUpdates As DependencyProperty = RegDP("CheckUpdates", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_createRestorePoint As DependencyProperty = RegDP("CreateRestorePoint", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_saveLogs As DependencyProperty = RegDP("SaveLogs", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_showoffer As DependencyProperty = RegDP("ShowOffer", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_enablesafemodedialog As DependencyProperty = RegDP("EnableSafeModeDialog", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_PreventWinUpdate As DependencyProperty = RegDP("PreventWinUpdate", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_FirstTimeLaunch As DependencyProperty = RegDP("FirstTimeLaunch", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_UsedBCD As DependencyProperty = RegDP("UsedBCD", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_RememberLastChoice As DependencyProperty = RegDP("RememberLastChoice", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_LastSelectedGPUIndex As DependencyProperty = RegDP("LastSelectedGPUIndex", GetType(Integer), GetType(AppSettings), 0)
+		Private ReadOnly m_LastSelectedTypeIndex As DependencyProperty = RegDP("LastSelectedTypeIndex", GetType(Integer), GetType(AppSettings), 0)
 
 #End Region
 
@@ -136,6 +136,7 @@ Namespace Display_Driver_Uninstaller
 				SetValue(m_appname, value)
 			End Set
 		End Property
+
 		Public Property AppVersion As Version
 			Get
 				Return CType(GetValue(m_appversion), Version)
@@ -153,6 +154,7 @@ Namespace Display_Driver_Uninstaller
 				UpdateWinText(value)
 			End Set
 		End Property
+
 		Public Property WinVersionText As String
 			Get
 				Return CStr(GetValue(m_winVersionText))
@@ -161,6 +163,7 @@ Namespace Display_Driver_Uninstaller
 				SetValue(m_winVersionText, value)
 			End Set
 		End Property
+
 		Public Property WinIs64 As Boolean
 			Get
 				Return CBool(GetValue(m_winIs64))

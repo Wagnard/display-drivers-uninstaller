@@ -1,9 +1,6 @@
 ﻿Imports System.IO
 Imports System.Xml
-Imports System.Windows
-Imports System.Reflection
 Imports System.Collections.ObjectModel
-Imports System.Collections.Specialized
 Imports System.ComponentModel
 Imports System.Threading
 
@@ -15,9 +12,9 @@ Namespace Display_Driver_Uninstaller
 
 		Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
 
-		Private m_threadlock As Object = "No can do!"
+		Private ReadOnly m_threadlock As Object = "No can do!"
 		Private m_logEntries As New ObservableCollection(Of LogEntry)
-		Private m_dispatcher As Threading.Dispatcher
+		Private ReadOnly m_dispatcher As Threading.Dispatcher
 		Private m_countQueued As Int64 = 0L
 		Private m_countAdded As Int64 = 0L
 

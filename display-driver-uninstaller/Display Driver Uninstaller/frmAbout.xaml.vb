@@ -1,9 +1,8 @@
 ﻿Imports System.ComponentModel
-Imports System.Text
 
 Namespace Display_Driver_Uninstaller
 
-	Public Class frmAbout
+	Public Class FrmAbout
 		Implements INotifyPropertyChanged
 
 		Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
@@ -43,17 +42,17 @@ Namespace Display_Driver_Uninstaller
 			End Set
 		End Property
 
-		Private Sub frmAbout_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
+		Private Sub FrmAbout_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
 			Languages.TranslateForm(Me, False)
 			lblVersion.Content = Application.Settings.AppVersion.ToString
 			FlowDirection = Application.Settings.FlowControl
 		End Sub
 
-		Private Sub btnClose_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnClose.Click
+		Private Sub BtnClose_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnClose.Click
 			Me.Close()
 		End Sub
 
-		Private Sub btn_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnAbout.Click, btnTos.Click, btnTranslators.Click, btnPatron.Click
+		Private Sub Btn_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnAbout.Click, btnTos.Click, btnTranslators.Click, btnPatron.Click
 			Dim btn As Button = TryCast(sender, Button)
 
 			If btn Is Nothing Then

@@ -416,11 +416,11 @@
 						</Style>
 					</StackPanel.Resources>
 
-					<Button Content="disable" Height="23" Name="btnDisable" Width="75" Click="btnDisable_Click" />
-					<Button Content="enable" Height="23" Name="btnEnable" Width="75" Click="btnEnable_Click" />
-					<Button Content="remove" Height="23" Name="btnRemove" Width="75" Click="btnRemove_Click" />
-					<Button Content="update inf" Height="23" Name="btnUpdate" Width="75" Click="btnUpdate_Click" />
-					<Button Content="remove inf" Height="23" Name="btnRemoveInf" Width="75" Click="btnRemoveInf_Click" />
+					<Button Content="disable" Height="23" Name="btnDisable" Width="75" Click="BtnDisable_Click" />
+					<Button Content="enable" Height="23" Name="btnEnable" Width="75" Click="BtnEnable_Click" />
+					<Button Content="remove" Height="23" Name="btnRemove" Width="75" Click="BtnRemove_Click" />
+					<Button Content="update inf" Height="23" Name="btnUpdate" Width="75" Click="BtnUpdate_Click" />
+					<Button Content="remove inf" Height="23" Name="btnRemoveInf" Width="75" Click="BtnRemoveInf_Click" />
 					<Button Content="ReScan devices" Height="23" Name="btnReScanDevices" Width="89" />
 					<CheckBox Content="Include Siblings" Height="16" Name="chbSearchSiblings" />
 				</StackPanel>
@@ -432,7 +432,7 @@
 					</StackPanel>
 
 					<StackPanel Orientation="Horizontal" DockPanel.Dock="Right" >
-						<Button Content="Find devices" Height="23" Name="btnFindDevs" Width="120" Click="btnFindDevs_Click" Margin="10,10,0,10" />
+						<Button Content="Find devices" Height="23" Name="btnFindDevs" Width="120" Click="BtnFindDevs_Click" Margin="10,10,0,10" />
 						<Label Width="80" Content="Devices: 0" Height="28" Name="lblDevicesDev" DockPanel.Dock="Right" />
 					</StackPanel>
 
@@ -441,11 +441,11 @@
 
 				<DockPanel Grid.Row="2" Background="{x:Null}">
 					<Label Content="Filter:"/>
-					<ComboBox x:Name="cbFilter" Width="150" HorizontalAlignment="Center" SelectedIndex="6" SelectionChanged="cbFilter_SelectionChanged" VerticalContentAlignment="Center" VerticalAlignment="Center" />
+					<ComboBox x:Name="cbFilter" Width="150" HorizontalAlignment="Center" SelectedIndex="6" SelectionChanged="CbFilter_SelectionChanged" VerticalContentAlignment="Center" VerticalAlignment="Center" />
 
 					<Label Width="80" Content="Items: 0" Height="28" Name="lblDevices" DockPanel.Dock="Right" />
 
-					<TextBox Name="tbFilter" TextChanged="tbFilter_TextChanged" />
+					<TextBox Name="tbFilter" TextChanged="TbFilter_TextChanged" />
 				</DockPanel>
 			</Grid>
 		</TabItem>

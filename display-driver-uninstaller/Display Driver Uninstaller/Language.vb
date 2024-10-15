@@ -7,7 +7,7 @@ Namespace Display_Driver_Uninstaller
 	Public Class Languages
 		Private Shared ReadOnly sysNewLine As String = Environment.NewLine
 		Private Shared ReadOnly dateFormats As String() = New String() {"d/M/yyyy", "d.M.yyyy", "d-M-yyyy"}
-		Private Shared threadLock As Object = New Object() 'lock access for one thread at time
+		Private Shared ReadOnly threadLock As Object = New Object() 'lock access for one thread at time
 		Private Shared ReadOnly whiteSpaceChars As Char()
 		Public Const DefaultEngISO As String = "en-US"
 
@@ -887,8 +887,8 @@ notFound:
 		End Sub
 
 		Private Class TranslatedFile
-			Private m_details As LanguageOption
-			Private m_parents As Dictionary(Of TranslatedControl, List(Of TranslatedControl))
+			Private ReadOnly m_details As LanguageOption
+			Private ReadOnly m_parents As Dictionary(Of TranslatedControl, List(Of TranslatedControl))
 
 			Public ReadOnly Property Details As LanguageOption
 				Get
@@ -912,9 +912,9 @@ notFound:
 		End Class
 
 		Private Class TranslatedControl
-			Private m_control As String
-			Private m_attributes As Dictionary(Of String, String)
-			Private m_values As Dictionary(Of String, String)
+			Private ReadOnly m_control As String
+			Private ReadOnly m_attributes As Dictionary(Of String, String)
+			Private ReadOnly m_values As Dictionary(Of String, String)
 
 			Public ReadOnly Property ControlName As String
 				Get
@@ -947,11 +947,11 @@ notFound:
 			Implements IComparable(Of LanguageOption)
 			Implements IEquatable(Of LanguageOption)
 
-			Private m_isolang As String
-			Private m_displaytext As String
-			Private m_filename As String
-			Private m_hideTranslators As Boolean
-			Private m_translators As List(Of LanguageTranslators)
+			Private ReadOnly m_isolang As String
+			Private ReadOnly m_displaytext As String
+			Private ReadOnly m_filename As String
+			Private ReadOnly m_hideTranslators As Boolean
+			Private ReadOnly m_translators As List(Of LanguageTranslators)
 
 			Public ReadOnly Property ISOLanguage As String
 				Get

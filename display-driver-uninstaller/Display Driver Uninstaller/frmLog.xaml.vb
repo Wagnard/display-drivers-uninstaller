@@ -9,7 +9,7 @@ Namespace Display_Driver_Uninstaller
 		CopyLine
 	End Enum
 
-	Public Class frmLog
+	Public Class FrmLog
 		Implements INotifyPropertyChanged
 
 		Public Event PropertyChanged(sender As Object, e As System.ComponentModel.PropertyChangedEventArgs) Implements System.ComponentModel.INotifyPropertyChanged.PropertyChanged
@@ -88,7 +88,7 @@ Namespace Display_Driver_Uninstaller
 			Me.Close()
 		End Sub
 
-		Private Sub frmLog_Loaded(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles MyBase.Loaded
+		Private Sub FrmLog_Loaded(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles MyBase.Loaded
 			lbLog.Items.Refresh()
 			Languages.TranslateForm(Me)
 
@@ -97,13 +97,13 @@ Namespace Display_Driver_Uninstaller
 			End If
 		End Sub
 
-		Private Sub frmLog_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+		Private Sub FrmLog_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
 			If SelectedEntry IsNot Nothing Then
 				SelectedEntry.IsSelected = False
 			End If
 		End Sub
 
-		Private Sub btnOpenLog_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnOpenLog.Click
+		Private Sub BtnOpenLog_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnOpenLog.Click
 			Using ofd As System.Windows.Forms.OpenFileDialog = New System.Windows.Forms.OpenFileDialog
 				ofd.Filter = "DDU Log (*.xml)|*.xml"
 				ofd.FilterIndex = 0
@@ -112,7 +112,7 @@ Namespace Display_Driver_Uninstaller
 					Dim newLog As New AppLog
 					newLog.OpenFromFile(ofd.FileName)
 
-					Dim newLogWindow As New frmLog With
+					Dim newLogWindow As New FrmLog With
 				 {
 				   .Title = ofd.FileName,
 				   .Owner = Me,
@@ -332,7 +332,7 @@ Namespace Display_Driver_Uninstaller
 			End If
 		End Sub
 
-		Private Sub tabControl_SelectionChanged(sender As System.Object, e As System.Windows.Controls.SelectionChangedEventArgs) Handles tabControl.SelectionChanged
+		Private Sub TabControl_SelectionChanged(sender As System.Object, e As System.Windows.Controls.SelectionChangedEventArgs) Handles tabControl.SelectionChanged
 			UpdateScrollPosition(GetCurrentListBox())
 		End Sub
 

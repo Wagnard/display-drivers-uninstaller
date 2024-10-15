@@ -2,16 +2,14 @@
 Imports System.IO
 Imports System.Text
 Imports System.Reflection
-Imports System.Runtime.InteropServices
 Imports System.Security.Cryptography
-Imports System.Windows.Forms
 Imports Microsoft.Win32
 Imports Display_Driver_Uninstaller.Win32
 
 Namespace Display_Driver_Uninstaller
 
 	Public Module Tools
-		Dim FileIO As New FileIO
+		ReadOnly FileIO As New FileIO
 		' 9 = vbTAB --- 10 = vbLF --- 11 = vbVerticalTab --- 12 = vbFormFeed --- 13 = vbCR --- 32 = SPACE
 		Private ReadOnly whiteSpaceChars As Char() = New Char() {ChrW(9), ChrW(10), ChrW(11), ChrW(12), ChrW(13), ChrW(32)}
 

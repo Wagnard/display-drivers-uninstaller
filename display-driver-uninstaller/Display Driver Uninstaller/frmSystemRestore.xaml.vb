@@ -3,12 +3,12 @@ Imports Microsoft.Win32
 
 Namespace Display_Driver_Uninstaller
 
-	Public Class frmSystemRestore
+	Public Class FrmSystemRestore
 		Implements IDisposable
 		Private disposed As Boolean
 		Private ReadOnly canClose2 As New EventWaitHandle(True, EventResetMode.ManualReset) ' Thread safe!
 
-		Private Sub frmSystemRestore_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
+		Private Sub FrmSystemRestore_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
 			Languages.TranslateForm(Me)
 		End Sub
 
@@ -73,14 +73,14 @@ Namespace Display_Driver_Uninstaller
 			End Try
 		End Sub
 
-		Private Sub frmSystemRestore_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles MyBase.Closing
+		Private Sub FrmSystemRestore_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles MyBase.Closing
 			If Not canClose2.WaitOne(0) Then
 				e.Cancel = True
 				Exit Sub
 			End If
 		End Sub
 
-		Private Sub frmSystemRestore_ContentRendered(sender As Object, e As EventArgs) Handles MyBase.ContentRendered
+		Private Sub FrmSystemRestore_ContentRendered(sender As Object, e As EventArgs) Handles MyBase.ContentRendered
 
 			Dim thread As New Thread(AddressOf CreateSystemRestore)
 			thread.Start()

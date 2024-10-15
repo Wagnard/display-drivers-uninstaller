@@ -7,7 +7,6 @@ Imports System.Text
 Imports Display_Driver_Uninstaller.Win32
 Imports System.Security.Principal
 Imports Microsoft.Win32
-Imports System.Runtime.InteropServices
 
 Namespace Display_Driver_Uninstaller
 
@@ -848,7 +847,7 @@ Namespace Display_Driver_Uninstaller
 				m_dispatcher.Invoke(Sub() SystemRestore(owner))
 			Else
 				If Application.Settings.CreateRestorePoint AndAlso Forms.SystemInformation.BootMode = Forms.BootMode.Normal Then
-					Dim frmSystemRestore As New frmSystemRestore With
+					Dim frmSystemRestore As New FrmSystemRestore With
 				 {
 				  .ResizeMode = ResizeMode.NoResize,
 				  .WindowStyle = WindowStyle.ToolWindow
@@ -886,10 +885,10 @@ Namespace Display_Driver_Uninstaller
 	End Class
 
 	Public Class Data
-		Private m_launchOptions As AppLaunchOptions
-		Private m_settings As AppSettings
-		Private m_paths As AppPaths
-		Private m_log As AppLog
+		Private ReadOnly m_launchOptions As AppLaunchOptions
+		Private ReadOnly m_settings As AppSettings
+		Private ReadOnly m_paths As AppPaths
+		Private ReadOnly m_log As AppLog
 
 		Public ReadOnly Property IsDebug As Boolean
 			Get

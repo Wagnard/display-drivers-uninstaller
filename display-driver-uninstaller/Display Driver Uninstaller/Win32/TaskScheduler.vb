@@ -1,5 +1,4 @@
-﻿Imports System.Collections
-Imports System.Reflection
+﻿Imports System.Reflection
 Imports System.Runtime.CompilerServices
 Imports System.Runtime.InteropServices
 Imports System.Security
@@ -34,8 +33,8 @@ Namespace Display_Driver_Uninstaller.Win32
 		Friend Shared ReadOnly iTaskGuid As Guid = Marshal.GenerateGuidForType(GetType(Version1.ITask))
 
 		Private _disposed As Boolean
-		Private _taskSchedulerV1 As Version1.ITaskScheduler = Nothing
-		Private _taskSchedulerV2 As Version2.TaskScheduler = Nothing
+		Private ReadOnly _taskSchedulerV1 As Version1.ITaskScheduler = Nothing
+		Private ReadOnly _taskSchedulerV2 As Version2.TaskScheduler = Nothing
 
 		Public Sub New(ByVal config As ThreadSettings)
 			_useV2 = (config.WinVersion >= OSVersion.WinVista)
@@ -222,8 +221,8 @@ Namespace Display_Driver_Uninstaller.Win32
 	Public Class TaskV2
 		Inherits Task
 
-		Private _taskFolder As Version2.ITaskFolder = Nothing
-		Private _task As Version2.IRegisteredTask = Nothing
+		Private ReadOnly _taskFolder As Version2.ITaskFolder = Nothing
+		Private ReadOnly _task As Version2.IRegisteredTask = Nothing
 
 		Friend Sub New(ByVal folder As Version2.ITaskFolder, ByVal task As Version2.IRegisteredTask)
 			_taskFolder = folder
@@ -322,7 +321,7 @@ Namespace Display_Driver_Uninstaller.Win32
 	Public Class TaskV1
 		Inherits Task
 
-		Private _taskScheduler As Version1.ITaskScheduler = Nothing
+		Private ReadOnly _taskScheduler As Version1.ITaskScheduler = Nothing
 		Private _task As Version1.ITask = Nothing
 
 		Friend Sub New(ByVal taskScheduler As Version1.ITaskScheduler, ByVal task As Version1.ITask)

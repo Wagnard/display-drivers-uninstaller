@@ -104,8 +104,8 @@
     <Compile Include="CleanupEngine.vb" />
     <Compile Include="DesktopIconRemover.vb" />
     <Compile Include="FileIO.vb" />
-    <Compile Include="frmSystemRestore.xaml.vb">
-      <DependentUpon>frmSystemRestore.xaml</DependentUpon>
+    <Compile Include="FrmSystemRestore.xaml.vb">
+      <DependentUpon>FrmSystemRestore.xaml</DependentUpon>
     </Compile>
     <Compile Include="GPUCleanup.vb" />
     <Compile Include="Inf.vb" />
@@ -122,11 +122,11 @@
     <Compile Include="frmAbout.xaml.vb">
       <DependentUpon>frmAbout.xaml</DependentUpon>
     </Compile>
-    <Compile Include="frmLaunch.xaml.vb">
-      <DependentUpon>frmLaunch.xaml</DependentUpon>
+    <Compile Include="FrmLaunch.xaml.vb">
+      <DependentUpon>FrmLaunch.xaml</DependentUpon>
     </Compile>
-    <Compile Include="frmLog.xaml.vb">
-      <DependentUpon>frmLog.xaml</DependentUpon>
+    <Compile Include="FrmLog.xaml.vb">
+      <DependentUpon>FrmLog.xaml</DependentUpon>
     </Compile>
     <Compile Include="AppSettings.vb" />
     <Compile Include="LogEntry.vb" />
@@ -147,11 +147,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="frmLaunch.xaml">
+    <Page Include="FrmLaunch.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="frmMain.xaml">
+    <Page Include="FrmMain.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -159,19 +159,19 @@
       <DependentUpon>Application.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="frmMain.xaml.vb">
-      <DependentUpon>frmMain.xaml</DependentUpon>
+    <Compile Include="FrmMain.xaml.vb">
+      <DependentUpon>FrmMain.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="frmLog.xaml">
+    <Page Include="FrmLog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="frmOptions.xaml">
+    <Page Include="FrmOptions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="frmSystemRestore.xaml">
+    <Page Include="FrmSystemRestore.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -197,8 +197,8 @@
     <Import Include="System.Windows.Navigation" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="frmOptions.xaml.vb">
-      <DependentUpon>frmOptions.xaml</DependentUpon>
+    <Compile Include="FrmOptions.xaml.vb">
+      <DependentUpon>FrmOptions.xaml</DependentUpon>
     </Compile>
     <Compile Include="Language.vb" />
     <Compile Include="My Project\AssemblyInfo.vb">

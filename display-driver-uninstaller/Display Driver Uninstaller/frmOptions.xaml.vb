@@ -1,13 +1,13 @@
 ﻿Namespace Display_Driver_Uninstaller
-	Public Class frmOptions
+	Public Class FrmOptions
 
-		Private Sub frmOptions_Loaded(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles MyBase.Loaded
+		Private Sub FrmOptions_Loaded(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles MyBase.Loaded
 			Languages.TranslateForm(Me)
 			Application.Settings.PreventWinUpdate = FrmMain.InfoDriverSearch
 			'AdjustWindow(Me)
 		End Sub
 
-		Private Sub btnClose_Click(sender As Object, e As RoutedEventArgs) Handles btnClose.Click
+		Private Sub BtnClose_Click(sender As Object, e As RoutedEventArgs) Handles btnClose.Click
 			Me.Close()
 		End Sub
 

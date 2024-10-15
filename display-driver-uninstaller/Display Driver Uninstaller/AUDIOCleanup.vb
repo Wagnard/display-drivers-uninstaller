@@ -4,8 +4,8 @@ Imports Microsoft.Win32
 Namespace Display_Driver_Uninstaller
 	Public Class AUDIOCleanup
 		'todo
-		Private _cleanupEngine As New CleanupEngine
-		Private _fileIO As New FileIO
+		Private ReadOnly _cleanupEngine As New CleanupEngine
+		Private ReadOnly _fileIO As New FileIO
 
 		Public Sub Start(ByVal config As ThreadSettings)
 			Dim win10 As Boolean = FrmMain.IsWindows10
@@ -332,7 +332,7 @@ Namespace Display_Driver_Uninstaller
 
 			Application.Log.AddMessage("Cleaning Directories (Please Wait...)")
 
-			_cleanupEngine.Folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\REALTEK\driverfiles.cfg"), config)
+			_cleanupEngine.Folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\REALTEK\driverfiles.cfg"))
 
 			filePath = config.Paths.ProgramFiles + "Realtek"
 			If _fileIO.ExistsDir(filePath) Then

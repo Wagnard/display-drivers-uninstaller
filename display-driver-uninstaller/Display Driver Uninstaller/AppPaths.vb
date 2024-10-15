@@ -4,8 +4,21 @@ Imports Display_Driver_Uninstaller.Win32
 
 Namespace Display_Driver_Uninstaller
 	Public Class AppPaths
-		Private m_exefile, m_dirapp, m_dirapproaming, m_dirsettings, m_dirlanguage, m_dirlog,
-	 m_roaming, m_sysdrive, m_windir, m_programfiles, m_programfilesx86, m_userpath, m_system32, m_syswow64 As String
+
+		Private m_exefile As String
+		Private m_dirapp As String
+		Private m_dirapproaming As String
+		Private m_dirsettings As String
+		Private m_dirlanguage As String
+		Private m_dirlog As String
+		Private m_roaming As String
+		Private m_sysdrive As String
+		Private m_windir As String
+		Private m_programfiles As String
+		Private m_programfilesx86 As String
+		Private m_userpath As String
+		Private m_system32 As String
+		Private m_syswow64 As String
 
 		'NOTE!!! All paths ends with \
 		'No need to check for ending \
