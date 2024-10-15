@@ -119,8 +119,8 @@
     <Compile Include="AppLog.vb" />
     <Compile Include="AppPaths.vb" />
     <Compile Include="Converters.vb" />
-    <Compile Include="frmAbout.xaml.vb">
-      <DependentUpon>frmAbout.xaml</DependentUpon>
+    <Compile Include="FrmAbout.xaml.vb">
+      <DependentUpon>FrmAbout.xaml</DependentUpon>
     </Compile>
     <Compile Include="FrmLaunch.xaml.vb">
       <DependentUpon>FrmLaunch.xaml</DependentUpon>
@@ -143,7 +143,7 @@
     <Compile Include="Win32\TaskScheduler.vb" />
     <Compile Include="Win32\Win32.vb" />
     <Compile Include="Win32\WinAPI.vb" />
-    <Page Include="frmAbout.xaml">
+    <Page Include="FrmAbout.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
