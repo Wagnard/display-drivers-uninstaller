@@ -127,8 +127,8 @@ Namespace Display_Driver_Uninstaller
 
 		Public Sub RemoveAppx1809(ByVal AppxToRemove As String)
 			Dim ServiceInstaller As New ServiceInstaller
-			Dim win10 As Boolean = frmMain.IsWindows10
-			Dim win10_1809 As Boolean = frmMain.IsWindows10_1809
+			Dim win10 As Boolean = FrmMain.IsWindows10
+			Dim win10_1809 As Boolean = FrmMain.IsWindows10_1809
 			If win10 Then
 				If WindowsIdentity.GetCurrent().IsSystem Then
 					ImpersonateLoggedOnUser.ReleaseToken()  'Will not work if we impersonate "SYSTEM"
@@ -524,8 +524,8 @@ Namespace Display_Driver_Uninstaller
 
 		Public Sub RemoveAppx(ByVal AppxToRemove As String)
 			Dim ServiceInstaller As New ServiceInstaller
-			Dim win10 As Boolean = frmMain.IsWindows10
-			Dim win10_1809 As Boolean = frmMain.IsWindows10_1809
+			Dim win10 As Boolean = FrmMain.IsWindows10
+			Dim win10_1809 As Boolean = FrmMain.IsWindows10_1809
 			Dim WasRemoved As Boolean = False
 			If win10 Then
 				If WindowsIdentity.GetCurrent().IsSystem Then
@@ -1667,7 +1667,7 @@ Namespace Display_Driver_Uninstaller
 				If regkey IsNot Nothing Then
 					For Each service As String In services
 						If IsNullOrWhitespace(service) Then Continue For
-						If (config.RemoveAudioBus = False OrElse frmMain.DoNotRemoveAmdHdAudioBusFiles) AndAlso StrContainsAny(service, True, "amdkmafd") Then Continue For
+						If (config.RemoveAudioBus = False OrElse FrmMain.DoNotRemoveAmdHdAudioBusFiles) AndAlso StrContainsAny(service, True, "amdkmafd") Then Continue For
 						If (config.RemoveAMDKMPFD = False Or config.NotPresentAMDKMPFD = False) AndAlso StrContainsAny(service, True, "amdkmpfd") Then Continue For
 						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
 							If regkey2 IsNot Nothing Then
@@ -1823,7 +1823,7 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Public Sub PrePnplockdownfiles(ByVal oeminf As String, ByVal config As ThreadSettings)
-			Dim win8higher = frmMain.IsWindows8OrHigher
+			Dim win8higher = FrmMain.IsWindows8OrHigher
 			Dim processinfo As New ProcessStartInfo
 			Dim process As New Process
 			Dim sourceValue As String
@@ -1858,8 +1858,8 @@ Namespace Display_Driver_Uninstaller
 
 		Public Sub Pnplockdownfiles(ByVal driverfiles As String(), ByVal config As ThreadSettings)
 
-			Dim winxp = frmMain.IsWindowsXp
-			Dim win8higher = frmMain.IsWindows8OrHigher
+			Dim winxp = FrmMain.IsWindowsXp
+			Dim win8higher = FrmMain.IsWindows8OrHigher
 			Dim processinfo As New ProcessStartInfo
 			Dim process As New Process
 
@@ -2717,7 +2717,7 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Public Sub Folderscleanup(ByVal driverfiles As String(), ByVal config As ThreadSettings)
-			Dim winxp = frmMain.IsWindowsXp
+			Dim winxp = FrmMain.IsWindowsXp
 
 			Dim TaskList = New List(Of Tasks.Task)()
 
@@ -2994,7 +2994,7 @@ Namespace Display_Driver_Uninstaller
 
 				If StrContainsAny(oem.Provider, True, CurrentProvider) Then
 					'before removing the oem we try to get the original inf name (win8+)
-					If frmMain.IsWindows8OrHigher Then
+					If FrmMain.IsWindows8OrHigher Then
 						If MyRegistry.OpenSubKey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverInfFiles\" & oem.FileName) IsNot Nothing Then
 							Try
 								catalog = MyRegistry.OpenSubKey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverInfFiles\" & oem.FileName).GetValue("Active").ToString
@@ -3036,8 +3036,8 @@ Namespace Display_Driver_Uninstaller
 					End If
 				End If
 				'check if the oem was removed to process to the pnplockdownfile if necessary
-				If frmMain.IsWindows8OrHigher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
-					If (config.RemoveAudioBus = False OrElse frmMain.DoNotRemoveAmdHdAudioBusFiles) AndAlso StrContainsAny(catalog, True, "amdkmafd") Then Continue For
+				If FrmMain.IsWindows8OrHigher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
+					If (config.RemoveAudioBus = False OrElse FrmMain.DoNotRemoveAmdHdAudioBusFiles) AndAlso StrContainsAny(catalog, True, "amdkmafd") Then Continue For
 					PrePnplockdownfiles(catalog, config)
 				End If
 			Next
@@ -3047,7 +3047,7 @@ Namespace Display_Driver_Uninstaller
 			Application.Log.AddMessage("Driver Store CleanUP Complete.")
 		End Sub
 		Public Sub Fixregistrydriverstore(ByVal config As ThreadSettings)
-			Dim win8higher As Boolean = frmMain.IsWindows8OrHigher
+			Dim win8higher As Boolean = FrmMain.IsWindows8OrHigher
 			Dim FileIO As New FileIO
 
 			ImpersonateLoggedOnUser.Taketoken()
@@ -3127,7 +3127,7 @@ Namespace Display_Driver_Uninstaller
 									Dim dirinfo As New System.IO.DirectoryInfo(child)
 									If dirinfo.Name.ToLower.StartsWith("c030") Or
 								 StrContainsAny(dirinfo.Name, True, "atihdwt6.inf") Or
-								 (config.RemoveAudioBus AndAlso frmMain.DoNotRemoveAmdHdAudioBusFiles = False) AndAlso StrContainsAny(dirinfo.Name, True, "amdkmafd.inf") Then
+								 (config.RemoveAudioBus AndAlso FrmMain.DoNotRemoveAmdHdAudioBusFiles = False) AndAlso StrContainsAny(dirinfo.Name, True, "amdkmafd.inf") Then
 										Try
 											Delete(child)
 										Catch ex As Exception
@@ -3173,11 +3173,11 @@ Namespace Display_Driver_Uninstaller
 
 
 		Private Sub UpdateTextMethod(ByVal strMessage As String)
-			frmMain.UpdateTextMethod(strMessage)
+			FrmMain.UpdateTextMethod(strMessage)
 		End Sub
 
 		Private Function UpdateTextTranslated(ByVal number As Integer) As String
-			Return frmMain.UpdateTextTranslated(number)
+			Return FrmMain.UpdateTextTranslated(number)
 		End Function
 
 	End Class

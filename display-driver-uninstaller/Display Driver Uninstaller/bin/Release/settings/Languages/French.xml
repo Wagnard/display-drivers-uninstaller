@@ -306,6 +306,9 @@
                Note : Cela n'empêche pas "Windows Update" de télécharger/installer de nouveaux pilotes. 
                Note 2 : Il est également *HAUTEMENT* recommandé d'annuler ce changement après avoir terminé l'utilisation de DDU et réinstallé le pilote de votre GPU ou vous pourriez avoir des problèmes avec l'installation d'autres périphériques.</Tooltip>
      </lblPreventWinUpdate>
+		<lblRememberLastChoice>
+			<Text>Se souvenir du dernier GPU sélectionné</Text>	
+		</lblRememberLastChoice>
   </frmOptions>
 
 	<frmLaunch Text="Option de démarrage">

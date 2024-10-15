@@ -3,7 +3,7 @@
 
 		Private Sub frmOptions_Loaded(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles MyBase.Loaded
 			Languages.TranslateForm(Me)
-			Application.Settings.PreventWinUpdate = frmMain.InfoDriverSearch
+			Application.Settings.PreventWinUpdate = FrmMain.InfoDriverSearch
 			'AdjustWindow(Me)
 		End Sub
 
@@ -14,9 +14,9 @@
 		Private Sub Chk_lblPreventWinUpdate(sender As Object, e As RoutedEventArgs) Handles lblPreventWinUpdate.Click
 
 			If lblPreventWinUpdate.IsChecked Then
-				frmMain.EnableDriverSearch(False)
+				FrmMain.EnableDriverSearch(False)
 			Else
-				frmMain.EnableDriverSearch(True)
+				FrmMain.EnableDriverSearch(True)
 			End If
 
 		End Sub

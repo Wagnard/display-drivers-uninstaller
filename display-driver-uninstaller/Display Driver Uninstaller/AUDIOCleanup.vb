@@ -8,7 +8,7 @@ Namespace Display_Driver_Uninstaller
 		Private _fileIO As New FileIO
 
 		Public Sub Start(ByVal config As ThreadSettings)
-			Dim win10 As Boolean = frmMain.IsWindows10
+			Dim win10 As Boolean = FrmMain.IsWindows10
 			Dim vendidexpected As String = ""
 			Dim VendidSC As String() = Nothing   ' "SoftwareComponent" Vendor ID
 
@@ -147,7 +147,7 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Private Sub CleanRealtek(ByVal config As ThreadSettings)
-			Dim win10 As Boolean = frmMain.IsWindows10
+			Dim win10 As Boolean = FrmMain.IsWindows10
 			Dim packages As String()
 			Dim wantedvalue As String = Nothing
 
@@ -422,11 +422,11 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Private Sub UpdateTextMethod(ByVal strMessage As String)
-			frmMain.UpdateTextMethod(strMessage)
+			FrmMain.UpdateTextMethod(strMessage)
 		End Sub
 
 		Private Function UpdateTextTranslated(ByVal number As Integer) As String
-			Return frmMain.UpdateTextTranslated(number)
+			Return FrmMain.UpdateTextTranslated(number)
 		End Function
 
 		Private Sub Delete(ByVal filename As String)

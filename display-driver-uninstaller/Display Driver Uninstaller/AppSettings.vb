@@ -121,6 +121,9 @@ Namespace Display_Driver_Uninstaller
 		Private m_PreventWinUpdate As DependencyProperty = RegDP("PreventWinUpdate", GetType(Boolean), GetType(AppSettings), False)
 		Private m_FirstTimeLaunch As DependencyProperty = RegDP("FirstTimeLaunch", GetType(Boolean), GetType(AppSettings), False)
 		Private m_UsedBCD As DependencyProperty = RegDP("UsedBCD", GetType(Boolean), GetType(AppSettings), False)
+		Private m_RememberLastChoice As DependencyProperty = RegDP("RememberLastChoice", GetType(Boolean), GetType(AppSettings), False)
+		Private m_LastSelectedGPUIndex As DependencyProperty = RegDP("LastSelectedGPUIndex", GetType(Integer), GetType(AppSettings), 0)
+		Private m_LastSelectedTypeIndex As DependencyProperty = RegDP("LastSelectedTypeIndex", GetType(Integer), GetType(AppSettings), 0)
 
 #End Region
 
@@ -456,6 +459,33 @@ Namespace Display_Driver_Uninstaller
 			End Set
 		End Property
 
+		Public Property RememberLastChoice As Boolean
+			Get
+				Return CBool(GetValue(m_RememberLastChoice))
+			End Get
+			Set(value As Boolean)
+				SetValue(m_RememberLastChoice, value)
+			End Set
+		End Property
+
+		Public Property LastSelectedGPUIndex As Integer
+			Get
+				Return CInt(GetValue(m_LastSelectedGPUIndex))
+			End Get
+			Set(value As Integer)
+				SetValue(m_LastSelectedGPUIndex, value)
+			End Set
+		End Property
+
+		Public Property LastSelectedTypeIndex As Integer
+			Get
+				Return CInt(GetValue(m_LastSelectedTypeIndex))
+			End Get
+			Set(value As Integer)
+				SetValue(m_LastSelectedTypeIndex, value)
+			End Set
+		End Property
+
 #End Region
 
 		Private Sub UpdateWinText(ByVal version As OSVersion)
@@ -600,7 +630,9 @@ Namespace Display_Driver_Uninstaller
 							.WriteElementString("PreventWinUpdate", PreventWinUpdate.ToString())
 							.WriteElementString("UsedBCD", UsedBCD.ToString())
 							.WriteElementString("KeepNVCPopt", KeepNVCPopt.ToString())
-
+							.WriteElementString("RememberLastChoice", RememberLastChoice.ToString())
+							.WriteElementString("LastSelectedGPUIndex", LastSelectedGPUIndex.ToString())
+							.WriteElementString("LastSelectedTypeIndex", LastSelectedTypeIndex.ToString())
 
 							.WriteEndElement()
 
@@ -772,6 +804,15 @@ Namespace Display_Driver_Uninstaller
 
 								Case "usedbcd"
 									UsedBCD = Boolean.Parse(KvP.Value)
+
+								Case "rememberlastchoice"
+									RememberLastChoice = Boolean.Parse(KvP.Value)
+
+								Case "lastselectedgpuindex"
+									LastSelectedGPUIndex = Integer.Parse(KvP.Value)
+
+								Case "lastselectedtypeindex"
+									LastSelectedTypeIndex = Integer.Parse(KvP.Value)
 
 							End Select
 						Next

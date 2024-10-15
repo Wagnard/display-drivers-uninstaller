@@ -26,7 +26,7 @@ Imports Display_Driver_Uninstaller.Win32
 
 Namespace Display_Driver_Uninstaller
 
-	Public Class frmMain
+	Public Class FrmMain
 		Private Shared _cleaningTask As Tasks.Task = Nothing
 		Private Shared _workTask As Tasks.Task = Nothing
 
@@ -185,7 +185,7 @@ Namespace Display_Driver_Uninstaller
 
 #Region "frmMain Controls"
 
-		Private Sub btnCleanRestart_Click(sender As Object, e As RoutedEventArgs) Handles btnCleanRestart.Click
+		Private Sub BtnCleanRestart_Click(sender As Object, e As RoutedEventArgs) Handles btnCleanRestart.Click
 
 			Dim config As New ThreadSettings(False)
 			config.Shutdown = False
@@ -197,7 +197,7 @@ Namespace Display_Driver_Uninstaller
 			StartThread(config)
 		End Sub
 
-		Private Sub btnClean_Click(sender As Object, e As RoutedEventArgs) Handles btnClean.Click
+		Private Sub BtnClean_Click(sender As Object, e As RoutedEventArgs) Handles btnClean.Click
 
 			Dim config As New ThreadSettings(False)
 			config.Shutdown = False
@@ -209,7 +209,7 @@ Namespace Display_Driver_Uninstaller
 			StartThread(config)
 		End Sub
 
-		Private Sub btnCleanShutdown_Click(sender As Object, e As RoutedEventArgs) Handles btnCleanShutdown.Click
+		Private Sub BtnCleanShutdown_Click(sender As Object, e As RoutedEventArgs) Handles btnCleanShutdown.Click
 
 			Dim config As New ThreadSettings(False)
 			config.Shutdown = True
@@ -221,11 +221,11 @@ Namespace Display_Driver_Uninstaller
 			StartThread(config)
 		End Sub
 
-		Private Sub btnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
+		Private Sub BtnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
 			EnableDriverSearch(True)
 		End Sub
 
-		Private Sub cbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
+		Private Sub CbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
 			If Application.Settings.SelectedLanguage IsNot Nothing Then
 				Languages.Load(Application.Settings.SelectedLanguage)
 
@@ -241,17 +241,33 @@ Namespace Display_Driver_Uninstaller
 
 				'Combobox does not translate themselve, we must push the updated ItemsSource.
 				cbSelectedType.ItemsSource = {Languages.GetTranslation("frmMain", "Options_Type", "Options1"), Languages.GetTranslation("frmMain", "Options_Type", "Options2"), Languages.GetTranslation("frmMain", "Options_Type", "Options3")}
-				cbSelectedType.SelectedIndex = 0
+				cbSelectedType.SelectedIndex = If(Application.Settings.RememberLastChoice, Application.Settings.LastSelectedTypeIndex, 0)
+
+				Select Case Application.Settings.SelectedType
+					Case CleanType.None, CleanType.GPU
+						cbSelectedGPU.ItemsSource = {
+			Languages.GetTranslation("frmMain", "Options_GPU", "Options1"),
+			Languages.GetTranslation("frmMain", "Options_GPU", "Options2"),
+			Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
+			Languages.GetTranslation("frmMain", "Options_GPU", "Options4")
+		} ' The order is important, check Appsettings.vb
+					Case CleanType.Audio
+						cbSelectedGPU.ItemsSource = {
+			Languages.GetTranslation("frmMain", "Options_AUDIO", "Options1"),
+			Languages.GetTranslation("frmMain", "Options_AUDIO", "Options2"),
+			Languages.GetTranslation("frmMain", "Options_AUDIO", "Options3")
+		} ' The order is important, check Appsettings.vb
+				End Select
 			End If
 		End Sub
 
-		Private Sub imgDonate_Click(sender As Object, e As EventArgs) Handles imgDonate.Click
+		Private Sub ImgDonate_Click(sender As Object, e As EventArgs) Handles imgDonate.Click
 			WinAPI.OpenVisitLink(" -visitdonate")
 		End Sub
-		Private Sub imgPatron_Click(sender As Object, e As EventArgs) Handles imgPatron.Click
+		Private Sub ImgPatron_Click(sender As Object, e As EventArgs) Handles imgPatron.Click
 			WinAPI.OpenVisitLink(" -visitpatron")
 		End Sub
-		Private Sub imgDiscord_Click(sender As Object, e As EventArgs) Handles imgDiscord.Click
+		Private Sub ImgDiscord_Click(sender As Object, e As EventArgs) Handles imgDiscord.Click
 			WinAPI.OpenVisitLink(" -visitdiscord")
 		End Sub
 
@@ -326,7 +342,7 @@ Namespace Display_Driver_Uninstaller
 			Me.Activate()
 		End Sub
 
-		Private Sub imgOffer_Click(sender As Object, e As RoutedEventArgs) Handles imgOffer.Click
+		Private Sub ImgOffer_Click(sender As Object, e As RoutedEventArgs) Handles imgOffer.Click
 			WinAPI.OpenVisitLink(" -visitoffer")
 		End Sub
 
@@ -334,7 +350,7 @@ Namespace Display_Driver_Uninstaller
 
 #Region "frmMain Events"
 
-		Private Sub frmMain_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
+		Private Sub FrmMain_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
 
 			Languages.TranslateForm(Me, False)
 		End Sub
@@ -378,17 +394,17 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 		End Sub
-		Private Sub frmMain_ContentRendered(sender As System.Object, e As System.EventArgs) Handles MyBase.ContentRendered
+		Private Sub FrmMain_ContentRendered(sender As System.Object, e As System.EventArgs) Handles MyBase.ContentRendered
 			Me.Topmost = False
 
 			Try
 				'cbSelectedGPU.ItemsSource = [Enum].GetValues(GetType(GPUVendor))
-				cbSelectedType.ItemsSource = {Languages.GetTranslation("frmMain", "Options_Type", "Options1"), Languages.GetTranslation("frmMain", "Options_Type", "Options2"), Languages.GetTranslation("frmMain", "Options_Type", "Options3")}
-				cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_GPU", "Options1"), Languages.GetTranslation("frmMain", "Options_GPU", "Options2"), Languages.GetTranslation("frmMain", "Options_GPU", "Options3"), Languages.GetTranslation("frmMain", "Options_GPU", "Options4")} 'the order is important, check Appsettings.vb
+				'cbSelectedType.ItemsSource = {Languages.GetTranslation("frmMain", "Options_Type", "Options1"), Languages.GetTranslation("frmMain", "Options_Type", "Options2"), Languages.GetTranslation("frmMain", "Options_Type", "Options3")}
+				'cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_GPU", "Options1"), Languages.GetTranslation("frmMain", "Options_GPU", "Options2"), Languages.GetTranslation("frmMain", "Options_GPU", "Options3"), Languages.GetTranslation("frmMain", "Options_GPU", "Options4")} 'the order is important, check Appsettings.vb
 				'cbSelectedType.ItemsSource = [Enum].GetValues(GetType(CleanType))
 
 
-				cbSelectedType.SelectedIndex = 0
+				cbSelectedType.SelectedIndex = If(Application.Settings.RememberLastChoice, Application.Settings.LastSelectedTypeIndex, 0)
 				If Not Application.LaunchOptions.Silent Then
 					If WinForm.SystemInformation.BootMode <> Forms.BootMode.FailSafe Then
 						_checkUpdate.CheckUpdates()
@@ -513,7 +529,7 @@ Namespace Display_Driver_Uninstaller
 
 		End Sub
 
-		Private Sub frmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
+		Private Sub FrmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
 			Try
 				If CleaningTask IsNot Nothing AndAlso Not CleaningTask.IsCompleted Then
 					e.Cancel = True
@@ -961,15 +977,15 @@ Namespace Display_Driver_Uninstaller
 
 			Dim uiContent As UIElement = TryCast(Me.Content, UIElement)
 
-				If uiContent IsNot Nothing Then
-					uiContent.IsEnabled = enabled
-				Else
-					cbLanguage.IsEnabled = enabled          'Selecting this at runtime maybe not good idea.. ;)
-					cbSelectedGPU.IsEnabled = enabled
-					ButtonsPanel.IsEnabled = enabled
-					btnWuRestore.IsEnabled = enabled
-					MenuStrip1.IsEnabled = enabled
-				End If
+			If uiContent IsNot Nothing Then
+				uiContent.IsEnabled = enabled
+			Else
+				cbLanguage.IsEnabled = enabled          'Selecting this at runtime maybe not good idea.. ;)
+				cbSelectedGPU.IsEnabled = enabled
+				ButtonsPanel.IsEnabled = enabled
+				btnWuRestore.IsEnabled = enabled
+				MenuStrip1.IsEnabled = enabled
+			End If
 
 		End Sub
 
@@ -1185,7 +1201,7 @@ Namespace Display_Driver_Uninstaller
 		' "Universal" solution, can be used for Nvidia/Intel too
 
 
-		Private Sub testing2MenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles testingMenuItem.Click
+		Private Sub Testing2MenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles testingMenuItem.Click
 			' TESTING / LOGGING (FILE)
 
 			Dim sfd As New SaveFileDialog() With
@@ -1242,7 +1258,7 @@ Namespace Display_Driver_Uninstaller
 			End If
 		End Sub
 
-		Private Sub checkXMLMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles checkXMLMenuItem.Click
+		Private Sub CheckXMLMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles checkXMLMenuItem.Click
 			Dim current As Languages.LanguageOption = Application.Settings.SelectedLanguage
 
 			Languages.CheckLanguageFiles()
@@ -1256,7 +1272,7 @@ Namespace Display_Driver_Uninstaller
 			testWindow.ShowDialog()
 		End Sub
 
-		Private Sub cbSelectedGPU_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedGPU.SelectionChanged
+		Private Sub CbSelectedGPU_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedGPU.SelectionChanged
 
 			Select Case cbSelectedType.SelectedIndex
 
@@ -1271,14 +1287,17 @@ Namespace Display_Driver_Uninstaller
 							Application.Settings.SelectedGPU = GPUVendor.None
 							Application.Settings.SelectedAUDIO = AudioVendor.None
 							ButtonsPanel.IsEnabled = False
+							'Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
 						Case 1
 							Application.Settings.SelectedAUDIO = AudioVendor.Realtek
 							cbSelectedGPU.IsEnabled = True
 							ButtonsPanel.IsEnabled = True
+							Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
 						Case 2
 							Application.Settings.SelectedAUDIO = AudioVendor.SoundBlaster
 							cbSelectedGPU.IsEnabled = True
 							ButtonsPanel.IsEnabled = True
+							Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
 
 					End Select
 				Case CleanType.GPU
@@ -1289,25 +1308,31 @@ Namespace Display_Driver_Uninstaller
 							Application.Settings.SelectedGPU = GPUVendor.None
 							Application.Settings.SelectedAUDIO = AudioVendor.None
 							ButtonsPanel.IsEnabled = False
+							'Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
 						Case 1
 							Application.Settings.SelectedGPU = GPUVendor.Nvidia
 							cbSelectedGPU.IsEnabled = True
 							ButtonsPanel.IsEnabled = True
+							Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
 						Case 2
 							Application.Settings.SelectedGPU = GPUVendor.AMD
 							cbSelectedGPU.IsEnabled = True
 							ButtonsPanel.IsEnabled = True
+							Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
 						Case 3
 							Application.Settings.SelectedGPU = GPUVendor.Intel
 							cbSelectedGPU.IsEnabled = True
 							ButtonsPanel.IsEnabled = True
+							Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
 					End Select
 
 			End Select
 
 		End Sub
 
-		Private Sub cbSelectedType_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedType.SelectionChanged
+		Private Sub CbSelectedType_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedType.SelectionChanged
+
+			Application.Settings.LastSelectedTypeIndex = cbSelectedType.SelectedIndex
 
 			Select Case cbSelectedType.SelectedIndex
 				Case 0
@@ -1323,13 +1348,15 @@ Namespace Display_Driver_Uninstaller
 					cbSelectedGPU.IsEnabled = True
 					cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_AUDIO", "Options1"), Languages.GetTranslation("frmMain", "Options_AUDIO", "Options2"), Languages.GetTranslation("frmMain", "Options_AUDIO", "Options3")}  ' the order is important, check Appsettings.vb
 					cbSelectedGPU.SelectedIndex = 0
+					cbSelectedGPU.SelectedIndex = If(Application.Settings.RememberLastChoice, Application.Settings.LastSelectedGPUIndex, 0)
 
 				Case 2
 					Application.Settings.SelectedType = CleanType.GPU
 					cbSelectedGPU.IsEnabled = True
 					cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_GPU", "Options1"), Languages.GetTranslation("frmMain", "Options_GPU", "Options2"), Languages.GetTranslation("frmMain", "Options_GPU", "Options3"), Languages.GetTranslation("frmMain", "Options_GPU", "Options4")} 'the order is important, check Appsettings.vb
 					cbSelectedGPU.SelectedIndex = 0
-					cbSelectedGPU.SelectedIndex = GPUIdentify()
+					cbSelectedGPU.SelectedIndex = If(Application.Settings.RememberLastChoice, Application.Settings.LastSelectedGPUIndex, GPUIdentify())
+
 			End Select
 
 		End Sub
@@ -1337,11 +1364,11 @@ Namespace Display_Driver_Uninstaller
 			_cleanupEngine.Cleandriverstore(config)
 		End Sub
 
-		Private Sub frmMain_Initialized(sender As Object, e As EventArgs) Handles MyBase.Initialized
+		Private Sub FrmMain_Initialized(sender As Object, e As EventArgs) Handles MyBase.Initialized
 			SharedLogBox = lbLog
 		End Sub
 
-		Private Sub lblOffer_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles lblOffer.MouseDown
+		Private Sub LblOffer_MouseDown(sender As Object, e As MouseButtonEventArgs) Handles lblOffer.MouseDown
 			WinAPI.OpenVisitLink(" -visitoffer")
 		End Sub
 	End Class

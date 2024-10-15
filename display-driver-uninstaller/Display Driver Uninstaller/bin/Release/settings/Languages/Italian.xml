@@ -306,6 +306,9 @@
                NOTA 1: questa opzione non impedirà a "Windows Update" di scaricare/installare nuovi driver.
                NOTA 2: inoltre, è *FORTEMENTE RACCOMANDATO* dopo aver terminato l'uso di DDU e reinstallato i driver riattivare la verifica degli aggiornamenti dei driver in "Windows Update" o potresti avere problemi con l'installazione di altri dispositivi.</Tooltip>
     </lblPreventWinUpdate>
+	<lblRememberLastChoice>
+			<Text>Ricorda l'ultimo GPU selezionato</Text>	
+	</lblRememberLastChoice>
 	</frmOptions>
 
 	<frmLaunch Text="Display Driver Uninstaller (DDU)">

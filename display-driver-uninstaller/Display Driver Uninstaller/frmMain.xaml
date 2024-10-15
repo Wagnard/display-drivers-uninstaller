@@ -1,4 +1,4 @@
-﻿<Window x:Class="Display_Driver_Uninstaller.frmMain" x:Name="frmMain"
+﻿<Window x:Class="Display_Driver_Uninstaller.FrmMain" x:Name="frmMain"
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -129,7 +129,7 @@
 
 		<DockPanel Grid.Row="2" Grid.RowSpan="1" Grid.Column="3" Margin="10,0">
 			<DockPanel DockPanel.Dock="Bottom" Grid.Row="1" Grid.Column="3" >
-				<ComboBox Name="cbSelectedType" HorizontalAlignment="Stretch" VerticalAlignment="Center"  DockPanel.Dock="Top" SelectedIndex="0" />
+				<ComboBox Name="cbSelectedType" HorizontalAlignment="Stretch" VerticalAlignment="Center"  DockPanel.Dock="Top" />
 			</DockPanel>
 
 			<Border DockPanel.Dock="Bottom" Margin="0,0,0,10">

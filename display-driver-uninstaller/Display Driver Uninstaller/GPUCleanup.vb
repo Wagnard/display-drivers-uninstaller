@@ -11,9 +11,9 @@ Namespace Display_Driver_Uninstaller
 	Public Class GPUCleanup
 
 		Private _fileIo As New FileIO
-		Private _winxp As Boolean = frmMain.IsWindowsXp
-		Private _win10 As Boolean = frmMain.IsWindows10
-		Private _isWindows8OrHigher As Boolean = frmMain.IsWindows8OrHigher
+		Private _winxp As Boolean = FrmMain.IsWindowsXp
+		Private _win10 As Boolean = FrmMain.IsWindows10
+		Private _isWindows8OrHigher As Boolean = FrmMain.IsWindows8OrHigher
 		Private _sysdrv As String = Application.Paths.SystemDrive
 
 		Public Sub Start(ByVal config As ThreadSettings)
@@ -255,7 +255,7 @@ Namespace Display_Driver_Uninstaller
 				ImpersonateLoggedOnUser.Taketoken()
 				'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
 				Try
-					frmMain.DoNotRemoveAmdHdAudioBusFiles = False
+					FrmMain.DoNotRemoveAmdHdAudioBusFiles = False
 					Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\PCI")
 						If subregkey IsNot Nothing Then
 							For Each child2 As String In subregkey.GetSubKeyNames()
@@ -274,7 +274,7 @@ Namespace Display_Driver_Uninstaller
 
 														If StrContainsAny(entry, True, "amdkmafd") Then
 															Application.Log.AddWarningMessage("Found a remaining AMD audio controller bus ! Preventing the removal of its driverfiles.")
-															frmMain.DoNotRemoveAmdHdAudioBusFiles = True
+															FrmMain.DoNotRemoveAmdHdAudioBusFiles = True
 														End If
 													Next
 												End If
@@ -287,7 +287,7 @@ Namespace Display_Driver_Uninstaller
 					End Using
 				Catch ex As Exception
 					Application.Log.AddException(ex)
-					frmMain.DoNotRemoveAmdHdAudioBusFiles = True  ' A security if the code to check fail.
+					FrmMain.DoNotRemoveAmdHdAudioBusFiles = True  ' A security if the code to check fail.
 				End Try
 
 				If WindowsIdentity.GetCurrent().IsSystem Then
@@ -1334,7 +1334,7 @@ Namespace Display_Driver_Uninstaller
 				CleanupEngine.Pnplockdownfiles(driverfilesKMPFD, config)
 			End If
 
-			If config.RemoveAudioBus AndAlso frmMain.donotremoveamdhdaudiobusfiles = False Then
+			If config.RemoveAudioBus AndAlso FrmMain.donotremoveamdhdaudiobusfiles = False Then
 				CleanupEngine.Pnplockdownfiles(driverfilesKMAFD, config)
 			End If
 
@@ -2592,7 +2592,7 @@ Namespace Display_Driver_Uninstaller
 				TaskList.Add(thread2)
 			End If
 
-			If config.RemoveAudioBus AndAlso frmMain.donotremoveamdhdaudiobusfiles = False Then
+			If config.RemoveAudioBus AndAlso FrmMain.donotremoveamdhdaudiobusfiles = False Then
 				Dim thread3 As Tasks.Task = Threading.Tasks.Task.Run(Sub() Threaddata1(driverfilesKMAFD, config))
 				TaskList.Add(thread3)
 			End If
@@ -3222,7 +3222,7 @@ Namespace Display_Driver_Uninstaller
 							Delete(child)
 
 						End If
-						If (config.RemoveAudioBus AndAlso frmMain.donotremoveamdhdaudiobusfiles = False) AndAlso StrContainsAny(child, True, "amdkmafd") Then
+						If (config.RemoveAudioBus AndAlso FrmMain.donotremoveamdhdaudiobusfiles = False) AndAlso StrContainsAny(child, True, "amdkmafd") Then
 
 							Delete(child)
 
@@ -3517,7 +3517,7 @@ Namespace Display_Driver_Uninstaller
 		End Function
 
 		Private Sub Checkpcieroot(ByVal config As ThreadSettings)   'This is for Nvidia Optimus to prevent the yellow mark on the PCI-E controler. We must remove the UpperFilters.
-			Dim win10 As Boolean = frmMain.IsWindows10
+			Dim win10 As Boolean = FrmMain.IsWindows10
 
 			If WindowsIdentity.GetCurrent().IsSystem Then
 				ImpersonateLoggedOnUser.ReleaseToken()
@@ -8101,11 +8101,11 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Private Sub UpdateTextMethod(ByVal strMessage As String)
-			frmMain.UpdateTextMethod(strMessage)
+			FrmMain.UpdateTextMethod(strMessage)
 		End Sub
 
 		Private Function UpdateTextTranslated(ByVal number As Integer) As String
-			Return frmMain.UpdateTextTranslated(number)
+			Return FrmMain.UpdateTextTranslated(number)
 		End Function
 
 		Private Sub Delete(ByVal filename As String)

@@ -29,7 +29,7 @@
 
 		End Sub
 		Private Sub btnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
-			frmMain.EnableDriverSearch(True)
+			FrmMain.EnableDriverSearch(True)
 			selection = cbBootOption.SelectedIndex
 
 			Me.DialogResult = False

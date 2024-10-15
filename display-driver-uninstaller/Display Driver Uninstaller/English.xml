@@ -300,12 +300,15 @@
 			<Text>Remove Vulkan Runtime</Text>
 			<Tooltip>Not recommended if you have two different GPUs capable of using the Vulkan API.</Tooltip>
 		</lblVulkan>
-    <lblPreventWinUpdate>
-      <Text>Prevent downloads of drivers from "Windows update" when "Windows" search for a driver for a device.</Text>
-      <Tooltip>In easy term, this option will denies "Windows/Device Manager" to check for driver update on "Windows Update". 
+		<lblPreventWinUpdate>
+			<Text>Prevent downloads of drivers from "Windows update" when "Windows" search for a driver for a device.</Text>
+			<Tooltip>In easy term, this option will denies "Windows/Device Manager" to check for driver update on "Windows Update". 
                Note: This doesn't prevent "Windows Update" to download/install new drivers. 
                Note2: It is also *HIGHLY* recommended to revert this change after you have finished using DDU and re-installed your GPU driver or you may have problem with other device installation.</Tooltip>
-     </lblPreventWinUpdate>
+		</lblPreventWinUpdate>
+		<lblRememberLastChoice>
+			<Text>Remember last selected GPU</Text>	
+		</lblRememberLastChoice>
   </frmOptions>
 
 	<frmLaunch Text="Launch option">

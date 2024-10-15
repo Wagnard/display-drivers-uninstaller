@@ -219,7 +219,7 @@ Namespace Display_Driver_Uninstaller
 		Private Sub LaunchMainWindow()
 			' >>> Loading UI <<<
 			Try
-				Dim window As frmMain = New frmMain() With {.DataContext = Data, .Topmost = True, .Visibility = Visibility.Visible}
+				Dim window As FrmMain = New FrmMain() With {.DataContext = Data, .Topmost = True, .Visibility = Visibility.Visible}
 
 				AddHandler window.Closing, AddressOf AppClosing
 				AddHandler window.Closed, AddressOf AppClose
@@ -259,13 +259,13 @@ Namespace Display_Driver_Uninstaller
 
 		Private Sub AppClosing(ByVal sender As Object, ByVal e As System.ComponentModel.CancelEventArgs)
 			Try
-				If frmMain.WorkTask IsNot Nothing Then                    ' workThread running, cleaning in progress!
+				If FrmMain.WorkTask IsNot Nothing Then                    ' workThread running, cleaning in progress!
 					' Should take few milliseconds...	
-					If frmMain.WorkTask.Status = Tasks.TaskStatus.Running Then Thread.Sleep(200)
-					If frmMain.WorkTask.Status = Tasks.TaskStatus.Running Then Thread.Sleep(2000)
+					If FrmMain.WorkTask.Status = Tasks.TaskStatus.Running Then Thread.Sleep(200)
+					If FrmMain.WorkTask.Status = Tasks.TaskStatus.Running Then Thread.Sleep(2000)
 
 					' workThread still running!
-					If frmMain.WorkTask.Status = Tasks.TaskStatus.Running Then
+					If FrmMain.WorkTask.Status = Tasks.TaskStatus.Running Then
 						e.Cancel = True
 						Exit Sub
 					End If

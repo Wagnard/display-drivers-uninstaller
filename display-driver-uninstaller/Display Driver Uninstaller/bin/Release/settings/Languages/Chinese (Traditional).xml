@@ -310,6 +310,9 @@
                備註：此選項不會禁止 Windows Update 下載或安裝新驅動程式。
                備註二：建議您於使用 DDU 並重新安裝驅動程式後取消此變更，否則使用新裝置時可能發生問題。</Tooltip>
      </lblPreventWinUpdate>
+	 	<lblRememberLastChoice>
+			<Text>記住上次選擇的GPU</Text>	
+		</lblRememberLastChoice>
   </frmOptions>
 
 	<frmLaunch Text="啟動選項">

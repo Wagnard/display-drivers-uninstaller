@@ -34,7 +34,7 @@
                 <DockPanel Grid.Row="0" Margin="10,10,10,10" DockPanel.Dock="Top" >
 					<Label DockPanel.Dock="Top" x:Name="lblGeneral" Content="lblGeneral" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
 
-                    <UniformGrid DockPanel.Dock="Top" Rows="7">
+                    <UniformGrid DockPanel.Dock="Top" Rows="8">
 						<CheckBox x:Name="lblRemMonitors" IsChecked="{Binding RemoveMonitors, Converter={StaticResource NulBoolToBool}}" Content="lblRemMonitors" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
 						<CheckBox x:Name="lblSaveLogs" IsChecked="{Binding SaveLogs, Converter={StaticResource NulBoolToBool}}" Content="lblSaveLogs" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
 						<CheckBox x:Name="lblCreateRestorePoint" IsChecked="{Binding CreateRestorePoint, Converter={StaticResource NulBoolToBool}}" Content="lblCreateRestorePoint" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
@@ -42,6 +42,7 @@
 						<CheckBox x:Name="lblCheckUpdates" IsChecked="{Binding CheckUpdates, Converter={StaticResource NulBoolToBool}}" Content="lblCheckUpdates" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
 						<CheckBox x:Name="lblVulkan" IsChecked="{Binding RemoveVulkan, Converter={StaticResource NulBoolToBool}}" Content="lblVulkan" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
 						<CheckBox x:Name="lblOffer" IsChecked="{Binding ShowOffer, Converter={StaticResource NulBoolToBool}}" Content="lblOffer" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
+						<CheckBox x:Name="lblRememberLastChoice" IsChecked="{Binding RememberLastChoice, Converter={StaticResource NulBoolToBool}}" Content="lblRememberLastChoice" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                     </UniformGrid>
                 </DockPanel>
 

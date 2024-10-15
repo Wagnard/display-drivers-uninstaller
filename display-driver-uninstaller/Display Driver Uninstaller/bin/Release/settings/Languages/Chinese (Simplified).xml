@@ -288,6 +288,9 @@
 				注 2: 当您已经完成使用 DDU 并且已经给显卡安装合适的驱动程序后, 强烈建议您将此选项恢复默认, 以防止其他设备出现问题。
 			</Tooltip>
 		</lblPreventWinUpdate>
+		<lblRememberLastChoice>
+			<Text>记住上次选择的GPU</Text>	
+		</lblRememberLastChoice>
 	</frmOptions>
 
 	<frmLaunch Text="启动选项">
