@@ -1,0 +1,468 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="es-ES" Text="Castellano (Español de España)" >
+	<!--
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
+
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<btnCleanRestart>
+			<Text>
+				Limpiar y reiniciar
+				(Altamente recomendado)
+			</Text>
+			<Tooltip>
+				Desinstalar los controladores actuales y anteriores, a continuación reiniciar el ordenador.
+				(Altamente recomendado)
+			</Tooltip>
+		</btnCleanRestart>
+		<btnClean>
+			<Text>
+				Limpiar y NO reiniciar
+				(Puede provocar problemas como pérdida de imagen)
+			</Text>
+			<Tooltip>
+				Desinstalar los controladores actuales y anteriores, pero no reiniciar el ordenador.
+				(Puede provocar problemas como pérdida de imagen)
+			</Tooltip>
+		</btnClean>
+		<btnCleanShutdown>
+			<Text>
+				Limpiar y apagar
+				(Para instalar una tarjeta gráfica nueva)
+			</Text>
+			<Tooltip>
+				Desinstalar los controladores actuales y anteriores y apagar el ordenador evitando la instalación automática de los mismos por el S.O.
+				(Para instalar una tarjeta gráfica nueva)
+			</Tooltip>
+		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Eliminar los archivos de instalación y caché de 'GeForce Experience'.
+				(Nota: Los controladores no serán eliminados)
+			</Text>
+			<Tooltip>
+				Su función principal es la de recuperar espacio en disco que el instalador de GFE no elimina (Versiones antiguas de GFE).
+			</Tooltip>
+		</btnCleanGfeDownloads>
+		<btnWuRestore>
+			<Text>
+				Reestablecer los valores de instalación de Dispositivos de Windows
+				(Windows instala los controladores automáticamente)
+			</Text>
+		</btnWuRestore>
+		<lblWinVersion>
+			<Text>Sistema operativo detectado:</Text>
+		</lblWinVersion>
+		<lblDonate>
+			<Text>*** ¿Le gusta DDU? Considere realizar una donación, la cual ayudará al futuro desarrollo de la aplicación. ***</Text>
+		</lblDonate>
+		<lblLog>
+			<Text>Registro</Text>
+		</lblLog>
+		<lblSelectedGPU>
+			<Text>Controlador de pantalla seleccionado</Text>
+		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Idioma seleccionado</Text>
+		</lblLanguage>
+
+		<lblUpdate>
+			<Text>Buscando actualizaciones...</Text>
+			<Text2>No se han encontrado actualizaciones. Su versión es la más reciente.</Text2>
+			<Text3>¡Actualización encontrada! Tenga presente que el soporte en versiones antiguas es más limitado que en la más reciente.</Text3>
+			<Text4>¡Error al descargar actualización!</Text4>
+		</lblUpdate>
+
+		<lblOffer>
+			<Text>Ofertas de nuestros socios (Recomendado)</Text>
+			<Tooltip>Se pueden deshabilitar desde el menú de opciones.</Tooltip>
+		</lblOffer>
+
+		<OptionsMenuItem>
+			<Text>Opciones</Text>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Info</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Registro ampliado</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Enlaces</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>Condiciones de servicio (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
+			<Text>Acerca de</Text>
+		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Traductores</Text>
+		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Patrocinador</Text>
+		</PatronMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Visite la web oficial de DDU</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>Visite la web de SVN</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Visite el hilo de NVIDIA en Guru3D</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Visite el hilo de AMD en Guru3D</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Visite el hilo de GeForce</Text>
+		</VisitGeforceMenuItem>
+
+		<Messages>
+			<Text1>¡Hay actualizaciones disponibles! ¿Desea visitar la web de DDU ahora?</Text1>
+			<Text2>Tenga en cuenta que el soporte en versiones más antiguas es más limitado que en la más reciente. Por favor, pruebe con una versión más nueva antes de reportar errores.</Text2>
+			<Text3>No está ejecutando DDU con privilegios de administrador. La aplicación se cerrará a continuación.</Text3>
+			<Text4>No ha sido posible encontrar PAExec. Por favor, consulte el registro (log).</Text4>
+			<Text5>DDU realizará muchas modificaciones en su registro. Se intentará crear un punto de restauración del sistema automáticamente (modo normal únicamente).</Text5>
+			<Text6>Ha habido un problema con uno de los módulos, envíe su registro (log) de DDU al desarrollador.</Text6>
+			<Text7>DDU ha detectado que posee un portátil con gráfica “AMD switching”. DDU no es totalmente compatible/fiable con sistemas Enduro aún. Úselo bajo su propia responsabilidad.</Text7>
+			<Text8>DDU ha detectado que NO está en modo seguro... Para una limpieza más completa y menos problemática, se recomienda que reinicie en dicho modo.</Text8>
+			<Text9>Se han modificado los valores de Instalación de Dispositivos de Windows para evitar que se instalen controladores automáticamente.</Text9>
+			<Text10>¡Proceso de limpieza de controladores completado! ¿Desea cerrar la aplicación?</Text10>
+			<Text11>Se han modificado los valores de Instalación de Dispositivos de Windows para instalar controladores automáticamente.</Text11>
+			<Text12>No se encuentra en Modo Seguro. Se recomienda encarecidamente reiniciar en dicho modo para evitar problemas. ¿Desea reiniciar en Modo Seguro ahora?</Text12>
+			<Text13>Esto es lo que necesita seleccionar en la pantalla azul de recuperación: Solucionar problemas -&gt; Opciones avanzadas -&gt; Configuración de inicio.</Text13>
+			<Text14>Su sistema necesita reiniciarse. Hágalo antes de usar DDU por favor.</Text14>
+			<Text15>No se ha efectuado ninguna modificación. Los valores de Instalación de Dispositivos de Windows ya estaban establecidos en su configuración por defecto.</Text15>
+			<Text16>Se ha producido un error crítico en Windows que impide la correcta eliminación de los controladores. Como medida de seguridad, DDU no continuará el proceso de limpieza de archivos y entradas del registro. Debe corregir los problemas en su sistema antes de usar DDU.</Text16>
+		</Messages>
+		<Options_Type>
+			<Options1>---Seleccione el tipo de dispositivo---</Options1>
+			<Options2>Audio</Options2>
+			<Options3>GPU</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---Seleccione dispositivo---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---Seleccione dispositivo---</Options1>
+			<Options2>REALTEK (En Construcción)</Options2>
+			<Options3>SOUNDBLASTER (En Construcción)</Options3>
+		</Options_AUDIO>
+		<UpdateLog>
+			<Text1>Ejecutando limpieza de biblioteca de controladores(Borrar OEM)...</Text1>
+			<Text2>Limpiando directorio</Text2>
+			<Text3>Limpiando claves de Registro conocidas... Puede tardar un par de minutos.</Text3>
+			<Text4>Limpiando cuenta de usuarios “UpdatusUser” si está presente.</Text4>
+			<Text5>Limpiando directorio</Text5>
+			<Text6>Iniciando limpieza del Registro</Text6>
+			<Text7>Finalizada la limpieza del Registro</Text7>
+			<Text8>Iniciando la eliminación de “nVidia Optimus UpperFilter”, si está presente.</Text8>
+			<Text9>Escaneando en busca de nuevo dispositivo...</Text9>
+			<Text10>¡Limpieza completada!</Text10>
+			<Text11>Versión de DDU</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>Detectada</Text13>
+			<Text14>Id Dispositivo GPU</Text14>
+			<Text15>Versión(es) de controlador(es) detectada(s)</Text15>
+			<Text16>INF</Text16>
+			<Text17>Sección INF</Text17>
+			<Text18>GPU instalada incorrectamente</Text18>
+			<Text19>Borrando algunas carpetas especiales, puede tardar un rato...</Text19>
+			<Text20>Iniciada la limpieza...</Text20>
+			<Text21>Desinstalando</Text21>
+			<Text22>controlador</Text22>
+			<Text23>Ejecutando eliminación de SetupAPI. Espere por favor (puede tardar algunos minutos)</Text23>
+			<Text24>GPU(s) eliminada(s) del Administrador de Dispositivos.</Text24>
+			<Text25>Ejecutando eliminación del controlador de Audio.</Text25>
+			<Text26>¡Adaptadores de audio HD eliminados!</Text26>
+			<Text27>Adaptador USB de 3D Vision eliminado del Administrador de Dispositivos.</Text27>
+			<Text28>¡Monitores visibles y ocultos eliminados!</Text28>
+			<Text29>Eliminación SetupAPI completada</Text29>
+			<Text30>Iniciando limpieza de región S-1-5-xx</Text30>
+			<Text31>Fin de limpieza de región S-1-5-xx</Text31>
+			<Text32>Iniciar limpieza Clasesraíz ,instalador\productos</Text32>
+			<Text33>Fin de limpieza Clasesraíz ,instalador\productos</Text33>
+			<Text34>Iniciar limpieza máquinalocal ,instalador\productos</Text34>
+			<Text35>Fin de limpieza máquinalocal ,instalador\productos</Text35>
+			<Text36>Iniciar limpieza usuarioactual ,instalador\productos</Text36>
+			<Text37>Fin de limpieza usuarioactual ,instalador\productos</Text37>
+			<Text38>Limpiando procesos/servicios...</Text38>
+			<Text39>Limpieza de procesos/servicios completada</Text39>
+			<Text40>Borrado.</Text40>
+			<Text41>Valor eliminado.</Text41>
+			<Text42>Archivo borrado.</Text42>
+		</UpdateLog>
+	</frmMain>
+
+	<frmOptions Text="Opciones">
+		<btnClose>
+			<Text>Cerrar</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Mostrar ofertas de nuestros socios</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>Opciones específicas de NVIDIA</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>Opciones específicas de AMD</Text>
+		</lblAmdspecific>
+		<lblAdvancedO>
+			<Text>Opciones Avanzadas (Cambiar bajo su propia responsabilidad)</Text>
+		</lblAdvancedO>
+		<lblGeneral>
+			<Text>Opciones Generales</Text>
+		</lblGeneral>
+		<lblRemNvidiaDirs>
+			<Text>Eliminar las carpetas de controladores "C:\NVIDIA" (NO recomendado)</Text>
+		</lblRemNvidiaDirs>
+		<lblSaveLogs>
+			<Text>Guardar archivos de registro en la ruta de arranque (Altamente recomendado)</Text>
+		</lblSaveLogs>
+		<lblRemPhysX>
+			<Text>Eliminar PhysX</Text>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
+			<Text>Eliminar 3DTV Play</Text>
+		</lblRem3DtvPlay>
+		<lblCreateRestorePoint>
+			<Text>Crear un punto de restauración de sistema (si es posible)</Text>
+		</lblCreateRestorePoint>
+		<lblRemMonitors>
+			<Text>Eliminar los monitores visibles y ocultos (Recomendado)</Text>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
+			<Text>Eliminar Bus de Audio AMD</Text>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
+			<Text>Eliminar las carpetas de controladores "C:\AMD" (NO recomendado)</Text>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
+			<Text>Eliminar el controlador/filtro AMDKMPFD (Se recomienda realizar una copia de seguridad en sistemas con chipset AMD)</Text>
+		</lblRemAMDKMPFD>
+		<lblShowSafeModeMsg>
+			<Text>Habilitar el cuadro de diálogo para el Modo Seguro (No recomendado hasta que haya probado el Modo Seguro de forma manual)</Text>
+			<Tooltip>No se recomienda si nunca ha reiniciado usted mismo su ordenador en modo seguro para ver si funciona. Esta opción podría causar un bucle infinito de arranque, pérdida de imagen y posiblemente otros problemas.</Tooltip>
+		</lblShowSafeModeMsg>
+		<lblUseRoamingCfg>
+			<Text>Guardar el archivo de configuración en la carpeta 'roaming'</Text>
+		</lblUseRoamingCfg>
+		<lblCheckUpdates>
+			<Text>Buscar actualizaciones automáticamente al iniciar DDU (Recomendado)</Text>
+		</lblCheckUpdates>
+		<lblRemGFE>
+			<Text>Eliminar 'GeForce Experience' (GFE)</Text>
+		</lblRemGFE>
+		<lblRemCrimsonCache>
+			<Text>Eliminar carpeta de caché 'Shader Crimson' de AMD</Text>
+			<Tooltip>
+				Recomendado en caso de anomalías gráficas (rendimiento o corrupción de imagen) causadas por datos de caché de 'shader' corruptos.
+				También recomendado si se va a proceder a cambiar a otra marca como NVIDIA.
+			</Tooltip>
+		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Eliminar librerías Vulkan</Text>
+			<Tooltip>No se recomienda en caso de disponer de dos tarjetas distintas con compatibilidad con la API Vulkan.</Tooltip>
+		</lblVulkan>
+    <lblPreventWinUpdate>
+      <Text>Impedir descargas de controladores desde "Windows update" cuando "Windows" los busca para un dispositivo.</Text>
+      <Tooltip>En pocas palabras, esta opción evitará que Windows/Administrador de Dispositivos pueda buscar un controlador actualizado desde "Windows Update". 
+               Nota: Esto no impide a "Windows Update" descargar/instalar nuevos controladores. 
+               Nota2: También es *MUY* recomendable revertir este cambio tras haber usado DDU y reinstalado sus controladores gráficos para evitar tener problemas con la instalación de otros dispositivos.</Tooltip>
+     </lblPreventWinUpdate>
+  </frmOptions>
+
+	<frmLaunch Text="Opción de Arranque">
+		<btnAccept>
+			<Text>Arranque</Text>
+			<Text2>
+				Reiniciar en
+				Modo Seguro
+			</Text2>
+		</btnAccept>
+		<btnClose>
+			<Text>Cerrar</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Opciones de arranque</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>
+				No se encuentra en Modo Seguro. Se recomienda
+				encarecidamente reiniciar en dicho modo para evitar problemas.
+			</Text>
+		</lblNotSafeMode>
+		<lblWinPasswordWarn>
+			<Text>
+				Aviso importante para usuarios de Windows 8/8.1/10:
+				¡Se requiere su "CONTRASEÑA" de Windows! (El PIN no funciona en Modo Seguro)
+				¡Cierre la aplicación de inmediato si la ha perdido o la desconoce!
+			</Text>
+		</lblWinPasswordWarn>
+		<cbBootOption>
+			<Item1>Normal</Item1>
+			<Item2>Modo Seguro (Recomendado)</Item2>
+			<Item3>Modo Seguro con Funciones de Red</Item3>
+		</cbBootOption>
+		<Messages>
+			<Text1>DDU ha cerrado programas conocidos por causar conflictos (como MSI Afterburner y RTSS).</Text1>
+		</Messages>
+	</frmLaunch>
+
+	<frmLog Text="Registro 'log' ampliado">
+		<btnClose>
+			<Text>Cerrar</Text>
+		</btnClose>
+		<btnOpenLog>
+			<Text>Abrir registro 'log'</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Opciones</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Copia habilitada</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filtros</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Mostrar eventos</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Mostrar advertencias</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Mostrar errores</Text>
+		</errorsMenuItem>
+	</frmLog>
+
+	<frmSystemRestore Text="Restauración del Sistema">
+		<lblSystemRestore>
+			<Text>Intentando crear punto de restauración del sistema.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="Acerca de">
+		<btnClose>
+			<Text>Cerrar</Text>
+		</btnClose>
+		<btnAbout>
+			<Text>Acerca de</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Condiciones de servicio (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Traductores</Text>
+		</btnTranslators>
+		<btnPatron>
+			<Text>Patrocinadores</Text>
+		</btnPatron>
+		<lblTranslators>
+			<Text>¡Agradecimientos especiales a los siguientes traductores así como aquellos que no están aquí mencionados!</Text>
+		</lblTranslators>
+		<lblPatron>
+			<Text>
+        ¡Muchas gracias al siguiente Patrocinador así como aquellos que no están aquí mencionados!
+
+        -honnmaguro   (Desde 16-03-2018)
+		-ZaoDaDong (Since 2019-02-06)
+		-Alberto Bursi (long time donator/supporter)
+		-Kaseb (Since 2019-09-05)
+		-Frank Brown (Since 2019-10-31)
+		-Sergey Bolshakow (Since 2020-09-10)
+		-James Tiller (Since 2021-04-03)
+		-Paulo Henrique (Since 2021-04-19)
+      </Text>
+		</lblPatron>
+	</frmAbout>
+
+	<Misc>
+		<About>
+			<Text>
+				Display Driver Uninstaller (DDU)/Limpiador para Controladores de Pantalla (NVIDIA/AMD)
+
+				Elimina el controlador de pantalla/GPU del Administrador de Dispositivos, y todo rastro
+				de controlador(es) del "Almacén" de Windows, así como servicios de NVIDIA/AMD.
+
+				El resultado es similar al que se obtendría tras una "Instalación Limpia" de Windows.
+
+				Esta herramienta actúa de un modo parecido a "Driver Sweeper"*, y contiene todos los
+				extras mencionados anteriormente.
+
+				Si experimenta cualquier problema instalando un controlador más antiguo o nuevo, dele una
+				oportunidad pues existen numerosos testimonios que afirman que puede corregir dichos problemas.
+
+				USO RECOMENDADO:
+
+				- La herramienta DDU puede ser usada en Modo Normal pero para una estabilidad absoluta,
+				el Modo Seguro es siempre la mejor opción.
+
+				- Nos complacería reunir opiniones de todo el mundo, cuéntenos si le ha sido útil o no.
+
+				- Realice una Copia de Seguridad o cree un nuevo Punto de Restauración.
+				(aunque normalmente debería ser bastante seguro.)
+
+				-Si ha tenido problemas con un controlador de pantalla, y esta herramienta le ha
+				ayudado a solventar lo que estaba o está fallando, por favor comparta su resultado.
+
+				Tenga siempre presente que ni NVIDIA, ni AMD, ni Microsoft pueden responsabilizarse
+				por cualquier tipo de daños hacia usted o su ordenador y no están de ningún modo
+				afiliados a DDU, o a sus creadores.
+				------------------------------------------------------------------------------------------------------------------------------------------------
+
+				Creado Por Wagnard.
+
+				Programadores: Wagnard, Devmltk, Shady7557
+
+				Testador: Dellon132
+
+				Logos: juanchacin
+
+				Agradecimiento muy especial a Jackalito por la donación de una AMD 7850.
+
+				Gracias a Helge Klein (http://helgeklein.com/setacl/) por el permiso para usar su programa "SetAcl" con DDU
+
+				Especial agradecimiento por su tiempo invertido en testar a: Gamer1291 (optimus), Octopuss (Amd Enduro),
+				nedooo` (por su tiempo invertido en ayudarme con tareas de depuración)
+				Extraordinary (por testar la corrección de un error)
+
+				Gracias a todos aquellos que corrieron el riesgo con su sistema.
+				(Especial Agradecimiento a Dellon132)
+
+				*DDU, sus creadores y colaboradores no están de ningún modo
+				afiliados a Driver Sweeper, o a sus creadores.
+			</Text>
+		</About>
+
+		<Tos>
+			<Text>
+				Display Driver Uninstaller ("DDU") ACUERDO DE USUARIO
+
+				En el momento de utilizar DDU, usted pasa a convertirse en ("Usuario") del software DDU. El presente acuerdo entra en vigor
+				tan pronto como usted usa el programa para desinstalar un controlador.
+
+				Al usar DDU usted accede a no acusar a DDU o a sus creadores, y colaboradores, de dañar o afectar negativamente su PC.
+
+				Al usar DDU usted reconoce que ni NVIDIA ("NVIDIA, Geforce") ni Advanced Micro Devices ("AMD, Radeon") tienen
+				nada que ver con este programa, y que de ningún modo están afiliados a DDU o a sus creadores.
+			</Text>
+		</Tos>
+	</Misc>
+
+	<LanguageTranslators>
+		<Translator>
+			<User>Jackalito</User>
+			<Details>Traductor</Details>
+			<LastUpdate>12/03/2020</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
+
+</DisplayDriverUninstaller>
