@@ -646,7 +646,11 @@ Namespace Display_Driver_Uninstaller
 					Try
 						If found IsNot Nothing AndAlso found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
-								If d IsNot Nothing AndAlso StrContainsAny(d.Description, True, "Intel(R) Graphics firmware update service") Then
+								If d IsNot Nothing AndAlso StrContainsAny(d.Description, True, "Intel(R) Graphics firmware update service", "Intel GFX Firmware Update Service") Then
+									SetupAPI.UninstallDevice(d)
+									Continue For
+								End If
+								If d IsNot Nothing AndAlso StrContainsAny(d.FriendlyName, True, "Intel(R) Graphics firmware update service", "Intel GFX Firmware Update Service") Then
 									SetupAPI.UninstallDevice(d)
 								End If
 							Next

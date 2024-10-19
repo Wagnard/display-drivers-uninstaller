@@ -42,7 +42,7 @@
                                 (ВНИМАНИЕ: Драйверы не будут удалены)
 			</Text>
 			<Tooltip>
-				В основном используется для высвобождения места на диске, которое не очищается установщиком GFE.
+				В основном используется для высвобождения места на диске, которое не очищается установщиком GFE(Устаревшие версии GFE).
 			</Tooltip>
 		</btnCleanGfeDownloads>
 		<btnWuRestore>
@@ -231,31 +231,31 @@
 			<Text>Общие параметры</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>Удалять папку "C:\NVIDIA" с драйверами (не рекомендуется)</Text>
+			<Text>Удалить папку "C:\NVIDIA" с драйверами (не рекомендуется)</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
 			<Text>Сохранять файлы журналов в папке программы (рекомендуется)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
-			<Text>Удалять PhysX</Text>
+			<Text>Удалить PhysX</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
-			<Text>Удалять 3DTV Play</Text>
+			<Text>Удалить 3DTV Play</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
 			<Text>Создавать точку восстановления системы (если разрешено)</Text>
 		</lblCreateRestorePoint>
 		<lblRemMonitors>
-			<Text>Удалять существующие и несуществующие мониторы (рекомендуется)</Text>
+			<Text>Удалить существующие и несуществующие мониторы (рекомендуется)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>Удалять AMD Audio Bus</Text>
+			<Text>Удалить AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>Удалять папку "C:\AMD" с драйверами (не рекомендуется)</Text>
+			<Text>Удалить папку "C:\AMD" с драйверами (не рекомендуется)</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Удалять драйвер AMDKMPFD (рекомендуется резервное копирование для чипсета AMD)</Text>
+			<Text>Удалить драйвер AMDKMPFD (рекомендуется резервное копирование для чипсета AMD)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
 			<Text>Разрешить окно "Безопасный режим" при запуске программы (не рекомендуется, если безопасный режим не тестировался вручную)</Text>
@@ -268,13 +268,13 @@
 			<Text>Автоматически проверять наличие обновлений DDU при запуске (рекомендуется)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Удалять GeForce Experience (GFE)</Text>
+			<Text>Удалить GeForce Experience (GFE) / NVIDIA App</Text>
 		</lblRemGFE>
 				<lblRemNVBROADCAST>
-			<Text>Удалять NVIDIA Broadcast</Text>
+			<Text>Удалить NVIDIA Broadcast</Text>
 		</lblRemNVBROADCAST>
 		<lblRemNVCP>
-			<Text>(DCH-драйвер) Удалять Панель управления NVIDIA, установленную из Microsoft Store</Text>
+			<Text>(DCH-драйвер) Удалить Панель управления NVIDIA, установленную из Microsoft Store</Text>
 		</lblRemNVCP>
 		<lblKeepNVCPopt>
 			<Text>Сохранить глобальную Панель управления NVIDIA / Настройки программы.</Text>
@@ -284,20 +284,20 @@
 			</Tooltip>
 		</lblKeepNVCPopt>
 		<lblRemINTELCP>
-			<Text>(DCH-драйвер) Удалять Панель управления Intel, установленную из Microsoft Store</Text>
+			<Text>(DCH-драйвер) Удалить Панель управления Intel, установленную из Microsoft Store</Text>
 		</lblRemINTELCP>
 		<lblRemAMDCP>
-			<Text>(DCH-драйвер) Удалять Панель управления AMD, установленную из Microsoft Store</Text>
+			<Text>(DCH-драйвер) Удалить Панель управления AMD, установленную из Microsoft Store</Text>
 		</lblRemAMDCP>
 		<lblRemCrimsonCache>
-			<Text>Удалять папку с кэшем шейдеров AMD Crimson</Text>
+			<Text>Удалить папку с кэшем шейдеров AMD Crimson</Text>
 			<Tooltip>
 				Рекомендуется при графических аномалиях (скорость или визуальные искажения) из-за повреждённых данных кэша шейдеров.
 				Также рекомендуется при переходе на видеокарту другой фирмы, например NVIDIA.
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>Удалять runtime-библиотеки Vulkan</Text>
+			<Text>Удалить runtime-библиотеки Vulkan</Text>
 			<Tooltip>Не рекомендуется, если установлены две разные видеокарты с поддержкой Vulkan API.</Tooltip>
 		</lblVulkan>
     <lblPreventWinUpdate>
@@ -419,6 +419,10 @@
 				-Matti Metsikko
 				-mikalonia - mika
 				-ChaosDMNS
+        -Eduardo Macias
+        -Peter Le
+        -Kater Willschie
+        -Duke Hanson
 
 		</lblPatron>
 	</frmAbout>
@@ -489,7 +493,7 @@
 
 		<Translator2>
 			<User>Danis Miryasov (miryasov.danis@yandex.ru)</User>
-			<LastUpdate>19.12.2023</LastUpdate>
+			<LastUpdate>18.10.2024</LastUpdate>
 		</Translator2>
 		<Translator3>
 			<User>Dmitry Yerokhin (erodim@mail.ru)</User>
