@@ -54,7 +54,7 @@
 !insertmacro MUI_LANGUAGE "German"
 !insertmacro MUI_LANGUAGE "Spanish"
 !insertmacro MUI_LANGUAGE "Japanese"
-!insertmacro MUI_LANGUAGE "Polski"
+!insertmacro MUI_LANGUAGE "Polish"
 
 ; Show the language selection dialog in .onInit
 Function .onInit
