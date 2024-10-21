@@ -54,6 +54,7 @@
 !insertmacro MUI_LANGUAGE "German"
 !insertmacro MUI_LANGUAGE "Spanish"
 !insertmacro MUI_LANGUAGE "Japanese"
+!insertmacro MUI_LANGUAGE "Polski"
 
 ; Show the language selection dialog in .onInit
 Function .onInit
@@ -107,6 +108,12 @@ LangString STR_01 ${LANG_JAPANESE}  "ウェブサイト ${PRODUCT_NAME}"
 LangString STR_02 ${LANG_JAPANESE}  "${PRODUCT_NAME} をアンインストールする"
 LangString STR_03 ${LANG_JAPANESE}  "$(^Name) はコンピュータから正常に削除されました。"
 LangString STR_04 ${LANG_JAPANESE}  "本当に $(^Name) とそのすべてのコンポーネントを完全に削除しますか？"
+
+; Polski
+LangString STR_01 ${LANG_POLISH}  "Strona ${PRODUCT_NAME}"
+LangString STR_02 ${LANG_POLISH}  "Odinstaluj ${PRODUCT_NAME}"
+LangString STR_03 ${LANG_POLISH}  "$(^Name) został pomyślnie usunięty z komputera."
+LangString STR_04 ${LANG_POLISH}  "Czy na pewno chcesz usunąć $(^Name) i wszystkie jego składniki?"
 
 
 
