@@ -137,6 +137,7 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "FileDescription"    "${PRODUCT_DESCRIPTIO
 VIAddVersionKey /LANG=${LANG_ENGLISH} "InternalName"       "${PRODUCT_NAME}"
 
 Section "MainSection" SEC01
+  SetShellVarContext current
   SetOutPath "$INSTDIR"
   SetOverwrite try
   File "${SOURCE_PATH}\Display Driver Uninstaller.exe"
