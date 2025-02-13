@@ -231,16 +231,16 @@
 			<Text>一般オプション</Text>
 		</lblGeneral>
 		<lblRemNvidiaDirs>
-			<Text>「C:\NVIDIA」ドライバーフォルダーを削除</Text>
+			<Text>「C:\NVIDIA」ドライバーフォルダーを削除する</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
 			<Text>ログファイルを起動パスに保存する (強く推奨)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
-			<Text>PhysX を削除</Text>
+			<Text>PhysX を削除する</Text>
 		</lblRemPhysX>
 		<lblRem3DtvPlay>
-			<Text>3DTV Play を削除</Text>
+			<Text>3DTV Play を削除する</Text>
 		</lblRem3DtvPlay>
 		<lblCreateRestorePoint>
 			<Text>システムの復元ポイントを作成する (可能な場合)</Text>
@@ -249,29 +249,29 @@
 			<Text>存在するモニターと存在しないモニターを削除する (推奨)</Text>
 		</lblRemMonitors>
 		<lblRemAMDAudioBus>
-			<Text>AMD Audio Bus を削除</Text>
+			<Text>AMD Audio Bus を削除する</Text>
 		</lblRemAMDAudioBus>
 		<lblRemAMDDirs>
-			<Text>「C:\AMD」ドライバーフォルダーを削除</Text>
+			<Text>「C:\AMD」ドライバーフォルダーを削除する</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>AMDKMPFD ドライバー / フィルターを削除 (AMD チップセットの場合バックアップを推奨)</Text>
+			<Text>AMDKMPFD ドライバー / フィルターを削除する (AMD チップセットの場合バックアップを推奨)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
 			<Text>起動オプションのダイアログを表示 (セーフモードを手動でテストするまでは推奨されません)</Text>
 			<Tooltip>セーフモードでの起動が正常に動作するかを確認したことがない場合、推奨されません。 起動オプションでの再起動 (セーフモード) によりブートループ、画面が黒くなるなどの問題が発生する可能性があります。</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>roaming フォルダーに設定ファイルを保存</Text>
+			<Text>roaming フォルダーに設定ファイルを保存する</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
 			<Text>起動時に DDU のアップデートを確認する (推奨)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Geforce Experience (GFE) / NVIDIA アプリを削除</Text>
+			<Text>Geforce Experience (GFE) / NVIDIA アプリを削除する</Text>
 		</lblRemGFE>
 		<lblRemNVBROADCAST>
-			<Text>NVIDIA Broadcast を削除</Text>
+			<Text>NVIDIA Broadcast を削除する</Text>
 		</lblRemNVBROADCAST>
 		<lblRemNVCP>
 			<Text>(DCH ドライバー) Microsoft Store からインストールされた NVIDIA コントロールパネルを削除する</Text>
@@ -300,7 +300,7 @@
 			</Tooltip>
 		</lblRemCrimsonCache>
 		<lblVulkan>
-			<Text>Vulkan ランタイムを削除</Text>
+			<Text>Vulkan ランタイムを削除する</Text>
 			<Tooltip>Vulkan API を利用可能な 2 つの異なる GPU を持っている場合は推奨しません。</Tooltip>
 		</lblVulkan>
 		<lblPreventWinUpdate>
