@@ -234,7 +234,7 @@
 			<Text>「C:\NVIDIA」ドライバーフォルダーを削除</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>ログファイルを起動パスに保存します。 (強く推奨します)</Text>
+			<Text>ログファイルを起動パスに保存する (強く推奨)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>PhysX を削除</Text>
