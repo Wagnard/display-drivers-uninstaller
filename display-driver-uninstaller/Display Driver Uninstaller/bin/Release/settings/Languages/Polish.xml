@@ -289,6 +289,12 @@
 		<lblRemINTELIGS>
 			<Text>Usuń Panel sterowania Intel Arc / Panel sterowania grafiki Intel</Text>
 		</lblRemINTELIGS>
+		<lblRemOneAPI>
+			<Text>Usuń Intel® oneAPI Level Zero SDK</Text>
+		</lblRemOneAPI>
+		<lblRemEnduranceGaming>
+			<Text>Usuń Intel® Endurance Gaming</Text>
+		</lblRemEnduranceGaming>
 		<lblRemAMDCP>
 			<Text>(Sterownik DCH) Usuń Panel Sterowania AMD zainstalowany z Microsoft Store</Text>
 		</lblRemAMDCP>
@@ -514,7 +520,7 @@
 		<Translator2>
 			<User>Patriot</User>
 			<Details>Oficjalny tłumacz</Details>
-			<LastUpdate>09.02.2025</LastUpdate>
+			<LastUpdate>04.04.2025</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
 
