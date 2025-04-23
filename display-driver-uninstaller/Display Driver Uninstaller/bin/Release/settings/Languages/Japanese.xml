@@ -119,7 +119,7 @@
 			<Text>Guru3d AMD のスレッドを開く</Text>
 		</VisitGuru3DAMDMenuItem>
 		<VisitGeforceMenuItem>
-			<Text>GeForce のスレッドを開く</Text>
+			<Text>GeForce のフォーラムを開く</Text>
 		</VisitGeforceMenuItem>
 
 		<Messages>
@@ -377,7 +377,7 @@
 			<Text>オプション</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>コピー有効</Text>
+			<Text>コピーを有効化</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
