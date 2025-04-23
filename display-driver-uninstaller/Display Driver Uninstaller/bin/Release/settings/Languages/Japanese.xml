@@ -106,6 +106,9 @@
 		<VisitDDUHomeMenuItem>
 			<Text>DDU の公式ウェブサイトを開く</Text>
 		</VisitDDUHomeMenuItem>
+		<VisitDiscord>
+			<Text>Discord に参加</Text>
+		</VisitDiscord>
 		<VisitSVNMenuItem>
 			<Text>SVN のウェブサイトを開く</Text>
 		</VisitSVNMenuItem>
@@ -155,7 +158,7 @@
 			<Options1>---デバイスを選択---</Options1>
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
-			<Options4>INTEL</Options4>
+			<Options4>Intel®</Options4>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---デバイスを選択---</Options1>
@@ -222,7 +225,7 @@
 			<Text>AMD 固有のオプション</Text>
 		</lblAmdspecific>
 		<lblINTELspecific>
-			<Text>INTEL 固有のオプション</Text>
+			<Text>Intel® 固有のオプション</Text>
 		</lblINTELspecific>
 		<lblAdvancedO>
 			<Text>高度なオプション (変更は自己責任です)</Text>
@@ -287,8 +290,14 @@
 			<Text>(DCH ドライバー) Microsoft Store からインストールされた Intel® コントロールパネルを削除する</Text>
 		</lblRemINTELCP>
 		<lblRemINTELIGS>
-			<Text>Intel Arc Control / Intel® Graphics Software を削除する</Text>
+			<Text>Intel® Arc Control / Intel® Graphics Software を削除する</Text>
 		</lblRemINTELIGS>
+		<lblRemOneAPI>
+			<Text>Intel® oneAPI Level Zero SDK を削除する</Text>
+		</lblRemOneAPI>
+		<lblRemEnduranceGaming>
+			<Text>Intel® Endurance Gaming を削除する</Text>
+		</lblRemEnduranceGaming>
 		<lblRemAMDCP>
 			<Text>(DCH ドライバー) Microsoft Store からインストールされた AMD コントロールパネルを削除する</Text>
 		</lblRemAMDCP>
@@ -510,13 +519,13 @@
 		<Translator>
 			<User>DH ◆OmegaWBPUI</User>
 			<Details>DH.OmegaWBPUI@gmail.com</Details>
-			<LastUpdate>04/10/2018</LastUpdate>
+			<LastUpdate>2018/04/10/</LastUpdate>
 		</Translator>
 
 		<Translator2>
 			<User>Re*Index.(ot_inc)</User>
 			<Details>https://reindex-ot.github.io</Details>
-			<LastUpdate>03/14/2025</LastUpdate>
+			<LastUpdate>2025/04/24/</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
 
