@@ -141,7 +141,7 @@
 			<Text16>Windows で重大なエラーが発生し、ドライバーが正しく削除されませんでした。 セキュリティ対策として、DDU はファイルとレジストリの削除を続行しません。 DDU を使用する前に、システムの問題を修正する必要があります。</Text16>
 			<Text17>DDU を起動するのは今回が初めてのようですね。
 				
-					使用する前に次の点にご注意ください:
+					使用する前に以下の点にご注意ください:
 				1: 問題と構成によっては状況が改善されることもあれば、悪化する場合もあります。
 					2: バックアップを取っておく必要があります。
 					3: ライセンス、Readme、ToS をご確認ください。
@@ -271,7 +271,7 @@
 			<Text>起動時に DDU のアップデートを確認する (推奨)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Geforce Experience (GFE) / NVIDIA アプリを削除する</Text>
+			<Text>GeForce Experience (GFE) / NVIDIA アプリを削除する</Text>
 		</lblRemGFE>
 		<lblRemNVBROADCAST>
 			<Text>NVIDIA Broadcast を削除する</Text>
@@ -298,11 +298,14 @@
 		<lblRemEnduranceGaming>
 			<Text>Intel® Endurance Gaming を削除する</Text>
 		</lblRemEnduranceGaming>
+		<lblRemIntelNpu>
+			<Text>Intel® NPU を削除する</Text>
+		</lblRemIntelNpu>
 		<lblRemAMDCP>
 			<Text>(DCH ドライバー) Microsoft Store からインストールされた AMD コントロールパネルを削除する</Text>
 		</lblRemAMDCP>
 		<lblRemCrimsonCache>
-			<Text>AMD Crimson Shader Cache フォルダーを削除</Text>
+			<Text>AMD Crimson シェーダーキャッシュフォルダーを削除する</Text>
 			<Tooltip>
 				破損したシェーダーキャッシュデータによってグラフィックの異常 (速度または視覚的な破損) が発生した場合に推奨します。
 				NVIDIA などの別のブランドに変更する場合にも推奨します。
@@ -444,7 +447,7 @@
 				-Duke Hanson
 				-Sam Gooding
 				-Zero Chung
-
+				-Remy Starshade
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -524,8 +527,7 @@
 
 		<Translator2>
 			<User>Re*Index.(ot_inc)</User>
-			<Details>https://reindex-ot.github.io/</Details>
-			<LastUpdate>24/04/2025</LastUpdate>
+			<LastUpdate>11/06/2025</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
 
