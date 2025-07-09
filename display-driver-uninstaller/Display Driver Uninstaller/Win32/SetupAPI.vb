@@ -1401,6 +1401,10 @@ Namespace Display_Driver_Uninstaller.Win32
 		End Function
 
 		<DllImport("kernel32.dll", SetLastError:=True)>
+		Private Shared Function FreeLibrary(ByVal hModule As IntPtr) As Boolean
+		End Function
+
+		<DllImport("kernel32.dll", SetLastError:=True)>
 		Public Shared Function GetProcAddress(hModule As IntPtr, lpProcName As String) As IntPtr
 		End Function
 
@@ -1565,12 +1569,16 @@ Namespace Display_Driver_Uninstaller.Win32
 		Public Shared Function MethodExists(libraryName As String, methodName As String) As Boolean
 			Dim libraryPtr As IntPtr = LoadLibrary(libraryName)
 
-			If libraryPtr <> IntPtr.Zero Then
-				Dim procPtr As IntPtr = GetProcAddress(libraryPtr, methodName)
-				Return procPtr <> IntPtr.Zero
+			If libraryPtr = IntPtr.Zero Then
+				Return False
 			End If
 
-			Return False
+			Try
+				Dim procPtr As IntPtr = GetProcAddress(libraryPtr, methodName)
+				Return procPtr <> IntPtr.Zero
+			Finally
+				FreeLibrary(libraryPtr)
+			End Try
 		End Function
 
 		Public Shared Function TEST_GetDevices(ByVal filter As String, ByVal text As String, ByVal includeSiblings As Boolean, ByVal includeparents As Boolean, Optional ByVal driverDetails As Boolean = False) As List(Of Device)
