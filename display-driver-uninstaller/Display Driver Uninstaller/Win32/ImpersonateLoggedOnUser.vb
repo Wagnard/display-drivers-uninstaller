@@ -87,7 +87,8 @@ Namespace Display_Driver_Uninstaller.Win32
 				Catch ex As Exception
 					Application.Log.AddMessage(ex.Message + ex.StackTrace)
 				Finally
-					CloseHandle(hToken)
+					SafeClose(hToken)
+					SafeClose(dupeTokenHandle)
 				End Try
 			Else
 				logEntry.Type = LogType.Warning
@@ -117,6 +118,13 @@ Namespace Display_Driver_Uninstaller.Win32
 			Dim retVal As Boolean = DuplicateToken(token, Level, dupeTokenHandle)
 			Return dupeTokenHandle
 		End Function
+
+		Private Shared Sub SafeClose(ByRef handle As IntPtr)
+			If handle <> IntPtr.Zero Then
+				CloseHandle(handle)
+				handle = IntPtr.Zero
+			End If
+		End Sub
 
 	End Class
 End Namespace
