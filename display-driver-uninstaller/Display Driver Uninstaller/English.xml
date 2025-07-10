@@ -51,6 +51,14 @@
 				(automatically install drivers)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Clean Shader Cache (Only)
+			</Text>
+			<Tooltip>
+				Only deletes shader / compute cache files. More effective if run from Safe Mode.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Detected operating system:</Text>
 		</lblWinVersion>

@@ -51,6 +51,14 @@
 				(Treiber automatisch installieren)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Shader-Cache bereinigen (Nur)
+			</Text>
+			<Tooltip>
+				Löscht nur Shader- / Compute-Cache-Dateien. Effektiver im abgesicherten Modus.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Erkanntes Betriebssystem (OS):</Text>
 		</lblWinVersion>

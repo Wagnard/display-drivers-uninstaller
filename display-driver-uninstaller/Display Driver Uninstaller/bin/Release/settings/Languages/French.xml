@@ -51,6 +51,14 @@
 			 (installation automatique des pilotes)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Nettoyer le cache des shaders (Seulement)
+			</Text>
+			<Tooltip>
+				Supprime uniquement les fichiers de cache shader / compute. Plus efficace en mode sans échec.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Version de Windows détectée :</Text>
 		</lblWinVersion>

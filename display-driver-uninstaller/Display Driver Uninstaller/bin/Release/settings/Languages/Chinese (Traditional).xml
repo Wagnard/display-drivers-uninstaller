@@ -51,6 +51,14 @@
                                 （自動安裝驅動程式）  
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				清除著色器快取 (僅此)
+			</Text>
+			<Tooltip>
+				僅刪除著色器 / 運算快取檔案。於安全模式下執行更有效。
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>偵測到的系統版本：</Text>
 		</lblWinVersion>

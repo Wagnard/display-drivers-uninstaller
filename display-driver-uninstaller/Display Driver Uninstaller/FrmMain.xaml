@@ -8,8 +8,8 @@
 	mc:Ignorable="d"
 
 	Title="{Binding Settings.AppName, Mode=OneWay}"
-	Height="625" Width="692"
-	MinHeight="590" MinWidth="600" ResizeMode="CanResize" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico"
+	Height="625" Width="690"
+	MinHeight="625" MinWidth="690" ResizeMode="CanResize" Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico"
 	Visibility="Visible" WindowStartupLocation="CenterScreen">
 
 	<Window.Resources>
@@ -17,10 +17,10 @@
 		<conv:BooleanToString x:Key="BoolToStr" TrueValue="x64" FalseValue="x86" />
 		<conv:EnumToTextConverter x:Key="EnumToText" />
 
-        <ImageBrush x:Key="logoAMD" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/amd_logo.png" Stretch="Uniform" AlignmentY="Center" />
-        <ImageBrush x:Key="logoNvidia" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/nvidia_logo.png" Stretch="Uniform" AlignmentY="Center" />
-        <ImageBrush x:Key="logoIntel" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/intel_logo.jpg" Stretch="Uniform" AlignmentY="Center" />
-        <ImageBrush x:Key="logoRealtek" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/realtek-logo.png" Stretch="Uniform" AlignmentY="Center" />
+		<ImageBrush x:Key="logoAMD" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/amd_logo.png" Stretch="Uniform" AlignmentY="Center" />
+		<ImageBrush x:Key="logoNvidia" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/nvidia_logo.png" Stretch="Uniform" AlignmentY="Center" />
+		<ImageBrush x:Key="logoIntel" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/intel_logo.jpg" Stretch="Uniform" AlignmentY="Center" />
+		<ImageBrush x:Key="logoRealtek" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/realtek-logo.png" Stretch="Uniform" AlignmentY="Center" />
 		<ImageBrush x:Key="logoSoundBlaster" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/creative_logo.png" Stretch="Uniform" AlignmentY="Center" />
 
 		<LinearGradientBrush x:Key="brushNvidia" EndPoint="0.5,1" StartPoint="0.5,0">
@@ -128,7 +128,7 @@
 
 		<DockPanel Grid.Row="2" Grid.RowSpan="1" Grid.Column="3" Margin="10,0">
 			<DockPanel DockPanel.Dock="Bottom" Grid.Row="1" Grid.Column="3" >
-			
+
 			</DockPanel>
 
 			<Border DockPanel.Dock="Bottom" Margin="0,0,0,25">
@@ -176,12 +176,26 @@
 			<Button DockPanel.Dock="Top" x:Name="btnCleanShutdown" HorizontalAlignment="Stretch" >
 				<TextBlock Text="btnCleanShutdown" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
 			</Button>
+			<Button DockPanel.Dock="Top" x:Name="btnCleanCaches" HorizontalAlignment="Stretch" >
+				<TextBlock Text="btnCleanCaches" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
+			</Button>
 		</DockPanel>
 
-		<Button Grid.Row="4" Grid.Column="3" Margin="10,10" x:Name="btnWuRestore" MinHeight="40" MaxHeight="60" Visibility="{Binding Settings.PreventWinUpdate, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
-			<TextBlock Text="btnWuRestore" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
-		</Button>
-
+		<DockPanel Grid.Row="4" Grid.Column="3" x:Name="RightButtonsPanel" >
+			<DockPanel.Resources>
+				<Style TargetType="Button" >
+					<Setter Property="MinWidth" Value="230" />
+					<Setter Property="MaxWidth" Value="230" />
+					<Setter Property="MinHeight" Value="37" />
+					<Setter Property="MaxHeight" Value="100" />
+					<Setter Property="Margin" Value="10,10,10,0" />
+				</Style>
+			</DockPanel.Resources>
+			<Button DockPanel.Dock="Top" x:Name="btnWuRestore" MinHeight="40" MaxHeight="60" Visibility="{Binding Settings.PreventWinUpdate, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
+				<TextBlock Text="btnWuRestore" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
+			</Button>
+		</DockPanel>
+		
 		<DockPanel LastChildFill="True" Margin="10" Grid.Row="5" Grid.Column="3">
 			<StackPanel DockPanel.Dock="Bottom">
 				<Label x:Name="lblLanguage" Content="lblLanguage" FontWeight="Bold" />

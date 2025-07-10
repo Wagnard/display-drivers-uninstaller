@@ -51,6 +51,20 @@ Namespace Display_Driver_Uninstaller
 				Exit Sub
 			End If
 
+			If config.CleanCache AndAlso Not config.HasCleanArg Then
+				Select Case config.SelectedGPU
+					Case GPUVendor.Nvidia
+						CleanNvidiaCache(config)
+					Case GPUVendor.AMD
+						CleanAmdCache(config)
+					Case GPUVendor.Intel
+						CleanIntelCache(config)
+				End Select
+
+				config.Success = True
+				Return
+			End If
+
 			UpdateTextMethod(UpdateTextTranslated(20) + " " & config.SelectedGPU.ToString() & " " + UpdateTextTranslated(21))
 			Application.Log.AddMessage("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
 			UpdateTextMethod(UpdateTextTranslated(22))
@@ -1052,6 +1066,7 @@ Namespace Display_Driver_Uninstaller
 			cleanupEngine.Fixregistrydriverstore(config)
 			config.Success = True
 		End Sub
+
 		Private Sub KillProcess(ByVal ParamArray processnames As String())
 			For Each processName As String In processnames
 				If String.IsNullOrEmpty(processName) Then
@@ -2771,6 +2786,68 @@ child.Contains("HydraVision\") Then
 				ImpersonateLoggedOnUser.ReleaseToken()
 			End If
 		End Sub
+
+		Private Sub CleanAmdCache(ByVal config As ThreadSettings)
+			For Each filepaths As String In _fileIo.GetDirectories(config.Paths.UserPath)
+				If String.IsNullOrWhiteSpace(filepaths) Then Continue For
+				Dim filePath As String = filepaths + "\AppData\Local\AMD"
+				If _fileIo.ExistsDir(filePath) Then
+					Try
+						For Each child As String In _fileIo.GetDirectories(filePath)
+							If String.IsNullOrWhiteSpace(child) = False Then
+								If StrContainsAny(child, True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Then
+									Delete(child)
+								End If
+							End If
+						Next
+					Catch ex As Exception
+						Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+					End Try
+				End If
+
+				filePath = config.Paths.System32 + "config\systemprofile\AppData\Local\D3DSCache"
+				If _fileIo.ExistsDir(filePath) Then
+					Try
+						For Each child As String In _fileIo.GetDirectories(filePath)
+							If String.IsNullOrWhiteSpace(child) = False Then
+								Delete(child)
+							End If
+						Next
+					Catch ex As Exception
+						Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+					End Try
+				End If
+
+				filePath = filepaths + "\AppData\LocalLow\AMD"
+				If _fileIo.ExistsDir(filePath) Then
+					Try
+						For Each child As String In _fileIo.GetDirectories(filePath)
+							If String.IsNullOrWhiteSpace(child) = False Then
+								If StrContainsAny(child, True, "dxcache", "vkcache", "glcache") Then
+									Delete(child)
+								End If
+							End If
+						Next
+					Catch ex As Exception
+						Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+					End Try
+				End If
+
+				filePath = filepaths + "\AppData\Local\D3DSCache"
+				If _fileIo.ExistsDir(filePath) Then
+					Try
+						For Each child As String In _fileIo.GetDirectories(filePath)
+							If String.IsNullOrWhiteSpace(child) = False Then
+								Delete(child)
+							End If
+						Next
+					Catch ex As Exception
+						Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+					End Try
+				End If
+			Next
+		End Sub
+
 		Private Sub Cleanamdfolders(ByVal config As ThreadSettings)
 			Dim filePath As String = Nothing
 			Dim removedxcache As Boolean = config.RemoveCrimsonCache
@@ -2820,6 +2897,10 @@ child.Contains("HydraVision\") Then
 			If config.RemoveAudioBus AndAlso FrmMain.DoNotRemoveAmdHdAudioBusFiles = False Then
 				Dim thread3 As Task = Task.Run(Sub() Threaddata1(driverfilesKMAFD))
 				TaskList.Add(thread3)
+			End If
+
+			If removedxcache Then
+				CleanAmdCache(config)
 			End If
 
 			filePath = Environment.GetEnvironmentVariable("windir")
@@ -5742,6 +5823,129 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
 			End If
 		End Sub
 
+		Private Sub CleanNvidiaCache(ByVal config As ThreadSettings)
+			Dim filePath As String = config.Paths.System32 + "config\systemprofile\AppData\Local\NVIDIA"
+			If _fileIo.ExistsDir(filePath) Then
+				If filePath IsNot Nothing Then
+					For Each child As String In _fileIo.GetDirectories(filePath)
+						If String.IsNullOrWhiteSpace(child) = False Then
+							If StrContainsAny(child, True, "DXCache", "GLCache") Then
+								Delete(child)
+							End If
+						End If
+					Next
+				End If
+			End If
+
+			filePath = config.Paths.System32 + "config\systemprofile\AppData\Local\D3DSCache"
+			If _fileIo.ExistsDir(filePath) Then
+				Try
+					For Each child As String In _fileIo.GetDirectories(filePath)
+						If String.IsNullOrWhiteSpace(child) = False Then
+							Delete(child)
+						End If
+					Next
+				Catch ex As Exception
+					Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+				End Try
+			End If
+
+			filePath = config.Paths.System32 + "config\systemprofile\AppData\LocalLow\NVIDIA"
+			If _fileIo.ExistsDir(filePath) Then
+				If filePath IsNot Nothing Then
+					Try
+						For Each child As String In _fileIo.GetDirectories(filePath)
+							If String.IsNullOrWhiteSpace(child) = False Then
+								If StrContainsAny(child, True, "PerDriverVersion", "dxcache") Then
+									Delete(child)
+								End If
+							End If
+						Next
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+				End If
+			End If
+
+			filePath = config.Paths.WinDir + "ServiceProfiles\LocalService\AppData\Local\NVIDIA"
+			If _fileIo.ExistsDir(filePath) Then
+				If filePath IsNot Nothing Then
+					Try
+						For Each child As String In _fileIo.GetDirectories(filePath)
+							If String.IsNullOrWhiteSpace(child) = False Then
+								If StrContainsAny(child, True, "DXCache") Then
+									Delete(child)
+								End If
+							End If
+						Next
+					Catch ex As Exception
+						Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+					End Try
+				End If
+			End If
+
+			For Each filepaths As String In _fileIo.GetDirectories(config.Paths.UserPath)
+				If String.IsNullOrWhiteSpace(filepaths) Then Continue For
+				filePath = filepaths + "\AppData\LocalLow\NVIDIA"
+				If _fileIo.ExistsDir(filePath) Then
+					Try
+						For Each child As String In _fileIo.GetDirectories(filePath)
+							If String.IsNullOrWhiteSpace(child) = False Then
+								If StrContainsAny(child, True, "DXCache", "PerDriverVersion") Then
+									Delete(child)
+								End If
+							End If
+						Next
+					Catch ex As Exception
+						Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+					End Try
+				End If
+
+				filePath = filepaths + "\AppData\Local\NVIDIA"
+				If _fileIo.ExistsDir(filePath) Then
+					Try
+						For Each child As String In _fileIo.GetDirectories(filePath)
+							If String.IsNullOrWhiteSpace(child) = False Then
+								If StrContainsAny(child, True, "glcache", "DXCache", "OptixCache") Then
+									Delete(child)
+								End If
+							End If
+						Next
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+				End If
+
+				filePath = filepaths + "\AppData\Roaming\NVIDIA"
+				If _fileIo.ExistsDir(filePath) Then
+					Try
+						For Each child As String In _fileIo.GetDirectories(filePath)
+							If String.IsNullOrWhiteSpace(child) = False Then
+								If StrContainsAny(child, True, "computecache", "glcache") Then
+									Delete(child)
+								End If
+							End If
+						Next
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+				End If
+
+				filePath = filepaths + "\AppData\Local\D3DSCache"
+				If _fileIo.ExistsDir(filePath) Then
+					Try
+						For Each child As String In _fileIo.GetDirectories(filePath)
+							If String.IsNullOrWhiteSpace(child) = False Then
+								Delete(child)
+							End If
+						Next
+					Catch ex As Exception
+						Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+					End Try
+				End If
+			Next
+		End Sub
+
 		Private Sub CleanNvidiaFolders(ByVal config As ThreadSettings)
 			Dim filePath As String = Nothing
 			Dim removephysx As Boolean = config.RemovePhysX
@@ -5794,6 +5998,8 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
 
 			UpdateTextMethod(UpdateTextTranslated(4))
 			Application.Log.AddMessage("Cleaning Directory")
+
+			CleanNvidiaCache(config)
 
 			If config.RemoveNvidiaDirs = True Then
 				filePath = _sysdrv + "NVIDIA"
@@ -7667,6 +7873,53 @@ child.ToLower.Equals("oneapp_igcc") Then
 			End If
 		End Sub
 
+		Private Sub CleanIntelCache(config As ThreadSettings)
+			For Each filepaths As String In _fileIo.GetDirectories(config.Paths.UserPath)
+				If String.IsNullOrWhiteSpace(filepaths) Then Continue For
+
+				Dim filePath As String = filepaths + "\AppData\LocalLow\Intel"
+				If _fileIo.ExistsDir(filePath) Then
+					Try
+						For Each child As String In _fileIo.GetDirectories(filePath)
+							If String.IsNullOrWhiteSpace(child) = False Then
+								If StrContainsAny(child, True, "shadercache") Then
+									Delete(child)
+								End If
+							End If
+						Next
+					Catch ex As Exception
+						Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+					End Try
+				End If
+
+				filePath = config.Paths.System32 + "config\systemprofile\AppData\Local\D3DSCache"
+				If _fileIo.ExistsDir(filePath) Then
+					Try
+						For Each child As String In _fileIo.GetDirectories(filePath)
+							If String.IsNullOrWhiteSpace(child) = False Then
+								Delete(child)
+							End If
+						Next
+					Catch ex As Exception
+						Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+					End Try
+				End If
+
+				filePath = filepaths + "\AppData\Local\D3DSCache"
+				If _fileIo.ExistsDir(filePath) Then
+					Try
+						For Each child As String In _fileIo.GetDirectories(filePath)
+							If String.IsNullOrWhiteSpace(child) = False Then
+								Delete(child)
+							End If
+						Next
+					Catch ex As Exception
+						Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+					End Try
+				End If
+			Next
+		End Sub
+
 		Private Sub CleanIntelFolders(ByVal config As ThreadSettings)
 			Dim CleanupEngine As New CleanupEngine
 			Dim driverFiles As String() = IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\driverfiles.cfg")
@@ -7684,6 +7937,8 @@ child.ToLower.Equals("oneapp_igcc") Then
 			If Not FrmMain.IntelNpuPresent Then
 				CleanupEngine.Folderscleanup(sharedDriverFiles)
 			End If
+
+			CleanIntelCache(config)
 
 			Dim filePath As String = System.Environment.SystemDirectory
 			Dim files() As String = IO.Directory.GetFiles(filePath + "\", "igfxcoin*.*")

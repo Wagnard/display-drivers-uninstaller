@@ -51,6 +51,14 @@
 				(ドライバーを自動インストール）
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				シェーダーキャッシュをクリーン (のみ)
+			</Text>
+			<Tooltip>
+				シェーダー / コンピュートキャッシュファイルのみを削除します。セーフモードで実行するとより効果的です。
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>検出された OS:</Text>
 		</lblWinVersion>

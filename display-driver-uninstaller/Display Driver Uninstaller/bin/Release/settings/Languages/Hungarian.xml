@@ -51,6 +51,14 @@
 				(automatikus illesztőprogram telepítés)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Shader gyorsítótár törlése (Csak)
+			</Text>
+			<Tooltip>
+				Csak a shader / compute gyorsítótár fájlokat törli. Biztonságos módban hatékonyabb.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Operációs rendszer és verziója:</Text>
 		</lblWinVersion>

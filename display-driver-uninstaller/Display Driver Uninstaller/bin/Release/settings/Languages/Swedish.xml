@@ -51,6 +51,14 @@
 				 (automatisk drivrutininstallation)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Rensa Shader-cache (Endast)
+			</Text>
+			<Tooltip>
+				Tar endast bort shader-/compute-cachefiler. Mer effektivt i felsäkert läge.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Detekterad Windows-version</Text>
 		</lblWinVersion>

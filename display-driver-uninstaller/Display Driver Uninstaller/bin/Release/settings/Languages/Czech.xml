@@ -51,6 +51,14 @@
         		(instalovat ovladače automaticky)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Vyčistit mezipaměť shaderů (Pouze)
+			</Text>
+			<Tooltip>
+				Odstraní pouze soubory shader / compute cache. Efektivnější v nouzovém režimu.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Zjištěný operační systém:</Text>
 		</lblWinVersion>

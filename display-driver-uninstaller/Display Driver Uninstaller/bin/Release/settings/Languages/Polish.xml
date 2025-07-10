@@ -51,6 +51,14 @@
 			    (Automatycznie instaluje sterowniki od Microsoft)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Wyczyść pamięć cache shaderów (Tylko)
+			</Text>
+			<Tooltip>
+				Usuwa tylko pliki pamięci podręcznej shaderów / obliczeń. Bardziej skuteczne w trybie awaryjnym.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Zainstalowana wersja systemu:</Text>
 		</lblWinVersion>

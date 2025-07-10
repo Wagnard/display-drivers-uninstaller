@@ -51,6 +51,14 @@
 				(자동으로 드라이버 설치)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				셰이더 캐시 정리 (전용)
+			</Text>
+			<Tooltip>
+				셰이더 / 컴퓨트 캐시 파일만 삭제합니다. 안전 모드에서 실행 시 더 효과적입니다.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>탐지된 운영 체제:</Text>
 		</lblWinVersion>

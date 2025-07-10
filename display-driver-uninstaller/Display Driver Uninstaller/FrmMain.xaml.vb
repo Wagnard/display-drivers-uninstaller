@@ -231,6 +231,13 @@ Namespace Display_Driver_Uninstaller
 			Await ThreadTaskAsync(config)
 		End Sub
 
+		Private Async Sub BtnCleanCaches_Click(sender As Object, e As RoutedEventArgs) Handles btnCleanCaches.Click
+
+			Dim config As New ThreadSettings(False)
+			config.CleanCache = True
+			Await ThreadTaskAsync(config)
+		End Sub
+
 		Private Sub BtnWuRestore_Click(sender As Object, e As EventArgs) Handles btnWuRestore.Click
 			EnableDriverSearch(True)
 		End Sub
@@ -1313,6 +1320,7 @@ Namespace Display_Driver_Uninstaller
 							Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
 
 					End Select
+					btnCleanCaches.IsEnabled = False
 				Case CleanType.GPU
 
 					Select Case cbSelectedGPU.SelectedIndex
@@ -1343,7 +1351,7 @@ Namespace Display_Driver_Uninstaller
 							ButtonsPanel.IsEnabled = True
 							Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
 					End Select
-
+					btnCleanCaches.IsEnabled = True
 			End Select
 
 		End Sub

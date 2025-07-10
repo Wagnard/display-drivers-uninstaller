@@ -51,6 +51,14 @@
 				(automatisch drivers installeren)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Shader-cache opschonen (Alleen)
+			</Text>
+			<Tooltip>
+				Verwijdert alleen shader- / compute-cachebestanden. Effectiever in Veilige modus.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Gedetecteerde Windows versie:</Text>
 		</lblWinVersion>

@@ -51,6 +51,14 @@
 				(instalar automaticamente)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Limpar Cache de Shader (Somente)
+			</Text>
+			<Tooltip>
+				Exclui apenas arquivos de cache de shader / computação. Mais eficaz no Modo de Segurança.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Sistema operativo detectado:</Text>
 		</lblWinVersion>
