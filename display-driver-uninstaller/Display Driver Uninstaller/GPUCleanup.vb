@@ -52,6 +52,7 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 			If config.CleanCache AndAlso Not config.HasCleanArg Then
+				Application.Log.AddMessage("Cleaning " + config.SelectedGPU.ToString() + " cache ...")
 				Select Case config.SelectedGPU
 					Case GPUVendor.Nvidia
 						CleanNvidiaCache(config)

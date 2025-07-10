@@ -95,7 +95,6 @@
 				<MenuItem x:Name="VisitDDUHomeMenuItem" Header="VisitDDUHomeMenuItem" />
 				<MenuItem x:Name="VisitDiscord" Header="VisitDiscord" />
 				<MenuItem x:Name="VisitSVNMenuItem" Header="VisitSVNMenuItem" />
-				<MenuItem x:Name="VisitGeforceMenuItem" Header="VisitGeforceMenuItem" />
 			</MenuItem>
 
 			<MenuItem x:Name="ExtendedLogMenuItem" Header="ExtendedLogMenuItem"/>

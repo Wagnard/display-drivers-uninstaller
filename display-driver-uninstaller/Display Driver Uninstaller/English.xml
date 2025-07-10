@@ -112,13 +112,13 @@
 			<Text>Patrons</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Visit official DDU website</Text>
+			<Text>Visit Official DDU Website</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitDiscord>
-			<Text>Join our Discord</Text>
+			<Text>Join Our Discord</Text>
 		</VisitDiscord>
 		<VisitSVNMenuItem>
-			<Text>Visit SVN website</Text>
+			<Text>Visit GitHub Website</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
 			<Text>Visit Guru3d NVIDIA thread</Text>

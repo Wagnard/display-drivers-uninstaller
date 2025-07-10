@@ -332,9 +332,9 @@ Namespace Display_Driver_Uninstaller
 			WinAPI.OpenVisitLink(" -visitsvn")
 		End Sub
 
-		Private Sub VisitGeforceMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGeforceMenuItem.Click
-			WinAPI.OpenVisitLink(" -visitgeforce")
-		End Sub
+		'Private Sub VisitGeforceMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles VisitGeforceMenuItem.Click
+		'	WinAPI.OpenVisitLink(" -visitgeforce")
+		'End Sub
 
 		Private Sub ExtendedLogMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles ExtendedLogMenuItem.Click
 			Dim frmLog As New FrmLog
