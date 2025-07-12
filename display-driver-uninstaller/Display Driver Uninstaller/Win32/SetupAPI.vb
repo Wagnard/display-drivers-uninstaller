@@ -2708,9 +2708,13 @@ Namespace Display_Driver_Uninstaller.Win32
 		End Function
 
 		Private Shared Sub ExtractChilds(driverDetails As Boolean, Devices As List(Of Device), allDevices As List(Of Device), Optional updateDevice As Boolean = False)
+			If Devices Is Nothing Then Return
 
 			For Each dev As Device In Devices
+				If dev Is Nothing Then Continue For
+
 				GetChildv2(dev, allDevices)
+
 				If dev.ChildDevices IsNot Nothing AndAlso dev.ChildDevices.Length > 0 Then
 					UpdateDevicesByID(dev.ChildDevices, driverDetails)
 					ExtractChilds(driverDetails, dev.ChildDevices.ToList(), allDevices, True)
@@ -3717,12 +3721,15 @@ Namespace Display_Driver_Uninstaller.Win32
 				Dim childDevices As New List(Of Device)(5)
 
 				For Each instDevice In allDevices
-
-					If instDevice.ParentDevices Is Nothing OrElse Not instDevice.ParentDevices.Length > 0 Then
+					If instDevice Is Nothing OrElse instDevice.ParentDevices Is Nothing OrElse instDevice.ParentDevices.Length = 0 Then
 						Continue For
 					End If
 
 					For Each parentDevice In instDevice.ParentDevices
+						If parentDevice Is Nothing Then
+							Continue For
+						End If
+
 						If parentDevice.DevInstID = device.DevInstID Then
 							childDevices.Add(
 							 New Device() With {
