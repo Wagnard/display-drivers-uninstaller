@@ -1046,7 +1046,7 @@ Namespace Display_Driver_Uninstaller
 			If config.SelectedGPU = GPUVendor.AMD Then
 				Cleanamdserviceprocess(config)
 				CleanAmd(config)
-				Cleanamdfolders(config)
+				CleanAmdFolders(config)
 			End If
 
 			If config.SelectedGPU = GPUVendor.Nvidia Then
@@ -1163,6 +1163,7 @@ Namespace Display_Driver_Uninstaller
 				ImpersonateLoggedOnUser.ReleaseToken()
 			End If
 		End Sub
+
 		Private Sub CleanAmd(ByVal config As ThreadSettings, ByVal Optional preclean As Boolean = False)
 			Dim CleanupEngine As New CleanupEngine
 			Dim wantedvalue As String = Nothing
@@ -1785,11 +1786,11 @@ child.ToLower.Contains("legacy_amdacpksd") Then
 						For Each child2 As String In subregkey.GetSubKeyNames()
 							If String.IsNullOrWhiteSpace(child2) Then Continue For
 							If StrContainsAny(child2, True, "controlset") Then
-								Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\" & child2 & "\Services\eventlog", True)
+								Using regkey As RegistryKey = MyRegistry.OpenSubKey(subregkey, child2 & "\Services\eventlog", True)
 									If regkey IsNot Nothing Then
 										For Each child As String In regkey.GetSubKeyNames()
 											If String.IsNullOrWhiteSpace(child) Then Continue For
-											If child.ToLower.Contains("aceeventlog") Then
+											If StrContainsAny(child, True, "aceeventlog") Then
 												Try
 													Deletesubregkey(regkey, child)
 													Continue For
@@ -1797,28 +1798,61 @@ child.ToLower.Contains("legacy_amdacpksd") Then
 													Application.Log.AddException(ex)
 												End Try
 											End If
+
+											If StrContainsAny(child, True, "Application") Then
+												Using applicationKey As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
+													If applicationKey IsNot Nothing Then
+														' check for any of these sub‑keys…
+														Dim toDelete = New String() {
+															"AMD_ANR_BG_PROC",
+															"ATIeRecord"
+														}
+
+														For Each sk In toDelete
+															If applicationKey.GetSubKeyNames().Contains(sk, StringComparer.OrdinalIgnoreCase) Then
+																Try
+																	Deletesubregkey(applicationKey, sk)
+																Catch ex As Exception
+																	Application.Log.AddException(ex)
+																End Try
+															End If
+														Next
+														Continue For
+													End If
+												End Using
+											End If
+
+											If StrContainsAny(child, True, "System") Then
+												Using systemKey As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
+													If systemKey IsNot Nothing Then
+														' check for any of these sub‑keys…
+														Dim toDelete = New String() {
+															"amdkmdag",
+															"amdkmdap"
+														}
+
+														For Each sk In toDelete
+															If systemKey.GetSubKeyNames().Contains(sk, StringComparer.OrdinalIgnoreCase) Then
+																Try
+																	Deletesubregkey(systemKey, sk)
+																Catch ex As Exception
+																	Application.Log.AddException(ex)
+																End Try
+															End If
+														Next
+														Continue For
+													End If
+												End Using
+											End If
 										Next
-										Try
-											Deletesubregkey(regkey, "Application\ATIeRecord", False)
-											Continue For
-										Catch ex As Exception
-											Application.Log.AddException(ex)
-										End Try
-										Try
-											Deletesubregkey(regkey, "System\amdkmdag", False)
-											Continue For
-										Catch ex As Exception
-											Application.Log.AddException(ex)
-										End Try
-										Try
-											Deletesubregkey(regkey, "System\amdkmdap", False)
-										Catch ex As Exception
-											Application.Log.AddException(ex)
-										End Try
 									End If
 								End Using
 								Try
-									Deletesubregkey(Registry.LocalMachine, "SYSTEM\" & child2 & "\Services\Atierecord", False)
+									Using regkey As RegistryKey = MyRegistry.OpenSubKey(subregkey, child2 & "\Services\Atierecord", False)
+										If regkey IsNot Nothing Then
+											Deletesubregkey(Registry.LocalMachine, "SYSTEM\" & child2 & "\Services\Atierecord", False)
+										End If
+									End Using
 								Catch ex As Exception
 									Application.Log.AddException(ex)
 								End Try
@@ -1834,6 +1868,7 @@ child.ToLower.Contains("legacy_amdacpksd") Then
 			'--------------------------------
 			'end of eventviewer stuff removal
 			'--------------------------------
+
 			Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot,
 "Directory\background\shellex\ContextMenuHandlers", True)
@@ -2117,7 +2152,7 @@ child.ToLower.Contains("legacy_amdacpksd") Then
 								'	End Try
 								'End If
 								If StrContainsAny(child, True, "install") Then  'Just a safety here....
-									Using installKey As RegistryKey = regkey.OpenSubKey(child, True)
+									Using installKey As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
 										If installKey IsNot Nothing Then
 											For Each key As String In installKey.GetSubKeyNames()
 												If StrContainsAny(key, True, "autoupdate", "checkforupdates", "lastrun", "progress") Then
@@ -2353,8 +2388,8 @@ child.ToLower.Contains("mftvdecoder") Then
 														If dependencyRegkey IsNot Nothing Then
 															For Each depChild As String In dependencyRegkey.GetSubKeyNames
 																If String.IsNullOrWhiteSpace(depChild) Then Continue For
-																If String.IsNullOrWhiteSpace(dependencyRegkey.OpenSubKey(depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-																If StrContainsAny(child, True, dependencyRegkey.OpenSubKey(depChild, False).GetValue("", String.Empty).ToString()) Then
+																If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
+																If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
 																	Try
 																		Deletesubregkey(dependencyRegkey, depChild, False)
 																	Catch ex As Exception
@@ -2849,7 +2884,7 @@ child.Contains("HydraVision\") Then
 			Next
 		End Sub
 
-		Private Sub Cleanamdfolders(ByVal config As ThreadSettings)
+		Private Sub CleanAmdFolders(ByVal config As ThreadSettings)
 			Dim filePath As String = Nothing
 			Dim removedxcache As Boolean = config.RemoveCrimsonCache
 			Dim driverfiles = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfiles.cfg")
@@ -4519,8 +4554,8 @@ child.ToLower.Contains("_virtualaudio.driver") AndAlso removegfe Then
 														If dependencyRegkey IsNot Nothing Then
 															For Each depChild As String In dependencyRegkey.GetSubKeyNames
 																If String.IsNullOrWhiteSpace(depChild) Then Continue For
-																If String.IsNullOrWhiteSpace(dependencyRegkey.OpenSubKey(depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-																If StrContainsAny(child, True, dependencyRegkey.OpenSubKey(depChild, False).GetValue("", String.Empty).ToString()) Then
+																If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
+																If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
 																	Try
 																		Deletesubregkey(dependencyRegkey, depChild, False)
 																	Catch ex As Exception
@@ -7399,8 +7434,8 @@ child.ToLower.Contains("igfxdtcm") Then
 													If dependencyRegkey IsNot Nothing Then
 														For Each depChild As String In dependencyRegkey.GetSubKeyNames
 															If String.IsNullOrWhiteSpace(depChild) Then Continue For
-															If String.IsNullOrWhiteSpace(dependencyRegkey.OpenSubKey(depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-															If StrContainsAny(child, True, dependencyRegkey.OpenSubKey(depChild, False).GetValue("", String.Empty).ToString()) Then
+															If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
+															If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
 																Try
 																	Deletesubregkey(dependencyRegkey, depChild, False)
 																Catch ex As Exception
@@ -7433,8 +7468,8 @@ child.ToLower.Contains("igfxdtcm") Then
 														If dependencyRegkey IsNot Nothing Then
 															For Each depChild As String In dependencyRegkey.GetSubKeyNames
 																If String.IsNullOrWhiteSpace(depChild) Then Continue For
-																If String.IsNullOrWhiteSpace(dependencyRegkey.OpenSubKey(depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-																If StrContainsAny(child, True, dependencyRegkey.OpenSubKey(depChild, False).GetValue("", String.Empty).ToString()) Then
+																If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
+																If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
 																	Try
 																		Deletesubregkey(dependencyRegkey, depChild, False)
 																	Catch ex As Exception
@@ -7481,8 +7516,8 @@ child.ToLower.Contains("igfxdtcm") Then
 															If dependencyRegkey IsNot Nothing Then
 																For Each depChild As String In dependencyRegkey.GetSubKeyNames
 																	If String.IsNullOrWhiteSpace(depChild) Then Continue For
-																	If String.IsNullOrWhiteSpace(dependencyRegkey.OpenSubKey(depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-																	If StrContainsAny(child, True, dependencyRegkey.OpenSubKey(depChild, False).GetValue("", String.Empty).ToString()) Then
+																	If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
+																	If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
 																		Try
 																			Deletesubregkey(dependencyRegkey, depChild, False)
 																		Catch ex As Exception
@@ -7512,8 +7547,8 @@ child.ToLower.Contains("igfxdtcm") Then
 																If dependencyRegkey IsNot Nothing Then
 																	For Each depChild As String In dependencyRegkey.GetSubKeyNames
 																		If String.IsNullOrWhiteSpace(depChild) Then Continue For
-																		If String.IsNullOrWhiteSpace(dependencyRegkey.OpenSubKey(depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-																		If StrContainsAny(child, True, dependencyRegkey.OpenSubKey(depChild, False).GetValue("", String.Empty).ToString()) Then
+																		If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
+																		If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
 																			Try
 																				Deletesubregkey(dependencyRegkey, depChild, False)
 																			Catch ex As Exception

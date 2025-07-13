@@ -322,7 +322,7 @@ Namespace Display_Driver_Uninstaller
 					' ... your existing control set checks ...
 					If String.IsNullOrWhiteSpace(childName) Then Continue For
 
-					Using envKey As RegistryKey = topLevelKey.OpenSubKey($"{childName}\Control\Session Manager\Environment", writable:=True)
+					Using envKey As RegistryKey = MyRegistry.OpenSubKey(topLevelKey, $"{childName}\Control\Session Manager\Environment", Writable:=True)
 						If envKey Is Nothing Then Continue For
 
 						Dim allNames = envKey.GetValueNames()
