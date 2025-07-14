@@ -544,7 +544,10 @@ Namespace Display_Driver_Uninstaller
 					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					Application.Log.AddException(ex)
 				End Try
-				ImpersonateLoggedOnUser.Taketoken()
+
+				If Not WindowsIdentity.GetCurrent().IsSystem Then
+					ImpersonateLoggedOnUser.Taketoken()
+				End If
 
 				'Verification is there is still an AMD HD Audio Bus device and set donotremoveamdhdaudiobusfiles to true if thats the case
 				Try
@@ -584,6 +587,45 @@ Namespace Display_Driver_Uninstaller
 				If WindowsIdentity.GetCurrent().IsSystem Then
 					ImpersonateLoggedOnUser.ReleaseToken()
 				End If
+
+				' ----------------------
+				' Removing the videocard
+				' ----------------------
+
+				Try
+					Application.Log.AddMessage("Executing SetupAPI: Remove GPU(s).")
+					Dim GPUs As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(vendCHIDGPU, False, False, True)
+					If GPUs IsNot Nothing AndAlso GPUs.Count > 0 Then
+						' Create a list to track devices already removed
+						Dim removedDevices As New List(Of String)
+						For Each GPU As SetupAPI.Device In GPUs
+							If GPU IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(GPU.DeviceID) Then
+								If removedDevices.Contains(GPU.ToString()) Then
+									Continue For
+								End If
+
+								If GPU.ChildDevices IsNot Nothing AndAlso GPU.ChildDevices.Length > 0 Then
+									Application.Log.AddMessage("SetupAPI: Removing childrens associated to the GPU(s)")
+									RemoveChiendrensFromDevices(GPU.ChildDevices, removedDevices)
+									Application.Log.AddMessage("SetupAPI: Removal of the childrens associated to the GPU(s) completed.")
+								End If
+								SetupAPI.UninstallDevice(GPU) 'Then we remove the GPU itself.
+
+								removedDevices.Add(GPU.ToString())
+
+							End If
+						Next
+						GPUs.Clear()
+						removedDevices.Clear()
+					End If
+					UpdateTextMethod(UpdateTextTranslated(23))
+					Application.Log.AddMessage("SetupAPI: Remove GPU(s) Complete.")
+				Catch ex As Exception
+					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
+					Application.Log.AddException(ex)
+					config.GPURemovedSuccess = False
+					Exit Sub
+				End Try
 
 				If config.SelectedGPU = GPUVendor.AMD Then
 					' ------------------------------
@@ -629,36 +671,11 @@ Namespace Display_Driver_Uninstaller
 						MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
 						Application.Log.AddException(ex)
 					End Try
-				End If
-
-				'-----------------------
-				'Removing NVVHCI
-				'-----------------------
-				If config.SelectedGPU = GPUVendor.Nvidia AndAlso config.RemoveGFE Then
-					Try
-						Application.Log.AddMessage("Executing SetupAPI: Remove NVVHCI.")
-						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByHID("ROOT\NVVHCI", False, False, False)
-						If found IsNot Nothing AndAlso found.Count > 0 Then
-							For Each d As SetupAPI.Device In found
-								If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
-									If StrContainsAny(d.HardwareIDs(0), True, "ROOT\NVVHCI") Then
-										SetupAPI.UninstallDevice(d)
-									End If
-								End If
-							Next
-							found.Clear()
-						End If
-						Application.Log.AddMessage("SetupAPI: Remove NVVHCI Complete.")
-					Catch ex As Exception
-						Application.Log.AddException(ex)
-					End Try
-				End If
 
 
-				'------------------------------------------------------------
-				'Removing AMD Crash Defender and AMD Link Controler Emulation
-				'------------------------------------------------------------
-				If config.SelectedGPU = GPUVendor.AMD Then
+					'------------------------------------------------------------
+					'Removing AMD Crash Defender and AMD Link Controler Emulation
+					'------------------------------------------------------------
 					Try
 						Application.Log.AddMessage("Executing SetupAPI: Remove AMD Crash Defender and AMD Link Controler Emulation.")
 						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("system", Nothing, False)
@@ -676,46 +693,26 @@ Namespace Display_Driver_Uninstaller
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 					End Try
+
+					Try
+						UpdateTextMethod("Start - Check for AMD-OpenCL / AMD-Windows")
+						Application.Log.AddMessage("Executing SetupAPI: check AMD-OpenCL / AMD-Windows SoftwareComponent started")
+						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
+						If found IsNot Nothing AndAlso found.Count > 0 Then
+							For Each d As SetupAPI.Device In found
+								If d IsNot Nothing AndAlso StrContainsAny(d.Description, True, "AMD-Windows Support Components", "AMD-OpenCL User Mode Driver") Then
+									SetupAPI.UninstallDevice(d)
+								End If
+							Next
+							found.Clear()
+						End If
+						UpdateTextMethod("End - Check for AMD-OpenCL system device.")
+						Application.Log.AddMessage("SetupAPI: Check AMD-OpenCL system device Complete .")
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+
 				End If
-
-				' ----------------------
-				' Removing the videocard
-				' ----------------------
-
-				Try
-					Application.Log.AddMessage("Executing SetupAPI: Remove GPU(s).")
-					Dim GPUs As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID(vendCHIDGPU, False, False, True)
-					If GPUs IsNot Nothing AndAlso GPUs.Count > 0 Then
-						' Create a list to track devices already removed
-						Dim removedDevices As New List(Of String)
-						For Each GPU As SetupAPI.Device In GPUs
-							If GPU IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(GPU.DeviceID) Then
-								If removedDevices.Contains(GPU.ToString()) Then
-									Continue For
-								End If
-
-								If GPU.ChildDevices IsNot Nothing AndAlso GPU.ChildDevices.Length > 0 Then
-									Application.Log.AddMessage("SetupAPI: Removing childrens associated to the GPU(s)")
-									RemoveChiendrensFromDevices(GPU.ChildDevices, removedDevices)
-									Application.Log.AddMessage("SetupAPI: Removal of the childrens associated to the GPU(s) completed.")
-								End If
-								SetupAPI.UninstallDevice(GPU) 'Then we remove the GPU itself.
-
-								removedDevices.Add(GPU.ToString())
-
-							End If
-						Next
-						GPUs.Clear()
-						removedDevices.Clear()
-					End If
-					UpdateTextMethod(UpdateTextTranslated(23))
-					Application.Log.AddMessage("SetupAPI: Remove GPU(s) Complete.")
-				Catch ex As Exception
-					'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
-					Application.Log.AddException(ex)
-					config.GPURemovedSuccess = False
-					Exit Sub
-				End Try
 
 				If config.SelectedGPU = GPUVendor.Intel Then
 
@@ -823,6 +820,7 @@ Namespace Display_Driver_Uninstaller
 						Application.Log.AddException(ex)
 					End Try
 					Application.Log.AddMessage("SetupAPI: Remove Intel(R) Leftover audio complete")
+
 				End If
 
 				'Here I remove 3dVision USB Adapter and USB type C(RTX).
@@ -992,11 +990,36 @@ Namespace Display_Driver_Uninstaller
 							End If
 							Application.Log.AddMessage("SetupAPI: Remove NVIDIA NvModuleTracker Device Complete .")
 						End If
+
+
+						'-----------------------
+						'Removing NVVHCI
+						'-----------------------
+
+						Try
+							Application.Log.AddMessage("Executing SetupAPI: Remove NVVHCI.")
+							found = SetupAPI.GetDevicesByHID("ROOT\NVVHCI", False, False, False)
+							If found IsNot Nothing AndAlso found.Count > 0 Then
+								For Each d As SetupAPI.Device In found
+									If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
+										If StrContainsAny(d.HardwareIDs(0), True, "ROOT\NVVHCI") Then
+											SetupAPI.UninstallDevice(d)
+										End If
+									End If
+								Next
+								found.Clear()
+							End If
+							Application.Log.AddMessage("SetupAPI: Remove NVVHCI Complete.")
+						Catch ex As Exception
+							Application.Log.AddException(ex)
+						End Try
+
 					Catch ex As Exception
 						Application.Log.AddException(ex)
 						'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
 					End Try
 				End If
+
 				Application.Log.AddMessage("SetupAPI: Remove Audio/HDMI Complete")
 				If config.SelectedGPU <> GPUVendor.Intel Then
 					cleanupEngine.Cleandriverstore(config)
@@ -1021,26 +1044,11 @@ Namespace Display_Driver_Uninstaller
 					UpdateTextMethod(UpdateTextTranslated(27))
 					Application.Log.AddMessage("SetupAPI: Remove Monitor(s) Complete .")
 				End If
-			End If
 
-			If config.SelectedGPU = GPUVendor.AMD Then
-				Try
-					UpdateTextMethod("Start - Check for AMD-OpenCL / AMD-Windows")
-					Application.Log.AddMessage("Executing SetupAPI: check AMD-OpenCL / AMD-Windows SoftwareComponent started")
-					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
-					If found IsNot Nothing AndAlso found.Count > 0 Then
-						For Each d As SetupAPI.Device In found
-							If d IsNot Nothing AndAlso StrContainsAny(d.Description, True, "AMD-Windows Support Components", "AMD-OpenCL User Mode Driver") Then
-								SetupAPI.UninstallDevice(d)
-							End If
-						Next
-						found.Clear()
-					End If
-					UpdateTextMethod("End - Check for AMD-OpenCL system device.")
-					Application.Log.AddMessage("SetupAPI: Check AMD-OpenCL system device Complete .")
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
+				If config.SelectedGPU = GPUVendor.AMD Then
+
+				End If
+
 			End If
 
 			If config.SelectedGPU = GPUVendor.AMD Then
