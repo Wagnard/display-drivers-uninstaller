@@ -379,7 +379,6 @@ Namespace Display_Driver_Uninstaller
 			End Using
 		End Sub
 
-
 		Public Function IsIntelNpuPresent() As Boolean
 			Try
 				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("ComputeAccelerator", "VEN_8086", False, driverDetails:=False, logging:=False)

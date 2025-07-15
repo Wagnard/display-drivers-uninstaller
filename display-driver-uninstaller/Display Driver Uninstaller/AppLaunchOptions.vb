@@ -149,7 +149,6 @@ Namespace Display_Driver_Uninstaller
 							RemoveAMDCP = True
 							RemoveINTELCP = True
 							RemoveINTELIGS = True
-							RemoveIntelNpu = True
 							RemoveOneAPI = True
 							RemoveEnduranceGaming = True
 							RemoveNVCP = True
