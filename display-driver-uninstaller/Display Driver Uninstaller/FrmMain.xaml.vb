@@ -626,39 +626,47 @@ Namespace Display_Driver_Uninstaller
 
 				UpdateTextMethod(UpdateTextTranslated(9))
 
-				If config.PreventClose Then
-					Exit Sub
-				End If
-
-				If Not config.Shutdown Then
-					SetupAPI.ReScanDevices()
-				End If
 
 				If WindowsIdentity.GetCurrent().IsSystem Then
 					ImpersonateLoggedOnUser.ReleaseToken()
 				End If
 
-				EnableControls(True)
-
-				If config.Restart Then
-
-					'Application.RestartComputer()
-					WinAPI.OpenVisitLink(" -CleanComplete -Restart")
-					CloseDDU()
-					Exit Sub
-				End If
-
-				If config.Shutdown Then
-					'Application.ShutdownComputer()
-					WinAPI.OpenVisitLink(" -CleanComplete -Shutdown")
-					CloseDDU()
-					Exit Sub
-				End If
-
-
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 			End Try
+		End Sub
+
+		Private Sub CleaningCompleted(ByVal config As ThreadSettings)
+			If Not config.Shutdown Then
+				SetupAPI.ReScanDevices()
+			End If
+
+			If config.Restart Then
+
+				'Application.RestartComputer()
+				WinAPI.OpenVisitLink(" -CleanComplete -Restart")
+				CloseDDU()
+				Return
+			End If
+
+			If config.Shutdown Then
+				'Application.ShutdownComputer()
+				WinAPI.OpenVisitLink(" -CleanComplete -Shutdown")
+				CloseDDU()
+				Return
+			End If
+
+			If config.Silent Then
+				CloseDDU()
+				Return
+			End If
+
+			If Not config.Restart AndAlso Not config.Shutdown Then
+				If MessageBox.Show(Application.Current.MainWindow, Languages.GetTranslation("frmMain", "Messages", "Text10"), config.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
+					CloseDDU()
+					Return
+				End If
+			End If
 		End Sub
 
 		Private Async Function ThreadTaskAsync(ByVal config As ThreadSettings) As Task
@@ -669,38 +677,13 @@ Namespace Display_Driver_Uninstaller
 
 				If Not config.HasCleanArg AndAlso Not config.SelectedGPU = GPUVendor.All Then
 					Await StartThreadAsync(config)
+					CleaningCompleted(config)
 					Return
 				End If
-
-				config.PreventClose = True
 
 				Await ProcessCleaningArgumentsAsync(config)
 
-				If config.Restart Then
-
-					'Application.RestartComputer()
-					WinAPI.OpenVisitLink(" -CleanComplete -Restart")
-					CloseDDU()
-					Return
-				End If
-
-				If config.Shutdown Then
-					'Application.ShutdownComputer()
-					WinAPI.OpenVisitLink(" -CleanComplete -Shutdown")
-					CloseDDU()
-					Return
-				End If
-
-				If config.Silent Then
-					CloseDDU()
-					Return
-				End If
-
-				If Not config.Restart And Not config.Shutdown Then
-					If MessageBox.Show(Application.Current.MainWindow, Languages.GetTranslation("frmMain", "Messages", "Text10"), config.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
-						CloseDDU()
-					End If
-				End If
+				CleaningCompleted(config)
 
 			Catch ex As Exception
 				Application.Log.AddException(ex)
@@ -719,7 +702,7 @@ Namespace Display_Driver_Uninstaller
 				config.SelectedAUDIO = AudioVendor.None
 				config.SelectedGPU = GPUVendor.AMD
 
-				Await StartThreadAsync(config, False)
+				Await StartThreadAsync(config)
 
 				CleaningTask = Nothing
 			End If
@@ -730,7 +713,7 @@ Namespace Display_Driver_Uninstaller
 				config.SelectedAUDIO = AudioVendor.None
 				config.SelectedGPU = GPUVendor.Nvidia
 
-				Await StartThreadAsync(config, False)
+				Await StartThreadAsync(config)
 
 				CleaningTask = Nothing
 			End If
@@ -741,7 +724,7 @@ Namespace Display_Driver_Uninstaller
 				config.SelectedAUDIO = AudioVendor.None
 				config.SelectedGPU = GPUVendor.Intel
 
-				Await StartThreadAsync(config, False)
+				Await StartThreadAsync(config)
 
 				CleaningTask = Nothing
 			End If
@@ -752,7 +735,7 @@ Namespace Display_Driver_Uninstaller
 				config.SelectedGPU = GPUVendor.None
 				config.SelectedAUDIO = AudioVendor.Realtek
 
-				Await StartThreadAsync(config, False)
+				Await StartThreadAsync(config)
 
 				CleaningTask = Nothing
 			End If
@@ -763,7 +746,7 @@ Namespace Display_Driver_Uninstaller
 				config.SelectedGPU = GPUVendor.None
 				config.SelectedAUDIO = AudioVendor.SoundBlaster
 
-				Await StartThreadAsync(config, False)
+				Await StartThreadAsync(config)
 			End If
 
 		End Function
@@ -781,7 +764,7 @@ Namespace Display_Driver_Uninstaller
 
 		End Sub
 
-		Private Async Function StartThreadAsync(ByVal config As ThreadSettings, Optional ByVal showMsgBox As Boolean = True) As Task
+		Private Async Function StartThreadAsync(ByVal config As ThreadSettings) As Task
 			Try
 				'If System.Diagnostics.Debugger.IsAttached Then          'TODO: remove when tested
 				Dim logEntry As New LogEntry() With {.Message = "Used settings for cleaning!"}
@@ -798,13 +781,6 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				Await Task.Run(Sub() CleaningThread_Work(config))
-
-				If showMsgBox AndAlso (Not config.Silent And Not config.Restart And Not config.Shutdown) Then
-					If MessageBox.Show(Application.Current.MainWindow, Languages.GetTranslation("frmMain", "Messages", "Text10"), config.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
-						CloseDDU()
-						Return
-					End If
-				End If
 
 			Catch ex As Exception
 				CleaningTask = Nothing
