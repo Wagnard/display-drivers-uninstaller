@@ -637,6 +637,9 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Private Sub CleaningCompleted(ByVal config As ThreadSettings)
+
+			EnableControls(True)
+
 			If Not config.Shutdown Then
 				SetupAPI.ReScanDevices()
 			End If
@@ -645,6 +648,7 @@ Namespace Display_Driver_Uninstaller
 
 				'Application.RestartComputer()
 				WinAPI.OpenVisitLink(" -CleanComplete -Restart")
+				Application.Log.AddMessage("Restarting the computer...")
 				CloseDDU()
 				Return
 			End If
@@ -652,6 +656,7 @@ Namespace Display_Driver_Uninstaller
 			If config.Shutdown Then
 				'Application.ShutdownComputer()
 				WinAPI.OpenVisitLink(" -CleanComplete -Shutdown")
+				Application.Log.AddMessage("Shutting down the computer...")
 				CloseDDU()
 				Return
 			End If
@@ -661,12 +666,11 @@ Namespace Display_Driver_Uninstaller
 				Return
 			End If
 
-			If Not config.Restart AndAlso Not config.Shutdown Then
-				If MessageBox.Show(Application.Current.MainWindow, Languages.GetTranslation("frmMain", "Messages", "Text10"), config.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
-					CloseDDU()
-					Return
-				End If
+			If MessageBox.Show(Application.Current.MainWindow, Languages.GetTranslation("frmMain", "Messages", "Text10"), config.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
+				CloseDDU()
+				Return
 			End If
+
 		End Sub
 
 		Private Async Function ThreadTaskAsync(ByVal config As ThreadSettings) As Task
@@ -677,18 +681,15 @@ Namespace Display_Driver_Uninstaller
 
 				If Not config.HasCleanArg AndAlso Not config.SelectedGPU = GPUVendor.All Then
 					Await StartThreadAsync(config)
-					CleaningCompleted(config)
 					Return
 				End If
 
 				Await ProcessCleaningArgumentsAsync(config)
 
-				CleaningCompleted(config)
-
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 			Finally
-				EnableControls(True)
+				CleaningCompleted(config)
 			End Try
 		End Function
 

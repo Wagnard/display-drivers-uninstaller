@@ -93,8 +93,6 @@ Namespace Display_Driver_Uninstaller
 			End If
 		End Sub
 
-
-
 		Private Sub InitLanguages()
 			Dim defaultLang As Languages.LanguageOption = Languages.DefaultEng
 			Dim foundLangs As List(Of Languages.LanguageOption) = Nothing
@@ -456,16 +454,16 @@ Namespace Display_Driver_Uninstaller
 						If LaunchOptions.Restart Then
 							Thread.Sleep(2000)
 							RestartComputer()
-							Me.Shutdown(0)          ' Skip loading.
+							AppClose(Me, EventArgs.Empty)          ' Skip loading.
 							Exit Sub
 						End If
 						If LaunchOptions.Shutdown Then
 							Thread.Sleep(2000)
 							ShutdownComputer()
-							Me.Shutdown(0)          ' Skip loading.
+							AppClose(Me, EventArgs.Empty)     ' Skip loading.
 							Exit Sub
 						End If
-						Me.Shutdown(0)          ' Skip loading.
+						AppClose(Me, EventArgs.Empty)          ' Skip loading.
 						Exit Sub
 					End If
 				Catch ex As Exception
