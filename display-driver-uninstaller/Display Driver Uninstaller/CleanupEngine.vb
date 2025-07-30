@@ -521,9 +521,6 @@ Namespace Display_Driver_Uninstaller
 					End Select
 				End Try
 			End If
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
 		End Sub
 
 		Public Sub RemoveAppx(ByVal appxToRemove As String)
@@ -713,10 +710,6 @@ Namespace Display_Driver_Uninstaller
 							End Using
 					End Select
 				End Try
-			End If
-
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
 			End If
 		End Sub
 
@@ -3138,7 +3131,9 @@ Namespace Display_Driver_Uninstaller
 			Dim win8higher As Boolean = FrmMain.IsWindows8OrHigher
 			Dim FileIO As New FileIO
 
-			ImpersonateLoggedOnUser.Taketoken()
+			If Not WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.Taketoken()
+			End If
 
 			'Windows 8 + only
 			'This should fix driver installation problem reporting that a file is not found.

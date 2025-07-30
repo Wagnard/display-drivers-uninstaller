@@ -1132,7 +1132,11 @@ Namespace Display_Driver_Uninstaller
 			Dim cleanupEngine As New CleanupEngine
 			Dim services As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\services.cfg")
 			Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
-			ImpersonateLoggedOnUser.Taketoken()
+
+			If Not WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.Taketoken()
+			End If
+
 			Application.Log.AddMessage("Cleaning Process/Services...")
 			cleanupEngine.Cleanserviceprocess(services, config)    '// add each line as String Array.
 
@@ -1185,11 +1189,10 @@ Namespace Display_Driver_Uninstaller
 			Dim driverfilesKMPFD As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfilesKMPFD.cfg")
 			Dim driverfilesKMAFD As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\driverfilesKMAFD.cfg")
 
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
-
 			If preclean Then
+				If Not WindowsIdentity.GetCurrent().IsSystem Then
+					ImpersonateLoggedOnUser.Taketoken()
+				End If
 				UpdateTextMethod(UpdateTextTranslated(2))
 				Application.Log.AddMessage("Cleaning registry Part 1/2")
 
@@ -1405,7 +1408,14 @@ wantedvalue2.ToLower.Contains("ati video") Then
 				'old dcom 
 
 				CLSIDCleanThread(clsidleftover)
+				If WindowsIdentity.GetCurrent().IsSystem Then
+					ImpersonateLoggedOnUser.ReleaseToken()
+				End If
 				Return
+			End If
+
+			If Not WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.Taketoken()
 			End If
 
 			Application.Log.AddMessage("Cleaning registry Part 2/2")
@@ -1486,12 +1496,11 @@ wantedvalue2.ToLower.Contains("ati video") Then
 					End Try
 				End If
 			End Using
+
 			If config.RemoveVulkan Then
 				CleanVulkan(config)
 			End If
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
+
 			Application.Log.AddMessage("ngenservice Clean")
 
 			'----------------------
@@ -2928,6 +2937,9 @@ child.Contains("HydraVision\") Then
 
 			'Delete driver files
 			'delete OpenCL
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
 
 			Dim thread1 As Task = Task.Run(Sub() Threaddata1(driverfiles))
 			TaskList.Add(thread1)
@@ -2941,6 +2953,10 @@ child.Contains("HydraVision\") Then
 			If config.RemoveAudioBus AndAlso FrmMain.DoNotRemoveAmdHdAudioBusFiles = False Then
 				Dim thread3 As Task = Task.Run(Sub() Threaddata1(driverfilesKMAFD))
 				TaskList.Add(thread3)
+			End If
+
+			If Not WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.Taketoken()
 			End If
 
 			If removedxcache Then
@@ -3849,11 +3865,11 @@ child2.ToLower.Contains("hdaudio.driver") Then
 			Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\driverfiles.cfg")
 			Dim gfedriverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfedriverfiles.cfg")
 
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
-
 			If preclean Then
+
+				If Not WindowsIdentity.GetCurrent().IsSystem Then
+					ImpersonateLoggedOnUser.Taketoken()
+				End If
 
 				'-----------------
 				'Registry Cleaning
@@ -3879,10 +3895,6 @@ child2.ToLower.Contains("hdaudio.driver") Then
 					CleanupEngine.RemoveAppx("NVIDIAControlPanel")
 				End If
 
-				If Not WindowsIdentity.GetCurrent().IsSystem Then
-					ImpersonateLoggedOnUser.Taketoken()
-				End If
-
 				'for GFE removal only
 				If removegfe Then
 					Dim thread1 As Task = Task.Run(Sub() CLSIDCleanThread(clsidleftoverGFE))
@@ -3891,11 +3903,17 @@ child2.ToLower.Contains("hdaudio.driver") Then
 					Dim thread1 As Task = Task.Run(Sub() CLSIDCleanThread(clsidleftover))
 					TaskList.Add(thread1)
 				End If
+
 				Dim thread2 As Task = Task.Run(Sub() InstallerCleanThread(packages, config))
 				TaskList.Add(thread2)
+
 				If removenvbroadcast Then
 					Dim thread3 As Task = Task.Run(Sub() InstallerCleanThread(clsidleftoverNVB, config))
 					TaskList.Add(thread3)
+				End If
+
+				If Not WindowsIdentity.GetCurrent().IsSystem Then
+					ImpersonateLoggedOnUser.Taketoken()
 				End If
 
 				'------------------------------
@@ -3934,7 +3952,16 @@ child2.ToLower.Contains("hdaudio.driver") Then
 				End If
 
 				Application.Log.AddMessage("Finished dcom/clsid/appid/typelib/interface cleanup")
+
+				If WindowsIdentity.GetCurrent().IsSystem Then
+					ImpersonateLoggedOnUser.ReleaseToken()
+				End If
+
 				Return
+			End If
+
+			If Not WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.Taketoken()
 			End If
 
 			Application.Log.AddMessage("Cleaning registry Part 2/2")
@@ -4323,10 +4350,6 @@ child2.ToLower.Contains("hdaudio.driver") Then
 				CleanVulkan(config)
 			End If
 
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
-
 			Try
 				For Each users As String In Registry.Users.GetSubKeyNames()
 					If Not String.IsNullOrWhiteSpace(users) Then
@@ -4435,6 +4458,17 @@ child2.ToLower.Contains("nvidia control panel") Then
 							End If
 						End Using
 					End If
+
+					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, users & "\Software\Microsoft\Windows\CurrentVersion\Run", True)
+						If regkey IsNot Nothing Then
+							For Each child As String In regkey.GetValueNames
+								If String.IsNullOrWhiteSpace(child) Then Continue For
+								If StrContainsAny(child, True, "NVIDIA Broadcast") AndAlso config.RemoveNVBROADCAST Then
+									Deletevalue(regkey, child)
+								End If
+							Next
+						End If
+					End Using
 				Next
 			Catch ex As Exception
 				Application.Log.AddException(ex)
@@ -5347,12 +5381,12 @@ child.ToLower.StartsWith("nview") Then
 				For Each child As String In Registry.Users.GetSubKeyNames()
 					If String.IsNullOrWhiteSpace(child) Then Continue For
 					If StrContainsAny(child, True, "s-1-5") Then
-						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True)
+						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, child & "\Software\Classes\VirtualStore\MACHINE\SOFTWARE\NVIDIA Corporation", True)
 							If regkey IsNot Nothing Then
 								Try
 									Deletesubregkey(regkey, "Global", False)
 									If regkey.SubKeyCount = 0 Then
-										Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, child & "Software\Classes\VirtualStore\MACHINE\SOFTWARE", True)
+										Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, child & "\Software\Classes\VirtualStore\MACHINE\SOFTWARE", True)
 											If regkey2 IsNot Nothing Then
 												Try
 													Deletesubregkey(regkey2, "NVIDIA Corporation", False)
@@ -5999,10 +6033,6 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
 			Dim nvbdriverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\nvbdriverfiles.cfg")
 			Dim TaskList = New List(Of Task)()
 
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
-
 			Dim thread1 As Task = Task.Run(Sub() Threaddata1(driverfiles))
 			TaskList.Add(thread1)
 
@@ -6024,6 +6054,10 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
 			If shouldRemoveBoth Then
 				Dim thread3 As Task = Task.Run(Sub() Threaddata1(rtxAud))
 				TaskList.Add(thread3)
+			End If
+
+			If Not WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.Taketoken()
 			End If
 
 			'Delete NVIDIA data Folders
@@ -7090,10 +7124,6 @@ child.ToLower.Contains("nvidia.gfe") Then
 			Dim clsidleftoverigs As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\clsidleftoverigs.cfg")
 			Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\driverfiles.cfg")
 
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
-
 			If preclean Then
 				UpdateTextMethod(UpdateTextTranslated(5))
 				Application.Log.AddMessage("Cleaning registry Part 1/2")
@@ -7123,7 +7153,15 @@ child.ToLower.Contains("nvidia.gfe") Then
 					CleanupEngine.Clsidleftover(clsidleftoverigs) '// add each line as String Array.
 				End If
 
+				If WindowsIdentity.GetCurrent().IsSystem Then
+					ImpersonateLoggedOnUser.ReleaseToken()
+				End If
+
 				Return
+			End If
+
+			If Not WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.Taketoken()
 			End If
 
 			Application.Log.AddMessage("Cleaning registry Part 2/2")
@@ -7178,10 +7216,6 @@ child.ToLower.Contains("nvidia.gfe") Then
 
 			If config.RemoveVulkan Then
 				CleanVulkan(config)
-			End If
-
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
 			End If
 
 			Try
@@ -8203,10 +8237,6 @@ StrContainsAny(child, True, "gcc") AndAlso config.RemoveINTELCP Then
 		End Sub
 
 		Private Sub CleanVulkan(ByVal config As ThreadSettings)
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
-
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Khronos\OpenCL\Vendors", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetValueNames()
@@ -8585,10 +8615,6 @@ StrContainsAny(child, True, "gcc") AndAlso config.RemoveINTELCP Then
 					End If
 				End If
 			End If
-
-			If WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.ReleaseToken()
-			End If
 		End Sub
 
 		Private Sub AmdEnvironementPath(ByVal filepath As String)
@@ -8631,6 +8657,9 @@ filepath & "\ati.ace\core-static"
 				ImpersonateLoggedOnUser.Taketoken()
 			End If
 			CleanupEngine.Folderscleanup(driverfiles)
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
 		End Sub
 
 		Private Sub Deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String, Optional ByVal throwOnMissingSubKey As Boolean = True)
@@ -8649,6 +8678,9 @@ filepath & "\ati.ace\core-static"
 				ImpersonateLoggedOnUser.Taketoken()
 			End If
 			CleanupEngine.Clsidleftover(Clsidleftover)
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
 		End Sub
 
 		Private Sub InstallerCleanThread(ByVal Packages As String(), config As ThreadSettings)
@@ -8657,6 +8689,9 @@ filepath & "\ati.ace\core-static"
 				ImpersonateLoggedOnUser.Taketoken()
 			End If
 			CleanupEngine.Installer(Packages, config)
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
 		End Sub
 
 		Private Sub ClassrootCleanThread(ByRef ThreadFinised As Boolean, ByVal Classroot As String(), config As ThreadSettings)
@@ -8667,6 +8702,9 @@ filepath & "\ati.ace\core-static"
 			ThreadFinised = False
 			CleanupEngine.ClassRoot(Classroot, config)
 			ThreadFinised = True
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
 		End Sub
 
 	End Class

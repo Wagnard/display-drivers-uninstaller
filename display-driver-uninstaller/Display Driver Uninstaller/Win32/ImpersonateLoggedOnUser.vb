@@ -1,5 +1,8 @@
-﻿Imports System.Runtime.InteropServices
+﻿Imports System.Collections.Concurrent
+Imports System.Runtime.InteropServices
 Imports System.Security
+Imports System.Security.Principal
+Imports System.Threading
 
 Namespace Display_Driver_Uninstaller.Win32
 
@@ -16,6 +19,8 @@ Namespace Display_Driver_Uninstaller.Win32
 
 		Declare Function ImpersonateLoggedOnUser Lib "advapi32.dll" (ByVal hToken As Integer) As Integer
 
+		Private Shared ReadOnly _impersonatedUser As New ConcurrentDictionary(Of Integer, WindowsImpersonationContext)
+
 		Public Const TOKEN_DUPLICATE As Integer = 2
 
 		Public Const TOKEN_QUERY As Integer = 8
@@ -29,6 +34,13 @@ Namespace Display_Driver_Uninstaller.Win32
 			Dim procs As Process() = Process.GetProcesses()
 			Dim logEntry As New LogEntry() With {.Message = "Trying to impersonate the SYSTEM account..."}
 			logEntry.Type = LogType.Warning
+
+			If _impersonatedUser.ContainsKey(Thread.CurrentThread.ManagedThreadId) Then
+				logEntry.Type = LogType.Warning
+				logEntry.Message &= " BUG Present, Trying to impersonate when already impersonated on this thread."
+				Application.Log.Add(logEntry)
+				Return
+			End If
 
 			ACL.AddPriviliges(ACL.SE.DEBUG_NAME, ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 
@@ -57,14 +69,16 @@ Namespace Display_Driver_Uninstaller.Win32
 									Throw New Exception(s)
 								End If
 
-								Dim impersonatedUser As Principal.WindowsImpersonationContext = newId.Impersonate()
-								Dim accountToken As IntPtr = Principal.WindowsIdentity.GetCurrent().Token
+								Dim currentThreadId = Thread.CurrentThread.ManagedThreadId
+								_impersonatedUser(currentThreadId) = newId.Impersonate()
+								' Dim accountToken As IntPtr = Principal.WindowsIdentity.GetCurrent().Token
 
-								ImpersonateLoggedOnUser(CInt((hToken)))
+								'	ImpersonateLoggedOnUser(CInt((hToken)))
 
 								If Principal.WindowsIdentity.GetCurrent().IsSystem Then
 									'ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 									logEntry.Add(proc.ProcessName, "SYSTEM account impersonalisation SUCCESS")
+									logEntry.Add(" ThreadID : " + currentThreadId.ToString)
 									logEntry.Type = LogType.Event
 									logEntry.Message = logEntry.Message + " SUCCESS !"
 									Exit For
@@ -105,12 +119,27 @@ Namespace Display_Driver_Uninstaller.Win32
 		End Sub
 
 		Public Shared Sub ReleaseToken()
-			RevertToSelf()
-			If Principal.WindowsIdentity.GetCurrent().IsSystem Then
-				Application.Log.AddWarningMessage("Reverting Impersonalisation failed!")
+			Dim currentThreadId As Integer = Thread.CurrentThread.ManagedThreadId
+			Dim impersonatedUser As WindowsImpersonationContext = Nothing
+			Dim LogEntry As New LogEntry() With {.Message = "Trying to Revert impersonalisation of the SYSTEM account..."}
+			LogEntry.Type = LogType.Warning
+			'	RevertToSelf()
+			If _impersonatedUser.TryRemove(currentThreadId, impersonatedUser) Then
+				impersonatedUser?.Undo()
+				impersonatedUser?.Dispose()
+				impersonatedUser = Nothing
+				If Principal.WindowsIdentity.GetCurrent().IsSystem Then
+					LogEntry.Message = LogEntry.Message + " Reverting Impersonalisation failed!"
+					LogEntry.Add(" ThreadID : " + currentThreadId.ToString)
+				Else
+					LogEntry.Add(" ThreadID : " + currentThreadId.ToString)
+					LogEntry.Type = LogType.Event
+					LogEntry.Message = LogEntry.Message + " Reverting the Impersonalisation is successful !"
+				End If
 			Else
-				Application.Log.AddMessage("Reverting the Impersonalisation is successful !")
+				Debug.WriteLine(currentThreadId)
 			End If
+			Application.Log.Add(LogEntry)
 		End Sub
 
 		Private Shared Function DupeToken(ByVal token As IntPtr, ByVal Level As Integer) As IntPtr

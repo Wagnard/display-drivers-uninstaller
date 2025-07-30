@@ -528,7 +528,10 @@ Namespace Display_Driver_Uninstaller
 				EnableDriverSearch(False)
 			End If
 
-			ImpersonateLoggedOnUser.Taketoken()
+			If Not WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.Taketoken()
+			End If
+
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
 				MsgBox("Could not impersonate the SYSTEM account, it is NOT recommended to use DDU in this state.")
 			End If
