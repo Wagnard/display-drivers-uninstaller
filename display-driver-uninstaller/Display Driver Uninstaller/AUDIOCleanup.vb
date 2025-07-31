@@ -309,6 +309,9 @@ Namespace Display_Driver_Uninstaller
 				Application.Log.AddException(ex)
 			End Try
 
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
 		End Sub
 
 		Private Sub CleanRealtekFolders(ByVal config As ThreadSettings)
@@ -318,6 +321,10 @@ Namespace Display_Driver_Uninstaller
 			Application.Log.AddMessage("Cleaning Directories (Please Wait...)")
 
 			_cleanupEngine.Folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\REALTEK\driverfiles.cfg"))
+
+			If Not WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.Taketoken()
+			End If
 
 			filePath = config.Paths.ProgramFiles + "Realtek"
 			If _fileIO.ExistsDir(filePath) Then
@@ -388,6 +395,9 @@ Namespace Display_Driver_Uninstaller
 				End If
 			End If
 
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
 		End Sub
 
 		Private Sub KillProcess(ByVal ParamArray processnames As String())

@@ -2814,7 +2814,11 @@ Namespace Display_Driver_Uninstaller
 					Next
 				End If
 			End If
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
 		End Sub
+
 		Private Sub Threaddata1Prefetch(filepath As String, ByVal driverfiles As String())
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
 				ImpersonateLoggedOnUser.Taketoken()
@@ -2839,6 +2843,9 @@ Namespace Display_Driver_Uninstaller
 						RemoveSharedDlls(filepath & If(driverfile.StartsWith("\"), driverfile.Substring(1), driverfile))
 					End If
 				Next
+			End If
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
 			End If
 		End Sub
 

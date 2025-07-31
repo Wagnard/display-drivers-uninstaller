@@ -78,7 +78,7 @@ Namespace Display_Driver_Uninstaller.Win32
 								If Principal.WindowsIdentity.GetCurrent().IsSystem Then
 									'ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 									logEntry.Add(proc.ProcessName, "SYSTEM account impersonalisation SUCCESS")
-									logEntry.Add(" ThreadID : " + currentThreadId.ToString)
+									logEntry.Add("ThreadID : " + currentThreadId.ToString)
 									logEntry.Type = LogType.Event
 									logEntry.Message = logEntry.Message + " SUCCESS !"
 									Exit For
@@ -130,11 +130,13 @@ Namespace Display_Driver_Uninstaller.Win32
 				impersonatedUser = Nothing
 				If Principal.WindowsIdentity.GetCurrent().IsSystem Then
 					LogEntry.Message = LogEntry.Message + " Reverting Impersonalisation failed!"
-					LogEntry.Add(" ThreadID : " + currentThreadId.ToString)
+					LogEntry.Add("ThreadID : " + currentThreadId.ToString)
+					LogEntry.Add("Remaining impersonated threadIDs: " & String.Join(", ", _impersonatedUser.Keys))
 				Else
-					LogEntry.Add(" ThreadID : " + currentThreadId.ToString)
 					LogEntry.Type = LogType.Event
 					LogEntry.Message = LogEntry.Message + " Reverting the Impersonalisation is successful !"
+					LogEntry.Add("ThreadID : " + currentThreadId.ToString)
+					LogEntry.Add("Remaining impersonated threadIDs: " & String.Join(", ", _impersonatedUser.Keys))
 				End If
 			Else
 				Debug.WriteLine(currentThreadId)

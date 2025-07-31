@@ -2738,7 +2738,7 @@ child.Contains("HydraVision\") Then
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames
 								If String.IsNullOrWhiteSpace(child) Then Continue For
-								If StrContainsAny(child, True, "AMD Updater", "AMDLinkUpdate", "StartCN", "StartDVR", "StartCNBM", "ModifyLinkUpdate", "AMD ThankingURL", "AMDInstallLauncher", "AMDInstallUEP", "StartAUEP") Then
+								If StrContainsAny(child, True, "AMD Updater", "AMDLinkUpdate", "StartCN", "StartDVR", "StartCNBM", "ModifyLinkUpdate", "AMD ThankingURL", "AMDInstallLauncher", "AMDInstallUEP", "StartAUEP", "AMD Install Manager") Then
 									For Each ScheduleChild As String In schedule.GetSubKeyNames
 										If String.IsNullOrWhiteSpace(ScheduleChild) Then Continue For
 										Try
@@ -2746,6 +2746,7 @@ child.Contains("HydraVision\") Then
 												If regkey2 IsNot Nothing Then
 													If Not String.IsNullOrWhiteSpace(regkey2.GetValue("Id", String.Empty).ToString) Then
 														wantedvalue = regkey2.GetValue("Id", String.Empty).ToString
+														If String.IsNullOrEmpty(wantedvalue) Then Continue For
 														Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(schedule, ScheduleChild, True)
 															If regkey3 IsNot Nothing Then
 																For Each child2 As String In regkey3.GetSubKeyNames
@@ -2943,7 +2944,6 @@ child.Contains("HydraVision\") Then
 
 			Dim thread1 As Task = Task.Run(Sub() Threaddata1(driverfiles))
 			TaskList.Add(thread1)
-			Threaddata1(driverfiles)
 
 			If config.RemoveAMDKMPFD AndAlso config.NotPresentAMDKMPFD Then
 				Dim thread2 As Task = Task.Run(Sub() Threaddata1(driverfilesKMPFD))
@@ -8004,16 +8004,16 @@ child.ToLower.Equals("oneapp_igcc") Then
 			Dim sharedDriverFiles As String() = IO.File.ReadAllLines(Application.Paths.AppBase & "settings\INTEL\shareddriverfiles.cfg")
 			UpdateTextMethod(UpdateTextTranslated(4))
 
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
-
 			Application.Log.AddMessage("Cleaning Directory")
 
 			CleanupEngine.Folderscleanup(driverFiles)      '// add each line as String Array.
 
 			If Not FrmMain.IntelNpuPresent Then
 				CleanupEngine.Folderscleanup(sharedDriverFiles)
+			End If
+
+			If Not WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.Taketoken()
 			End If
 
 			CleanIntelCache(config)
@@ -8653,13 +8653,9 @@ filepath & "\ati.ace\core-static"
 
 		Private Sub Threaddata1(ByVal driverfiles As String())
 			Dim CleanupEngine As New CleanupEngine
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
+
 			CleanupEngine.Folderscleanup(driverfiles)
-			If WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.ReleaseToken()
-			End If
+
 		End Sub
 
 		Private Sub Deletesubregkey(ByVal value1 As RegistryKey, ByVal value2 As String, Optional ByVal throwOnMissingSubKey As Boolean = True)
