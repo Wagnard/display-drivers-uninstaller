@@ -15,14 +15,15 @@
 '    along with DDU.  If not, see <http://www.gnu.org/licenses/>.
 Option Strict On
 
-Imports Microsoft.Win32
 Imports System.IO
-Imports System.Threading.Tasks
-Imports System.Security.Principal
+Imports System.Linq
 Imports System.Reflection
+Imports System.Security.Principal
 Imports System.Text
-Imports WinForm = System.Windows.Forms
+Imports System.Threading.Tasks
 Imports Display_Driver_Uninstaller.Win32
+Imports Microsoft.Win32
+Imports WinForm = System.Windows.Forms
 
 Namespace Display_Driver_Uninstaller
 
@@ -648,7 +649,7 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 			If config.Restart Then
-
+				RemoveRegOption()
 				'Application.RestartComputer()
 				WinAPI.OpenVisitLink(" -CleanComplete -Restart")
 				Application.Log.AddMessage("Restarting the computer...")
@@ -657,6 +658,7 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 			If config.Shutdown Then
+				RemoveRegOption()
 				'Application.ShutdownComputer()
 				WinAPI.OpenVisitLink(" -CleanComplete -Shutdown")
 				Application.Log.AddMessage("Shutting down the computer...")
@@ -674,6 +676,21 @@ Namespace Display_Driver_Uninstaller
 				Return
 			End If
 
+		End Sub
+
+		Private Sub RemoveRegOption()
+			If WinForm.SystemInformation.BootMode <> WinForm.BootMode.Normal Then
+				Try
+					Using regControl As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot", Writable:=True)
+						If regControl IsNot Nothing AndAlso regControl.GetSubKeyNames().Contains("Option") Then
+							regControl.DeleteSubKeyTree("Option", throwOnMissingSubKey:=False)
+							Application.Log.AddMessage("Deleted SafeBoot\Option key before reboot.")
+						End If
+					End Using
+				Catch ex As Exception
+					Application.Log.AddWarningMessage("Could not delete SafeBoot\Option key: " & ex.Message)
+				End Try
+			End If
 		End Sub
 
 		Private Async Function ThreadTaskAsync(ByVal config As ThreadSettings) As Task

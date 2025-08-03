@@ -7477,7 +7477,7 @@ child.ToLower.Contains("igfxdtcm") Then
 														For Each depChild As String In dependencyRegkey.GetSubKeyNames
 															If String.IsNullOrWhiteSpace(depChild) Then Continue For
 															If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-															If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
+															If StrContainsAny(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString(), True, child) Then
 																Try
 																	Deletesubregkey(dependencyRegkey, depChild, False)
 																Catch ex As Exception
@@ -7511,7 +7511,7 @@ child.ToLower.Contains("igfxdtcm") Then
 															For Each depChild As String In dependencyRegkey.GetSubKeyNames
 																If String.IsNullOrWhiteSpace(depChild) Then Continue For
 																If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-																If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
+																If StrContainsAny(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString(), True, child) Then
 																	Try
 																		Deletesubregkey(dependencyRegkey, depChild, False)
 																	Catch ex As Exception
