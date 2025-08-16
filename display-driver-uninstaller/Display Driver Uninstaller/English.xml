@@ -63,7 +63,7 @@
 			<Text>Detected operating system:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** You like DDU? Think about a donation, it will help further development. ***</Text>
+			<Text>*** You like DDU? Leave a tip to support development ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Log</Text>
