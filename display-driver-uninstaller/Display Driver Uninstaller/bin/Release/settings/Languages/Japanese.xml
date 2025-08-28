@@ -53,17 +53,17 @@
 		</btnWuRestore>
 		<btnCleanCaches>
 			<Text>
-				シェーダーキャッシュをクリーン (のみ)
+				シェーダーキャッシュのみを削除 
 			</Text>
 			<Tooltip>
-				シェーダー / コンピュートキャッシュファイルのみを削除します。セーフモードで実行するとより効果的です。
+				シェーダー / コンピューティングキャッシュファイルのみを削除します。 セーフモードから実行でより効果的になります。
 			</Tooltip>
 		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>検出された OS:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** DDUはお気に召しましたか？ よろしければ開発を支援する寄付をご検討ください。 ***</Text>
+			<Text>*** DDUはお気に召しましたか？ 開発をサポートするためにチップをください ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>ログ</Text>
@@ -112,13 +112,13 @@
 			<Text>支援者</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>DDU の公式ウェブサイトを開く</Text>
+			<Text>DDU 公式ウェブサイトを開く</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitDiscord>
-			<Text>Discord に参加</Text>
+			<Text>Discord に参加する</Text>
 		</VisitDiscord>
 		<VisitSVNMenuItem>
-			<Text>SVN のウェブサイトを開く</Text>
+			<Text>GitHub を開く</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
 			<Text>Guru3d NVIDIA のスレッドを開く</Text>
@@ -167,7 +167,7 @@
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>Intel®</Options4>
-			<Options5>すべてのGPU</Options5>
+			<Options5>すべての GPU</Options5>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---デバイスを選択---</Options1>
@@ -501,10 +501,10 @@
 				ロゴ: juanchacin
 
 				AMD 7850 を寄付してくださった Jackalito に心から感謝します。
-				
-				Special thanks to Guru3D https://www.guru3d.com/ for helping provide early exposure.
 
-				Helge Klein (http://helgeklein.com/setacl/) が DDU で「SetAcl」のプログラムを使用する許可をくださりました、感謝します。
+				Guru3D (https://www.guru3d.com/) による早期的な情報公開を心より感謝申し上げます。
+
+				Helge Klein 氏 (https://helgeklein.com/setacl/) が DDU で「SetAcl」のプログラムを使用する許可をくださりました、感謝します。
 
 				テストで時間を割いてくださった Gamer1291 (optimus)、Octopuss (Amd Enduro)、nedooo (時間を割いてデバッグに協力) に心から感謝します。
 				Extraordinary (バグ修正とテスト)
@@ -539,7 +539,7 @@
 		<Translator2>
 			<User>Re*Index.(ot_inc)</User>
 			<Details>https://reindex-ot.github.io/</Details>
-			<LastUpdate>11/06/2025</LastUpdate>
+			<LastUpdate>29/08/2025</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
 
