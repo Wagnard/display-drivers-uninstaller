@@ -51,11 +51,19 @@
 				(automatically install drivers)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Clean Shader Cache (Only)
+			</Text>
+			<Tooltip>
+				Only deletes shader / compute cache files. More effective if run from Safe Mode.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Detected operating system:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** You like DDU? Think about a donation, it will help further development. ***</Text>
+			<Text>*** You like DDU? Leave a tip to support development ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>Log</Text>
@@ -104,13 +112,13 @@
 			<Text>Patrons</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Visit official DDU website</Text>
+			<Text>Visit Official DDU Website</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitDiscord>
-			<Text>Join our Discord</Text>
+			<Text>Join Our Discord</Text>
 		</VisitDiscord>
 		<VisitSVNMenuItem>
-			<Text>Visit SVN website</Text>
+			<Text>Visit GitHub Website</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
 			<Text>Visit Guru3d NVIDIA thread</Text>
@@ -159,6 +167,7 @@
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>Intel®</Options4>
+			<Options5>All GPUs</Options5>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---Select device---</Options1>
@@ -493,7 +502,9 @@
 
 				Huge Thanks to Jackalito for the donation of a AMD 7850.
 
-				Thanks to Helge Klein (http://helgeklein.com/setacl/) for the permission to use his Program with DDU "SetAcl"
+				Special thanks to Guru3D (https://www.guru3d.com/) for helping to provide early exposure.
+
+				Thanks to Helge Klein (https://helgeklein.com/setacl/) for the permission to use his Program with DDU "SetAcl"
 
 				Huge Thanks for their time for testing: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (took time debugging with me)
 				Extraordinary (Testing a bug fix)

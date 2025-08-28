@@ -208,14 +208,14 @@ Namespace Display_Driver_Uninstaller
 
 		Public Sub AddDevices(ByVal extendedDetails As Boolean, ByVal ParamArray devices As Win32.SetupAPI.Device())
 			For Each d As Win32.SetupAPI.Device In devices
-				Add("Description", If(Not IsNullOrWhitespace(d.Description), d.Description, "-"))
-				Add("FriendlyName", If(Not IsNullOrWhitespace(d.FriendlyName), d.FriendlyName, "-"))
-				Add("ClassName", If(Not IsNullOrWhitespace(d.ClassName), d.ClassName, "-"))
-				Add("Service", If(Not IsNullOrWhitespace(d.Service), d.Service, "-"))
+				Add("Description", If(Not String.IsNullOrWhiteSpace(d.Description), d.Description, "-"))
+				Add("FriendlyName", If(Not String.IsNullOrWhiteSpace(d.FriendlyName), d.FriendlyName, "-"))
+				Add("ClassName", If(Not String.IsNullOrWhiteSpace(d.ClassName), d.ClassName, "-"))
+				Add("Service", If(Not String.IsNullOrWhiteSpace(d.Service), d.Service, "-"))
 				Add(KvP.Empty)
-				Add("DeviceID", If(Not IsNullOrWhitespace(d.DeviceID), d.DeviceID, "-"))
+				Add("DeviceID", If(Not String.IsNullOrWhiteSpace(d.DeviceID), d.DeviceID, "-"))
 				Add("DevInst", d.devInst.ToString())
-				Add("InstallState", If(Not IsNullOrWhitespace(d.InstallStateStr), d.InstallStateStr, "-"))
+				Add("InstallState", If(Not String.IsNullOrWhiteSpace(d.InstallStateStr), d.InstallStateStr, "-"))
 				Add(KvP.Empty)
 				If d.LowerFilters IsNot Nothing AndAlso d.LowerFilters.Length > 0 Then
 					Add("Lower Filters", String.Join(Environment.NewLine, d.LowerFilters))
@@ -254,7 +254,7 @@ Namespace Display_Driver_Uninstaller
 				Add("IsPresent", d.IsPresent.ToString)
 				Add(KvP.Empty)
 
-				Add("DevProblem", If(Not IsNullOrWhitespace(d.DevProblemStr), d.DevProblemStr, "-"))
+				Add("DevProblem", If(Not String.IsNullOrWhiteSpace(d.DevProblemStr), d.DevProblemStr, "-"))
 
 				Values.Add(KvP.Empty)
 
@@ -319,17 +319,17 @@ Namespace Display_Driver_Uninstaller
 						Add("Driver Details")
 
 						For Each drvInfo As Win32.SetupAPI.DriverInfo In d.DriverInfo
-							Add("> Description", If(Not IsNullOrWhitespace(drvInfo.Description), drvInfo.Description, "-"))
-							Add("> Manufacturer", If(Not IsNullOrWhitespace(drvInfo.MfgName), drvInfo.MfgName, "-"))
-							Add("> Provider", If(Not IsNullOrWhitespace(drvInfo.ProviderName), drvInfo.ProviderName, "-"))
+							Add("> Description", If(Not String.IsNullOrWhiteSpace(drvInfo.Description), drvInfo.Description, "-"))
+							Add("> Manufacturer", If(Not String.IsNullOrWhiteSpace(drvInfo.MfgName), drvInfo.MfgName, "-"))
+							Add("> Provider", If(Not String.IsNullOrWhiteSpace(drvInfo.ProviderName), drvInfo.ProviderName, "-"))
 							Add("> DriverDate", drvInfo.DriverDate.ToString())
-							Add("> DriverVersion", If(Not IsNullOrWhitespace(drvInfo.DriverVersion), drvInfo.DriverVersion, "-"))
+							Add("> DriverVersion", If(Not String.IsNullOrWhiteSpace(drvInfo.DriverVersion), drvInfo.DriverVersion, "-"))
 
 							If drvInfo.InfFile IsNot Nothing Then
-								Add("> InfFile", If(Not IsNullOrWhitespace(drvInfo.InfFile.FileName), drvInfo.InfFile.FileName, "-"))
+								Add("> InfFile", If(Not String.IsNullOrWhiteSpace(drvInfo.InfFile.FileName), drvInfo.InfFile.FileName, "-"))
 								Add(">>   InstallDate", drvInfo.InfFile.InstallDate.ToShortDateString())
-								Add(">>   Class", If(Not IsNullOrWhitespace(drvInfo.InfFile.Class), drvInfo.InfFile.Class, "-"))
-								Add(">>   Provider", If(Not IsNullOrWhitespace(drvInfo.InfFile.Provider), drvInfo.InfFile.Provider, "-"))
+								Add(">>   Class", If(Not String.IsNullOrWhiteSpace(drvInfo.InfFile.Class), drvInfo.InfFile.Class, "-"))
+								Add(">>   Provider", If(Not String.IsNullOrWhiteSpace(drvInfo.InfFile.Provider), drvInfo.InfFile.Provider, "-"))
 							End If
 
 							Add(">")
@@ -368,7 +368,7 @@ Namespace Display_Driver_Uninstaller
 					m_exData.Add("Win32_ErrorName", Win32.GetErrorEnum(errCode))
 					m_exData.Add("Win32_ErrorCode", String.Format("{0} (0x{1:X})", win32Ex.NativeErrorCode.ToString(), errCode))
 
-					If overrideMessage OrElse IsNullOrWhitespace(Message) Then
+					If overrideMessage OrElse String.IsNullOrWhiteSpace(Message) Then
 						Message = msg.Trim()
 					End If
 				End If
@@ -382,7 +382,7 @@ Namespace Display_Driver_Uninstaller
 					m_exData.Add("COM_ErrorName", Win32.GetErrorEnum(errCode))
 					m_exData.Add("COM_ErrorCode", String.Format("{0} (0x{1:X})", comEx.ErrorCode.ToString(), errCode))
 
-					If overrideMessage OrElse IsNullOrWhitespace(Message) Then
+					If overrideMessage OrElse String.IsNullOrWhiteSpace(Message) Then
 						Message = comEx.Message.Trim()
 					End If
 				End If
@@ -390,7 +390,7 @@ Namespace Display_Driver_Uninstaller
 				If ex IsNot Nothing Then
 					If Not String.IsNullOrEmpty(ex.Message) Then m_exData.Add("Message", ex.Message)
 
-					If overrideMessage OrElse IsNullOrWhitespace(Message) Then
+					If overrideMessage OrElse String.IsNullOrWhiteSpace(Message) Then
 						Message = ex.Message.Trim()
 					End If
 				End If

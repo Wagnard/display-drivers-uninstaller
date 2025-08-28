@@ -7,7 +7,6 @@ Namespace Display_Driver_Uninstaller
 		Public Property Paths As New AppPaths(False)
 		Public Property Success As Boolean = False
 		Public Property GPURemovedSuccess As Boolean = True
-		Public Property PreventClose As Boolean = False
 		Public Property NotPresentAMDKMPFD As Boolean = False
 		Public Property SelectedGPU As GPUVendor
 		Public Property SelectedAUDIO As AudioVendor

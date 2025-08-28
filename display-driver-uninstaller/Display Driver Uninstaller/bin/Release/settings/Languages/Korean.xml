@@ -51,6 +51,14 @@
 				(자동으로 드라이버 설치)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				셰이더 캐시 정리 (전용)
+			</Text>
+			<Tooltip>
+				셰이더 / 컴퓨트 캐시 파일만 삭제합니다. 안전 모드에서 실행 시 더 효과적입니다.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>탐지된 운영 체제:</Text>
 		</lblWinVersion>
@@ -159,6 +167,7 @@
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>INTEL</Options4>
+			<Options5>모든 GPU</Options5>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---장치 선택---</Options1>
@@ -492,8 +501,10 @@
 				로고: juanchacin
 
 				AMD 7850의 기부에 대해 Jackalito에게 감사드립니다.
+				
+				Special thanks to Guru3D https://www.guru3d.com/ for helping provide early exposure.
 
-				DDU "SetAcl"과 함께 자신의 프로그램을 사용할 수 있는 권한을 주신 Helge Klein (http://helgeklein.com/setacl/) 에게 감사드립니다
+				DDU "SetAcl"과 함께 자신의 프로그램을 사용할 수 있는 권한을 주신 Helge Klein (https://helgeklein.com/setacl/) 에게 감사드립니다
 
 				테스트에 많은 시간을 할애해 주셔서 감사합니다: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (나와 함께 디버깅하는 데 시간이 걸렸습니다)
 				Extraordinary (버그 수정 테스트)

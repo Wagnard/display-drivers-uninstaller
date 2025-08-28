@@ -51,6 +51,14 @@
         		(instalovat ovladače automaticky)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Vyčistit mezipaměť shaderů (Pouze)
+			</Text>
+			<Tooltip>
+				Odstraní pouze soubory shader / compute cache. Efektivnější v nouzovém režimu.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Zjištěný operační systém:</Text>
 		</lblWinVersion>
@@ -156,6 +164,7 @@
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>INTEL</Options4>
+			<Options5>Všechny GPU</Options5>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---Vyberte zařízení---</Options1>
@@ -469,7 +478,9 @@
 
 				Velké poděkování patří Jackalito za věnování AMD 7850.
 
-				Děkuji Helge Klein (http://helgeklein.com/setacl/) za povolení používat jeho program s DDU "SetAcl"
+				Special thanks to Guru3D https://www.guru3d.com/ for helping provide early exposure.
+
+				Děkuji Helge Klein (https://helgeklein.com/setacl/) za povolení používat jeho program s DDU "SetAcl"
 
 				Velké poděkování patří následujícím lidem za jejich čas pro testování: Gamer1291 (optimus), Octopuss (Amd Enduro) ,
 				nedooo` (ladění), Extraordinary (testování opravy)

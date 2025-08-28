@@ -1,13 +1,13 @@
-﻿Imports System.IO
-Imports System.Threading
-Imports System.Globalization
-Imports System.Windows.Markup
-Imports System.Text
-
-Imports Display_Driver_Uninstaller.Win32
+﻿Imports System.Globalization
+Imports System.IO
+Imports System.Linq
 Imports System.Security.Principal
-Imports Microsoft.Win32
+Imports System.Text
+Imports System.Threading
 Imports System.Threading.Tasks
+Imports System.Windows.Markup
+Imports Display_Driver_Uninstaller.Win32
+Imports Microsoft.Win32
 
 Namespace Display_Driver_Uninstaller
 
@@ -21,7 +21,7 @@ Namespace Display_Driver_Uninstaller
 		Private Const URL_DDUHOME As String = "https://www.wagnardsoft.com"
 		Private Const URL_GURU3D_AMD As String = "http://forums.guru3d.com/showthread.php?t=379505"
 		Private Const URL_GURU3D_NVIDIA As String = "http://forums.guru3d.com/showthread.php?t=379506"
-		Private Const URL_GEFORCE As String = "https://forums.geforce.com/default/topic/550192/geforce-drivers/wagnard-tools-ddu-gmp-tdr-manupulator-updated-01-22-2015-/"
+		Private Const URL_GEFORCE As String = "https://www.nvidia.com/en-us/geforce/forums/game-ready-drivers/13/1001/wagnard-tools-ddu-more/"
 		Private Const URL_SVN As String = "https://github.com/Wagnard/display-drivers-uninstaller"
 		Private Const URL_OFFER As String = "https://www.drivereasy.com/update-display-drivers"
 
@@ -92,8 +92,6 @@ Namespace Display_Driver_Uninstaller
 				End If
 			End If
 		End Sub
-
-
 
 		Private Sub InitLanguages()
 			Dim defaultLang As Languages.LanguageOption = Languages.DefaultEng
@@ -455,17 +453,19 @@ Namespace Display_Driver_Uninstaller
 					If LaunchOptions.CleanComplete Then
 						If LaunchOptions.Restart Then
 							Thread.Sleep(2000)
+							RemoveRegOption()
 							RestartComputer()
-							Me.Shutdown(0)          ' Skip loading.
+							AppClose(Me, EventArgs.Empty)          ' Skip loading.
 							Exit Sub
 						End If
 						If LaunchOptions.Shutdown Then
 							Thread.Sleep(2000)
+							RemoveRegOption()
 							ShutdownComputer()
-							Me.Shutdown(0)          ' Skip loading.
+							AppClose(Me, EventArgs.Empty)     ' Skip loading.
 							Exit Sub
 						End If
-						Me.Shutdown(0)          ' Skip loading.
+						AppClose(Me, EventArgs.Empty)          ' Skip loading.
 						Exit Sub
 					End If
 				Catch ex As Exception
@@ -579,7 +579,7 @@ Namespace Display_Driver_Uninstaller
 				webAddress = URL_OFFER
 			End If
 
-			If Not IsNullOrWhitespace(webAddress) Then
+			If Not String.IsNullOrWhiteSpace(webAddress) Then
 
 				Using process As Process = New Process() With
 			 {
@@ -613,7 +613,7 @@ Namespace Display_Driver_Uninstaller
 				If regkey IsNot Nothing Then
 					regOSValue = regkey.GetValue("CurrentVersion", String.Empty).ToString()
 
-					If Not IsNullOrWhitespace(regOSValue) Then
+					If Not String.IsNullOrWhiteSpace(regOSValue) Then
 						Try
 							For Each os As [Enum] In [Enum].GetValues(GetType(OSVersion))
 								If GetDescription(os).Equals(regOSValue) Then
@@ -885,6 +885,21 @@ Namespace Display_Driver_Uninstaller
 			Catch ex As Exception
 				Log.AddException(ex, "Failed to install SafeBoot Handler Service")
 			End Try
+		End Sub
+
+		Private Sub RemoveRegOption()
+			If Forms.SystemInformation.BootMode <> Forms.BootMode.Normal Then
+				Try
+					Using regControl As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot", Writable:=True)
+						If regControl IsNot Nothing AndAlso regControl.GetSubKeyNames().Contains("Option") Then
+							regControl.DeleteSubKeyTree("Option", throwOnMissingSubKey:=False)
+							Application.Log.AddMessage("Deleted SafeBoot\Option key before reboot.")
+						End If
+					End Using
+				Catch ex As Exception
+					Application.Log.AddWarningMessage("Could not delete SafeBoot\Option key: " & ex.Message)
+				End Try
+			End If
 		End Sub
 
 		Public Shared Sub RestartComputer()

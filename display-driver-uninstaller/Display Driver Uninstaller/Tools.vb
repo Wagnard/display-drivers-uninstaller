@@ -119,7 +119,7 @@ Namespace Display_Driver_Uninstaller
 					If regkey IsNot Nothing Then
 						Dim wantedValue As String() = CType(regkey.GetValue("PreferredUILanguages"), String())
 
-						If wantedValue IsNot Nothing AndAlso wantedValue.Length > 0 AndAlso Not IsNullOrWhitespace(wantedValue(0)) Then
+						If wantedValue IsNot Nothing AndAlso wantedValue.Length > 0 AndAlso Not String.IsNullOrWhiteSpace(wantedValue(0)) Then
 							Return wantedValue(0)
 						Else
 							Return Globalization.CultureInfo.InstalledUICulture.Name    'Return en-US, en-GB, fr-FR etc.
@@ -132,7 +132,7 @@ Namespace Display_Driver_Uninstaller
 							If regkey2 IsNot Nothing Then
 								Dim wantedValue As String() = CType(regkey.GetValue("MachinePreferredUILanguages"), String())
 
-								If wantedValue IsNot Nothing AndAlso wantedValue.Length > 0 AndAlso Not IsNullOrWhitespace(wantedValue(0)) Then
+								If wantedValue IsNot Nothing AndAlso wantedValue.Length > 0 AndAlso Not String.IsNullOrWhiteSpace(wantedValue(0)) Then
 									Return wantedValue(0)
 								Else
 									Return Globalization.CultureInfo.InstalledUICulture.Name    'Return en-US, en-GB, fr-FR etc.
@@ -148,9 +148,9 @@ Namespace Display_Driver_Uninstaller
 			End Try
 		End Function
 
-		Public Function IsNullOrWhitespace(ByVal str As String) As Boolean
-			Return If(str IsNot Nothing, String.IsNullOrEmpty(str.Trim(whiteSpaceChars)), True)
-		End Function
+		'Public Function String.IsNullOrWhiteSpace(ByVal str As String) As Boolean
+		'	Return If(str IsNot Nothing, String.IsNullOrEmpty(str.Trim(whiteSpaceChars)), True)
+		'End Function
 
 		''' <summary>Concats all given parameters to single text</summary>
 		Public Function StrAppend(ByVal sb As StringBuilder, ParamArray str As String()) As StringBuilder
@@ -170,7 +170,7 @@ Namespace Display_Driver_Uninstaller
 
 		''' <summary>Replaces all given parameters from text (Case Sensitive!)</summary>
 		Public Function StrReplace(ByVal sb As StringBuilder, ByRef oldStr As String, ByRef newStr As String) As StringBuilder
-			If IsNullOrWhitespace(oldStr) Then
+			If String.IsNullOrWhiteSpace(oldStr) Then
 				Return sb
 			End If
 
@@ -187,7 +187,7 @@ Namespace Display_Driver_Uninstaller
 			If Str IsNot Nothing And Str.Length > 0 Then
 				If ignoreCase Then
 					For Each s As String In Str
-						If Not IsNullOrWhitespace(s) Then
+						If Not String.IsNullOrWhiteSpace(s) Then
 							text = Strings.Replace(text, s, String.Empty, 1, -1, CompareMethod.Text)
 						End If
 					Next
@@ -199,7 +199,7 @@ Namespace Display_Driver_Uninstaller
 					Dim sb As New StringBuilder(text)
 
 					For Each s As String In Str
-						If Not IsNullOrWhitespace(s) Then
+						If Not String.IsNullOrWhiteSpace(s) Then
 							sb.Replace(s, String.Empty)
 						End If
 					Next
@@ -213,13 +213,13 @@ Namespace Display_Driver_Uninstaller
 
 		''' <summary>Check if text contains any of the given parameters</summary>
 		Public Function StrContainsAny(ByVal text As String, ByVal ignoreCase As Boolean, ParamArray Str As String()) As Boolean
-			If IsNullOrWhitespace(text) Then Return False
+			If String.IsNullOrWhiteSpace(text) Then Return False
 
 			If Str IsNot Nothing And Str.Length > 0 Then
 				Dim comparison As StringComparison = If(ignoreCase, StringComparison.OrdinalIgnoreCase, StringComparison.Ordinal)
 
 				For Each s As String In Str
-					If Not IsNullOrWhitespace(s) Then
+					If Not String.IsNullOrWhiteSpace(s) Then
 						If text.IndexOf(s, comparison) <> -1 Then   ' -1 = NOT FOUND
 							Return True
 						End If
@@ -232,12 +232,12 @@ Namespace Display_Driver_Uninstaller
 
 		''' <summary>Check if text contains Equal of the given parameters</summary>
 		Public Function StrEqual(ByVal text As String, ByVal ignoreCase As Boolean, ParamArray Str As String()) As Boolean
-			If IsNullOrWhitespace(text) Then Return False
+			If String.IsNullOrWhiteSpace(text) Then Return False
 
 			If Str IsNot Nothing And Str.Length > 0 Then
 
 				For Each s As String In Str
-					If Not IsNullOrWhitespace(s) Then
+					If Not String.IsNullOrWhiteSpace(s) Then
 						If String.Equals(text, s, If(ignoreCase, StringComparison.OrdinalIgnoreCase, StringComparison.Ordinal)) Then
 							Return True
 						End If
@@ -301,93 +301,76 @@ Namespace Display_Driver_Uninstaller
 		Public Sub FixBrokenPathIfNeeded()
 			Const VALUE_NAME As String = "Path"
 
-			Using topLevelKey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM", Writable:=False)
+			' 1) Read actual system root path from registry
+			Dim systemRootFromRegistry As String = String.Empty
+			Using key As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion", False)
+				If key IsNot Nothing Then
+					systemRootFromRegistry = If(TryCast(key.GetValue("SystemRoot"), String), String.Empty)
+				End If
+			End Using
 
+			If String.IsNullOrWhiteSpace(systemRootFromRegistry) Then
+				' Could log warning or abort because we don't know system root
+				Application.Log.AddMessage("SystemRoot not found in registry; skipping Path fix.")
+				Return
+			End If
+
+			Using topLevelKey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM", Writable:=False)
 				If topLevelKey Is Nothing Then Return
 
 				For Each childName As String In topLevelKey.GetSubKeyNames()
+					' ... your existing control set checks ...
 					If String.IsNullOrWhiteSpace(childName) Then Continue For
 
-					Dim lc As String = childName.ToLowerInvariant()
-					' Only match exactly "CurrentControlSet" or "ControlSet" + digits:
-					Dim isControlSet As Boolean = False
-					If lc = "currentcontrolset" Then
-						isControlSet = True
-					ElseIf lc.StartsWith("controlset") Then
-						Dim suffix As String = lc.Substring("controlset".Length)
-						If suffix.All(AddressOf Char.IsDigit) Then
-							isControlSet = True
-						End If
-					End If
+					Using envKey As RegistryKey = MyRegistry.OpenSubKey(topLevelKey, $"{childName}\Control\Session Manager\Environment", Writable:=True)
+						If envKey Is Nothing Then Continue For
 
-					If Not isControlSet Then
-						Continue For
-					End If
-
-					Using envKey As RegistryKey = topLevelKey.OpenSubKey($"{childName}\Control\Session Manager\Environment", writable:=True)
-
-						If envKey Is Nothing Then
-							Continue For
-						End If
-
-						' 1) Does the value "Path" exist (case-insensitive)? 
 						Dim allNames = envKey.GetValueNames()
-						Dim hasPath = allNames.Any(
-							Function(n)
-								Return String.Equals(n, VALUE_NAME, StringComparison.OrdinalIgnoreCase)
-							End Function)
+						Dim hasPath = allNames.Any(Function(n) String.Equals(n, VALUE_NAME, StringComparison.OrdinalIgnoreCase))
+						If Not hasPath Then Continue For
 
-						If Not hasPath Then
-							Continue For
-						End If
-
-						' 2) Is it REG_EXPAND_SZ? (only then proceed)
 						Dim kind As RegistryValueKind = envKey.GetValueKind(VALUE_NAME)
-						If kind <> RegistryValueKind.ExpandString Then
-							Continue For
-						End If
+						If kind = RegistryValueKind.ExpandString Then Continue For
 
-						' 3) Read the raw (unexpanded) value
-						Dim rawObj As Object = envKey.GetValue(VALUE_NAME, defaultValue:=String.Empty, options:=RegistryValueOptions.DoNotExpandEnvironmentNames)
-
-						If rawObj Is Nothing Then Continue For
-
-						Dim rawPath As String = rawObj.ToString()
+						Dim rawObj = envKey.GetValue(VALUE_NAME, String.Empty, RegistryValueOptions.DoNotExpandEnvironmentNames)
+						Dim rawPath As String = If(rawObj?.ToString(), String.Empty)
 						If String.IsNullOrWhiteSpace(rawPath) Then Continue For
 
-						' 4) Perform your “c:\windows → %SystemRoot%” replacements:
-						Dim fixedPath As String = rawPath
-
-						' a) Replace any "c:\windows\system32\wbem" → "%SystemRoot%\System32\Wbem"
-						fixedPath = Regex.Replace(
-								fixedPath,
-								"(?i)\bc:\\windows\\system32\\wbem",
-								"%SystemRoot%\System32\Wbem",
-								RegexOptions.IgnoreCase)
-
-						' b) Replace "c:\windows\" everywhere with "%SystemRoot%\"
-						fixedPath = Regex.Replace(
-								fixedPath,
-								"(?i)\bc:\\windows\\",
-								"%SystemRoot%\",
-								RegexOptions.IgnoreCase)
-
-						' c) Replace standalone "c:\windows" at a segment boundary:
-						fixedPath = Regex.Replace(
-								fixedPath,
-								"(?i)\bc:\\windows(?=(;|$))",
-								"%SystemRoot%",
-								RegexOptions.IgnoreCase)
-
-						If String.Equals(rawPath, fixedPath, StringComparison.Ordinal) Then
-							Continue For
+						' 2) Only fix if rawPath contains the literal system root path (case-insensitive)
+						If rawPath.IndexOf(systemRootFromRegistry, StringComparison.OrdinalIgnoreCase) < 0 Then
+							Continue For ' Nothing to fix here
 						End If
 
-						' 5) Write it back as REG_EXPAND_SZ
+						' 3) Perform replacements with %SystemRoot%
+						Dim fixedPath As String = rawPath
+
+						' Replace "c:\windows\system32\wbem" → "%SystemRoot%\System32\Wbem"
+						fixedPath = Regex.Replace(
+					fixedPath,
+					"(?i)\b" & Regex.Escape(systemRootFromRegistry) & "\\system32\\wbem",
+					"%SystemRoot%\System32\Wbem",
+					RegexOptions.IgnoreCase)
+
+						' Replace "c:\windows\" everywhere with "%SystemRoot%\"
+						fixedPath = Regex.Replace(
+					fixedPath,
+					"(?i)\b" & Regex.Escape(systemRootFromRegistry) & "\\",
+					"%SystemRoot%\",
+					RegexOptions.IgnoreCase)
+
+						' Replace standalone "c:\windows" at segment boundary
+						fixedPath = Regex.Replace(
+					fixedPath,
+					"(?i)\b" & Regex.Escape(systemRootFromRegistry) & "(?=(;|$))",
+					"%SystemRoot%",
+					RegexOptions.IgnoreCase)
+
+						If String.Equals(rawPath, fixedPath, StringComparison.Ordinal) Then Continue For
+
 						Try
 							envKey.SetValue(VALUE_NAME, fixedPath, RegistryValueKind.ExpandString)
 							Application.Log.AddMessage(
-					  $"Fixed broken Path in registry. Old value: {rawPath} New value: {fixedPath}")
+						$"Fixed broken Path in registry. Old value: {rawPath} New value: {fixedPath}")
 						Catch ex As Exception
 							Application.Log.AddException(ex)
 						End Try

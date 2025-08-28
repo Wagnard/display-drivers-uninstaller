@@ -51,6 +51,14 @@
 			    (Automatycznie instaluje sterowniki od Microsoft)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Wyczyść pamięć cache shaderów (Tylko)
+			</Text>
+			<Tooltip>
+				Usuwa tylko pliki pamięci podręcznej shaderów / obliczeń. Bardziej skuteczne w trybie awaryjnym.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Zainstalowana wersja systemu:</Text>
 		</lblWinVersion>
@@ -156,6 +164,7 @@
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>INTEL</Options4>
+			<Options5>Wszystkie GPU</Options5>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---Wybierz urządzenie---</Options1>
@@ -486,7 +495,9 @@
 
 				Wielkie podziękowania dla Jackalito za podarowanie AMD 7850.
 
-				Podziękowania dla Helge Klein (http://helgeklein.com/setacl/) za zgodę na użycie jego programu w DDU "SetAcl"
+				Special thanks to Guru3D https://www.guru3d.com/ for helping provide early exposure.
+
+				Podziękowania dla Helge Klein (https://helgeklein.com/setacl/) za zgodę na użycie jego programu w DDU "SetAcl"
 
 				Wielkie podziękowania za poświęcony czas dla testerów: Gamer1291 (optimus), Octopuss (Amd Enduro), nedooo (poświęcił czas na debugowanie ze mną) 
 				Extraordinary (testowanie i poprawki błędów)

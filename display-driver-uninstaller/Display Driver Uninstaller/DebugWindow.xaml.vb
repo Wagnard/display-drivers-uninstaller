@@ -249,17 +249,17 @@ Namespace Display_Driver_Uninstaller
 
 			Dim sb As New StringBuilder()
 
-			sb.AppendLine("Description: " & If(IsNullOrWhitespace(device.Description), "<empty>", device.Description))
-			sb.AppendLine("FriendlyName: " & If(IsNullOrWhitespace(device.FriendlyName), "<empty>", device.FriendlyName))
-			sb.AppendLine("ClassName: " & If(IsNullOrWhitespace(device.ClassName), "<empty>", device.ClassName))
-			sb.AppendLine("ClassGuid: " & If(IsNullOrWhitespace(device.ClassGuid), "<empty>", device.ClassGuid))
-			sb.AppendLine("DeviceID: " & If(IsNullOrWhitespace(device.DeviceID), "<empty>", device.DeviceID))
-			sb.AppendLine("InstallState: " & If(IsNullOrWhitespace(device.InstallStateStr), device.InstallState.ToString(), device.InstallStateStr))
+			sb.AppendLine("Description: " & If(String.IsNullOrWhiteSpace(device.Description), "<empty>", device.Description))
+			sb.AppendLine("FriendlyName: " & If(String.IsNullOrWhiteSpace(device.FriendlyName), "<empty>", device.FriendlyName))
+			sb.AppendLine("ClassName: " & If(String.IsNullOrWhiteSpace(device.ClassName), "<empty>", device.ClassName))
+			sb.AppendLine("ClassGuid: " & If(String.IsNullOrWhiteSpace(device.ClassGuid), "<empty>", device.ClassGuid))
+			sb.AppendLine("DeviceID: " & If(String.IsNullOrWhiteSpace(device.DeviceID), "<empty>", device.DeviceID))
+			sb.AppendLine("InstallState: " & If(String.IsNullOrWhiteSpace(device.InstallStateStr), device.InstallState.ToString(), device.InstallStateStr))
 
 			sb.AppendLine("RebootRequired: " & If(device.RebootRequired, "Yes", "No"))
 
 			sb.AppendLine("DevInstID: " & device.DevInstID.ToString())
-			sb.AppendLine("DevProblemStr: " & If(IsNullOrWhitespace(device.DevProblemStr), device.DevProblem.ToString(), device.DevProblemStr))
+			sb.AppendLine("DevProblemStr: " & If(String.IsNullOrWhiteSpace(device.DevProblemStr), device.DevProblem.ToString(), device.DevProblemStr))
 
 			If device.DevStatusStr IsNot Nothing AndAlso device.DevStatusStr.Length > 0 Then
 				sb.AppendLine("DevStatusStr:")

@@ -51,6 +51,14 @@
 				 (automatisk drivrutininstallation)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Rensa Shader-cache (Endast)
+			</Text>
+			<Tooltip>
+				Tar endast bort shader-/compute-cachefiler. Mer effektivt i felsäkert läge.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Detekterad Windows-version</Text>
 		</lblWinVersion>
@@ -159,6 +167,7 @@
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>INTEL</Options4>
+			<Options5>Alla GPU:er</Options5>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---Välj enhet---</Options1>
@@ -493,7 +502,9 @@
 
 Stort tack till Jackalito för donationen av en AMD7850.			
 
-Tack till Helge Klein (http://helgeklein.com/setacl/) : för tillståndet att använda hans program med DDU "SetAcl"
+Speciellt tack till Guru3D https://www.guru3d.com/ för hjälp med tidig exponering.
+
+Tack till Helge Klein (https://helgeklein.com/setacl/) : för tillståndet att använda hans program med DDU "SetAcl"
 
 				Stort tack för deras tid för att testa: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (tog sig tid att debugga med mig)
 				Extraordinärt (Testade en felfix)

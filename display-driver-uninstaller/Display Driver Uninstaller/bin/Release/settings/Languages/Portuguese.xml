@@ -51,6 +51,14 @@
 				(instalar automaticamente)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Limpar Cache de Shader (Somente)
+			</Text>
+			<Tooltip>
+				Exclui apenas arquivos de cache de shader / computação. Mais eficaz no Modo de Segurança.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Sistema operativo detectado:</Text>
 		</lblWinVersion>
@@ -156,6 +164,7 @@
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>INTEL®</Options4>
+			<Options5>Todas as GPUs</Options5>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---Seleccionar dispositivo---</Options1>
@@ -491,7 +500,9 @@
 
 				Imenso Agradecimento a Jackalito pela doação de um AMD 7850.
 
-				Agradecimentos a Helge Klein (http://helgeklein.com/setacl/) : pela autorização para usar o seu Programa com o DDU "SetAcl"
+				Special thanks to Guru3D https://www.guru3d.com/ for helping provide early exposure.
+
+				Agradecimentos a Helge Klein (https://helgeklein.com/setacl/) : pela autorização para usar o seu Programa com o DDU "SetAcl"
 
 				Imenso Agradecimento pelo seu tempo para fazer testes : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (gastou tempo em depurações comigo)
 				Extraordinary (Teste da reparação de um erro)

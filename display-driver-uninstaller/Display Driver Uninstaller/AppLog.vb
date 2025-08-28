@@ -68,7 +68,7 @@ Namespace Display_Driver_Uninstaller
 		Public Function CreateEntry(Optional ByVal Ex As Exception = Nothing, Optional ByVal message As String = Nothing) As LogEntry
 			Dim logEntry As New LogEntry()
 
-			If Not IsNullOrWhitespace(message) Then
+			If Not String.IsNullOrWhiteSpace(message) Then
 				logEntry.Message = message
 			End If
 

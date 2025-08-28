@@ -11,6 +11,7 @@ Namespace Display_Driver_Uninstaller
 		Nvidia
 		AMD
 		Intel
+		All
 	End Enum
 
 	Public Enum CleanType As Int32
@@ -588,13 +589,13 @@ Namespace Display_Driver_Uninstaller
 							Dim regValue As String = regkey.GetValue("CurrentMajorVersionNumber", String.Empty).ToString()
 							Dim regValue2 As String = regkey.GetValue("Currentbuild", String.Empty).ToString()
 
-							If Not IsNullOrWhitespace(regValue) AndAlso regValue.Equals("10") Then
+							If Not String.IsNullOrWhiteSpace(regValue) AndAlso regValue.Equals("10") Then
 								version = OSVersion.Win10
 								Application.Settings.WinVersionText = "Windows 10"
-								If Not IsNullOrWhitespace(regValue2) AndAlso regValue2 >= "17763" Then
+								If Not String.IsNullOrWhiteSpace(regValue2) AndAlso regValue2 >= "17763" Then
 									Win10_1809 = True
 								End If
-								If Not IsNullOrWhitespace(regValue2) AndAlso regValue2 >= "22000" Then
+								If Not String.IsNullOrWhiteSpace(regValue2) AndAlso regValue2 >= "22000" Then
 									Application.Settings.WinVersionText = "Windows 11"
 									Win11 = True
 								End If
@@ -614,7 +615,7 @@ Namespace Display_Driver_Uninstaller
 					Dim regValue2 As String = regkey.GetValue("Currentbuild", String.Empty).ToString()
 					Dim ubr As String = regkey.GetValue("UBR", String.Empty).ToString()
 
-					If Not IsNullOrWhitespace(regValue2) AndAlso Not IsNullOrWhitespace(ubr) Then
+					If Not String.IsNullOrWhiteSpace(regValue2) AndAlso Not String.IsNullOrWhiteSpace(ubr) Then
 						Application.Settings.WinBuildText = regValue2 + "." + ubr
 					End If
 				End If
@@ -638,7 +639,7 @@ Namespace Display_Driver_Uninstaller
 "Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
 				If regkey IsNot Nothing Then
 					For Each child As String In regkey.GetSubKeyNames()
-						If IsNullOrWhitespace(child) Then Continue For
+						If String.IsNullOrWhiteSpace(child) Then Continue For
 						If StrContainsAny(child, True, "_nvidiabroadcast") Then
 							NVIDIA_Broadcast_Installed = True
 							Continue For

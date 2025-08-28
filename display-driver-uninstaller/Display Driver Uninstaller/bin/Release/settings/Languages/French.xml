@@ -51,6 +51,14 @@
 			 (installation automatique des pilotes)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Nettoyer le cache des shaders (Seulement)
+			</Text>
+			<Tooltip>
+				Supprime uniquement les fichiers de cache shader / compute. Plus efficace en mode sans échec.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Version de Windows détectée :</Text>
 		</lblWinVersion>
@@ -159,6 +167,7 @@
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>INTEL</Options4>
+			<Options5>Tout les GPUs</Options5>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---Choisir le matériel---</Options1>
@@ -489,7 +498,9 @@ Votre " MOT DE PASSE " Windows *peut* être requis ! (Le PIN *pourrait* NE PAS f
 				Logos : juanchacin
 
 				Un grand merci à Jackalito pour le don d'un AMD 7850.
-
+				
+				Un merci special à Guru3D https://www.guru3d.com/ pour la visibilité au début du projet.
+				
 				Merci à Helge Klein (http://helgeklein.com/setacl/) pour la permission d'utiliser son Programme "SetAcl" avec DDU.
 
 				Un grand merci pour le temps qu'ils ont passé à tester : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (a pris le temps de déboguer avec moi)

@@ -368,7 +368,7 @@ Namespace Display_Driver_Uninstaller
 		End Function
 
 		Public Function CountFiles(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = True) As Int32
-			If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
+			If String.IsNullOrWhiteSpace(wildCard) Or Not wildCard.Contains("*") Then
 				wildCard = "*"
 			End If
 
@@ -376,7 +376,7 @@ Namespace Display_Driver_Uninstaller
 		End Function
 
 		Public Function CountDirectories(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = True) As Int32
-			If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
+			If String.IsNullOrWhiteSpace(wildCard) Or Not wildCard.Contains("*") Then
 				wildCard = "*"
 			End If
 
@@ -384,7 +384,7 @@ Namespace Display_Driver_Uninstaller
 		End Function
 
 		Public Function GetFiles(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False) As List(Of String)
-			If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
+			If String.IsNullOrWhiteSpace(wildCard) Or Not wildCard.Contains("*") Then
 				wildCard = "*"
 			End If
 
@@ -392,7 +392,7 @@ Namespace Display_Driver_Uninstaller
 		End Function
 
 		Public Function GetDirectories(ByVal directory As String, Optional ByVal wildCard As String = "*", Optional ByVal searchSubDirs As Boolean = False) As List(Of String)
-			If IsNullOrWhitespace(wildCard) Or Not wildCard.Contains("*") Then
+			If String.IsNullOrWhiteSpace(wildCard) Or Not wildCard.Contains("*") Then
 				wildCard = "*"
 			End If
 
@@ -402,7 +402,7 @@ Namespace Display_Driver_Uninstaller
 		Private Sub DeleteInternal(ByVal fileName As String, ByVal fixedAcl As Boolean)
 			Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
 
-			If IsNullOrWhitespace(fileName) Then
+			If String.IsNullOrWhiteSpace(fileName) Then
 				Return
 			End If
 
@@ -490,7 +490,7 @@ Namespace Display_Driver_Uninstaller
 							Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Fonts", True)
 								If regkey IsNot Nothing Then
 									For Each childs As String In regkey.GetValueNames
-										If IsNullOrWhitespace(childs) Then Continue For
+										If String.IsNullOrWhiteSpace(childs) Then Continue For
 										If StrContainsAny(childs, True, "qtquickcontrols") Then
 											Deletevalue(regkey, childs)
 										End If
@@ -596,7 +596,7 @@ Namespace Display_Driver_Uninstaller
 		Private Function GetFilesToDeleteInternal(ByVal fileName As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal searchFiles As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
 			GetFilesToDeleteInternal = New List(Of String)(0)
 
-			If IsNullOrWhitespace(fileName) Then
+			If String.IsNullOrWhiteSpace(fileName) Then
 				Return GetFilesToDeleteInternal
 			End If
 

@@ -34,6 +34,7 @@ Namespace Display_Driver_Uninstaller
 				ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls13 Or SecurityProtocolType.Tls12
 
 				Dim url As String = "https://www.wagnardsoft.com/DDU/currentversion2.txt"
+				Dim url2 As String = "https://www.wagnardsoft.com/api/ddu/version.json"
 				Dim newestVersionStr As String = Nothing
 
 				Using client As New HttpClient()
@@ -42,11 +43,21 @@ Namespace Display_Driver_Uninstaller
 					client.DefaultRequestHeaders.UserAgent.ParseAdd($"DDU/{version} (Display Driver Uninstaller)")
 					client.Timeout = TimeSpan.FromMilliseconds(5000) ' Set timeout to 5 seconds
 					Try
-						Dim response As HttpResponseMessage = Await client.GetAsync(url)
-						response.EnsureSuccessStatusCode() ' Throws an exception if the request is not successful
+						Using response As HttpResponseMessage = Await client.GetAsync(url)
+							response.EnsureSuccessStatusCode() ' Throws an exception if the request is not successful
 
-						newestVersionStr = Await response.Content.ReadAsStringAsync()
-						response.Dispose()
+							newestVersionStr = Await response.Content.ReadAsStringAsync()
+						End Using
+						Try
+							Using response As HttpResponseMessage = Await client.GetAsync(url2)
+								response.EnsureSuccessStatusCode() ' Throws an exception if the request is not successful
+
+								'newestVersionStr = Await response.Content.ReadAsStringAsync()
+							End Using
+						Catch ex As Exception
+							'For the moment we do absolutely nothing with this.
+							Application.Log.AddException(ex)
+						End Try
 					Catch ex As Exception
 						' Handle the error appropriately
 						status = UpdateStatus.Error
@@ -58,7 +69,7 @@ Namespace Display_Driver_Uninstaller
 				Dim newestVersion As Integer
 				Dim applicationVersion As Integer
 
-				If IsNullOrWhitespace(newestVersionStr) OrElse
+				If String.IsNullOrWhiteSpace(newestVersionStr) OrElse
 		   Not Integer.TryParse(newestVersionStr.Replace(".", ""), newestVersion) OrElse
 		   Not Integer.TryParse(currentVersion.ToString().Replace(".", ""), applicationVersion) Then
 

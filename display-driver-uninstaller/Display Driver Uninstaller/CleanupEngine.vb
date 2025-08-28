@@ -24,7 +24,7 @@ Namespace Display_Driver_Uninstaller
 		Public Sub Deletesubregkey(ByRef regkeypath As RegistryKey, ByVal child As String, Optional ByVal throwOnMissingSubKey As Boolean = True)
 			SyncLock _registryLock
 				Dim fixregacls As Boolean = False
-				If (regkeypath IsNot Nothing) AndAlso (Not IsNullOrWhitespace(child)) Then
+				If (regkeypath IsNot Nothing) AndAlso (Not String.IsNullOrWhiteSpace(child)) Then
 					Try
 						Using regkey As RegistryKey = MyRegistry.OpenSubKey(regkeypath, child, True)
 							If regkey Is Nothing AndAlso Not throwOnMissingSubKey Then
@@ -34,7 +34,7 @@ Namespace Display_Driver_Uninstaller
 							'or else we will get an argument exception when trying to remove the key if permission are wrong.
 							If regkey IsNot Nothing Then
 								For Each childs As String In regkey.GetSubKeyNames
-									If IsNullOrWhitespace(childs) Then Continue For
+									If String.IsNullOrWhiteSpace(childs) Then Continue For
 									Deletesubregkey(regkey, childs, throwOnMissingSubKey)
 								Next
 							End If
@@ -84,7 +84,7 @@ Namespace Display_Driver_Uninstaller
 
 		Public Sub RemoveSharedDlls(ByVal directorypath As String)
 			Dim FileIO As New FileIO
-			If Not IsNullOrWhitespace(directorypath) AndAlso Not FileIO.ExistsDir(directorypath) Then
+			If Not String.IsNullOrWhiteSpace(directorypath) AndAlso Not FileIO.ExistsDir(directorypath) Then
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
 					If regkey IsNot Nothing AndAlso regkey.GetValue(If(Not directorypath.EndsWith("\"), directorypath & "\", directorypath)) IsNot Nothing Then
 						Try
@@ -199,7 +199,7 @@ Namespace Display_Driver_Uninstaller
 						Dim WasRemoved As Boolean = False
 						Dim packageIdFamilyName = ""
 						If package IsNot Nothing Then
-							If IsNullOrWhitespace(package.Id.FullName) Then Continue For
+							If String.IsNullOrWhiteSpace(package.Id.FullName) Then Continue For
 							If StrContainsAny(package.Id.FullName, True, AppxToRemove) Then
 								packageIdFamilyName = package.Id.FamilyName
 								If win10_1809 AndAlso CanDeprovisionPackageForAllUsersAsync() Then
@@ -258,7 +258,7 @@ Namespace Display_Driver_Uninstaller
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services\bam\State\UserSettings", True)
 										If regkey IsNot Nothing Then
 											For Each child As String In regkey.GetSubKeyNames
-												If IsNullOrWhitespace(child) Then Continue For
+												If String.IsNullOrWhiteSpace(child) Then Continue For
 												Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
 													Try
 														Deletevalue(regkey2, packageIdFamilyName, False)
@@ -327,7 +327,7 @@ Namespace Display_Driver_Uninstaller
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.CurrentUser, "Software\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\AppSwitched", True)
 										If regkey IsNot Nothing Then
 											For Each child As String In regkey.GetValueNames
-												If IsNullOrWhitespace(child) Then Continue For
+												If String.IsNullOrWhiteSpace(child) Then Continue For
 												If StrContainsAny(child, True, packageIdFamilyName) Then
 													Try
 														Deletevalue(regkey, child, False)
@@ -342,7 +342,7 @@ Namespace Display_Driver_Uninstaller
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.CurrentUser, "Software\Microsoft\Windows NT\CurrentVersion\HostActivityManager\CommitHistory", True)
 										If regkey IsNot Nothing Then
 											For Each child As String In regkey.GetSubKeyNames
-												If IsNullOrWhitespace(child) Then Continue For
+												If String.IsNullOrWhiteSpace(child) Then Continue For
 												If StrContainsAny(child, True, packageIdFamilyName) Then
 													Try
 														Deletesubregkey(regkey, child, False)
@@ -406,11 +406,11 @@ Namespace Display_Driver_Uninstaller
 
 									'Win 10 (1803)
 									For Each regkeyusers As String In Registry.Users.GetSubKeyNames
-										If IsNullOrWhitespace(regkeyusers) Then Continue For
+										If String.IsNullOrWhiteSpace(regkeyusers) Then Continue For
 										Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, regkeyusers & "\Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
 											If regkey IsNot Nothing Then
 												For Each ValueName As String In regkey.GetValueNames
-													If IsNullOrWhitespace(ValueName) Then Continue For
+													If String.IsNullOrWhiteSpace(ValueName) Then Continue For
 													If StrContainsAny(ValueName, True, packageIdFamilyName) Then  'Not working need fixing
 														Try
 															Deletevalue(regkey, ValueName)
@@ -521,9 +521,6 @@ Namespace Display_Driver_Uninstaller
 					End Select
 				End Try
 			End If
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
 		End Sub
 
 		Public Sub RemoveAppx(ByVal appxToRemove As String)
@@ -602,7 +599,7 @@ Namespace Display_Driver_Uninstaller
 
 					For Each package In packages
 						If package IsNot Nothing Then
-							If IsNullOrWhitespace(package.Id.FullName) Then Continue For
+							If String.IsNullOrWhiteSpace(package.Id.FullName) Then Continue For
 							If StrContainsAny(package.Id.FullName, True, AppxToRemove) Then
 
 								deploymentOperation = packageManager.RemovePackageAsync(package.Id.FullName, If(win10_1809, RemovalOptions.RemoveForAllUsers, Nothing))
@@ -633,7 +630,7 @@ Namespace Display_Driver_Uninstaller
 									Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
 										If regkey IsNot Nothing Then
 											For Each ValueName As String In regkey.GetValueNames
-												If IsNullOrWhitespace(ValueName) Then Continue For
+												If String.IsNullOrWhiteSpace(ValueName) Then Continue For
 												If StrContainsAny(ValueName, True, package.Id.FamilyName) Then  'Not working need fixing
 													Try
 														Deletevalue(regkey, ValueName)
@@ -648,11 +645,11 @@ Namespace Display_Driver_Uninstaller
 
 									'Win 10 (1803)
 									For Each regkeyusers As String In Registry.Users.GetSubKeyNames
-										If IsNullOrWhitespace(regkeyusers) Then Continue For
+										If String.IsNullOrWhiteSpace(regkeyusers) Then Continue For
 										Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, regkeyusers & "\Software\Microsoft\Windows\CurrentVersion\DeviceSetup\InstalledPfns", True)
 											If regkey IsNot Nothing Then
 												For Each ValueName As String In regkey.GetValueNames
-													If IsNullOrWhitespace(ValueName) Then Continue For
+													If String.IsNullOrWhiteSpace(ValueName) Then Continue For
 													If StrContainsAny(ValueName, True, package.Id.FamilyName) Then  'Not working need fixing
 														Try
 															Deletevalue(regkey, ValueName)
@@ -714,10 +711,6 @@ Namespace Display_Driver_Uninstaller
 					End Select
 				End Try
 			End If
-
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
 		End Sub
 
 		Public Sub RemoveRegDeviceSoftware(ByVal value As String)
@@ -740,7 +733,7 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Public Sub Deletevalue(ByVal regkeypath As RegistryKey, ByVal child As String, Optional ByVal throwOnMissingValue As Boolean = True)
-			If regkeypath IsNot Nothing AndAlso Not IsNullOrWhitespace(child) Then
+			If regkeypath IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(child) Then
 				regkeypath.DeleteValue(child, throwOnMissingValue)
 
 				Application.Log.AddMessage(regkeypath.ToString & "\" & child & " - " & UpdateTextMethodmessagefn(40))
@@ -759,7 +752,7 @@ Namespace Display_Driver_Uninstaller
 					If regkeyRoot IsNot Nothing Then
 						Parallel.ForEach(regkeyRoot.GetSubKeyNames(),
 						Sub(child)
-							If IsNullOrWhitespace(child) Then Return
+							If String.IsNullOrWhiteSpace(child) Then Return
 
 							Dim wantedvalue As String = Nothing
 							Dim wantedvalue2 As String = Nothing
@@ -767,7 +760,7 @@ Namespace Display_Driver_Uninstaller
 							Dim typelib As String = Nothing
 
 							For Each croot As String In classroots
-								If IsNullOrWhitespace(croot) Then Continue For
+								If String.IsNullOrWhiteSpace(croot) Then Continue For
 								If StrContainsAny(croot, True, "GeforceExperience", "nvidiaapp") AndAlso Not config.RemoveGFE Then
 									'do nothing
 								Else
@@ -776,13 +769,13 @@ Namespace Display_Driver_Uninstaller
 											If regkey2 IsNot Nothing Then
 												wantedvalue = TryCast(regkey2.GetValue("", String.Empty), String)
 
-												If Not IsNullOrWhitespace(wantedvalue) Then
+												If Not String.IsNullOrWhiteSpace(wantedvalue) Then
 
 													Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "CLSID\" & wantedvalue)
 														If regkey3 IsNot Nothing Then
 															appid = TryCast(regkey3.GetValue("AppID", String.Empty), String)
 
-															If Not IsNullOrWhitespace(appid) Then
+															If Not String.IsNullOrWhiteSpace(appid) Then
 
 																Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "AppID", True)
 																	If regkey4 IsNot Nothing Then
@@ -801,7 +794,7 @@ Namespace Display_Driver_Uninstaller
 														If regkey3 IsNot Nothing Then
 															typelib = TryCast(regkey3.GetValue("", String.Empty), String)
 
-															If Not IsNullOrWhitespace(typelib) Then
+															If Not String.IsNullOrWhiteSpace(typelib) Then
 																Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, "TypeLib", True)
 																	If regkey4 IsNot Nothing Then
 																		Try
@@ -889,19 +882,19 @@ Namespace Display_Driver_Uninstaller
 								Using regkey5 As RegistryKey = MyRegistry.OpenSubKey(regkeyRoot, child)
 									If regkey5 IsNot Nothing Then
 										For Each shellEX As String In regkey5.GetSubKeyNames
-											If IsNullOrWhitespace(shellEX) Then Continue For
+											If String.IsNullOrWhiteSpace(shellEX) Then Continue For
 
 											If StrContainsAny(shellEX, True, "shellex") Then
 												Using regkey6 As RegistryKey = MyRegistry.OpenSubKey(regkey5, shellEX & "\ContextMenuHandlers", True)
 													If regkey6 IsNot Nothing Then
 														For Each ShExt As String In regkey6.GetSubKeyNames
-															If IsNullOrWhitespace(ShExt) Then Continue For
+															If String.IsNullOrWhiteSpace(ShExt) Then Continue For
 
 															If StrContainsAny(ShExt, True, "openglshext", "nvappshext") Then
 																Using regkey7 As RegistryKey = MyRegistry.OpenSubKey(regkey6, ShExt)
 																	If regkey7 IsNot Nothing Then
 																		wantedvalue2 = TryCast(regkey7.GetValue("", String.Empty), String)
-																		If Not IsNullOrWhitespace(wantedvalue2) Then
+																		If Not String.IsNullOrWhiteSpace(wantedvalue2) Then
 																			'If StrContainsAny(wantedvalue2, True, wantedvalue) Then
 																			Try
 																				Deletesubregkey(regkey6, ShExt)
@@ -940,7 +933,7 @@ Namespace Display_Driver_Uninstaller
 						If regkey IsNot Nothing Then
 							Parallel.ForEach(regkey.GetSubKeyNames(),
 							Sub(child)
-								If IsNullOrWhitespace(child) Then Return
+								If String.IsNullOrWhiteSpace(child) Then Return
 
 								Dim wantedvalue As String = Nothing
 								Dim wantedvalue2 As String = Nothing
@@ -948,20 +941,20 @@ Namespace Display_Driver_Uninstaller
 								Dim typelib As String = Nothing
 
 								For Each croot As String In classroots
-									If IsNullOrWhitespace(croot) Then Continue For
+									If String.IsNullOrWhiteSpace(croot) Then Continue For
 
 									If child.StartsWith(croot, StringComparison.OrdinalIgnoreCase) Then
 										Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\CLSID")
 											If regkey2 IsNot Nothing Then
 												wantedvalue = TryCast(regkey2.GetValue("", String.Empty), String)
 
-												If Not IsNullOrWhitespace(wantedvalue) Then
+												If Not String.IsNullOrWhiteSpace(wantedvalue) Then
 
 													Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, "CLSID\" & wantedvalue)
 														If regkey3 IsNot Nothing Then
 															appid = TryCast(regkey3.GetValue("AppID", String.Empty), String)
 
-															If Not IsNullOrWhitespace(appid) Then
+															If Not String.IsNullOrWhiteSpace(appid) Then
 
 																Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "AppID", True)
 																	If regkey4 IsNot Nothing Then
@@ -982,7 +975,7 @@ Namespace Display_Driver_Uninstaller
 														If regkey3 IsNot Nothing Then
 															typelib = TryCast(regkey3.GetValue("", String.Empty), String)
 
-															If Not IsNullOrWhitespace(typelib) Then
+															If Not String.IsNullOrWhiteSpace(typelib) Then
 
 																Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "TypeLib", True)
 																	If regkey4 IsNot Nothing Then
@@ -1089,16 +1082,16 @@ Namespace Display_Driver_Uninstaller
 					If reginterface IsNot Nothing Then
 						Parallel.ForEach(reginterface.GetSubKeyNames(),
 						Sub(interfacechild)
-							If IsNullOrWhitespace(interfacechild) Then Return
+							If String.IsNullOrWhiteSpace(interfacechild) Then Return
 							Dim wantedvalue2 As String
 							Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
 								If reginterface2 IsNot Nothing Then
 									If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
 										If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
 											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
-											If Not IsNullOrWhitespace(wantedvalue2) Then
+											If Not String.IsNullOrWhiteSpace(wantedvalue2) Then
 												For Each item As String In childlist
-													If IsNullOrWhitespace(item) Then Continue For
+													If String.IsNullOrWhiteSpace(item) Then Continue For
 													If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "CLSID\" + item) Is Nothing Then
 														Try
 															Deletesubregkey(reginterface, interfacechild)
@@ -1115,9 +1108,9 @@ Namespace Display_Driver_Uninstaller
 									If typelibList IsNot Nothing AndAlso typelibList.Count > 0 Then
 										If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
 											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
-											If Not IsNullOrWhitespace(wantedvalue2) Then
+											If Not String.IsNullOrWhiteSpace(wantedvalue2) Then
 												For Each item As String In typelibList
-													If IsNullOrWhitespace(item) Then Continue For
+													If String.IsNullOrWhiteSpace(item) Then Continue For
 													If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib\" + item) Is Nothing Then
 														Try
 															Deletesubregkey(reginterface, interfacechild)
@@ -1140,7 +1133,7 @@ Namespace Display_Driver_Uninstaller
 					If reginterface IsNot Nothing Then
 						Parallel.ForEach(reginterface.GetSubKeyNames(),
 						Sub(interfacechild)
-							If IsNullOrWhitespace(interfacechild) Then Return
+							If String.IsNullOrWhiteSpace(interfacechild) Then Return
 							Dim wantedvalue2 As String
 							Using reginterface2 As RegistryKey = MyRegistry.OpenSubKey(reginterface, interfacechild, False)
 								If reginterface2 IsNot Nothing Then
@@ -1148,9 +1141,9 @@ Namespace Display_Driver_Uninstaller
 									If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
 										If MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32") IsNot Nothing Then
 											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "ProxyStubClsid32").GetValue("", String.Empty), String)
-											If Not IsNullOrWhitespace(wantedvalue2) Then
+											If Not String.IsNullOrWhiteSpace(wantedvalue2) Then
 												For Each item As String In childlist
-													If IsNullOrWhitespace(item) Then Continue For
+													If String.IsNullOrWhiteSpace(item) Then Continue For
 													If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\CLSID\" + item) Is Nothing Then
 														Try
 															Deletesubregkey(reginterface, interfacechild)
@@ -1167,9 +1160,9 @@ Namespace Display_Driver_Uninstaller
 									If typelibList IsNot Nothing AndAlso typelibList.Count > 0 Then
 										If MyRegistry.OpenSubKey(reginterface2, "TypeLib") IsNot Nothing Then
 											wantedvalue2 = TryCast(MyRegistry.OpenSubKey(reginterface2, "TypeLib").GetValue("", String.Empty), String)
-											If Not IsNullOrWhitespace(wantedvalue2) Then
+											If Not String.IsNullOrWhiteSpace(wantedvalue2) Then
 												For Each item As String In typelibList
-													If IsNullOrWhitespace(item) Then Continue For
+													If String.IsNullOrWhiteSpace(item) Then Continue For
 													If StrContainsAny(wantedvalue2, True, item) AndAlso MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\TypeLib\" + item) Is Nothing Then
 														Try
 															Deletesubregkey(reginterface, interfacechild)
@@ -1203,7 +1196,7 @@ Namespace Display_Driver_Uninstaller
 			   "Software\Microsoft\Windows\CurrentVersion\Installer\UserData", False)
 					If basekey IsNot Nothing Then
 						For Each super As String In basekey.GetSubKeyNames()
-							If IsNullOrWhitespace(super) Then Continue For
+							If String.IsNullOrWhiteSpace(super) Then Continue For
 
 							If StrContainsAny(super, True, "s-1-5") Then
 
@@ -1212,7 +1205,7 @@ Namespace Display_Driver_Uninstaller
 
 									If regkey IsNot Nothing Then
 										For Each child As String In regkey.GetSubKeyNames()
-											If IsNullOrWhitespace(child) Then Continue For
+											If String.IsNullOrWhiteSpace(child) Then Continue For
 
 											Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 										"Software\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Products\" & child &
@@ -1221,10 +1214,10 @@ Namespace Display_Driver_Uninstaller
 												If subregkey IsNot Nothing Then
 
 													wantedvalue = TryCast(subregkey.GetValue("DisplayName", String.Empty), String)
-													If IsNullOrWhitespace(wantedvalue) Then Continue For
+													If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
 
 													For Each package As String In packages
-														If IsNullOrWhitespace(package) Then Continue For
+														If String.IsNullOrWhiteSpace(package) Then Continue For
 														If (StrContainsAny(wantedvalue, True, package)) AndAlso
 													  Not ((removephysx = False) AndAlso wantedvalue.ToLower.Contains("physx")) Then
 
@@ -1233,7 +1226,7 @@ Namespace Display_Driver_Uninstaller
 															'Deleting here the c:\windows\installer entries.
 															Try
 																file = TryCast(subregkey.GetValue("LocalPackage", String.Empty), String)
-																If IsNullOrWhitespace(file) Then Continue For
+																If String.IsNullOrWhiteSpace(file) Then Continue For
 
 																If StrContainsAny(file, True, ".msi") Then
 																	Delete(file)
@@ -1244,7 +1237,7 @@ Namespace Display_Driver_Uninstaller
 
 															Try
 																folder = TryCast(subregkey.GetValue("UninstallString", String.Empty), String)
-																If Not IsNullOrWhitespace(folder) Then
+																If Not String.IsNullOrWhiteSpace(folder) Then
 																	If StrContainsAny(folder, True, "{") AndAlso StrContainsAny(folder, True, "}") Then
 
 																		folder = folder.Substring(folder.IndexOf("{"), (folder.IndexOf("}") - folder.IndexOf("{")) + 1)
@@ -1254,7 +1247,7 @@ Namespace Display_Driver_Uninstaller
 																			If regkey2 IsNot Nothing Then
 
 																				For Each subkeyname As String In regkey2.GetValueNames
-																					If Not IsNullOrWhitespace(subkeyname) Then
+																					If Not String.IsNullOrWhiteSpace(subkeyname) Then
 																						If StrContainsAny(subkeyname, True, folder) Then
 																							Deletevalue(regkey2, subkeyname)
 																						End If
@@ -1278,14 +1271,14 @@ Namespace Display_Driver_Uninstaller
 														"SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes", True)
 																If superregkey IsNot Nothing Then
 																	For Each child2 As String In superregkey.GetSubKeyNames()
-																		If IsNullOrWhitespace(child2) Then Continue For
+																		If String.IsNullOrWhiteSpace(child2) Then Continue For
 
 																		Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 																   "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UpgradeCodes\" & child2, True)
 
 																			If subsuperregkey IsNot Nothing Then
 																				For Each wantedstring As String In subsuperregkey.GetValueNames()
-																					If IsNullOrWhitespace(wantedstring) Then Continue For
+																					If String.IsNullOrWhiteSpace(wantedstring) Then Continue For
 
 																					If StrContainsAny(wantedstring, True, child) Then
 																						Try
@@ -1297,7 +1290,7 @@ Namespace Display_Driver_Uninstaller
 																					End If
 																				Next
 																				For Each wantedsubkey In subsuperregkey.GetSubKeyNames()
-																					If IsNullOrWhitespace(wantedsubkey) Then Continue For
+																					If String.IsNullOrWhiteSpace(wantedsubkey) Then Continue For
 																					If wantedsubkey.Contains(child) Then
 																						Try
 																							Deletesubregkey(subsuperregkey, wantedsubkey)
@@ -1319,14 +1312,14 @@ Namespace Display_Driver_Uninstaller
 														"SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components", True)
 																If superregkey IsNot Nothing Then
 																	For Each child2 As String In superregkey.GetSubKeyNames()
-																		If IsNullOrWhitespace(child2) Then Continue For
+																		If String.IsNullOrWhiteSpace(child2) Then Continue For
 
 																		Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 																   "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\" & super & "\Components\" & child2, True)
 
 																			If subsuperregkey IsNot Nothing Then
 																				For Each wantedstring In subsuperregkey.GetValueNames()
-																					If IsNullOrWhitespace(wantedstring) Then Continue For
+																					If String.IsNullOrWhiteSpace(wantedstring) Then Continue For
 
 																					If wantedstring.Contains(child) Then
 																						Try
@@ -1338,7 +1331,7 @@ Namespace Display_Driver_Uninstaller
 																					End If
 																				Next
 																				For Each wantedsubkey In subsuperregkey.GetSubKeyNames()
-																					If IsNullOrWhitespace(wantedsubkey) Then Continue For
+																					If String.IsNullOrWhiteSpace(wantedsubkey) Then Continue For
 																					If wantedsubkey.Contains(child) Then
 																						Try
 																							Deletesubregkey(subsuperregkey, wantedsubkey)
@@ -1381,7 +1374,7 @@ Namespace Display_Driver_Uninstaller
 			"Installer\Products", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If IsNullOrWhitespace(child) Then Continue For
+							If String.IsNullOrWhiteSpace(child) Then Continue For
 
 							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot,
 						"Installer\Products\" & child, False)
@@ -1389,10 +1382,10 @@ Namespace Display_Driver_Uninstaller
 								If subregkey IsNot Nothing Then
 
 									wantedvalue = TryCast(subregkey.GetValue("ProductName", String.Empty), String)
-									If IsNullOrWhitespace(wantedvalue) Then Continue For
+									If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
 
 									For Each package As String In packages
-										If IsNullOrWhitespace(package) Then Continue For
+										If String.IsNullOrWhiteSpace(package) Then Continue For
 
 										If StrContainsAny(wantedvalue, True, package) AndAlso
 									   Not ((removephysx = False) AndAlso StrContainsAny(wantedvalue, True, "physx")) Then
@@ -1400,7 +1393,7 @@ Namespace Display_Driver_Uninstaller
 											Try
 												folder = TryCast(subregkey.GetValue("ProductIcon", String.Empty), String)
 
-												If (IsNullOrWhitespace(folder)) Then Continue For
+												If (String.IsNullOrWhiteSpace(folder)) Then Continue For
 												If Not StrContainsAny(folder, True, "{") Then Continue For
 												If Not StrContainsAny(folder, True, "}") Then Continue For
 
@@ -1409,7 +1402,7 @@ Namespace Display_Driver_Uninstaller
 												Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\Folders", True)
 													If regkey2 IsNot Nothing Then
 														For Each subkeyname As String In regkey2.GetValueNames
-															If IsNullOrWhitespace(subkeyname) Then Continue For
+															If String.IsNullOrWhiteSpace(subkeyname) Then Continue For
 
 															If StrContainsAny(subkeyname, True, folder) Then
 																Deletevalue(regkey2, subkeyname)
@@ -1440,14 +1433,14 @@ Namespace Display_Driver_Uninstaller
 										"Installer\UpgradeCodes", True)
 												If superregkey IsNot Nothing Then
 													For Each child2 As String In superregkey.GetSubKeyNames()
-														If IsNullOrWhitespace(child2) Then Continue For
+														If String.IsNullOrWhiteSpace(child2) Then Continue For
 
 														Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot,
 													  "Installer\UpgradeCodes\" & child2, True)
 
 															If subsuperregkey IsNot Nothing Then
 																For Each wantedstring As String In subsuperregkey.GetValueNames()
-																	If IsNullOrWhitespace(wantedstring) Then Continue For
+																	If String.IsNullOrWhiteSpace(wantedstring) Then Continue For
 																	If wantedstring.Contains(child) Then
 																		Try
 																			Deletevalue(subsuperregkey, child)
@@ -1458,7 +1451,7 @@ Namespace Display_Driver_Uninstaller
 																	End If
 																Next
 																For Each wantedsubkey In subsuperregkey.GetSubKeyNames()
-																	If IsNullOrWhitespace(wantedsubkey) Then Continue For
+																	If String.IsNullOrWhiteSpace(wantedsubkey) Then Continue For
 																	If wantedsubkey.Contains(child) Then
 																		Try
 																			Deletesubregkey(subsuperregkey, wantedsubkey)
@@ -1480,13 +1473,13 @@ Namespace Display_Driver_Uninstaller
 											Using superregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\Components", True)
 												If superregkey IsNot Nothing Then
 													For Each child2 As String In superregkey.GetSubKeyNames()
-														If IsNullOrWhitespace(child2) Then Continue For
+														If String.IsNullOrWhiteSpace(child2) Then Continue For
 
 														Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Installer\UserData\Components\" & child2, True)
 
 															If subsuperregkey IsNot Nothing Then
 																For Each wantedstring In subsuperregkey.GetValueNames()
-																	If IsNullOrWhitespace(wantedstring) Then Continue For
+																	If String.IsNullOrWhiteSpace(wantedstring) Then Continue For
 
 																	If wantedstring.Contains(child) Then
 																		Try
@@ -1498,7 +1491,7 @@ Namespace Display_Driver_Uninstaller
 																	End If
 																Next
 																For Each wantedsubkey In subsuperregkey.GetSubKeyNames()
-																	If IsNullOrWhitespace(wantedsubkey) Then Continue For
+																	If String.IsNullOrWhiteSpace(wantedsubkey) Then Continue For
 																	If wantedsubkey.Contains(child) Then
 																		Try
 																			Deletesubregkey(subsuperregkey, wantedsubkey)
@@ -1535,17 +1528,17 @@ Namespace Display_Driver_Uninstaller
 			"Software\Classes\Installer\Products", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If IsNullOrWhitespace(child) Then Continue For
+							If String.IsNullOrWhiteSpace(child) Then Continue For
 
 							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 						"Software\Classes\Installer\Products\" & child, False)
 
 								If subregkey IsNot Nothing Then
 									wantedvalue = TryCast(subregkey.GetValue("ProductName", String.Empty), String)
-									If IsNullOrWhitespace(wantedvalue) Then Continue For
+									If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
 
 									For Each package As String In packages
-										If IsNullOrWhitespace(package) Then Continue For
+										If String.IsNullOrWhiteSpace(package) Then Continue For
 
 										If (StrContainsAny(wantedvalue, True, package)) AndAlso
 									  Not ((removephysx = False) AndAlso wantedvalue.ToLower.Contains("physx")) Then
@@ -1568,14 +1561,14 @@ Namespace Display_Driver_Uninstaller
 										"Software\Classes\Installer\UpgradeCodes", True)
 												If superregkey IsNot Nothing Then
 													For Each child2 As String In superregkey.GetSubKeyNames()
-														If IsNullOrWhitespace(child2) Then Continue For
+														If String.IsNullOrWhiteSpace(child2) Then Continue For
 
 														Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
 													  "Software\Classes\Installer\UpgradeCodes\" & child2, True)
 
 															If subsuperregkey IsNot Nothing Then
 																For Each wantedstring As String In subsuperregkey.GetValueNames()
-																	If IsNullOrWhitespace(wantedstring) Then Continue For
+																	If String.IsNullOrWhiteSpace(wantedstring) Then Continue For
 
 																	If StrContainsAny(wantedstring, True, child) Then
 																		Try
@@ -1605,24 +1598,24 @@ Namespace Display_Driver_Uninstaller
 
 			Try
 				For Each users As String In Registry.Users.GetSubKeyNames()
-					If IsNullOrWhitespace(users) Then Continue For
+					If String.IsNullOrWhiteSpace(users) Then Continue For
 
 					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users,
 				users & "\Software\Microsoft\Installer\Products", True)
 
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If IsNullOrWhitespace(child) Then Continue For
+								If String.IsNullOrWhiteSpace(child) Then Continue For
 
 								Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users,
 							  users & "\Software\Microsoft\Installer\Products\" & child, False)
 
 									If subregkey IsNot Nothing Then
 										wantedvalue = TryCast(subregkey.GetValue("ProductName", String.Empty), String)
-										If IsNullOrWhitespace(wantedvalue) Then Continue For
+										If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
 
 										For Each package As String In packages
-											If IsNullOrWhitespace(package) Then Continue For
+											If String.IsNullOrWhiteSpace(package) Then Continue For
 
 											If (StrContainsAny(wantedvalue, True, package)) AndAlso
 										   Not ((removephysx = False) AndAlso StrContainsAny(wantedvalue, True, "physx")) Then
@@ -1645,14 +1638,14 @@ Namespace Display_Driver_Uninstaller
 											users & "\Software\Microsoft\Installer\UpgradeCodes", True)
 													If superregkey IsNot Nothing Then
 														For Each child2 As String In superregkey.GetSubKeyNames()
-															If IsNullOrWhitespace(child2) Then Continue For
+															If String.IsNullOrWhiteSpace(child2) Then Continue For
 
 															Using subsuperregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users,
 														  users & "\Software\Microsoft\Installer\UpgradeCodes" & child2, True)
 
 																If subsuperregkey IsNot Nothing Then
 																	For Each wantedstring As String In subsuperregkey.GetValueNames()
-																		If IsNullOrWhitespace(wantedstring) Then Continue For
+																		If String.IsNullOrWhiteSpace(wantedstring) Then Continue For
 
 																		If wantedstring.Contains(child) Then
 																			Try
@@ -1693,7 +1686,7 @@ Namespace Display_Driver_Uninstaller
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services", True)
 				If regkey IsNot Nothing Then
 					For Each service As String In services
-						If IsNullOrWhitespace(service) Then Continue For
+						If String.IsNullOrWhiteSpace(service) Then Continue For
 						If (config.RemoveAudioBus = False OrElse FrmMain.DoNotRemoveAmdHdAudioBusFiles) AndAlso StrContainsAny(service, True, "amdkmafd") Then Continue For
 						If (config.RemoveAMDKMPFD = False Or config.NotPresentAMDKMPFD = False) AndAlso StrContainsAny(service, True, "amdkmpfd") Then Continue For
 						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
@@ -1766,16 +1759,16 @@ Namespace Display_Driver_Uninstaller
 						Dim serviceValue As String
 
 						For Each child As String In regkey.GetSubKeyNames
-							If IsNullOrWhitespace(child) Then Continue For
+							If String.IsNullOrWhiteSpace(child) Then Continue For
 
 							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\Video", False)
 								If subregkey IsNot Nothing Then
 									serviceValue = TryCast(subregkey.GetValue("Service", String.Empty), String)
 
-									If IsNullOrWhitespace(serviceValue) Then Continue For
+									If String.IsNullOrWhiteSpace(serviceValue) Then Continue For
 
 									For Each service As String In services
-										If IsNullOrWhitespace(service) Then Continue For
+										If String.IsNullOrWhiteSpace(service) Then Continue For
 										If serviceValue.Equals(service, StringComparison.OrdinalIgnoreCase) Then
 											Try
 												Deletesubregkey(regkey, child)
@@ -1831,7 +1824,7 @@ Namespace Display_Driver_Uninstaller
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Configuration", True)
 				If regkey IsNot Nothing Then
 					For Each subregkey In regkey.GetSubKeyNames()
-						If subregkey IsNot Nothing AndAlso Not IsNullOrWhitespace(hardwareID) Then
+						If subregkey IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(hardwareID) Then
 							If StrContainsAny(subregkey, True, hardwareID) Then
 								Try
 									Deletesubregkey(regkey, subregkey)
@@ -1869,13 +1862,13 @@ Namespace Display_Driver_Uninstaller
 				If win8higher Then
 					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
 						If regkey IsNot Nothing Then
-							If Not IsNullOrWhitespace(oeminf) Then
+							If Not String.IsNullOrWhiteSpace(oeminf) Then
 								For Each child As String In regkey.GetSubKeyNames()
-									If IsNullOrWhitespace(child) Then Continue For
+									If String.IsNullOrWhiteSpace(child) Then Continue For
 
 									sourceValue = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("Source", String.Empty), String)
 
-									If Not IsNullOrWhitespace(sourceValue) AndAlso StrContainsAny(sourceValue, True, oeminf) Then
+									If Not String.IsNullOrWhiteSpace(sourceValue) AndAlso StrContainsAny(sourceValue, True, oeminf) Then
 										Try
 											Deletesubregkey(regkey, child)
 										Catch ex As Exception
@@ -1907,7 +1900,7 @@ Namespace Display_Driver_Uninstaller
 						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
 							If regkey IsNot Nothing Then
 								For Each child As String In regkey.GetSubKeyNames()
-									If IsNullOrWhitespace(child) Then Continue For
+									If String.IsNullOrWhiteSpace(child) Then Continue For
 
 									Dim normalizedPath As String = child.Replace("/", "\")
 									normalizedPath = Environment.ExpandEnvironmentVariables(normalizedPath)
@@ -1929,7 +1922,7 @@ Namespace Display_Driver_Uninstaller
 						Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
 							If regkey IsNot Nothing Then
 								For Each child As String In regkey.GetValueNames()
-									If IsNullOrWhitespace(child) Then Continue For
+									If String.IsNullOrWhiteSpace(child) Then Continue For
 
 									If Not fileIO.ExistsFile(child) Then
 										If StrContainsAny(child, True, driverfiles) Then
@@ -2054,7 +2047,7 @@ Namespace Display_Driver_Uninstaller
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "CLSID", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If IsNullOrWhitespace(child) Then Continue For
+							If String.IsNullOrWhiteSpace(child) Then Continue For
 
 							If StrContainsAny(child, True, clsidleftover) Then
 								Try
@@ -2070,12 +2063,12 @@ Namespace Display_Driver_Uninstaller
 							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\InProcServer32", False)
 								If subregkey IsNot Nothing Then
 									wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
-									If Not IsNullOrWhitespace(wantedvalue) Then
+									If Not String.IsNullOrWhiteSpace(wantedvalue) Then
 
 										If StrContainsAny(wantedvalue, True, clsidleftover) Then
 
 											appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
-											If Not IsNullOrWhitespace(appid) Then
+											If Not String.IsNullOrWhiteSpace(appid) Then
 												Try
 													Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "AppID", True), appid, False)
 												Catch ex As Exception
@@ -2086,7 +2079,7 @@ Namespace Display_Driver_Uninstaller
 											Using subregkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\TypeLib")
 												If subregkey2 IsNot Nothing Then
 													typelib = TryCast(subregkey2.GetValue("", String.Empty), String)
-													If Not IsNullOrWhitespace(typelib) Then
+													If Not String.IsNullOrWhiteSpace(typelib) Then
 														Try
 															Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib", True), typelib)
 															typelibList.Add(typelib)
@@ -2127,12 +2120,12 @@ Namespace Display_Driver_Uninstaller
 							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child, False)
 								If subregkey IsNot Nothing Then
 									wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
-									If Not IsNullOrWhitespace(wantedvalue) Then
+									If Not String.IsNullOrWhiteSpace(wantedvalue) Then
 
 										If StrContainsAny(wantedvalue, True, clsidleftover) Then
 
 											appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
-											If Not IsNullOrWhitespace(appid) Then
+											If Not String.IsNullOrWhiteSpace(appid) Then
 												Try
 													Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "AppID", True), appid, False)
 												Catch ex As Exception
@@ -2143,7 +2136,7 @@ Namespace Display_Driver_Uninstaller
 											Using subregkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\TypeLib")
 												If subregkey2 IsNot Nothing Then
 													typelib = TryCast(subregkey2.GetValue("", String.Empty), String)
-													If Not IsNullOrWhitespace(typelib) Then
+													If Not String.IsNullOrWhiteSpace(typelib) Then
 														Try
 															Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib", True), typelib)
 															typelibList.Add(typelib)
@@ -2175,12 +2168,12 @@ Namespace Display_Driver_Uninstaller
 									If subregkey2 IsNot Nothing Then
 										wantedvalue = TryCast(subregkey2.GetValue("", String.Empty), String)
 										wantedvalue2 = TryCast(subregkey2.GetValue("ServerExecutable", String.Empty), String)  'Intel specific workaround "igfxext.exe"
-										If Not IsNullOrWhitespace(wantedvalue) OrElse Not IsNullOrWhitespace(wantedvalue2) Then
+										If Not String.IsNullOrWhiteSpace(wantedvalue) OrElse Not String.IsNullOrWhiteSpace(wantedvalue2) Then
 
 											If StrContainsAny(wantedvalue, True, clsidleftover) OrElse StrContainsAny(wantedvalue2, True, clsidleftover) Then
 
 												appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
-												If Not IsNullOrWhitespace(appid) Then
+												If Not String.IsNullOrWhiteSpace(appid) Then
 													Try
 														Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "AppID", True), appid, False)
 													Catch ex As Exception
@@ -2191,7 +2184,7 @@ Namespace Display_Driver_Uninstaller
 												Using subregkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\TypeLib")
 													If subregkey3 IsNot Nothing Then
 														typelib = TryCast(subregkey3.GetValue("", String.Empty), String)
-														If Not IsNullOrWhitespace(typelib) Then
+														If Not String.IsNullOrWhiteSpace(typelib) Then
 															Try
 																Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib", True), typelib)
 																typelibList.Add(typelib)
@@ -2237,7 +2230,7 @@ Namespace Display_Driver_Uninstaller
 					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\CLSID", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If IsNullOrWhitespace(child) Then Continue For
+								If String.IsNullOrWhiteSpace(child) Then Continue For
 
 								If StrContainsAny(child, True, clsidleftover) Then
 									Try
@@ -2253,12 +2246,12 @@ Namespace Display_Driver_Uninstaller
 								Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\InProcServer32", False)
 									If subregkey IsNot Nothing Then
 										wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
-										If Not IsNullOrWhitespace(wantedvalue) Then
+										If Not String.IsNullOrWhiteSpace(wantedvalue) Then
 
 											If StrContainsAny(wantedvalue, True, clsidleftover) Then
 
 												appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
-												If Not IsNullOrWhitespace(appid) Then
+												If Not String.IsNullOrWhiteSpace(appid) Then
 													Try
 														Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\AppID", True), appid, False)
 													Catch ex As Exception
@@ -2269,7 +2262,7 @@ Namespace Display_Driver_Uninstaller
 												Using subregkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\TypeLib")
 													If subregkey2 IsNot Nothing Then
 														typelib = TryCast(subregkey2.GetValue("", String.Empty), String)
-														If Not IsNullOrWhitespace(typelib) Then
+														If Not String.IsNullOrWhiteSpace(typelib) Then
 															Try
 																Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\TypeLib", True), typelib)
 																typelibList.Add(typelib)
@@ -2312,12 +2305,12 @@ Namespace Display_Driver_Uninstaller
 								Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child, False)
 									If subregkey IsNot Nothing Then
 										wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
-										If Not IsNullOrWhitespace(wantedvalue) Then
+										If Not String.IsNullOrWhiteSpace(wantedvalue) Then
 
 											If StrContainsAny(wantedvalue, True, clsidleftover) Then
 
 												appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
-												If Not IsNullOrWhitespace(appid) Then
+												If Not String.IsNullOrWhiteSpace(appid) Then
 													Try
 														Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\AppID", True), appid, False)
 													Catch ex As Exception
@@ -2328,7 +2321,7 @@ Namespace Display_Driver_Uninstaller
 												Using subregkey2 As RegistryKey = MyRegistry.OpenSubKey(subregkey, "TypeLib")
 													If subregkey2 IsNot Nothing Then
 														typelib = TryCast(subregkey2.GetValue("", String.Empty), String)
-														If Not IsNullOrWhitespace(typelib) Then
+														If Not String.IsNullOrWhiteSpace(typelib) Then
 															Try
 																Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\TypeLib", True), typelib)
 																typelibList.Add(typelib)
@@ -2362,11 +2355,11 @@ Namespace Display_Driver_Uninstaller
 									Using subregkey2 As RegistryKey = MyRegistry.OpenSubKey(subregkey, "LocalServer32", False)
 										If subregkey2 IsNot Nothing Then
 											wantedvalue = TryCast(subregkey2.GetValue("", String.Empty), String)
-											If Not IsNullOrWhitespace(wantedvalue) Then
+											If Not String.IsNullOrWhiteSpace(wantedvalue) Then
 
 												If StrContainsAny(wantedvalue, True, clsidleftover) Then
 													appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
-													If Not IsNullOrWhitespace(appid) Then
+													If Not String.IsNullOrWhiteSpace(appid) Then
 														Try
 															Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\AppID", True), appid)
 														Catch exARG As ArgumentException
@@ -2379,7 +2372,7 @@ Namespace Display_Driver_Uninstaller
 													Using subregkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\TypeLib")
 														If subregkey3 IsNot Nothing Then
 															typelib = TryCast(subregkey3.GetValue("", String.Empty), String)
-															If Not IsNullOrWhitespace(typelib) Then
+															If Not String.IsNullOrWhiteSpace(typelib) Then
 																Try
 																	Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\TypeLib", True), typelib)
 																	typelibList.Add(typelib)
@@ -2427,12 +2420,12 @@ Namespace Display_Driver_Uninstaller
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "AppID", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If IsNullOrWhitespace(child) Then Continue For
+							If String.IsNullOrWhiteSpace(child) Then Continue For
 							If StrContainsAny(child, True, clsidleftover) Then
 								Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 									If subregkey IsNot Nothing Then
 										wantedvalue = TryCast(subregkey.GetValue("AppID", String.Empty), String)
-										If Not IsNullOrWhitespace(wantedvalue) Then
+										If Not String.IsNullOrWhiteSpace(wantedvalue) Then
 											Try
 												Deletesubregkey(regkey, wantedvalue, False)
 											Catch ex As Exception
@@ -2440,7 +2433,7 @@ Namespace Display_Driver_Uninstaller
 											End Try
 										Else
 											wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
-											If Not IsNullOrWhitespace(wantedvalue) Then
+											If Not String.IsNullOrWhiteSpace(wantedvalue) Then
 												Try
 													Deletesubregkey(regkey, wantedvalue, False)
 												Catch ex As Exception
@@ -2469,12 +2462,12 @@ Namespace Display_Driver_Uninstaller
 					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\AppID", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If IsNullOrWhitespace(child) Then Continue For
+								If String.IsNullOrWhiteSpace(child) Then Continue For
 								If StrContainsAny(child, True, clsidleftover) Then
 									Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 										If subregkey IsNot Nothing Then
 											wantedvalue = TryCast(subregkey.GetValue("AppID", String.Empty), String)
-											If Not IsNullOrWhitespace(wantedvalue) Then
+											If Not String.IsNullOrWhiteSpace(wantedvalue) Then
 
 												Try
 													Deletesubregkey(regkey, wantedvalue, False)
@@ -2484,7 +2477,7 @@ Namespace Display_Driver_Uninstaller
 											End If
 
 											wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
-											If Not IsNullOrWhitespace(wantedvalue) Then
+											If Not String.IsNullOrWhiteSpace(wantedvalue) Then
 												Try
 													Deletesubregkey(regkey, wantedvalue, False)
 												Catch ex As Exception
@@ -2515,35 +2508,35 @@ Namespace Display_Driver_Uninstaller
 					If regkey IsNot Nothing Then
 						Parallel.ForEach(regkey.GetSubKeyNames(),
 						Sub(child)
-							If IsNullOrWhitespace(child) Then Return
+							If String.IsNullOrWhiteSpace(child) Then Return
 							Dim value As String = Nothing
 							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 								If regkey2 Is Nothing Then Return
 
 								For Each child2 As String In regkey2.GetSubKeyNames()
-									If IsNullOrWhitespace(child2) Then Continue For
+									If String.IsNullOrWhiteSpace(child2) Then Continue For
 
 									Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey2, child2)
 										If regkey3 Is Nothing Then Continue For
 
 										For Each child3 As String In regkey3.GetSubKeyNames()
-											If IsNullOrWhitespace(child3) Then Continue For
+											If String.IsNullOrWhiteSpace(child3) Then Continue For
 
 											Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey3, child3)
 												If regkey4 Is Nothing Then Continue For
 
 												For Each child4 As String In regkey4.GetSubKeyNames()
-													If IsNullOrWhitespace(child4) Then Continue For
+													If String.IsNullOrWhiteSpace(child4) Then Continue For
 
 													Using regkey5 As RegistryKey = MyRegistry.OpenSubKey(regkey4, child4)
 														If regkey5 Is Nothing Then Continue For
 
 														value = TryCast(regkey5.GetValue("", String.Empty), String)    'Can also be UInt32 btw! (Usualy abnormal from personal experience,but still should be managed in the future)
 
-														If IsNullOrWhitespace(value) Then Continue For
+														If String.IsNullOrWhiteSpace(value) Then Continue For
 
 														For Each clsIdle As String In clsidleftover
-															If IsNullOrWhitespace(clsIdle) Then Continue For
+															If String.IsNullOrWhiteSpace(clsIdle) Then Continue For
 
 															If StrContainsAny(value, True, clsIdle) Then
 																Try
@@ -2588,14 +2581,14 @@ Namespace Display_Driver_Uninstaller
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "CLSID\{860BB310-5D01-11d0-BD3B-00A0C911CE86}", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If IsNullOrWhitespace(child) Then Continue For
+							If String.IsNullOrWhiteSpace(child) Then Continue For
 							If StrContainsAny(child, True, "Instance") Then
 								Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
 									If regkey2 Is Nothing Then Continue For
 									If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
 										For Each clsid As String In childlist
 											For Each child2 As String In regkey2.GetSubKeyNames()
-												If IsNullOrWhitespace(child2) Then Continue For
+												If String.IsNullOrWhiteSpace(child2) Then Continue For
 
 												If StrContainsAny(child2, True, clsid) Then
 													Try
@@ -2620,14 +2613,14 @@ Namespace Display_Driver_Uninstaller
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\CLSID\{860BB310-5D01-11d0-BD3B-00A0C911CE86}", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
-							If IsNullOrWhitespace(child) Then Continue For
+							If String.IsNullOrWhiteSpace(child) Then Continue For
 							If StrContainsAny(child, True, "Instance") Then
 								Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
 									If regkey2 Is Nothing Then Continue For
 									If childlist IsNot Nothing AndAlso childlist.Count > 0 Then
 										For Each clsid As String In childlist
 											For Each child2 As String In regkey2.GetSubKeyNames()
-												If IsNullOrWhitespace(child2) Then Continue For
+												If String.IsNullOrWhiteSpace(child2) Then Continue For
 												If StrContainsAny(child2, True, clsid) Then
 													Try
 														Deletesubregkey(regkey2, child2)
@@ -2659,24 +2652,24 @@ Namespace Display_Driver_Uninstaller
 					If regkey IsNot Nothing Then
 						Parallel.ForEach(regkey.GetSubKeyNames(),
 						Sub(child)
-							If IsNullOrWhitespace(child) Then Return
+							If String.IsNullOrWhiteSpace(child) Then Return
 							Dim wantedvalue As String
 							Dim typelib As String = Nothing
 							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Interface\" & child, False)
 
 								If subregkey IsNot Nothing Then
 									wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
-									If IsNullOrWhitespace(wantedvalue) Then Return
+									If String.IsNullOrWhiteSpace(wantedvalue) Then Return
 
 									For Each iface As String In interfaces
-										If IsNullOrWhitespace(iface) Then Continue For
+										If String.IsNullOrWhiteSpace(iface) Then Continue For
 
 										If StrContainsAny(wantedvalue, True, iface) Then
 
 											Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(subregkey, "Typelib", True)
 												If regkey2 IsNot Nothing Then
 													typelib = TryCast(regkey2.GetValue("", String.Empty), String)
-													If IsNullOrWhitespace(typelib) Then Continue For
+													If String.IsNullOrWhiteSpace(typelib) Then Continue For
 
 													Try
 														Deletesubregkey(regkey2, typelib, False)
@@ -2709,24 +2702,24 @@ Namespace Display_Driver_Uninstaller
 						If regkey IsNot Nothing Then
 							Parallel.ForEach(regkey.GetSubKeyNames(),
 							Sub(child)
-								If IsNullOrWhitespace(child) Then Return
+								If String.IsNullOrWhiteSpace(child) Then Return
 								Dim wantedvalue As String
 								Dim typelib As String = Nothing
 								Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "WOW6432Node\Interface\" & child, False)
 
 									If subregkey IsNot Nothing Then
 										wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
-										If IsNullOrWhitespace(wantedvalue) Then Return
+										If String.IsNullOrWhiteSpace(wantedvalue) Then Return
 
 										For Each iface As String In interfaces
-											If IsNullOrWhitespace(iface) Then Continue For
+											If String.IsNullOrWhiteSpace(iface) Then Continue For
 
 											If StrContainsAny(wantedvalue, True, iface) Then
 
 												Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(subregkey, "Typelib", True)
 													If regkey2 IsNot Nothing Then
 														typelib = TryCast(regkey2.GetValue("", String.Empty), String)
-														If IsNullOrWhitespace(typelib) Then Continue For
+														If String.IsNullOrWhiteSpace(typelib) Then Continue For
 
 														Try
 															Deletesubregkey(regkey2, typelib, False)
@@ -2811,7 +2804,7 @@ Namespace Display_Driver_Uninstaller
 			If filepath IsNot Nothing Then
 				If FileIO.ExistsDir(filepath) Then
 					For Each driverfile As String In driverfiles
-						If IsNullOrWhitespace(driverfile) Then Continue For
+						If String.IsNullOrWhiteSpace(driverfile) Then Continue For
 						If FileIO.ExistsFile(filepath & If(driverfile.StartsWith("\"), driverfile.Substring(1), driverfile)) Then
 							Delete(filepath & If(driverfile.StartsWith("\"), driverfile.Substring(1), driverfile))
 							If Not FileIO.ExistsFile(filepath & If(driverfile.StartsWith("\"), driverfile.Substring(1), driverfile)) Then
@@ -2821,7 +2814,11 @@ Namespace Display_Driver_Uninstaller
 					Next
 				End If
 			End If
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
+			End If
 		End Sub
+
 		Private Sub Threaddata1Prefetch(filepath As String, ByVal driverfiles As String())
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
 				ImpersonateLoggedOnUser.Taketoken()
@@ -2830,7 +2827,7 @@ Namespace Display_Driver_Uninstaller
 			If filepath IsNot Nothing Then
 				If FileIO.ExistsDir(filepath) Then
 					For Each child As String In FileIO.GetFiles(filepath)
-						If IsNullOrWhitespace(child) Then Continue For
+						If String.IsNullOrWhiteSpace(child) Then Continue For
 						If StrContainsAny(child, True, driverfiles) Then
 							Try
 								Delete(child)
@@ -2841,11 +2838,14 @@ Namespace Display_Driver_Uninstaller
 					Next
 				End If
 				For Each driverfile As String In driverfiles
-					If IsNullOrWhitespace(driverfile) Then Continue For
+					If String.IsNullOrWhiteSpace(driverfile) Then Continue For
 					If Not FileIO.ExistsFile(filepath & If(driverfile.StartsWith("\"), driverfile.Substring(1), driverfile)) Then
 						RemoveSharedDlls(filepath & If(driverfile.StartsWith("\"), driverfile.Substring(1), driverfile))
 					End If
 				Next
+			End If
+			If WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.ReleaseToken()
 			End If
 		End Sub
 
@@ -3073,7 +3073,7 @@ Namespace Display_Driver_Uninstaller
 										Dim disabledAudiobusList As New List(Of SetupAPI.Device)
 										For Each audiobus As SetupAPI.Device In audiobusList
 											If audiobus IsNot Nothing AndAlso audiobus.ExtendedInfs IsNot Nothing AndAlso
-												audiobus.ExtendedInfs.Length > 0 AndAlso Not IsNullOrWhitespace(audiobus.Service) Then
+												audiobus.ExtendedInfs.Length > 0 AndAlso Not String.IsNullOrWhiteSpace(audiobus.Service) Then
 												If StrContainsAny(audiobus.Service, True, "HDAudBus", "IntcAudioBus") Then
 													If audiobus.IsPresent Then
 														SetupAPI.EnableDevice(audiobus, False) 'Removing the Audio bus.
@@ -3109,7 +3109,7 @@ Namespace Display_Driver_Uninstaller
 							End If
 
 							For Each SourceDisksName In oem.SourceDisksFiles
-								If IsNullOrWhitespace(SourceDisksName) Then Continue For
+								If String.IsNullOrWhiteSpace(SourceDisksName) Then Continue For
 								If SourceDisksName IsNot Nothing AndAlso StrContainsAny(SourceDisksName, True, driverfiles) Then
 									SetupAPI.RemoveInf(oem, False)
 									Exit For
@@ -3123,7 +3123,7 @@ Namespace Display_Driver_Uninstaller
 					End If
 				End If
 				'check if the oem was removed to process to the pnplockdownfile if necessary
-				If FrmMain.IsWindows8OrHigher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not IsNullOrWhitespace(catalog)) Then
+				If FrmMain.IsWindows8OrHigher AndAlso (Not FileIO.ExistsFile(oem.FileName)) AndAlso (Not String.IsNullOrWhiteSpace(catalog)) Then
 					If (config.RemoveAudioBus = False OrElse FrmMain.DoNotRemoveAmdHdAudioBusFiles) AndAlso StrContainsAny(catalog, True, "amdkmafd") Then Continue For
 					PrePnplockdownfiles(catalog)
 				End If
@@ -3138,7 +3138,9 @@ Namespace Display_Driver_Uninstaller
 			Dim win8higher As Boolean = FrmMain.IsWindows8OrHigher
 			Dim FileIO As New FileIO
 
-			ImpersonateLoggedOnUser.Taketoken()
+			If Not WindowsIdentity.GetCurrent().IsSystem Then
+				ImpersonateLoggedOnUser.Taketoken()
+			End If
 
 			'Windows 8 + only
 			'This should fix driver installation problem reporting that a file is not found.
@@ -3150,18 +3152,18 @@ Namespace Display_Driver_Uninstaller
 
 					Dim infslist As String = ""
 					For Each infs As String In My.Computer.FileSystem.GetFiles(Environment.GetEnvironmentVariable("windir") & "\inf", Microsoft.VisualBasic.FileIO.SearchOption.SearchTopLevelOnly, "oem*.inf")
-						If Not IsNullOrWhitespace(infs) Then
+						If Not String.IsNullOrWhiteSpace(infs) Then
 							infslist += infs
 						End If
 					Next
 					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverInfFiles", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If IsNullOrWhitespace(child) Then Continue For
+								If String.IsNullOrWhiteSpace(child) Then Continue For
 
 								If child.ToLower.StartsWith("oem") AndAlso child.ToLower.EndsWith(".inf") Then
 									If Not StrContainsAny(infslist, True, child) Then
-										If Not IsNullOrWhitespace(MyRegistry.OpenSubKey(regkey, child).GetValue("", String.Empty).ToString) Then
+										If Not String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(regkey, child).GetValue("", String.Empty).ToString) Then
 											Try
 												Deletesubregkey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverPackages\" & MyRegistry.OpenSubKey(regkey, child).GetValue("", String.Empty).ToString)
 											Catch ex As Exception
@@ -3182,11 +3184,11 @@ Namespace Display_Driver_Uninstaller
 					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "DRIVERS\DriverDatabase\DriverPackages", True)
 						If regkey IsNot Nothing Then
 							For Each child As String In regkey.GetSubKeyNames()
-								If IsNullOrWhitespace(child) Then Continue For
+								If String.IsNullOrWhiteSpace(child) Then Continue For
 
 								Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 									If regkey2 IsNot Nothing Then
-										If (Not IsNullOrWhitespace(regkey2.GetValue("", String.Empty).ToString)) AndAlso
+										If (Not String.IsNullOrWhiteSpace(regkey2.GetValue("", String.Empty).ToString)) AndAlso
 								 regkey2.GetValue("", String.Empty).ToString.ToLower.StartsWith("oem") AndAlso
 								 regkey2.GetValue("", String.Empty).ToString.ToLower.EndsWith(".inf") AndAlso
 								 (Not StrContainsAny(infslist, True, regkey2.GetValue("", String.Empty).ToString)) Then
@@ -3209,9 +3211,9 @@ Namespace Display_Driver_Uninstaller
 				Select Case config.SelectedGPU
 					Case GPUVendor.AMD
 						FilePath = System.Environment.SystemDirectory & "\DriverStore\FileRepository"
-						If IsNullOrWhitespace(FilePath) = False Then
+						If String.IsNullOrWhiteSpace(FilePath) = False Then
 							For Each child As String In FileIO.GetDirectories(FilePath)
-								If IsNullOrWhitespace(child) = False Then
+								If String.IsNullOrWhiteSpace(child) = False Then
 									Dim dirinfo As New System.IO.DirectoryInfo(child)
 									If dirinfo.Name.ToLower.StartsWith("c030") Or
 								 StrContainsAny(dirinfo.Name, True, "atihdwt6.inf") Or
@@ -3227,9 +3229,9 @@ Namespace Display_Driver_Uninstaller
 						End If
 					Case GPUVendor.Nvidia
 						FilePath = System.Environment.SystemDirectory & "\DriverStore\FileRepository"
-						If IsNullOrWhitespace(FilePath) = False Then
+						If String.IsNullOrWhiteSpace(FilePath) = False Then
 							For Each child As String In FileIO.GetDirectories(FilePath)
-								If IsNullOrWhitespace(child) = False Then
+								If String.IsNullOrWhiteSpace(child) = False Then
 									Dim dirinfo As New System.IO.DirectoryInfo(child)
 									If StrContainsAny(dirinfo.Name, True, "nvstusb.inf", "nvhda.inf", "nv_dispi.inf") Then
 										Try

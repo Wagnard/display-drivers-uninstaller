@@ -19,6 +19,7 @@ Namespace Display_Driver_Uninstaller
 		Public Property CleanIntel As Boolean = False
 		Public Property CleanRealtek As Boolean = False
 		Public Property CleanSoundBlaster As Boolean = False
+		Public Property CleanCache As Boolean = False
 
 		Public Property PreventWinUpdateArg As Boolean = False
 
@@ -148,7 +149,6 @@ Namespace Display_Driver_Uninstaller
 							RemoveAMDCP = True
 							RemoveINTELCP = True
 							RemoveINTELIGS = True
-							RemoveIntelNpu = True
 							RemoveOneAPI = True
 							RemoveEnduranceGaming = True
 							RemoveNVCP = True
@@ -163,6 +163,8 @@ Namespace Display_Driver_Uninstaller
 							RemoveMonitors = True
 							Remove3DTVPlay = True
 							RemoveCrimsonCache = True
+						Case StrContainsAny(Argument, True, "-cleancache")
+							CleanCache = True
 							'	TODO: Add cmdline args for those RemoveXXXX properties
 							'	Case StrContainsAny(Argument, True, "-RemNvidiaDirs") : RemoveNvidiaDirs = True
 

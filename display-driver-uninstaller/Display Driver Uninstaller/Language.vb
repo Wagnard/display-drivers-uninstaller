@@ -121,7 +121,7 @@ notFound:
 		''' <returns>Translated text. If language not found, return English text</returns> 
 		Public Shared Function GetTranslation(ByVal parent As String, ByVal control As String, ByVal type As String, Optional ByVal forceEnglish As Boolean = False) As String
 			SyncLock threadLock
-				If IsNullOrWhitespace(parent) OrElse IsNullOrWhitespace(control) OrElse IsNullOrWhitespace(type) Then
+				If String.IsNullOrWhiteSpace(parent) OrElse String.IsNullOrWhiteSpace(control) OrElse String.IsNullOrWhiteSpace(type) Then
 					Return Nothing
 				End If
 
@@ -209,7 +209,7 @@ notFound:
 				If translateTitle Then
 					Dim text As String = GetParentTranslation(window.Name, "Text")
 
-					If Not IsNullOrWhitespace(text) Then
+					If Not String.IsNullOrWhiteSpace(text) Then
 						window.Title = text
 					End If
 				End If
@@ -252,21 +252,21 @@ notFound:
 						If Not TypeOf (child) Is MenuItem Then
 							Dim ctrl As Control = TryCast(child, Control)
 
-							If ctrl IsNot Nothing AndAlso Not IsNullOrWhitespace(ctrl.Name) Then
+							If ctrl IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(ctrl.Name) Then
 								controls.Add(ctrl)
 							End If
 						Else
 							Dim menuitem As MenuItem = TryCast(child, MenuItem)
 
 							If menuitem IsNot Nothing Then
-								If Not IsNullOrWhitespace(menuitem.Name) Then controls.Add(menuitem)
+								If Not String.IsNullOrWhiteSpace(menuitem.Name) Then controls.Add(menuitem)
 								GetMenuItems(menuitem, controls)
 							End If
 						End If
 					ElseIf TypeOf (child) Is TextBlock Then
 						Dim tb As TextBlock = TryCast(child, TextBlock)
 
-						If tb IsNot Nothing AndAlso Not IsNullOrWhitespace(tb.Name) Then
+						If tb IsNot Nothing AndAlso Not String.IsNullOrWhiteSpace(tb.Name) Then
 							controls.Add(tb)
 						End If
 					End If
@@ -480,7 +480,7 @@ notFound:
 												End If
 											Loop While Not (reader.NodeType = XmlNodeType.EndElement AndAlso reader.Name.StartsWith("Translator", StringComparison.OrdinalIgnoreCase))
 
-											If Not IsNullOrWhitespace(translator.User) Then
+											If Not String.IsNullOrWhiteSpace(translator.User) Then
 												file.Details.Translators.Insert(New Random().Next(0, file.Details.Translators.Count + 1), translator)
 											End If
 										End If
@@ -761,9 +761,9 @@ notFound:
 											foundAttr = True
 
 											If Not skipSuccess Then sw.WriteLine(vbTab & "Attribute: " & attr.Key & " -> " & attr2.Key)
-											If Not skipSuccess Then sw.WriteLine(vbTab & vbTab & """" & attr.Value & """ -> """ & If(IsNullOrWhitespace(attr2.Value.Trim(trims)), "???", attr2.Value.Trim(trims)) & """")
+											If Not skipSuccess Then sw.WriteLine(vbTab & vbTab & """" & attr.Value & """ -> """ & If(String.IsNullOrWhiteSpace(attr2.Value.Trim(trims)), "???", attr2.Value.Trim(trims)) & """")
 
-											If IsNullOrWhitespace(attr2.Value) Then
+											If String.IsNullOrWhiteSpace(attr2.Value) Then
 												errors.Add("'" & parent2.Key.ControlName & "'s attribute '" & attr2.Key & "'s value is empty!")
 											End If
 
@@ -794,9 +794,9 @@ notFound:
 														foundAttr = True
 
 														If Not skipSuccess Then sw.WriteLine(vbTab & "Attribute: " & attr.Key & " -> " & attr2.Key)
-														If Not skipSuccess Then sw.WriteLine(vbTab & vbTab & """" & If(attr.Value.Trim(trims).Length > MaxLEN, attr.Value.Trim(trims).Substring(0, MaxLEN) & " ...", attr.Value.Trim(trims)) & """ -> """ & If(IsNullOrWhitespace(attr2.Value.Trim(trims)), "???", If(attr2.Value.Trim(trims).Length > MaxLEN, attr2.Value.Trim(trims).Substring(0, MaxLEN) & " ...", attr2.Value.Trim(trims))) & """")
+														If Not skipSuccess Then sw.WriteLine(vbTab & vbTab & """" & If(attr.Value.Trim(trims).Length > MaxLEN, attr.Value.Trim(trims).Substring(0, MaxLEN) & " ...", attr.Value.Trim(trims)) & """ -> """ & If(String.IsNullOrWhiteSpace(attr2.Value.Trim(trims)), "???", If(attr2.Value.Trim(trims).Length > MaxLEN, attr2.Value.Trim(trims).Substring(0, MaxLEN) & " ...", attr2.Value.Trim(trims))) & """")
 
-														If IsNullOrWhitespace(attr2.Value) Then
+														If String.IsNullOrWhiteSpace(attr2.Value) Then
 															errors.Add("'" & parent2.Key.ControlName & "'s control '" & tc2.ControlName & "'s attribute '" & attr2.Key & "'s value is empty!")
 														End If
 
@@ -817,9 +817,9 @@ notFound:
 														foundTcValue = True
 
 														If Not skipSuccess Then sw.WriteLine(vbTab & vbTab & kvp.Key & " -> " & kvp2.Key)
-														If Not skipSuccess Then sw.WriteLine(vbTab & vbTab & vbTab & """" & If(kvp.Value.Trim(trims).Length > MaxLEN, kvp.Value.Trim(trims).Substring(0, MaxLEN) & " ...", kvp.Value.Trim(trims)) & """ -> """ & If(IsNullOrWhitespace(kvp2.Value.Trim(trims)), "???", If(kvp2.Value.Trim(trims).Length > MaxLEN, kvp2.Value.Trim(trims).Substring(0, MaxLEN) & " ...", kvp2.Value.Trim(trims))) & """")
+														If Not skipSuccess Then sw.WriteLine(vbTab & vbTab & vbTab & """" & If(kvp.Value.Trim(trims).Length > MaxLEN, kvp.Value.Trim(trims).Substring(0, MaxLEN) & " ...", kvp.Value.Trim(trims)) & """ -> """ & If(String.IsNullOrWhiteSpace(kvp2.Value.Trim(trims)), "???", If(kvp2.Value.Trim(trims).Length > MaxLEN, kvp2.Value.Trim(trims).Substring(0, MaxLEN) & " ...", kvp2.Value.Trim(trims))) & """")
 
-														If IsNullOrWhitespace(kvp2.Value) Then
+														If String.IsNullOrWhiteSpace(kvp2.Value) Then
 															errors.Add("'" & parent2.Key.ControlName & "'s control '" & tc2.ControlName & "' child elements '" & kvp2.Key & "'s value is empty!")
 														End If
 

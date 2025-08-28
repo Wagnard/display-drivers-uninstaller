@@ -51,6 +51,14 @@
                                 （自動安裝驅動程式）  
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				清除著色器快取 (僅此)
+			</Text>
+			<Tooltip>
+				僅刪除著色器 / 運算快取檔案。於安全模式下執行更有效。
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>偵測到的系統版本：</Text>
 		</lblWinVersion>
@@ -156,6 +164,7 @@
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>INTEL</Options4>
+			<Options5>所有 GPU</Options5>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---選擇裝置---</Options1>
@@ -485,7 +494,9 @@
 
 				十分感謝 Jackalito 捐助 AMD 7850。
 
-				感謝 Helge Klein (http://helgeklein.com/setacl/) for the permission to use his Program with DDU "SetAcl"
+				Special thanks to Guru3D https://www.guru3d.com/ for helping provide early exposure.
+
+				感謝 Helge Klein (https://helgeklein.com/setacl/) for the permission to use his Program with DDU "SetAcl"
 
 				非常感謝花時間進行測試的各位：Gamer1291 (Optimus)、Octopuss (AMD Enduro)、nedooo` (花費時間偵錯)
 				Extraordinary (測試臭蟲修復)

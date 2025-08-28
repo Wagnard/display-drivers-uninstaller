@@ -51,6 +51,14 @@
 				(自动执行下载并安装驱动程序)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				清理着色器缓存 (仅此)
+			</Text>
+			<Tooltip>
+				仅删除着色器 / 计算缓存文件。安全模式下执行效果更佳。
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>当前操作系统: </Text>
 		</lblWinVersion>
@@ -147,6 +155,7 @@
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>Intel</Options4>
+			<Options5>所有 GPU</Options5>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>--- 设备供应商 ---</Options1>
@@ -448,6 +457,8 @@
 				新版本中文资源维护：雷锋、chenyiping1995
 
 				非常感谢 Jackalito 捐赠的一块 AMD 7850 显示卡。
+				
+				Special thanks to Guru3D https://www.guru3d.com/ for helping provide early exposure.
 
 				感谢 Helge Klein (https://helgeklein.com/setacl/) 允许 DDU 软件使用他的程序 "SetACL"。
 

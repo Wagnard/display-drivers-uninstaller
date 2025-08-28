@@ -51,6 +51,14 @@
 				(automatisch drivers installeren)
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Shader-cache opschonen (Alleen)
+			</Text>
+			<Tooltip>
+				Verwijdert alleen shader- / compute-cachebestanden. Effectiever in Veilige modus.
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Gedetecteerde Windows versie:</Text>
 		</lblWinVersion>
@@ -156,6 +164,7 @@
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>INTEL</Options4>
+			<Options5>Alle GPU's</Options5>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---Selecteer apparaat---</Options1>
@@ -457,7 +466,9 @@
 
 				Een grote dank aan Jackalito voor de donatie van een AMD 7850.
 
-				Dank aan Helge Klein (http://helgeklein.com/setacl/) : Voor de permissie om zijn Programma te mogen gebruiken in DDU "SetAcl"
+				Special thanks to Guru3D https://www.guru3d.com/ for helping provide early exposure.
+
+				Dank aan Helge Klein (https://helgeklein.com/setacl/) : Voor de permissie om zijn Programma te mogen gebruiken in DDU "SetAcl"
 
 				Bedankt aan iedereen die te tijd heeft genomen om te testen : Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (Hij nam de tijd om met mij te debuggen)
 				Extraordinary (Het testen van een bug fix)

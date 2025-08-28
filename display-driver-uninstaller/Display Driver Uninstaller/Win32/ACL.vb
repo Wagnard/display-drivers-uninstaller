@@ -799,7 +799,7 @@ Namespace Display_Driver_Uninstaller.Win32
 						End If
 					End Try
 
-					If logEvents AndAlso Not IsNullOrWhitespace(previousOwnerSID) AndAlso previousOwnerSID = newOwnerSID Then
+					If logEvents AndAlso Not String.IsNullOrWhiteSpace(previousOwnerSID) AndAlso previousOwnerSID = newOwnerSID Then
 						logEntry.Add("> Owner is already set to System Account!")
 						Return True
 					End If

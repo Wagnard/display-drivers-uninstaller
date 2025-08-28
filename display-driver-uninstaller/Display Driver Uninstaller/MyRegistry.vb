@@ -5,7 +5,7 @@ Namespace Display_Driver_Uninstaller
 	Public Class MyRegistry
 
 		Public Shared Function OpenSubKey(ByVal RootKey As RegistryKey, ByVal Key As String, Optional ByVal Writable As Boolean = False) As RegistryKey
-			If RootKey Is Nothing OrElse IsNullOrWhitespace(Key) Then
+			If RootKey Is Nothing OrElse String.IsNullOrWhiteSpace(Key) Then
 				Return Nothing
 			End If
 

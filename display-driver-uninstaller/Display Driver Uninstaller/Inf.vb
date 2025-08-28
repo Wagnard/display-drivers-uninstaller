@@ -39,7 +39,7 @@ Namespace Display_Driver_Uninstaller
 		End Property
 		Public ReadOnly Property FileExists As Boolean
 			Get
-				Return Not IsNullOrWhitespace(_fileName) AndAlso File.Exists(_fileName)
+				Return Not String.IsNullOrWhiteSpace(_fileName) AndAlso File.Exists(_fileName)
 			End Get
 		End Property
 		Public ReadOnly Property IsValid As Boolean
@@ -59,7 +59,7 @@ Namespace Display_Driver_Uninstaller
 		Friend Sub New(ByVal fileName As String)
 			_fileName = fileName
 
-			If IsNullOrWhitespace(_fileName) OrElse Not File.Exists(_fileName) Then
+			If String.IsNullOrWhiteSpace(_fileName) OrElse Not File.Exists(_fileName) Then
 				_isValid = False
 				Return
 			End If
@@ -75,7 +75,7 @@ Namespace Display_Driver_Uninstaller
 						_provider = If(lineProvider IsNot Nothing, lineProvider.GetString(1), String.Empty)
 						_catalog = If(lineCatalogFile IsNot Nothing, lineCatalogFile.GetString(1), String.Empty)
 						_sourcedisksfiles = infFile.SetupFindLines("SourceDisksFiles", Nothing)
-						If Not IsNullOrWhitespace(_provider) Or Not IsNullOrWhitespace(_class) Then
+						If Not String.IsNullOrWhiteSpace(_provider) Or Not String.IsNullOrWhiteSpace(_class) Then
 							_isValid = True
 						End If
 					Else

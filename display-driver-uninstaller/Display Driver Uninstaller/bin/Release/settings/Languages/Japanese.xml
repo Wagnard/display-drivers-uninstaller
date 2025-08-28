@@ -51,6 +51,14 @@
 				(ドライバーを自動インストール）
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				シェーダーキャッシュをクリーン (のみ)
+			</Text>
+			<Tooltip>
+				シェーダー / コンピュートキャッシュファイルのみを削除します。セーフモードで実行するとより効果的です。
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>検出された OS:</Text>
 		</lblWinVersion>
@@ -159,6 +167,7 @@
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>Intel®</Options4>
+			<Options5>すべてのGPU</Options5>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---デバイスを選択---</Options1>
@@ -492,6 +501,8 @@
 				ロゴ: juanchacin
 
 				AMD 7850 を寄付してくださった Jackalito に心から感謝します。
+				
+				Special thanks to Guru3D https://www.guru3d.com/ for helping provide early exposure.
 
 				Helge Klein (http://helgeklein.com/setacl/) が DDU で「SetAcl」のプログラムを使用する許可をくださりました、感謝します。
 

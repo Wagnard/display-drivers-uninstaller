@@ -37,7 +37,6 @@
 		End Sub
 		Private Sub FrmLaunch_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
 			Languages.TranslateForm(Me)
-			Debug.WriteLine(Application.Settings.PreventWinUpdate)
 		End Sub
 
 		Private Sub CbBootOption_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles cbBootOption.SelectionChanged
