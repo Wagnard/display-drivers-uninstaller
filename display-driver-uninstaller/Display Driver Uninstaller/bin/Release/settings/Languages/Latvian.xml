@@ -36,6 +36,10 @@
 				(Jaunas grafikas kartes uzstādīšanai)
 			</Tooltip>
 		</btnCleanShutdown>
+			<btnCleanCaches>
+				<Text> Iztīrīt Shader Kēšatmiņu (Tikai) </Text>
+				<Tooltip> Tikai iztīra shader / aprēķinātos kēšatmiņas failus. Vairāk efektīvs, ja lieto drošājā režīmā. </Tooltip>
+			</btnCleanCaches>
 		<btnCleanGfeDownloads>
 			<Text>
 				Noņemt "GeForce Experience" displēja draivera instalācijas kēšatmiņu un failus.
@@ -497,7 +501,7 @@
 		<Translator>
 			<User>Raivo</User>
 			<Details>raivopleika12@gmail.com</Details>
-			<LastUpdate>07/07/2023</LastUpdate>
+			<LastUpdate>04/09/2025</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
