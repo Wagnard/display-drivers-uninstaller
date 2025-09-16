@@ -1675,6 +1675,19 @@ Namespace Display_Driver_Uninstaller
 
 		End Sub
 
+		Private Function GetServiceBaseNameOnly(imagePath As String) As String
+			If String.IsNullOrWhiteSpace(imagePath) Then Return Nothing
+
+			' Expand environment vars like %SystemRoot%
+			Dim expanded As String = Environment.ExpandEnvironmentVariables(imagePath)
+
+			' If there are command line args, take only the first token (the exe/sys path)
+			Dim exePart As String = expanded.Split(New Char() {" "c}, 2)(0).Trim(""""c)
+
+			' Return just the file name without extension
+			Return System.IO.Path.GetFileNameWithoutExtension(exePart)
+		End Function
+
 		Public Sub Cleanserviceprocess(ByVal services As String(), config As ThreadSettings)
 			Dim ServiceInstaller As New ServiceInstaller
 			Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
@@ -1689,6 +1702,20 @@ Namespace Display_Driver_Uninstaller
 						If String.IsNullOrWhiteSpace(service) Then Continue For
 						If (config.RemoveAudioBus = False OrElse FrmMain.DoNotRemoveAmdHdAudioBusFiles) AndAlso StrContainsAny(service, True, "amdkmafd") Then Continue For
 						If (config.RemoveAMDKMPFD = False Or config.NotPresentAMDKMPFD = False) AndAlso StrContainsAny(service, True, "amdkmpfd") Then Continue For
+
+						For Each regservice As String In regkey.GetSubKeyNames()
+							If String.IsNullOrWhiteSpace(regservice) Then Continue For
+
+							Using subkey As RegistryKey = regkey.OpenSubKey(regservice)
+								Dim wantedvalue = TryCast(subkey.GetValue("ImagePath", String.Empty), String)
+								If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
+								If (GetServiceBaseNameOnly(wantedvalue).Equals(service, StringComparison.OrdinalIgnoreCase)) Then
+									service = regservice
+									Exit For
+								End If
+							End Using
+						Next
+
 						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
 							If regkey2 IsNot Nothing Then
 
@@ -1769,7 +1796,7 @@ Namespace Display_Driver_Uninstaller
 
 									For Each service As String In services
 										If String.IsNullOrWhiteSpace(service) Then Continue For
-										If serviceValue.Equals(service, StringComparison.OrdinalIgnoreCase) Then
+										If serviceValue.StartsWith(service, StringComparison.OrdinalIgnoreCase) OrElse serviceValue.Equals("BasicDisplay", StringComparison.OrdinalIgnoreCase) Then
 											Try
 												Deletesubregkey(regkey, child)
 												Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child, False)

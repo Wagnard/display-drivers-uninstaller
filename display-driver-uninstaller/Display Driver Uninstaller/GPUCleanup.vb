@@ -1052,14 +1052,14 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 			If config.SelectedGPU = GPUVendor.AMD Then
-				Cleanamdserviceprocess(config)
+				CleanAmdServiceProcess(config)
 				CleanAmd(config)
 				CleanAmdFolders(config)
 			End If
 
 			If config.SelectedGPU = GPUVendor.Nvidia Then
 				Checkpcieroot(config)
-				Cleannvidiaserviceprocess(config)
+				CleanNvidiaServiceProcess(config)
 				CleanNvidia(config)
 				CleanNvidiaFolders(config)
 				cleanupEngine.RemoveRegDeviceSoftware("NVIDIA CoInstaller Display.Driver")
@@ -1128,7 +1128,7 @@ Namespace Display_Driver_Uninstaller
 			Next
 		End Sub
 
-		Private Sub Cleanamdserviceprocess(ByVal config As ThreadSettings)
+		Private Sub CleanAmdServiceProcess(ByVal config As ThreadSettings)
 			Dim cleanupEngine As New CleanupEngine
 			Dim services As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\AMD\services.cfg")
 			Dim objAuto As AutoResetEvent = New AutoResetEvent(False)
@@ -3742,7 +3742,7 @@ child.ToLower.Contains("\dem.") Then
 			UpdateTextMethod(UpdateTextTranslated(28))
 		End Sub
 
-		Private Sub Cleannvidiaserviceprocess(ByVal config As ThreadSettings)
+		Private Sub CleanNvidiaServiceProcess(ByVal config As ThreadSettings)
 			Dim CleanupEngine As New CleanupEngine
 			Dim services As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\services.cfg")
 			Dim gfeservices As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\NVIDIA\gfeservice.cfg")
