@@ -1,12 +1,13 @@
 ﻿Imports System.IO
-Imports Microsoft.Win32
-Imports Display_Driver_Uninstaller.Win32
+Imports System.Linq
 Imports System.Security.AccessControl
+Imports System.Security.Principal
 Imports System.Threading
+Imports System.Threading.Tasks
+Imports Display_Driver_Uninstaller.Win32
+Imports Microsoft.Win32
 Imports Windows.Foundation
 Imports Windows.Management.Deployment
-Imports System.Security.Principal
-Imports System.Threading.Tasks
 
 Namespace Display_Driver_Uninstaller
 
@@ -1698,32 +1699,32 @@ Namespace Display_Driver_Uninstaller
 
 			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services", True)
 				If regkey IsNot Nothing Then
-					For Each service As String In services
-						If String.IsNullOrWhiteSpace(service) Then Continue For
-						If (config.RemoveAudioBus = False OrElse FrmMain.DoNotRemoveAmdHdAudioBusFiles) AndAlso StrContainsAny(service, True, "amdkmafd") Then Continue For
-						If (config.RemoveAMDKMPFD = False Or config.NotPresentAMDKMPFD = False) AndAlso StrContainsAny(service, True, "amdkmpfd") Then Continue For
+					For i As Integer = 0 To services.Count - 1
+						If String.IsNullOrWhiteSpace(services(i)) Then Continue For
+						If (config.RemoveAudioBus = False OrElse FrmMain.DoNotRemoveAmdHdAudioBusFiles) AndAlso StrContainsAny(services(i), True, "amdkmafd") Then Continue For
+						If (config.RemoveAMDKMPFD = False Or config.NotPresentAMDKMPFD = False) AndAlso StrContainsAny(services(i), True, "amdkmpfd") Then Continue For
 
 						For Each regservice As String In regkey.GetSubKeyNames()
 							If String.IsNullOrWhiteSpace(regservice) Then Continue For
 
-							Using subkey As RegistryKey = regkey.OpenSubKey(regservice)
+							Using subkey As RegistryKey = MyRegistry.OpenSubKey(regkey, regservice)
 								Dim wantedvalue = TryCast(subkey.GetValue("ImagePath", String.Empty), String)
 								If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
-								If (GetServiceBaseNameOnly(wantedvalue).Equals(service, StringComparison.OrdinalIgnoreCase)) Then
-									service = regservice
+								If (GetServiceBaseNameOnly(wantedvalue).Equals(services(i), StringComparison.OrdinalIgnoreCase)) Then
+									services(i) = regservice
 									Exit For
 								End If
 							End Using
 						Next
 
-						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, service, False)
+						Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, services(i), False)
 							If regkey2 IsNot Nothing Then
 
 								If WindowsIdentity.GetCurrent().IsSystem Then
 									ImpersonateLoggedOnUser.ReleaseToken()
 								End If
 
-								If ServiceInstaller.GetServiceStatus(service) = Nothing AndAlso ServiceInstaller.GetServiceStatus(service, False) = Nothing Then
+								If ServiceInstaller.GetServiceStatus(services(i)) = Nothing AndAlso ServiceInstaller.GetServiceStatus(services(i), False) = Nothing Then
 									'Service is not present, but there is residual information on the registry service section for that service.
 
 									If Not WindowsIdentity.GetCurrent().IsSystem Then
@@ -1731,13 +1732,13 @@ Namespace Display_Driver_Uninstaller
 									End If
 
 									Try
-										Deletesubregkey(regkey, service, False)
+										Deletesubregkey(regkey, services(i), False)
 									Catch ex As Exception
 										Application.Log.AddException(ex)
 									End Try
 								Else
 									Try
-										ServiceInstaller.Uninstall(service)
+										ServiceInstaller.Uninstall(services(i))
 									Catch ex As Exception
 										Application.Log.AddException(ex)
 										Continue For
@@ -1746,7 +1747,7 @@ Namespace Display_Driver_Uninstaller
 									Dim waits As Int32 = 0
 
 									While waits < 30                         'MAX 3 sec APROX to wait Windows remove all files. ( 30 * 100ms)
-										If ServiceInstaller.GetServiceStatus(service) <> Nothing OrElse ServiceInstaller.GetServiceStatus(service, False) <> Nothing Then
+										If ServiceInstaller.GetServiceStatus(services(i)) <> Nothing OrElse ServiceInstaller.GetServiceStatus(services(i), False) <> Nothing Then
 											waits += 1
 											objAuto.WaitOne(100)
 											'System.Threading.Thread.Sleep(100)
@@ -1762,7 +1763,7 @@ Namespace Display_Driver_Uninstaller
 									Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\Setup\FirstBoot\Services", True)
 										If regkey4 IsNot Nothing Then
 											Try
-												Deletesubregkey(regkey4, service, False)
+												Deletesubregkey(regkey4, services(i), False)
 											Catch ex As Exception
 												Application.Log.AddException(ex)
 											End Try
@@ -1796,7 +1797,7 @@ Namespace Display_Driver_Uninstaller
 
 									For Each service As String In services
 										If String.IsNullOrWhiteSpace(service) Then Continue For
-										If serviceValue.StartsWith(service, StringComparison.OrdinalIgnoreCase) OrElse serviceValue.Equals("BasicDisplay", StringComparison.OrdinalIgnoreCase) Then
+										If serviceValue.Equals(service, StringComparison.OrdinalIgnoreCase) OrElse serviceValue.Equals("BasicDisplay", StringComparison.OrdinalIgnoreCase) Then
 											Try
 												Deletesubregkey(regkey, child)
 												Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child, False)
