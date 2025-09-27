@@ -1708,11 +1708,13 @@ Namespace Display_Driver_Uninstaller
 							If String.IsNullOrWhiteSpace(regservice) Then Continue For
 
 							Using subkey As RegistryKey = MyRegistry.OpenSubKey(regkey, regservice)
-								Dim wantedvalue = TryCast(subkey.GetValue("ImagePath", String.Empty), String)
-								If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
-								If (GetServiceBaseNameOnly(wantedvalue).Equals(services(i), StringComparison.OrdinalIgnoreCase)) Then
-									services(i) = regservice
-									Exit For
+								If subkey IsNot Nothing Then
+									Dim wantedvalue = TryCast(subkey.GetValue("ImagePath", String.Empty), String)
+									If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
+									If (GetServiceBaseNameOnly(wantedvalue).Equals(services(i), StringComparison.OrdinalIgnoreCase)) Then
+										services(i) = regservice
+										Exit For
+									End If
 								End If
 							End Using
 						Next
