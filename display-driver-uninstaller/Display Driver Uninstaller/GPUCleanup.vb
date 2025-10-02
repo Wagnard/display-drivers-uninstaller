@@ -6574,6 +6574,7 @@ StrContainsAny(DesktopIconRemover.GetShortcutTargetPath(child), True, "nvidia br
 					If String.IsNullOrWhiteSpace(child) = False Then
 						If child.ToLower.Contains("control panel client") Or
 child.ToLower.Contains("display") Or
+child.ToLower.Contains("vgpu licensing") Or
 child.ToLower.Contains("coprocmanager") Or
 child.ToLower.Contains("drs") Or
 child.ToLower.Contains("nvsmi") Or
