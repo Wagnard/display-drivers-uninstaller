@@ -483,7 +483,7 @@ Section Uninstall
   ${If} $RemoveSettings == ${BST_CHECKED}
       RMDir /r  "$INSTDIR\Settings"         ; Adjust the filename and path as needed
     ; Or if it's in the user's profile or AppData folder:
-    ; Delete "$APPDATA\Display Driver Uninstaller\settings.cfg"
+  RMDir /r "$APPDATA\DisplayDriverUninstaller"
   ${EndIf}
 
   RMDir "$INSTDIR"
