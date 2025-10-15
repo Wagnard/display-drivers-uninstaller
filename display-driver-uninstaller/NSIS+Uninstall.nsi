@@ -218,7 +218,7 @@ VIAddVersionKey /LANG=${LANG_ENGLISH} "InternalName"       "${PRODUCT_NAME}"
 Section "MainSection" SEC01
   SetShellVarContext all
   SetOutPath "$INSTDIR"
-  SetOverwrite try
+  SetOverwrite on
   File "${SOURCE_PATH}\Display Driver Uninstaller.exe"
   CreateDirectory "$SMPROGRAMS\Display Driver Uninstaller"
   CreateShortCut "$SMPROGRAMS\Display Driver Uninstaller\Display Driver Uninstaller.lnk" "$INSTDIR\Display Driver Uninstaller.exe"
