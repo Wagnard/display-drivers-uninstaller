@@ -107,13 +107,13 @@ Namespace Display_Driver_Uninstaller
 			Return "No 4.5 or later version detected"
 		End Function
 
-		Public Function CanDeprovisionPackageForAllUsersAsync() As Boolean
-			Dim packageManager As Windows.Management.Deployment.PackageManager = New Windows.Management.Deployment.PackageManager
-			Dim type As Type = packageManager.GetType
-			Return type.GetMethod("DeprovisionPackageForAllUsersAsync") IsNot Nothing
-		End Function
+        Public Function CanDeprovisionPackageForAllUsers() As Boolean
+            Dim packageManager As Windows.Management.Deployment.PackageManager = New Windows.Management.Deployment.PackageManager
+            Dim type As Type = packageManager.GetType
+            Return type.GetMethod("DeprovisionPackageForAllUsersAsync") IsNot Nothing
+        End Function
 
-		Public Function PreferredUILanguages() As String
+        Public Function PreferredUILanguages() As String
 			Try
 				Using regkey As RegistryKey = Registry.CurrentUser.OpenSubKey("Control Panel\Desktop", False)
 					If regkey IsNot Nothing Then

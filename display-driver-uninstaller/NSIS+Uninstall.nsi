@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME            "Display Driver Uninstaller"
-!define PRODUCT_VERSION         "18.1.3.5"
+!define PRODUCT_VERSION         "18.1.3.6"
 
 !define PRODUCT_PUBLISHER       "Wagnardsoft"
 !define PRODUCT_WEB_SITE        "https://www.wagnardsoft.com"

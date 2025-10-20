@@ -161,8 +161,8 @@ Namespace Display_Driver_Uninstaller
 
 					If config.RemoveINTELIGS Then
 						If _win10 Then
-							cleanupEngine.RemoveAppx("IntelArcSoftware")
-						End If
+                            cleanupEngine.RemoveAppxAsync("IntelArcSoftware").Wait()
+                        End If
 
 						Dim igsServices As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\servicesigs.cfg")
 						For Each service As String In igsServices
@@ -1210,11 +1210,11 @@ Namespace Display_Driver_Uninstaller
 				'Removal of the (DCH) AMD control panel comming from the Window Store. (In progress...)
 				If _win10 Then
 					If config.RemoveAMDCP Then
-						CleanupEngine.RemoveAppx("AMDRadeonSoftware")
-						CleanupEngine.RemoveAppx("AdvancedMicroDevicesInc-RSXCM")
-					End If
-					CleanupEngine.RemoveAppx("AdvancedMicroDevicesInc-2.AMDLink")
-				End If
+                        CleanupEngine.RemoveAppxAsync("AMDRadeonSoftware").Wait()
+                        CleanupEngine.RemoveAppxAsync("AdvancedMicroDevicesInc-RSXCM").Wait()
+                    End If
+                    CleanupEngine.RemoveAppxAsync("AdvancedMicroDevicesInc-2.AMDLink").Wait()
+                End If
 
 				If Not WindowsIdentity.GetCurrent().IsSystem Then
 					ImpersonateLoggedOnUser.Taketoken()
@@ -3892,8 +3892,8 @@ child2.ToLower.Contains("hdaudio.driver") Then
 
 				'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
 				If _win10 AndAlso config.RemoveNVCP Then
-					CleanupEngine.RemoveAppx("NVIDIAControlPanel")
-				End If
+                    CleanupEngine.RemoveAppxAsync("NVIDIAControlPanel").Wait()
+                End If
 
 				'for GFE removal only
 				If removegfe Then
@@ -7132,10 +7132,10 @@ child.ToLower.Contains("nvidia.gfe") Then
 				'Removal of the (DCH) from the Window Store. (In progress...)
 				If _win10 Then
 					If config.RemoveINTELCP Then
-						CleanupEngine.RemoveAppx("IntelGraphicsControlPanel")
-						CleanupEngine.RemoveAppx("IntelGraphicsExperience")
-						CleanupEngine.RemoveAppx("IntelGraphicsCommandCenter")
-					End If
+                        CleanupEngine.RemoveAppxAsync("IntelGraphicsControlPanel").Wait()
+                        CleanupEngine.RemoveAppxAsync("IntelGraphicsExperience").Wait()
+                        CleanupEngine.RemoveAppxAsync("IntelGraphicsCommandCenter").Wait()
+                    End If
 				End If
 
 				If Not WindowsIdentity.GetCurrent().IsSystem Then

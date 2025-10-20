@@ -139,8 +139,8 @@ Namespace Display_Driver_Uninstaller
 
 			'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
 			If win10 Then
-				_cleanupEngine.RemoveAppx("RealtekAudioControl")
-			End If
+                _cleanupEngine.RemoveAppxAsync("RealtekAudioControl").Wait()
+            End If
 
 			If Not WindowsIdentity.GetCurrent().IsSystem Then
 				ImpersonateLoggedOnUser.Taketoken()
