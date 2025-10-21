@@ -200,48 +200,31 @@ Namespace Display_Driver_Uninstaller
                         If Not StrContainsAny(package.Id.FullName, True, AppxToRemove) Then Continue For
                         Dim packageIdFamilyName = package.Id.FamilyName
 
-                        Try
-                            If win10_1809 AndAlso CanDeprovisionPackageForAllUsers() Then
-                                Dim deprovisionTask = packageManager.DeprovisionPackageForAllUsersAsync(package.Id.FamilyName).AsTask()
+                        Using cts As New CancellationTokenSource(TimeSpan.FromSeconds(10))
+                            Try
+                                If win10_1809 AndAlso CanDeprovisionPackageForAllUsers() Then
 
-                                ' Create a timeout task (e.g. 10 seconds)
-                                Dim timeoutTask = Task.Delay(TimeSpan.FromSeconds(10))
-
-                                ' Wait for whichever finishes first
-                                Dim completedTask = Await Task.WhenAny(deprovisionTask, timeoutTask)
-
-                                If completedTask Is timeoutTask Then
-                                    Application.Log.AddMessage($"{package.Id.FullName} deprovision timed out.")
-                                Else
-                                    ' Completed successfully (or faulted)
-                                    Await deprovisionTask
+                                    Await packageManager.DeprovisionPackageForAllUsersAsync(package.Id.FamilyName).AsTask(cts.Token)
                                     Application.Log.AddMessage($"{package.Id.FullName} package deprovisioned.")
                                 End If
-                            End If
-                        Catch ex As Exception
-                            Application.Log.AddMessage($"{package.Id.FullName} deprovisioned failed: {ex.Message}")
-                        End Try
+                            Catch ex As OperationCanceledException
+                                Application.Log.AddMessage($"{package.Id.FullName} deprovision timed out.")
+                            Catch ex As Exception
+                                Application.Log.AddMessage($"{package.Id.FullName} deprovisioned failed: {ex.Message}")
+                            End Try
+                        End Using
 
-                        Try
-                            Dim removePackageTask = packageManager.RemovePackageAsync(package.Id.FullName, RemovalOptions.RemoveForAllUsers).AsTask()
-
-                            ' Create a timeout task (e.g. 10 seconds)
-                            Dim timeoutTask = Task.Delay(TimeSpan.FromSeconds(10))
-
-                            ' Wait for whichever finishes first
-                            Dim completedTask = Await Task.WhenAny(removePackageTask, timeoutTask)
-
-                            If completedTask Is timeoutTask Then
-                                Application.Log.AddMessage($"{package.Id.FullName} package removal timed out.")
-                            Else
-                                Await removePackageTask
+                        Using cts As New CancellationTokenSource(TimeSpan.FromSeconds(10))
+                            Try
+                                Await packageManager.RemovePackageAsync(package.Id.FullName, RemovalOptions.RemoveForAllUsers).AsTask(cts.Token)
                                 Application.Log.AddMessage($"{package.Id.FullName} package removed.")
-                            End If
-
-                            WasRemoved = True
-                        Catch ex As Exception
-                            Application.Log.AddMessage($"{package.Id.FullName} removal failed: {ex.Message}")
-                        End Try
+                                WasRemoved = True
+                            Catch ex As OperationCanceledException
+                                Application.Log.AddMessage($"{package.Id.FullName} package removal timed out.")
+                            Catch ex As Exception
+                                Application.Log.AddMessage($"{package.Id.FullName} package removal failed: {ex.Message}")
+                            End Try
+                        End Using
 
                         If WasRemoved Then
                             If Not WindowsIdentity.GetCurrent().IsSystem Then
@@ -603,25 +586,17 @@ Namespace Display_Driver_Uninstaller
                         If Not StrContainsAny(package.Id.FullName, True, AppxToRemove) Then Continue For
                         Dim packageIdFamilyName = package.Id.FamilyName
 
-                        Try
-                            Dim removePackageTask = packageManager.RemovePackageAsync(package.Id.FullName, If(win10_1809, RemovalOptions.RemoveForAllUsers, Nothing)).AsTask()
-                            ' Create a timeout task (e.g. 10 seconds)
-                            Dim timeoutTask = Task.Delay(TimeSpan.FromSeconds(10))
-
-                            ' Wait for whichever finishes first
-                            Dim completedTask = Await Task.WhenAny(removePackageTask, timeoutTask)
-
-                            If completedTask Is timeoutTask Then
-                                Application.Log.AddMessage($"{package.Id.FullName} package removal timed out.")
-                            Else
-                                Await removePackageTask
+                        Using cts As New CancellationTokenSource(TimeSpan.FromSeconds(10))
+                            Try
+                                Await packageManager.RemovePackageAsync(package.Id.FullName, If(win10_1809, RemovalOptions.RemoveForAllUsers, Nothing)).AsTask(cts.Token)
                                 Application.Log.AddMessage($"{package.Id.FullName} package removed.")
-                            End If
-
-                            WasRemoved = True
-                        Catch ex As Exception
-                            Application.Log.AddMessage($"{package.Id.FullName} removal failed: {ex.Message}")
-                        End Try
+                                WasRemoved = True
+                            Catch ex As OperationCanceledException
+                                Application.Log.AddMessage($"{package.Id.FullName} package removal timed out.")
+                            Catch ex As Exception
+                                Application.Log.AddMessage($"{package.Id.FullName} package removal failed: {ex.Message}")
+                            End Try
+                        End Using
 
                         If WasRemoved Then
 

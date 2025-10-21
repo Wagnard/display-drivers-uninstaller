@@ -5,6 +5,7 @@ Imports System.Security.Principal
 Imports System.Text
 Imports System.Threading
 Imports System.Threading.Tasks
+Imports System.Windows.Interop
 Imports System.Windows.Markup
 Imports Display_Driver_Uninstaller.Win32
 Imports Microsoft.Win32
@@ -337,13 +338,16 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Private Sub Application_Startup(sender As Object, e As System.Windows.StartupEventArgs) Handles Me.Startup
-			'If WindowsIdentity.GetCurrent().IsSystem Then
-			'	MessageBox.Show("Attach debugger!")		' for Debugging System process
-			'	IsDebug = True
-			'End If
+            'If WindowsIdentity.GetCurrent().IsSystem Then
+            '	MessageBox.Show("Attach debugger!")		' for Debugging System process
+            '	IsDebug = True
+            'End If
 
-			' Vérify if we started as a service
-			If Environment.CommandLine.Contains("/service") Then
+            ' Force software rendering
+            RenderOptions.ProcessRenderMode = RenderMode.SoftwareOnly
+
+            ' Vérify if we started as a service
+            If Environment.CommandLine.Contains("/service") Then
 				Try
 					Dim ServicesToRun() As System.ServiceProcess.ServiceBase = {New DDUSafeBootService()}
 					System.ServiceProcess.ServiceBase.Run(ServicesToRun)
