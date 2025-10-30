@@ -6,7 +6,6 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports Display_Driver_Uninstaller.Win32
 Imports Microsoft.Win32
-Imports Windows.Foundation
 Imports Windows.Management.Deployment
 
 Namespace Display_Driver_Uninstaller
