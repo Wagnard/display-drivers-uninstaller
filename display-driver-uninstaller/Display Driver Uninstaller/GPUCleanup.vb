@@ -696,14 +696,14 @@ Namespace Display_Driver_Uninstaller
 
 					Try
 						UpdateTextMethod("Start - Check for AMD-OpenCL / AMD-Windows")
-						Application.Log.AddMessage("Executing SetupAPI: check AMD-OpenCL / AMD-Windows SoftwareComponent started")
-						Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
+                        Application.Log.AddMessage("Executing SetupAPI: check AMD-OpenCL / OGL / AMD-Windows SoftwareComponent / AMD-Vulkan User Mode Driver and others started")
+                        Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
 						If found IsNot Nothing AndAlso found.Count > 0 Then
 							For Each d As SetupAPI.Device In found
-								If d IsNot Nothing AndAlso StrContainsAny(d.Description, True, "AMD-Windows Support Components", "AMD-OpenCL User Mode Driver") Then
-									SetupAPI.UninstallDevice(d)
-								End If
-							Next
+                                If d IsNot Nothing AndAlso StrContainsAny(d.Description, True, "AMD-Windows Support Components", "AMD-OpenCL User Mode Driver", "AMD-Vulkan User Mode Driver", "AMD-OpenGL User Mode Driver", "AMD-Dynamic Audio Noise Supression") Then
+                                    SetupAPI.UninstallDevice(d)
+                                End If
+                            Next
 							found.Clear()
 						End If
 						UpdateTextMethod("End - Check for AMD-OpenCL system device.")

@@ -3065,6 +3065,13 @@ Namespace Display_Driver_Uninstaller
                                 End If
                             End If
 
+                            If config.SelectedType = CleanType.GPU AndAlso config.SelectedGPU = GPUVendor.AMD Then
+                                If StrContainsAny(oem.Class, True, "softwarecomponent", "system") AndAlso StrContainsAny(oem.Catalog, True, "amdvlk.cat", "amdogl.cat", "amdocl.cat", "amdwin-u", "amdfdans.cat") Then
+                                    SetupAPI.RemoveInf(oem, False)
+                                    Continue For
+                                End If
+                            End If
+
                             'When forcing the removal of an extension it is better to disable the devices that are associated with them before removing the inf.
 
                             If config.SelectedType = CleanType.GPU AndAlso config.SelectedGPU = GPUVendor.Intel Then
