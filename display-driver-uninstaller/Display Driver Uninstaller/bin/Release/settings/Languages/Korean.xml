@@ -114,6 +114,9 @@
 		<VisitDDUHomeMenuItem>
 			<Text>DDU 공식 웹사이트 방문</Text>
 		</VisitDDUHomeMenuItem>
+		<VisitDDUShopMenuItem>
+            <Text>DDU 공식 상품 매장을 방문하세요</Text>
+        </VisitDDUShopMenuItem>
 		<VisitDiscord>
 			<Text>Discord에 가입하기</Text>
 		</VisitDiscord>

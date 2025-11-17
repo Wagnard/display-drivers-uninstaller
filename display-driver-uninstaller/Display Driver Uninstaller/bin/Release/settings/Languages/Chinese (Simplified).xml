@@ -114,6 +114,9 @@
 		<VisitDDUHomeMenuItem>
 			<Text>DDU 官方网站</Text>
 		</VisitDDUHomeMenuItem>
+		<VisitDDUShopMenuItem>
+            <Text>访问DDU官方周边商店</Text>
+        </VisitDDUShopMenuItem>
 		<VisitSVNMenuItem>
 			<Text>DDU GitHub 仓库</Text>
 		</VisitSVNMenuItem>
