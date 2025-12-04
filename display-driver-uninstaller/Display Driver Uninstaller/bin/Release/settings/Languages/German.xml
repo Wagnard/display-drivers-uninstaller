@@ -117,6 +117,9 @@
 		<VisitDiscord>
 			<Text>Unserem Discord beitreten</Text>
 		</VisitDiscord>
+        <VisitDDUShopMenuItem>
+            <Text>Besuchen Sie den offiziellen DDU Merch Shop</Text>
+        </VisitDDUShopMenuItem>
 		<VisitSVNMenuItem>
 			<Text>SVN-Website besuchen</Text>
 		</VisitSVNMenuItem>
@@ -496,7 +499,7 @@
 
 				Coders: Wagnard, Devmltk, Shady7557
 
-				Tester: Dellon132
+				Tester: Dellon132 Mats/Onyx
 
 				Logos: juanchacin
 
@@ -540,6 +543,11 @@
 			<User>_rk_</User>
 			<LastUpdate>07/07/2025</LastUpdate>
 		</Translator2>
+		
+		<Translator3>
+			<User>Mats/Onyx</User>
+			<LastUpdate>03/12/2025</LastUpdate>
+		</Translator3>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>
