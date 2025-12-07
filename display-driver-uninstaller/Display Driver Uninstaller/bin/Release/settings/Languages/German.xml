@@ -121,7 +121,7 @@
             <Text>Besuchen Sie den offiziellen DDU Merch Shop</Text>
         </VisitDDUShopMenuItem>
 		<VisitSVNMenuItem>
-			<Text>SVN-Website besuchen</Text>
+			<Text>GitHub-Website besuchen</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
 			<Text>Guru3d NVIDIA-Thread besuchen</Text>
