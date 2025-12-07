@@ -114,6 +114,9 @@
 		<VisitDDUHomeMenuItem>
 			<Text>DDU 公式ウェブサイトを開く</Text>
 		</VisitDDUHomeMenuItem>
+        <VisitDDUShopMenuItem>
+            <Text>DDU 公式グッズのショップを開く</Text>
+        </VisitDDUShopMenuItem>
 		<VisitDiscord>
 			<Text>Discord に参加する</Text>
 		</VisitDiscord>
@@ -539,7 +542,7 @@
 		<Translator2>
 			<User>Re*Index.(ot_inc)</User>
 			<Details>https://reindex-ot.github.io/</Details>
-			<LastUpdate>06/11/2025</LastUpdate>
+			<LastUpdate>07/12/2025</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
 
