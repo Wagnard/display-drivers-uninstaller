@@ -114,6 +114,9 @@
 		<VisitDDUHomeMenuItem>
 			<Text>Visit Official DDU Website</Text>
 		</VisitDDUHomeMenuItem>
+        <VisitDDUShopMenuItem>
+            <Text>Visit Official DDU Merch Shop</Text>
+        </VisitDDUShopMenuItem>
 		<VisitDiscord>
 			<Text>Join Our Discord</Text>
 		</VisitDiscord>

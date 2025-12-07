@@ -64,26 +64,28 @@ Namespace Display_Driver_Uninstaller
 		Public VisitSVN As Boolean = False
 		Public VisitGuru3DNvidia As Boolean = False
 		Public VisitGuru3DAMD As Boolean = False
-		Public VisitDDUHome As Boolean = False
-		Public VisitGeforce As Boolean = False
+        Public VisitDDUHome As Boolean = False
+        Public VisitDDUShop As Boolean = False
+        Public VisitGeforce As Boolean = False
 		Public VisitOffer As Boolean = False
 
 		Public ReadOnly Property HasLinkArg As Boolean
 			Get
-				If VisitDonate OrElse
-			 VisitPatron OrElse
-			 VisitDiscord OrElse
-			 VisitSVN OrElse
-			 VisitGuru3DNvidia OrElse
-			 VisitGuru3DAMD OrElse
-			 VisitDDUHome OrElse
-			 VisitGeforce OrElse
-			 VisitOffer Then
+                If VisitDonate OrElse
+             VisitPatron OrElse
+             VisitDiscord OrElse
+             VisitSVN OrElse
+             VisitGuru3DNvidia OrElse
+             VisitGuru3DAMD OrElse
+             VisitDDUHome OrElse
+             VisitDDUShop OrElse
+             VisitGeforce OrElse
+             VisitOffer Then
 
-					Return True
-				End If
+                    Return True
+                End If
 
-				Return False
+                Return False
 			End Get
 		End Property
 
@@ -104,8 +106,9 @@ Namespace Display_Driver_Uninstaller
 						Case StrContainsAny(Argument, True, "-visitsvn") : VisitSVN = True
 						Case StrContainsAny(Argument, True, "-visitguru3dnvidia") : VisitGuru3DNvidia = True
 						Case StrContainsAny(Argument, True, "-visitguru3damd") : VisitGuru3DAMD = True
-						Case StrContainsAny(Argument, True, "-visitdduhome") : VisitDDUHome = True
-						Case StrContainsAny(Argument, True, "-visitgeforce") : VisitGeforce = True
+                        Case StrContainsAny(Argument, True, "-visitdduhome") : VisitDDUHome = True
+                        Case StrContainsAny(Argument, True, "-visitddushop") : VisitDDUShop = True
+                        Case StrContainsAny(Argument, True, "-visitgeforce") : VisitGeforce = True
 						Case StrContainsAny(Argument, True, "-visitoffer") : VisitOffer = True
 
 

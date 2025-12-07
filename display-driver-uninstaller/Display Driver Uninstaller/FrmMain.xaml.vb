@@ -280,21 +280,27 @@ Namespace Display_Driver_Uninstaller
 			End If
 		End Sub
 
-		Private Sub ImgDonate_Click(sender As Object, e As EventArgs) Handles imgDonate.Click
-			WinAPI.OpenVisitLink(" -visitdonate")
-		End Sub
-		Private Sub ImgPatron_Click(sender As Object, e As EventArgs) Handles imgPatron.Click
-			WinAPI.OpenVisitLink(" -visitpatron")
-		End Sub
-		Private Sub ImgDiscord_Click(sender As Object, e As EventArgs) Handles imgDiscord.Click
+        Private Sub ImgDonate_Click(sender As Object, e As EventArgs) Handles imgDonate.Click
+            WinAPI.OpenVisitLink(" -visitdonate")
+        End Sub
+
+        Private Sub ImgPatron_Click(sender As Object, e As EventArgs) Handles imgPatron.Click
+            WinAPI.OpenVisitLink(" -visitpatron")
+        End Sub
+
+        Private Sub ImgDiscord_Click(sender As Object, e As EventArgs) Handles imgDiscord.Click
 			WinAPI.OpenVisitLink(" -visitdiscord")
 		End Sub
 
-		Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomeMenuItem.Click
-			WinAPI.OpenVisitLink(" -visitdduhome")
-		End Sub
+        Private Sub VisitDDUShopPageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUShopMenuItem.Click
+            WinAPI.OpenVisitLink(" -visitddushop")
+        End Sub
 
-		Private Sub OptionsMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles OptionsMenuItem.Click
+        Private Sub VisitDDUHomepageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles VisitDDUHomeMenuItem.Click
+            WinAPI.OpenVisitLink(" -visitdduhome")
+        End Sub
+
+        Private Sub OptionsMenuItem_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles OptionsMenuItem.Click
 			Dim frmOptions As New FrmOptions
 
 			With frmOptions

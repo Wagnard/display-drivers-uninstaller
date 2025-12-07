@@ -19,8 +19,9 @@ Namespace Display_Driver_Uninstaller
 		Private Const URL_DONATE As String = "https://www.paypal.com/donate/?hosted_button_id=S8H2QAS7KLV7N"
 		Private Const URL_PATRON As String = "https://www.patreon.com/wagnardsoft"
 		Private Const URL_DISCORD As String = "https://discord.gg/JsSsKyqzjF"
-		Private Const URL_DDUHOME As String = "https://www.wagnardsoft.com"
-		Private Const URL_GURU3D_AMD As String = "http://forums.guru3d.com/showthread.php?t=379505"
+        Private Const URL_DDUHOME As String = "https://www.wagnardsoft.com/"
+        Private Const URL_DDUSHOP As String = "https://shop.wagnardsoft.com"
+        Private Const URL_GURU3D_AMD As String = "http://forums.guru3d.com/showthread.php?t=379505"
 		Private Const URL_GURU3D_NVIDIA As String = "http://forums.guru3d.com/showthread.php?t=379506"
 		Private Const URL_GEFORCE As String = "https://www.nvidia.com/en-us/geforce/forums/game-ready-drivers/13/1001/wagnard-tools-ddu-more/"
 		Private Const URL_SVN As String = "https://github.com/Wagnard/display-drivers-uninstaller"
@@ -563,21 +564,23 @@ Namespace Display_Driver_Uninstaller
 		Private Function ProcessLinks() As Boolean
 			Dim webAddress As String = Nothing
 
-			If Application.LaunchOptions.VisitDonate Then
-				webAddress = URL_DONATE
-			ElseIf Application.LaunchOptions.VisitPatron Then
-				webAddress = URL_PATRON
-			ElseIf Application.LaunchOptions.VisitDiscord Then
-				webAddress = URL_DISCORD
-			ElseIf Application.LaunchOptions.VisitGuru3DNvidia Then
-				webAddress = URL_GURU3D_NVIDIA
-			ElseIf Application.LaunchOptions.VisitGuru3DAMD Then
-				webAddress = URL_GURU3D_AMD
-			ElseIf Application.LaunchOptions.VisitGeforce Then
-				webAddress = URL_GEFORCE
-			ElseIf Application.LaunchOptions.VisitDDUHome Then
-				webAddress = URL_DDUHOME
-			ElseIf Application.LaunchOptions.VisitSVN Then
+            If Application.LaunchOptions.VisitDonate Then
+                webAddress = URL_DONATE
+            ElseIf Application.LaunchOptions.VisitPatron Then
+                webAddress = URL_PATRON
+            ElseIf Application.LaunchOptions.VisitDiscord Then
+                webAddress = URL_DISCORD
+            ElseIf Application.LaunchOptions.VisitGuru3DNvidia Then
+                webAddress = URL_GURU3D_NVIDIA
+            ElseIf Application.LaunchOptions.VisitGuru3DAMD Then
+                webAddress = URL_GURU3D_AMD
+            ElseIf Application.LaunchOptions.VisitGeforce Then
+                webAddress = URL_GEFORCE
+            ElseIf Application.LaunchOptions.VisitDDUHome Then
+                webAddress = URL_DDUHOME
+            ElseIf Application.LaunchOptions.VisitDDUShop Then
+                webAddress = URL_DDUSHOP
+            ElseIf Application.LaunchOptions.VisitSVN Then
 				webAddress = URL_SVN
 			ElseIf Application.LaunchOptions.VisitOffer Then
 				webAddress = URL_OFFER

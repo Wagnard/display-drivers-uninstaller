@@ -93,6 +93,7 @@
 
 			<MenuItem x:Name="LinksMenuItem" Header="LinksMenuItem">
 				<MenuItem x:Name="VisitDDUHomeMenuItem" Header="VisitDDUHomeMenuItem" />
+                <MenuItem x:Name="VisitDDUShopMenuItem" Header="VisitDDUShopMenuItem" />
 				<MenuItem x:Name="VisitDiscord" Header="VisitDiscord" />
 				<MenuItem x:Name="VisitSVNMenuItem" Header="VisitSVNMenuItem" />
 			</MenuItem>
