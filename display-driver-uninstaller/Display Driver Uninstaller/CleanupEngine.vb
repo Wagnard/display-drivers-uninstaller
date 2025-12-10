@@ -1684,10 +1684,15 @@ Namespace Display_Driver_Uninstaller
                                 If subkey IsNot Nothing Then
                                     Dim wantedvalue = TryCast(subkey.GetValue("ImagePath", String.Empty), String)
                                     If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
-                                    If (GetServiceBaseNameOnly(wantedvalue).Equals(services(i), StringComparison.OrdinalIgnoreCase)) Then
-                                        services(i) = regservice
-                                        Exit For
-                                    End If
+
+                                    Try
+                                        If (GetServiceBaseNameOnly(wantedvalue).Equals(services(i), StringComparison.OrdinalIgnoreCase)) Then
+                                            services(i) = regservice
+                                            Exit For
+                                        End If
+                                    Catch ex As Exception
+                                        Application.Log.AddWarning(ex)
+                                    End Try
                                 End If
                             End Using
                         Next
@@ -1752,10 +1757,12 @@ Namespace Display_Driver_Uninstaller
                     Next
                 End If
             End Using
-            CleanControlVideo(services)
+            CleanControlVideo(services, config)
+            CleanLeftOverRegDirectXSection()
         End Sub
 
-        Public Sub CleanControlVideo(ByVal services As String())
+        Public Sub CleanControlVideo(ByVal services As String(), config As ThreadSettings)
+            If System.Windows.Forms.SystemInformation.BootMode = Forms.BootMode.Normal Then Return
             Try
                 Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\Video", True)
                     If regkey IsNot Nothing Then
@@ -1791,17 +1798,68 @@ Namespace Display_Driver_Uninstaller
                                     'Here, if subregkey is nothing, it mean \video doesnt exist and there is no \0000, we can delete it.
                                     'this is a general cleanUP we could say.
                                     Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, False)
-                                        If regkey3 IsNot Nothing AndAlso regkey3.SubKeyCount = 0 Then
-
-                                            Try
-                                                Deletesubregkey(regkey, child)
-                                                Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child, False)
-                                                Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\UnitedVideo\CONTROL\VIDEO\" & child, False)
-                                            Catch ex As ArgumentException
-                                                'avoid an issue specific to this key
-                                            Catch ex As Exception
-                                                Application.Log.AddException(ex)
-                                            End Try
+                                        If regkey3 IsNot Nothing Then
+                                            If regkey3.SubKeyCount = 0 Then
+                                                Try
+                                                    Deletesubregkey(regkey, child)
+                                                    Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child, False)
+                                                    Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\UnitedVideo\CONTROL\VIDEO\" & child, False)
+                                                    Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\DirectX\" & child, False)
+                                                Catch ex As ArgumentException
+                                                    'avoid an issue specific to this key
+                                                Catch ex As Exception
+                                                    Application.Log.AddException(ex)
+                                                End Try
+                                            Else
+                                                Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey3, "0000", False)
+                                                    If regkey4 IsNot Nothing Then
+                                                        Dim providerName = TryCast(regkey4.GetValue("ProviderName", String.Empty), String)
+                                                        If Not String.IsNullOrWhiteSpace(providerName) Then
+                                                            Select Case config.SelectedGPU
+                                                                Case GPUVendor.Nvidia
+                                                                    If StrContainsAny(providerName, True, "NVIDIA", "Microsoft") Then
+                                                                        Try
+                                                                            Deletesubregkey(regkey, child)
+                                                                            Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child, False)
+                                                                            Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\UnitedVideo\CONTROL\VIDEO\" & child, False)
+                                                                            Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\DirectX\" & child, False)
+                                                                        Catch ex As ArgumentException
+                                                                            'avoid an issue specific to this key
+                                                                        Catch ex As Exception
+                                                                            Application.Log.AddException(ex)
+                                                                        End Try
+                                                                    End If
+                                                                Case GPUVendor.AMD
+                                                                    If StrContainsAny(providerName, True, "Advanced Micro Devices") Then
+                                                                        Try
+                                                                            Deletesubregkey(regkey, child)
+                                                                            Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child, False)
+                                                                            Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\UnitedVideo\CONTROL\VIDEO\" & child, False)
+                                                                            Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\DirectX\" & child, False)
+                                                                        Catch ex As ArgumentException
+                                                                            'avoid an issue specific to this key
+                                                                        Catch ex As Exception
+                                                                            Application.Log.AddException(ex)
+                                                                        End Try
+                                                                    End If
+                                                                Case GPUVendor.Intel
+                                                                    If StrContainsAny(providerName, True, "Intel") Then
+                                                                        Try
+                                                                            Deletesubregkey(regkey, child)
+                                                                            Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child, False)
+                                                                            Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\UnitedVideo\CONTROL\VIDEO\" & child, False)
+                                                                            Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\DirectX\" & child, False)
+                                                                        Catch ex As ArgumentException
+                                                                            'avoid an issue specific to this key
+                                                                        Catch ex As Exception
+                                                                            Application.Log.AddException(ex)
+                                                                        End Try
+                                                                    End If
+                                                            End Select
+                                                        End If
+                                                    End If
+                                                End Using
+                                            End If
                                         End If
                                     End Using
                                 End If
@@ -1820,6 +1878,30 @@ Namespace Display_Driver_Uninstaller
                 If WindowsIdentity.GetCurrent().IsSystem Then
                     ImpersonateLoggedOnUser.ReleaseToken()
                 End If
+            End Try
+        End Sub
+
+        Private Sub CleanLeftOverRegDirectXSection()
+            Try
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\DirectX", True)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+                            Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\Video", True)
+                                If regkey IsNot Nothing Then
+                                    If Not StrContainsAny(child, True, regkey2.GetSubKeyNames) Then
+                                        Try
+                                            Deletesubregkey(regkey, child)
+                                        Catch ex As Exception
+                                            Application.Log.AddException(ex)
+                                        End Try
+                                    End If
+                                End If
+                            End Using
+                        Next
+                    End If
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex)
             End Try
         End Sub
 

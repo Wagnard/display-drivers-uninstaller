@@ -1,29 +1,98 @@
-USEFUL TIP:
+# DDU – Common Issues & Solutions
 
-To solve the infinite boot loop issue (stuck in Safe Mode) / password lost that some users are having, you must boot with the DVD/USB (Windows installation disk) in recovery with Command prompt OR restart the computer (not the reset button) and HOLD THE SHIFT KEY until you have the advanced option menu and the option to boot with a Command prompt and type : 
+A clear and user‑friendly troubleshooting guide for Display Driver Uninstaller.
 
-Option 1 (recommended) : bcdedit /deletevalue {default} safeboot
+---
 
-* Replace "default" with the identifier of your operation system. (can be seen when you run bcdedit)
+## **1. Stuck in Safe Mode / Boot Loop (or Lost Password)**
 
-If option 1 is not working,
+If Windows remains stuck in Safe Mode after using DDU, try the following:
 
-Option 2 : bootrec /rebuildbcd
+### **Method 1 (Recommended)**
 
-There may need to be some adjustement if you have a dualboot system. but if not , it should work correctly.
+1. Boot into the **Windows Recovery Environment**:
 
-From my personal experience, the UXTHEME patcher was a possible cause of this.
+   * Boot from a Windows installation USB/DVD, **OR**
+   * Restart the computer and **hold SHIFT** until the **Advanced Options** menu appears.
+2. Open **Command Prompt**.
+3. Run the following command:
 
-Safe Mode may not work especially with the "Windows 10 Anniversary Update" when CSM in the bios is "Disabled". (Microsoft issue)
+```
+bcdedit /deletevalue {default} safeboot
+```
 
+> Replace `{default}` with the correct OS identifier if required (shown by running `bcdedit`).
 
+### **Method 2 (If Method 1 fails)**
 
-If DDU is not starting:
--DDU doesn't work from a network drive.
--The folder permission you have DDU install are broken, check that you have SYSTEM, Administrators and your username at Full Control.(Windows default)
--Try to install DDU on the Desktop and run it from there.
--Send the logs, if any, located within the DDU folder in the DDU Logs folder.
+```
+bootrec /rebuildbcd
+```
 
+### **Notes**
 
-New driver is not installing and an old driver from windows update is getting installed by itself?
--You had the internet connected and it should be disconnnected when running DDU and until you re-install the new driver
+* Dual‑boot systems may require selecting the correct OS entry.
+* Some **UXTheme patchers** have been known to cause Safe Mode issues.
+* Safe Mode may fail on some systems when **CSM is disabled** in BIOS (known Microsoft issue).
+
+---
+
+## **2. DDU Does Not Start**
+
+If DDU fails to launch:
+
+* Do **not** run DDU from a **network drive**.
+* Verify the DDU folder has standard Windows permissions (**Full Control**) for:
+
+  * `SYSTEM`
+  * `Administrators`
+  * Your user account
+* Try extracting and running DDU from the **Desktop**.
+* If the problem persists, include the log files found in:
+
+```
+DDU folder → DDU Logs
+```
+
+when asking for support.
+
+---
+
+## **3. Old Driver Installs Automatically Instead of the New One**
+
+If Windows installs an older driver via Windows Update before you can install your new driver:
+
+* **Disconnect from the internet** before running DDU.
+* Stay offline **until after** you manually install your new driver.
+
+---
+
+## **4. Windows Still Behaves as if It's in Safe Mode**
+
+Symptoms: no internet, reduced performance, limited features.
+
+1. Open **Registry Editor**.
+2. Navigate to:
+
+```
+HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\SafeBoot
+```
+
+3. Check for a subkey named **Options**.
+
+4. If:
+
+   * Safe Boot is not selected in **msconfig**, and
+   * `bcdedit` shows no `safeboot` entry,
+
+   …you may safely **delete the `Options` subkey**.
+
+5. Restart the computer.
+
+Windows should now return to normal mode.
+
+---
+
+## **Need Additional Help?**
+
+If issues continue, feel free to provide DDU logs or system details so the problem can be diagnosed more accurately.
