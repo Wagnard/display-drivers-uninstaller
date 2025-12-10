@@ -551,7 +551,7 @@ Namespace Display_Driver_Uninstaller
 				Me.Shutdown(0)
 			End Try
 
-			LaunchMainWindow()
+            LaunchMainWindow()
 		End Sub
 
 
@@ -894,22 +894,22 @@ Namespace Display_Driver_Uninstaller
 			End Try
 		End Sub
 
-		Private Sub RemoveRegOption()
-			If Forms.SystemInformation.BootMode <> Forms.BootMode.Normal Then
-				Try
-					Using regControl As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot", Writable:=True)
-						If regControl IsNot Nothing AndAlso regControl.GetSubKeyNames().Contains("Option") Then
-							regControl.DeleteSubKeyTree("Option", throwOnMissingSubKey:=False)
-							Application.Log.AddMessage("Deleted SafeBoot\Option key before reboot.")
-						End If
-					End Using
-				Catch ex As Exception
-					Application.Log.AddWarningMessage("Could not delete SafeBoot\Option key: " & ex.Message)
-				End Try
-			End If
-		End Sub
+        Public Shared Sub RemoveRegOption()
+            If Forms.SystemInformation.BootMode <> Forms.BootMode.Normal Then
+                Try
+                    Using regControl As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot", Writable:=True)
+                        If regControl IsNot Nothing AndAlso StrContainsAny("Option", True, regControl.GetSubKeyNames()) Then
+                            regControl.DeleteSubKeyTree("Option", throwOnMissingSubKey:=False)
+                            Application.Log.AddMessage("Deleted SafeBoot\Option key before reboot.")
+                        End If
+                    End Using
+                Catch ex As Exception
+                    Application.Log.AddWarningMessage("Could not delete SafeBoot\Option key: " & ex.Message)
+                End Try
+            End If
+        End Sub
 
-		Public Shared Sub RestartComputer()
+        Public Shared Sub RestartComputer()
 			If Not m_dispatcher.CheckAccess() Then
 				m_dispatcher.Invoke(Sub() RestartComputer())
 			Else

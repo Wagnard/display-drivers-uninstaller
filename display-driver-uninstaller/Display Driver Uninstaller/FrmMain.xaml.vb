@@ -546,8 +546,8 @@ Namespace Display_Driver_Uninstaller
 			If WindowsIdentity.GetCurrent().IsSystem Then
 				ImpersonateLoggedOnUser.ReleaseToken()
 			End If
-
-		End Sub
+            Application.RemoveRegOption()
+        End Sub
 
 		Private Sub FrmMain_Closing(sender As System.Object, e As System.ComponentModel.CancelEventArgs) Handles MyBase.Closing
 
