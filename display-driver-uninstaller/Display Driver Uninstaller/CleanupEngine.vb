@@ -1691,7 +1691,7 @@ Namespace Display_Driver_Uninstaller
                                             Exit For
                                         End If
                                     Catch ex As Exception
-                                        Application.Log.AddWarning(ex)
+                                        Application.Log.AddWarning(ex, wantedvalue)
                                     End Try
                                 End If
                             End Using
