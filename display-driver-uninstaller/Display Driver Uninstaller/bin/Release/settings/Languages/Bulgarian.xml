@@ -51,6 +51,14 @@
 				драйвъри в Windows по подразбиране
 			</Text>
 		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Почисти само кеша на шейдъра
+			</Text>
+			<Tooltip>
+				Изтрива само кеш файлове на шейдъра. По-ефективно в безопоасен режим (Safe Mode).
+			</Tooltip>
+		</btnCleanCaches>
 		<lblWinVersion>
 			<Text>Засечена версия на Windows</Text>
 		</lblWinVersion>
@@ -106,8 +114,14 @@
 		<VisitDDUHomeMenuItem>
 			<Text>Отваряне на официалната страница на DDU</Text>
 		</VisitDDUHomeMenuItem>
+        <VisitDDUShopMenuItem>
+            <Text>Отваряне на магазина с DDU мърчъндайз</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Присъединяване към Discord канала</Text>
+		</VisitDiscord>
 		<VisitSVNMenuItem>
-			<Text>Отваряне на SVN страницата</Text>
+			<Text>Отваряне на страницата в GitHub</Text>
 		</VisitSVNMenuItem>
 		<VisitGuru3DNvidiaMenuItem>
 			<Text>Отваряне на темата за NVIDIA в Guru3d</Text>
@@ -136,6 +150,15 @@
 			<Text14>Има рестартиране, което е на изчакване. Моля, рестартирайте, преди да използвате DDU.</Text14>
 			<Text15>Не беше направена промяна. Настройките на Windows за инсталиране на устройства са вече по подразбиране.</Text15>
 			<Text16>DDU се натъкна на критична грешка, която предотвратява премахването на драйвъри. Като мярка за сигурност, DDU няма да продължи с премахването на файлове и стойности в системния регистър. Трябва да отстраните проблемите с Вашата система, преди да използвате DDU отново.</Text16>
+			<Text17>Изглежда, че стартирате DDU за пръв път.
+				
+					Преди да използвате DDU, моля, обърнете внимание на следното:
+					1: В зависимост от проблемите и конфигурацията Ви, е възможно DDU да влоши положението.
+					2: Редно да имате резервно копие (бекъп).
+					3: Редно е да прочетете лиценза, Readme файла и УЗИ.
+					4: Не носим отговорност за каквито и да било щети или загуба на данни.
+					5: Винаги сме готови да помогне, ако имате въпроси или проблеми.
+			</Text17>
 		</Messages>
 		<Options_Type>
 			<Options1>--- Изберете типа на устройството ---</Options1>
@@ -146,7 +169,8 @@
 			<Options1>--- Изберете устройството ---</Options1>
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
-			<Options4>INTEL</Options4>
+			<Options4>Intel®</Options4>
+			<Options5>Всички</Options5>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>--- Изберете устройството ---</Options1>
@@ -212,6 +236,9 @@
 		<lblAmdspecific>
 			<Text>Специфични опции за AMD</Text>
 		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>Специфични опции за Intel®</Text>
+		</lblINTELspecific>
 		<lblAdvancedO>
 			<Text>Опции за напреднали потребители (променяте ги на свой риск)</Text>
 		</lblAdvancedO>
@@ -247,7 +274,7 @@
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
 			<Text>Показвай съобщение за безопасен режим при стартиране (не се препоръчва, докато не тествате безопасния режим ръчно)</Text>
-			<Tooltip>Не се препоръчва, ако никога досега не сте стартирали Вашия компютър ръчно в безопасен режим, за да разберете дали функционира. Тази опция може да доведе до невъзможност за стартиране, черен екран и други проблеми.</Tooltip>
+			<Tooltip>Не се препоръчва, ако никога не сте стартирали Вашия компютър в безопасен режим, за да разберете дали функционира. Опцията може да доведе до невъзможност за стартиране, черен екран и други проблеми.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
 			<Text>Съхранявай конфигурационния файл в папка roaming</Text>
@@ -256,8 +283,39 @@
 			<Text>Автоматично проверявай за актуализации на DDU при стартиране (препоръчително)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
-			<Text>Премахни Geforce Experience (GFE)</Text>
+			<Text>Премахни Geforce Experience (GFE) / NVIDIA App</Text>
 		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>Премахни NVIDIA Broadcast</Text>
+		</lblRemNVBROADCAST>
+		<lblRemNVCP>
+			<Text>(DCH драйвър) Премахни контролния панел на NVIDIA, който се инсталира от Microsoft Store</Text>
+		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>Запази настройките от класическия контролен панел на NVIDIA.</Text>
+			<Tooltip>
+				Ако сте се натъкнали на проблеми, които са довели до използването на DDU за почистване, препоръчваме да не включвате тази опция.
+				Опцията не е предназначена да решава проблеми и може да няма ефект върху проблема, който имате."
+			</Tooltip>
+		</lblKeepNVCPopt>
+		<lblRemINTELCP>
+			<Text>(DCH драйвър) Премахни контролния панел на Intel®, който се инсталира от Microsoft Store</Text>
+		</lblRemINTELCP>
+		<lblRemINTELIGS>
+			<Text>Премахни Intel® Arc Control / Intel® Graphics Software</Text>
+		</lblRemINTELIGS>
+		<lblRemOneAPI>
+			<Text>Премахни Intel® oneAPI Level Zero SDK</Text>
+		</lblRemOneAPI>
+		<lblRemEnduranceGaming>
+			<Text>Премахни Intel® Endurance Gaming</Text>
+		</lblRemEnduranceGaming>
+		<lblRemIntelNpu>
+			<Text>Премахни Intel® NPU</Text>
+		</lblRemIntelNpu>
+		<lblRemAMDCP>
+			<Text>(DCH драйвър) Премахни контролния панел на AMD, който се инсталира от Microsoft Store</Text>
+		</lblRemAMDCP>
 		<lblRemCrimsonCache>
 			<Text>Премахни папката с кеша на шейдъри на AMD Crimson</Text>
 			<Tooltip>
@@ -269,12 +327,15 @@
 			<Text>Премахвай средата за изпълнение (runtime) на Vulkan</Text>
 			<Tooltip>Не се препоръчва, ако разполагате с две различни видео карти, способни да използват Vulkan интерфейса.</Tooltip>
 		</lblVulkan>
-    <lblPreventWinUpdate>
-      <Text>Предотврати изтеглянето на драйвъри от Windows update, когато Windows търси драйвър за устройство.</Text>
-      <Tooltip>Тази опция забранява на Windows и Диспечера на устройства да проверяват в Windows Update за по-нова версия на драйвър на вече инсталирано устройство. 
+		<lblPreventWinUpdate>
+			<Text>Предотврати изтеглянето на драйвъри от Windows update, когато Windows търси драйвър за устройство.</Text>
+			<Tooltip>Тази опция забранява на Windows и Диспечера на устройства да проверяват в Windows Update за по-нова версия на драйвър на вече инсталирано устройство. 
                Забележка: Това не предотвратява Windows Update да изтегля и инсталира нови драйвъри. 
                Зебележка 2: Също така е *СИЛНО* препоръчително да промените настройката обртано, след като сте използвали DDU и сте инсталирали отново драйвъра за видео картата. В противен случай можете да имате проблеми с инсталациита на други устройства.</Tooltip>
-     </lblPreventWinUpdate>
+		</lblPreventWinUpdate>
+		<lblRememberLastChoice>
+			<Text>Помни последно избрания ГП</Text>	
+		</lblRememberLastChoice>
   </frmOptions>
    
 	<frmLaunch Text="Настройки за стартиране">
@@ -285,6 +346,11 @@
 				безопасен режим
 			</Text2>
 		</btnAccept>
+		<btnWuRestore>
+			<Text>
+				Задай настройките на Windows за инсталиране на устройства по подразбиране и затвори
+			</Text>
+		</btnWuRestore>
 		<btnClose>
 			<Text>Затвори</Text>
 		</btnClose>
@@ -372,15 +438,29 @@
 			<Text>
 		Големи благодарности на следните благодетели, както и на онези, които не са споменати!
 				  
-		-honnmaguro   (от 16.03.2018)  
-		-ZaoDaDong (Since 2019-02-06)
-		-Alberto Bursi (long time donator/supporter)
-		-Kaseb (Since 2019-09-05)
-		-Frank Brown (Since 2019-10-31)
-		-Sergey Bolshakow (Since 2020-09-10)
-		-James Tiller (Since 2021-04-03)
-		-Paulo Henrique (Since 2021-04-19)
-	  </Text>
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Chris Ross
+				-Fabio
+				-Matti Metsikko
+				-mikalonia - mika
+				-ChaosDMNS
+				-Eduardo Macias
+				-Peter Le
+				-Kater Willschie
+				-Duke Hanson
+				-Sam Gooding
+				-Zero Chung
+				-Remy Starshade
+			</Text>
 		</lblPatron>
 	</frmAbout>
 
@@ -419,17 +499,20 @@
 
 				Разработчици: Wagnard, Devmltk, Shady7557
 
-				Тестер: Dellon132
+				Тестер: Dellon132, Onyx
 
 				Лого: juanchacin
 
 				Огромни благодарности на Jackalito за дарението на AMD 7850.
+				
+				Специални благодарности на Guru3D (https://www.guru3d.com/) за помощта при първоначалното разпространение.
 
 				Благодарности на Helge Klein (http://helgeklein.com/setacl/) за позволението за използване на неговата програма (SetACL) с DDU.
 
-				Огромни благодарности на тестерите за отделеното време: Gamer1291 (optimus), Octopuss (Amd Enduro),	nedooo` (прекара време за дебъг с мен), Extraordinary (тества отстраняване на бъг).
+				Огромни благодарности на тестерите за отделеното време: Gamer1291 (optimus), Octopuss (Amd Enduro),	nedooo` (прекара време за дебъг с мен)
+				Extraordinary (тества отстраняване на бъг).
 
-				Благодарности на всеки, който изложи системата си на риск, и специални благодарности на Dellon132.
+				Благодарности на всеки, който изложи системата си на риск. (специални благодарности на Dellon132)
 
 				*DDU, неговите създатели и съдружници не са свързани по никакъв начин с Driver Sweeper или неговите създатели.
 			</Text>
@@ -451,8 +534,7 @@
 	<LanguageTranslators>
 		<Translator>
 			<User>Night_Raven</User>
-			<Details>SoftVisia.com</Details>
-			<LastUpdate>07.04.2023</LastUpdate>
+			<LastUpdate>17.12.2025</LastUpdate>
 		</Translator>
 		
 		<Translator2>
