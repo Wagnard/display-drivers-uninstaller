@@ -114,6 +114,9 @@
 		<VisitDDUHomeMenuItem>
 			<Text>Посетить официальный сайт DDU</Text>
 		</VisitDDUHomeMenuItem>
+		<VisitDDUShopMenuItem>
+      <Text>Посетите официальный магазин мерча DDU</Text>
+    </VisitDDUShopMenuItem>
 		<VisitDiscord>
 			<Text>Присоединяйтесь к нашему Discord</Text>
 		</VisitDiscord>
@@ -527,7 +530,7 @@
 
 		<Translator2>
 			<User>Danis Miryasov (miryasov.danis@yandex.ru)</User>
-			<LastUpdate>28.08.2025</LastUpdate>
+			<LastUpdate>26.12.2025</LastUpdate>
 		</Translator2>
 		<Translator3>
 			<User>Dmitry Yerokhin (erodim@mail.ru)</User>
