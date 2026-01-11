@@ -7884,7 +7884,7 @@ child.ToLower.Equals("oneapp_igcc") Then
                         If subregkey IsNot Nothing Then
                             For Each child As String In subregkey.GetSubKeyNames()
                                 If String.IsNullOrWhiteSpace(child) Then Continue For
-                                If StrContainsAny(child, True, "intel-gfx-info", "GfxFwError") Then
+                                If StrContainsAny(child, True, "intel-gfx-info", "GfxFwError", "Intel-Gfx-Display-External", "GfxFwAnalytic") Then
                                     Try
                                         Deletesubregkey(subregkey, child)
                                     Catch ex As Exception
@@ -7898,7 +7898,7 @@ child.ToLower.Equals("oneapp_igcc") Then
                         If subregkey IsNot Nothing Then
                             For Each child As String In subregkey.GetSubKeyNames()
                                 If String.IsNullOrWhiteSpace(child) Then Continue For
-                                If StrContainsAny(child, True, "{f70d4be7-78e4-4edf-91a9-0c1341d500db}", "{47F2193C-E940-4AED-90D0-C1EB9E4C23D6}") Then
+                                If StrContainsAny(child, True, "{f70d4be7-78e4-4edf-91a9-0c1341d500db}", "{47F2193C-E940-4AED-90D0-C1EB9E4C23D6}", "{31ab337f-8ba3-4145-88f3-cea537bfe861}") Then
                                     Try
                                         Deletesubregkey(subregkey, child)
                                     Catch ex As Exception
@@ -7927,7 +7927,7 @@ child.ToLower.Equals("oneapp_igcc") Then
                         If subregkey IsNot Nothing Then
                             For Each child As String In subregkey.GetSubKeyNames()
                                 If String.IsNullOrWhiteSpace(child) Then Continue For
-                                If StrContainsAny(child, True, "{f70d4be7-78e4-4edf-91a9-0c1341d500db}") Then
+                                If StrContainsAny(child, True, "{f70d4be7-78e4-4edf-91a9-0c1341d500db}", "{47f2193c-e940-4aed-90d0-c1eb9e4c23d6}") Then
                                     Try
                                         Deletesubregkey(subregkey, child)
                                     Catch ex As Exception

@@ -2029,6 +2029,7 @@ Namespace Display_Driver_Uninstaller
             End Try
 
         End Sub
+
         Private Sub OnCLSIDLeftoverRemoval(ByVal child As String)
             Try
                 Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1), False)
