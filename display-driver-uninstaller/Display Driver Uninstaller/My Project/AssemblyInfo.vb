@@ -15,7 +15,7 @@ Imports System.Windows
 <Assembly: AssemblyDescription("")> 
 <Assembly: AssemblyCompany("Wagnardsoft")>
 <Assembly: AssemblyProduct("Display Driver Uninstaller")>
-<Assembly: AssemblyCopyright("Copyright Wagnardsoft ©  2025")>
+<Assembly: AssemblyCopyright("Copyright Wagnardsoft ©  2026")>
 <Assembly: AssemblyTrademark("")> 
 <Assembly: ComVisible(false)>
 
@@ -55,5 +55,5 @@ Imports System.Windows
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("18.1.4.0")>
-<Assembly: AssemblyFileVersion("18.1.4.0")>
+<Assembly: AssemblyVersion("18.1.4.1")>
+<Assembly: AssemblyFileVersion("18.1.4.1")>
