@@ -114,6 +114,12 @@
 		<VisitDDUHomeMenuItem>
 			<Text>Bezoek de officiële DDU website</Text>
 		</VisitDDUHomeMenuItem>
+		        <VisitDDUShopMenuItem>
+            <Text>Bezoek de officiële DDU Merch Shop</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Doe mee met onze Discord</Text>
+		</VisitDiscord>
 		<VisitSVNMenuItem>
 			<Text>Bezoek de SVN website</Text>
 		</VisitSVNMenuItem>

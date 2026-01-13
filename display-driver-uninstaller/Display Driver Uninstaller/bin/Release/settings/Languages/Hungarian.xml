@@ -114,6 +114,9 @@
 		<VisitDDUHomeMenuItem>
 			<Text>A DDU weboldalának meglátogatása</Text>
 		</VisitDDUHomeMenuItem>
+		      <VisitDDUShopMenuItem>
+            <Text>Látogasd meg a hivatalos DDU Merch Shopot</Text>
+        </VisitDDUShopMenuItem>
 		<VisitDiscord>
 			<Text>Csatlakozz a Discord szerverünkhöz</Text>
 		</VisitDiscord>

@@ -109,6 +109,12 @@
 		<VisitGuru3DNvidiaMenuItem>
 			<Text>Επισκεφθείτε το Guru3d NVIDIA Νήμα</Text>
 		</VisitGuru3DNvidiaMenuItem>
+		      <VisitDDUShopMenuItem>
+            <Text>Επισκεφθείτε το Επίσημο DDU Merch Shop</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Μπες στο Discord μας</Text>
+		</VisitDiscord>
 		<VisitGuru3DAMDMenuItem>
 			<Text>Επισκεφθείτε το Guru3d AMD Νήμα</Text>
 		</VisitGuru3DAMDMenuItem>

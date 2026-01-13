@@ -84,6 +84,12 @@
 		<VisitDDUHomeMenuItem>
 			<Text>Visite o site oficial do DDU</Text>
 		</VisitDDUHomeMenuItem>
+		        <VisitDDUShopMenuItem>
+            <Text>Visite a loja oficial de mercadorias DDU</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Junte-se ao nosso Discord</Text>
+		</VisitDiscord>
 		<VisitSVNMenuItem>
 			<Text>Visite o site SVN</Text>
 		</VisitSVNMenuItem>

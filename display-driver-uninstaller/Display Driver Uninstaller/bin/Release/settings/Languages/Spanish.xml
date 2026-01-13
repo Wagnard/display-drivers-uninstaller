@@ -114,6 +114,12 @@
 		<VisitGuru3DAMDMenuItem>
 			<Text>Visita el hilo de AMD en Guru3D</Text>
 		</VisitGuru3DAMDMenuItem>
+		        <VisitDDUShopMenuItem>
+            <Text>Visita la tienda oficial de mercancía DDU</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Únete a nuestro Discord</Text>
+		</VisitDiscord>
 		<VisitGeforceMenuItem>
 			<Text>Visita el hilo de GeForce</Text>
 		</VisitGeforceMenuItem>

@@ -115,6 +115,12 @@
 		<VisitGuru3DAMDMenuItem>
 			<Text>Obisk niti Guru3d AMD</Text>
 		</VisitGuru3DAMDMenuItem>
+		       <VisitDDUShopMenuItem>
+            <Text>Obiščite uradno trgovino DDU Merch Shop</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Pridruži se našemu Discordu</Text>
+		</VisitDiscord>
 		<VisitGeforceMenuItem>
 			<Text>Obisk niti GeForce</Text>
 		</VisitGeforceMenuItem>

@@ -115,6 +115,12 @@
 		<VisitGuru3DAMDMenuItem>
 			<Text>Guru3D AMD Başlığını Ziyaret Edin</Text>
 		</VisitGuru3DAMDMenuItem>
+		       <VisitDDUShopMenuItem>
+            <Text>Resmi DDU Merch Mağazamızı Ziyaret Edin</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Discord'umuza Katıl</Text>
+		</VisitDiscord>
 		<VisitGeforceMenuItem>
 			<Text>Geforce Başlığını Ziyaret Edin</Text>
 		</VisitGeforceMenuItem>

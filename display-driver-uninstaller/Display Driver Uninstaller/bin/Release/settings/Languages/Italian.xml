@@ -112,6 +112,12 @@
 		<VisitGuru3DNvidiaMenuItem>
 			<Text>Visita forum Guru3d NVIDIA</Text>
 		</VisitGuru3DNvidiaMenuItem>
+		        <VisitDDUShopMenuItem>
+            <Text>Visita il negozio ufficiale DDU Merch Shop</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Unisciti al nostro Discord</Text>
+		</VisitDiscord>
 		<VisitGuru3DAMDMenuItem>
 			<Text>Visita forum Guru3d AMD</Text>
 		</VisitGuru3DAMDMenuItem>

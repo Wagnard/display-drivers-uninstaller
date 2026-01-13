@@ -116,6 +116,12 @@
 		<VisitGuru3DNvidiaMenuItem>
 			<Text>Poseti Guru3d NVIDIA odeljak</Text>
 		</VisitGuru3DNvidiaMenuItem>
+		        <VisitDDUShopMenuItem>
+            <Text>Poseti zvanični DDU Merch Shop</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Pridruži se našem Discordu</Text>
+		</VisitDiscord>
 		<VisitGuru3DAMDMenuItem>
 			<Text>Poseti Guru3d AMD odeljak</Text>
 		</VisitGuru3DAMDMenuItem>

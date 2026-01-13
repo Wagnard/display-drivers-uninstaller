@@ -114,6 +114,12 @@
 		<VisitSVNMenuItem>
 			<Text>Avaa lähdekoodi(SVN) sivu</Text>
 		</VisitSVNMenuItem>
+		        <VisitDDUShopMenuItem>
+            <Text>Käy virallisessa DDU Merch -kaupassa</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Liittykää meidän discordryhmään</Text>
+		</VisitDiscord>
 		<VisitGuru3DNvidiaMenuItem>
 			<Text>Avaa Guru3D:n NVIDIA viestiketju</Text>
 		</VisitGuru3DNvidiaMenuItem>

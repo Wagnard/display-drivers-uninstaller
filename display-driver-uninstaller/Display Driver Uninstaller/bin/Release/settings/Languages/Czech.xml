@@ -114,6 +114,12 @@
 		<VisitDDUHomeMenuItem>
 			<Text>Navštívit oficiální web DDU</Text>
 		</VisitDDUHomeMenuItem>
+		        <VisitDDUShopMenuItem>
+            <Text>Navštivte oficiální DDU merch shop</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Přidejte se k našemu Discordu</Text>
+		</VisitDiscord>
 		<VisitSVNMenuItem>
 			<Text>Navštívit web SVN</Text>
 		</VisitSVNMenuItem>

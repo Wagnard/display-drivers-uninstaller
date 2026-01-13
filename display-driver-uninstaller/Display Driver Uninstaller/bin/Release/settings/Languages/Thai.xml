@@ -112,6 +112,12 @@
 		<VisitGuru3DNvidiaMenuItem>
 			<Text>ไปที่หัวข้อ Guru3d NVIDIA</Text>
 		</VisitGuru3DNvidiaMenuItem>
+		        <VisitDDUShopMenuItem>
+            <Text>เยี่ยมชมร้านค้า DDU Merch Shop อย่างเป็นทางการ</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>เข้าร่วม Discord ของเรา</Text>
+		</VisitDiscord>
 		<VisitGuru3DAMDMenuItem>
 			<Text>ไปที่หัวข้อ Guru3d AMD</Text>
 		</VisitGuru3DAMDMenuItem>

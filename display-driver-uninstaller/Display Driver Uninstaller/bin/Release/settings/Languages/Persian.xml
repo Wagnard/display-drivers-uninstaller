@@ -115,6 +115,12 @@
 		<VisitGuru3DAMDMenuItem>
 			<Text>بازدید از موضوع Guru3d AMD</Text>
 		</VisitGuru3DAMDMenuItem>
+		        <VisitDDUShopMenuItem>
+            <Text>بازدید از فروشگاه رسمی مرچندایز DDU</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>به دیسکورد ما بپیوندید.</Text>
+		</VisitDiscord>
 		<VisitGeforceMenuItem>
 			<Text>بازدید از موضوع Geforce</Text>
 		</VisitGeforceMenuItem>

@@ -114,6 +114,9 @@
 		<VisitDDUHomeMenuItem>
 			<Text>Besök officiell DDU webbplats</Text>
 		</VisitDDUHomeMenuItem>
+		       <VisitDDUShopMenuItem>
+            <Text>Besök den officiella DDU Merch-butiken</Text>
+        </VisitDDUShopMenuItem>
 		<VisitDiscord>
 			<Text>Gå med i vår Discord</Text>
 		</VisitDiscord>

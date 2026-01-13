@@ -112,6 +112,12 @@
 		<VisitGuru3DNvidiaMenuItem>
 			<Text>בקר בשרשור NVIDIA של Guru3d</Text>
 		</VisitGuru3DNvidiaMenuItem>
+		        <VisitDDUShopMenuItem>
+            <Text>בקר בחנות המרצ'נדייז הרשמית של DDU</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>הצטרף לדיסקורד שלנו</Text>
+		</VisitDiscord>
 		<VisitGuru3DAMDMenuItem>
 			<Text>בקר בשרשור AMD של Guru3d</Text>
 		</VisitGuru3DAMDMenuItem>
