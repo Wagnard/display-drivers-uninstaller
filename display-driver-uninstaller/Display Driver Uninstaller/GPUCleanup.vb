@@ -291,8 +291,8 @@ Namespace Display_Driver_Uninstaller
 									' Uninstall the current device
 									SetupAPI.UninstallDevice(npu)
 									removedDevices.Add(npu.ToString)
-									Exit For
-								End If
+
+                                End If
 							Next
 							npus.Clear()
 							removedDevices.Clear()
