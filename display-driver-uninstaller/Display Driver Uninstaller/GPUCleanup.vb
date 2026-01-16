@@ -7153,6 +7153,7 @@ child.ToLower.Contains("nvidia.gfe") Then
             Dim packagesigs As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\packagesigs.cfg")
             Dim packagesoneapi As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\packagesoneapi.cfg")
             Dim packagesEndurance As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\packagesendurance.cfg")
+            Dim packagesNpu As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\packagesnpu.cfg")
             Dim classroot As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\classroot.cfg")
             Dim reginterface As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\interface.cfg")
             Dim clsidleftover As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\clsidleftover.cfg")
@@ -7537,6 +7538,7 @@ child.ToLower.Contains("igfxdtcm") Then
                                         If StrContainsAny(wantedvalue, True, packages) OrElse
                                             (config.RemoveINTELIGS AndAlso StrContainsAny(wantedvalue, True, packagesigs)) OrElse
                                             (config.RemoveEnduranceGaming AndAlso StrContainsAny(wantedvalue, True, packagesEndurance)) OrElse
+                                            (config.RemoveIntelNpu AndAlso Not Tools.IsIntelNpuPresent AndAlso StrContainsAny(wantedvalue, True, packagesNpu)) OrElse
                                             (config.RemoveOneAPI AndAlso StrContainsAny(wantedvalue, True, packagesoneapi)) Then
                                             Try
                                                 If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
@@ -7616,7 +7618,11 @@ child.ToLower.Contains("igfxdtcm") Then
                                                 wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
                                                 Dim InstallSource = subregkey.GetValue("InstallSource", String.Empty).ToString.TrimEnd(CChar("\"))
                                                 If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
-                                                If StrContainsAny(wantedvalue, True, packages) OrElse (config.RemoveINTELIGS AndAlso StrContainsAny(wantedvalue, True, packagesigs)) Then
+                                                If StrContainsAny(wantedvalue, True, packages) OrElse
+                                            (config.RemoveINTELIGS AndAlso StrContainsAny(wantedvalue, True, packagesigs)) OrElse
+                                            (config.RemoveEnduranceGaming AndAlso StrContainsAny(wantedvalue, True, packagesEndurance)) OrElse
+                                            (config.RemoveIntelNpu AndAlso Not Tools.IsIntelNpuPresent AndAlso StrContainsAny(wantedvalue, True, packagesNpu)) OrElse
+                                            (config.RemoveOneAPI AndAlso StrContainsAny(wantedvalue, True, packagesoneapi)) Then
                                                     Try
                                                         If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
                                                             Deletesubregkey(regkey, child)
