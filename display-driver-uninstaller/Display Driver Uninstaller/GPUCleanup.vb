@@ -8077,7 +8077,8 @@ child.ToLower.Equals("oneapp_igcc") Then
                     If String.IsNullOrWhiteSpace(child) = False Then
                         If StrContainsAny(child, True, "Media SDK", "Media Resource", "ACMirageCache", "Intel(R) Arc Software & Drivers", "PrebuiltShaderBinaries", "Intel(R) Graphics Software & Drivers") OrElse
 (config.RemoveINTELIGS AndAlso StrContainsAny(child, True, "Intel Graphics Software", "Intel Arc Control")) OrElse
-(config.RemoveEnduranceGaming AndAlso StrContainsAny(child, True, "EnduranceGaming")) Then
+(config.RemoveEnduranceGaming AndAlso StrContainsAny(child, True, "EnduranceGaming")) OrElse
+StrContainsAny(child, True, "intel(r) NPU software & drivers") AndAlso (config.RemoveIntelNpu AndAlso Not Tools.IsIntelNpuPresent) Then
                             Delete(child)
                         End If
                     End If
@@ -8105,7 +8106,8 @@ child.ToLower.Equals("oneapp_igcc") Then
                 For Each child As String In _fileIo.GetDirectories(filePath)
                     If String.IsNullOrWhiteSpace(child) = False Then
                         If StrContainsAny(child, True, "shadercache", "ags", "gfxinstaller", "IGN", "FWUpdateService") Or
-StrContainsAny(child, True, "gcc") AndAlso config.RemoveINTELCP Then
+StrContainsAny(child, True, "gcc") AndAlso config.RemoveINTELCP Or
+StrContainsAny(child, True, "npuinstaller") AndAlso (config.RemoveIntelNpu AndAlso Not Tools.IsIntelNpuPresent) Then
                             Delete(child)
                         End If
                     End If
@@ -8229,7 +8231,8 @@ StrContainsAny(child, True, "gcc") AndAlso config.RemoveINTELCP Then
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
                                 If config.RemoveINTELCP AndAlso StrContainsAny(child, True, "gcc", "games", "cuipromotions", "ags", "ign") OrElse
-(config.RemoveINTELIGS AndAlso StrContainsAny(child, True, "intelgraphicssoftware")) Then
+(config.RemoveINTELIGS AndAlso StrContainsAny(child, True, "intelgraphicssoftware")) OrElse
+StrContainsAny(child, True, "NPU") AndAlso (config.RemoveIntelNpu AndAlso Not Tools.IsIntelNpuPresent) Then
                                     Delete(child)
                                 End If
                             End If
