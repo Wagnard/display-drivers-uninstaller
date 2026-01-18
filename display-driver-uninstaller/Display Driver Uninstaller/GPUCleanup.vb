@@ -5653,6 +5653,118 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                 End If
             End Using
 
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "batfile\shellex\ContextMenuHandlers\OpenGLShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "batfile\shellex\ContextMenuHandlers\OpenGLShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "cmdfile\shellex\ContextMenuHandlers\OpenGLShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "cmdfile\shellex\ContextMenuHandlers\OpenGLShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "comfile\shellex\ContextMenuHandlers\OpenGLShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "comfile\shellex\ContextMenuHandlers\OpenGLShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "exefile\shellex\ContextMenuHandlers\OpenGLShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "exefile\shellex\ContextMenuHandlers\OpenGLShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "exefile\shellex\ContextMenuHandlers\NvAppShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "exefile\shellex\ContextMenuHandlers\NvAppShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "jsefile\shellex\ContextMenuHandlers\OpenGLShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "jsefile\shellex\ContextMenuHandlers\OpenGLShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "jsfile\shellex\ContextMenuHandlers\OpenGLShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "jsfile\shellex\ContextMenuHandlers\OpenGLShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "lnkfile\shellex\ContextMenuHandlers\OpenGLShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "lnkfile\shellex\ContextMenuHandlers\OpenGLShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "lnkfile\shellex\ContextMenuHandlers\NvAppShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "lnkfile\shellex\ContextMenuHandlers\NvAppShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "mscfile\shellex\ContextMenuHandlers\OpenGLShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "mscfile\shellex\ContextMenuHandlers\OpenGLShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "vbefile\shellex\ContextMenuHandlers\OpenGLShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "vbefile\shellex\ContextMenuHandlers\OpenGLShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "vbsfile\shellex\ContextMenuHandlers\OpenGLShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "vbsfile\shellex\ContextMenuHandlers\OpenGLShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "wsffile\shellex\ContextMenuHandlers\OpenGLShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "wsffile\shellex\ContextMenuHandlers\OpenGLShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
+            If MyRegistry.OpenSubKey(Registry.ClassesRoot, "wshfile\shellex\ContextMenuHandlers\OpenGLShExt", False) IsNot Nothing Then
+                Try
+                    Deletesubregkey(Registry.ClassesRoot, "wshfile\shellex\ContextMenuHandlers\OpenGLShExt")
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            End If
+
             Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, ".avi\shellex", True)
                 If regkey IsNot Nothing Then
                     If MyRegistry.OpenSubKey(regkey, "{3D1975AF-0FC3-463d-8965-4DC6B5A840F4}") IsNot Nothing Then
