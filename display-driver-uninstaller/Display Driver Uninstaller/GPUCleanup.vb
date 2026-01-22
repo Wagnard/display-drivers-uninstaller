@@ -1421,10 +1421,20 @@ wantedvalue2.ToLower.Contains("ati video") Then
 			Application.Log.AddMessage("Cleaning registry Part 2/2")
 			Application.Log.AddMessage("Record CleanUP")
 
-			'--------------
-			'Record cleanup
-			'--------------
-			Try
+            Try
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows Media Foundation", True)
+                    If regkey IsNot Nothing Then
+                        Deletevalue(regkey, "EMUOPM", False)
+                    End If
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+            End Try
+
+            '--------------
+            'Record cleanup
+            '--------------
+            Try
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Record", True)
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames()
@@ -3904,12 +3914,17 @@ child2.ToLower.Contains("hdaudio.driver") Then
                     TaskList.Add(thread1)
                 End If
 
-                Dim thread2 As Task = Task.Run(Sub() InstallerCleanThread(packages, config))
-                TaskList.Add(thread2)
+                If removenvbroadcast Then
+                    Dim thread2 As Task = Task.Run(Sub() CLSIDCleanThread(clsidleftoverNVB))
+                    TaskList.Add(thread2)
+                End If
+
+                Dim thread3 As Task = Task.Run(Sub() InstallerCleanThread(packages, config))
+                TaskList.Add(thread3)
 
                 If removenvbroadcast Then
-                    Dim thread3 As Task = Task.Run(Sub() InstallerCleanThread(clsidleftoverNVB, config))
-                    TaskList.Add(thread3)
+                    Dim thread4 As Task = Task.Run(Sub() InstallerCleanThread(clsidleftoverNVB, config))
+                    TaskList.Add(thread4)
                 End If
 
                 If Not WindowsIdentity.GetCurrent().IsSystem Then
@@ -5627,6 +5642,13 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                     If MyRegistry.OpenSubKey(regkey, "00nView") IsNot Nothing Then
                         Try
                             Deletesubregkey(regkey, "00nView")
+                        Catch ex As Exception
+                            Application.Log.AddException(ex)
+                        End Try
+                    End If
+                    If config.RemoveGFE AndAlso MyRegistry.OpenSubKey(regkey, "NvAppDesktopContext") IsNot Nothing Then
+                        Try
+                            Deletesubregkey(regkey, "NvAppDesktopContext")
                         Catch ex As Exception
                             Application.Log.AddException(ex)
                         End Try

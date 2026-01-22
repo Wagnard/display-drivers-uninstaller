@@ -2137,6 +2137,29 @@ Namespace Display_Driver_Uninstaller
 
                             If StrContainsAny(child, True, clsidleftover) Then
                                 Try
+                                    appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
+                                    If Not String.IsNullOrWhiteSpace(appid) Then
+                                        Try
+                                            Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "AppID", True), appid, False)
+                                        Catch ex As Exception
+                                            Application.Log.AddException(ex)
+                                        End Try
+                                    End If
+
+                                    Using subregkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\TypeLib")
+                                        If subregkey2 IsNot Nothing Then
+                                            typelib = TryCast(subregkey2.GetValue("", String.Empty), String)
+                                            If Not String.IsNullOrWhiteSpace(typelib) Then
+                                                Try
+                                                    Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib", True), typelib, False)
+                                                    typelibList.Add(typelib)
+                                                Catch ex As Exception
+                                                    Application.Log.AddException(ex)
+                                                End Try
+                                            End If
+                                        End If
+                                    End Using
+
                                     Deletesubregkey(regkey, child)
                                     OnCLSIDLeftoverRemoval(child)
                                     childlist.Add(child)
@@ -2167,10 +2190,8 @@ Namespace Display_Driver_Uninstaller
                                                     typelib = TryCast(subregkey2.GetValue("", String.Empty), String)
                                                     If Not String.IsNullOrWhiteSpace(typelib) Then
                                                         Try
-                                                            Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib", True), typelib)
+                                                            Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib", True), typelib, False)
                                                             typelibList.Add(typelib)
-                                                        Catch exARG As ArgumentException
-                                                            'Do nothing, can happen (Not found)
                                                         Catch ex As Exception
                                                             Application.Log.AddException(ex)
                                                         End Try
@@ -2224,10 +2245,8 @@ Namespace Display_Driver_Uninstaller
                                                     typelib = TryCast(subregkey2.GetValue("", String.Empty), String)
                                                     If Not String.IsNullOrWhiteSpace(typelib) Then
                                                         Try
-                                                            Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib", True), typelib)
+                                                            Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "TypeLib", True), typelib, False)
                                                             typelibList.Add(typelib)
-                                                        Catch exARG As ArgumentException
-                                                            'Do nothing, can happen (Not found)
                                                         Catch ex As Exception
                                                             Application.Log.AddException(ex)
                                                         End Try
@@ -2320,6 +2339,29 @@ Namespace Display_Driver_Uninstaller
 
                                 If StrContainsAny(child, True, clsidleftover) Then
                                     Try
+                                        appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
+                                        If Not String.IsNullOrWhiteSpace(appid) Then
+                                            Try
+                                                Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\AppID", True), appid, False)
+                                            Catch ex As Exception
+                                                Application.Log.AddException(ex)
+                                            End Try
+                                        End If
+
+                                        Using subregkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child & "\TypeLib")
+                                            If subregkey2 IsNot Nothing Then
+                                                typelib = TryCast(subregkey2.GetValue("", String.Empty), String)
+                                                If Not String.IsNullOrWhiteSpace(typelib) Then
+                                                    Try
+                                                        Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\TypeLib", True), typelib, False)
+                                                        typelibList.Add(typelib)
+                                                    Catch ex As Exception
+                                                        Application.Log.AddException(ex)
+                                                    End Try
+                                                End If
+                                            End If
+                                        End Using
+
                                         Deletesubregkey(regkey, child)
                                         OnCLSIDLeftoverRemovalWOW6432(child)
                                         childlist.Add(child)
@@ -2350,10 +2392,8 @@ Namespace Display_Driver_Uninstaller
                                                         typelib = TryCast(subregkey2.GetValue("", String.Empty), String)
                                                         If Not String.IsNullOrWhiteSpace(typelib) Then
                                                             Try
-                                                                Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\TypeLib", True), typelib)
+                                                                Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\TypeLib", True), typelib, False)
                                                                 typelibList.Add(typelib)
-                                                            Catch exARG As ArgumentException
-                                                                'Do nothing, can happen (Not found)
                                                             Catch ex As Exception
                                                                 Application.Log.AddException(ex)
                                                             End Try
@@ -2409,10 +2449,8 @@ Namespace Display_Driver_Uninstaller
                                                         typelib = TryCast(subregkey2.GetValue("", String.Empty), String)
                                                         If Not String.IsNullOrWhiteSpace(typelib) Then
                                                             Try
-                                                                Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\TypeLib", True), typelib)
+                                                                Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\TypeLib", True), typelib, False)
                                                                 typelibList.Add(typelib)
-                                                            Catch exARG As ArgumentException
-                                                                'Do nothing, can happen (Not found)
                                                             Catch ex As Exception
                                                                 Application.Log.AddException(ex)
                                                             End Try
@@ -2447,9 +2485,7 @@ Namespace Display_Driver_Uninstaller
                                                     appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
                                                     If Not String.IsNullOrWhiteSpace(appid) Then
                                                         Try
-                                                            Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\AppID", True), appid)
-                                                        Catch exARG As ArgumentException
-                                                            'Do nothing, can happen (Not found)
+                                                            Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\AppID", True), appid, False)
                                                         Catch ex As Exception
                                                             Application.Log.AddException(ex)
                                                         End Try
@@ -2460,10 +2496,8 @@ Namespace Display_Driver_Uninstaller
                                                             typelib = TryCast(subregkey3.GetValue("", String.Empty), String)
                                                             If Not String.IsNullOrWhiteSpace(typelib) Then
                                                                 Try
-                                                                    Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\TypeLib", True), typelib)
+                                                                    Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\TypeLib", True), typelib, False)
                                                                     typelibList.Add(typelib)
-                                                                Catch exARG As ArgumentException
-                                                                    'Do nothing, can happen (Not found)
                                                                 Catch ex As Exception
                                                                     Application.Log.AddException(ex)
                                                                 End Try
