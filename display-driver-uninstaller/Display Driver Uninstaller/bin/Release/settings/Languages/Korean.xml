@@ -29,11 +29,11 @@
 		<btnCleanShutdown>
 			<Text>
 				지우고, 시스템 끄기
-				(새 그래픽카드를 장착할 경우)
+				(새 그래픽 카드를 장착할 경우)
 			</Text>
 			<Tooltip>
 				현재 및 이전 드라이버를 제거하고 다시 검색하지 않고 컴퓨터 종료
-				(새 그래픽카드를 장착할 경우)
+				(새 그래픽 카드를 장착할 경우)
 			</Tooltip>
 		</btnCleanShutdown>
 		<btnCleanGfeDownloads>
@@ -60,10 +60,10 @@
 			</Tooltip>
 		</btnCleanCaches>
 		<lblWinVersion>
-			<Text>탐지된 운영 체제:</Text>
+			<Text>감지된 운영 체제:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** DDU를 좋아하십니까? 기부를 고려하면, 더 발전하는 데 도움이 될 것입니다. ***</Text>
+			<Text>*** DDU를 좋아하세요? 개발 지원을 위한 팁을 남겨주세요 ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>로그</Text>
@@ -106,7 +106,7 @@
 			<Text>정보</Text>
 		</AboutMenuItem>
 		<TranslatorsMenuItem>
-			<Text>번역자</Text>
+			<Text>번역가</Text>
 		</TranslatorsMenuItem>
 		<PatronMenuItem>
 			<Text>후원자</Text>
@@ -114,8 +114,8 @@
 		<VisitDDUHomeMenuItem>
 			<Text>DDU 공식 웹사이트 방문</Text>
 		</VisitDDUHomeMenuItem>
-		<VisitDDUShopMenuItem>
-            <Text>DDU 공식 상품 매장을 방문하세요</Text>
+        <VisitDDUShopMenuItem>
+            <Text>DDU 공식 상품 매장 방문</Text>
         </VisitDDUShopMenuItem>
 		<VisitDiscord>
 			<Text>Discord에 가입하기</Text>
@@ -141,7 +141,7 @@
 			<Text5>Display Driver Uninstaller (DDU)가 레지스트리를 많이 수정하고 있습니다. DDU는 시스템 복원 지점을 자동으로 생성합니다 (정상 모드만 해당).</Text5>
 			<Text6>모듈 중 하나에서 문제가 발생했습니다. DDU 로그를 개발자에게 전송하세요.</Text6>
 			<Text7>DDU가 AMD 스위칭 랩톱 (Enduro 또는 동등한 노트북)을 가지고 있음을 감지했지만 DDU가 아직 Enduro 시스템과 완전히 호환되지 않고 테스트되었습니다. 사용자의 책임 하에 사용하세요.</Text7>
-			<Text8>DDU가 안전 모드가 아님을 감지했습니다... 문제 없이 보다 효과적으로 정리하려면 안전 모드로 재부팅하는 것이 좋습니다.</Text8>
+			<Text8>DDU가 사용자가 안전 모드가 아님을 감지했습니다... 문제 없이 더 나은 정리를 위해 안전 모드로 재부팅하는 것이 권장됩니다.</Text8>
 			<Text9>Windows 장치 설치 설정이 드라이버를 자동으로 설치하지 않음으로 변경되었습니다.</Text9>
 			<Text10>지우기가 완료되었습니다! 지금 종료하시겠습니까?</Text10>
 			<Text11>Windows 장치 설치 설정이 드라이버를 자동으로 설치하도록 변경되었습니다.</Text11>
@@ -360,7 +360,7 @@
 		<lblNotSafeMode>
 			<Text>
 				안전 모드가 아닙니다. 발생 가능한 문제를 방지하기 위해 
-				안전 모드로 재부팅하는 것이 좋습니다.
+				안전 모드로 재부팅하는 것이 매우 권장됩니다.
 			</Text>
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
@@ -392,7 +392,7 @@
 			<Text>옵션</Text>
 		</optionsMenuItem>
 		<copyMenuItem>
-			<Text>복사 사용</Text>
+			<Text>복사 사용함</Text>
 		</copyMenuItem>
 
 		<filtersMenuItem>
@@ -426,13 +426,13 @@
 			<Text>서비스 약관 (ToS)</Text>
 		</btnTos>
 		<btnTranslators>
-			<Text>번역자</Text>
+			<Text>번역가</Text>
 		</btnTranslators>
 		<btnPatron>
 			<Text>후원자</Text>
 		</btnPatron>
 		<lblTranslators>
-			<Text>다음 번역자들과 목록에 없는 사람들에게 큰 감사를 드립니다!</Text>
+			<Text>다음 번역가들과 목록에 없는 사람들에게 큰 감사를 드립니다!</Text>
 		</lblTranslators>
 		<lblPatron>
 			<Text>
@@ -467,17 +467,17 @@
 	<Misc>
 		<About>
 			<Text>
-				Display Driver Uninstaller (DDU) / 디스플레이 (GPU) 드라이버용 클리너입니다. (NVIDIA/AMD)
+				Display Driver Uninstaller (DDU) / 디스플레이 (GPU) 드라이버에 대한 청소기입니다. (NVIDIA/AMD)
 
-				장치 관리자에서 디스플레이/GPU 드라이버를 제거하고 NVIDIA/AMD에서 서비스를 제거하면서 
-				Windows 드라이버 저장소에서 현재 및 모든 선행 드라이버를 제거합니다.
+				이 작업은 장치 관리자에서 디스플레이/GPU 드라이버를 제거하고, Windows 드라이버
+				저장소에서  현재 및 이전 모든 드라이버를 삭제하며, NVIDIA/AMD 관련 서비스를 제거합니다.
 
-				이 도구를 사용한 후의 현재 효과는 Windows가 "새로 설치" 상태였을 때와 비슷합니다.
+				이 도구를 사용한 후의 현재 효과는 Windows가 "새로 설치" 상태일 때와 유사할 것입니다.
 
 				이 도구는 "Driver Sweeper"*와 매우 유사하며 위에 언급된 추가 기능을 모두 갖추고 있습니다.
 
-				이전 드라이버 또는 최신 드라이버를 설치하는 데 문제가 있으면 문제를 해결한다는 일부 보고서가 있으므로 
-				설치해 보세요.
+				이전 버전 드라이버 또는 최신 버전 드라이버 설치에 문제가 있는 경우, 이 방법을 시도해 보세요.
+				일부 보고에 따르면 이 방법으로 문제가 해결된다고 합니다.
 
 				권장하는 사용 방법 :
 
@@ -486,13 +486,13 @@
 
 				- 우리는 모든 사람들의 의견을 수렴하여 성공 여부를 알려주고 싶습니다.
 
-				 백업 또는 시스템 복원 지점을 만듭니다. (그러나 일반적으로 상당히 안전해야 합니다.)
+				- 백업 또는 시스템 복원 지점을 만드세요. (하지만 일반적으로는 상당히 안전할 것입니다.)
 
 				- 드라이버에 문제가 있거나 이 도구를 사용하여 문제가 발생했거나 현재 발생하고 있는 경우 
 				결과를 공유하세요.
 
-				NVIDIA, AMD 또는 Microsoft는 사용자 또는 사용자 컴퓨터의 손상에 대해 책임을 질 수 없으며 
-				DDU 또는 해당 생성자의 계열사가 아닙니다.
+				NVIDIA, AMD, Microsoft는 사용자 또는 사용자의 컴퓨터에 발생한 어떠한 손해에 대해서도 책임을
+				지지 않으며, DDU 또는 그 제작자와는 어떠한 제휴 관계도 없음을 유념하세요.
 				-------------------------------
 
 				제작: Wagnard.
@@ -505,14 +505,14 @@
 
 				AMD 7850의 기부에 대해 Jackalito에게 감사드립니다.
 
-				Special thanks to Guru3D https://www.guru3d.com/ for helping provide early exposure.
+				초기 홍보에 도움을 주신 Guru3D (https://www.guru3d.com/)에 특별히 감사드립니다.
 
-				DDU "SetAcl"과 함께 자신의 프로그램을 사용할 수 있는 권한을 주신 Helge Klein (https://helgeklein.com/setacl/) 에게 감사드립니다
+				DDU "SetAcl"과 함께 자신의 프로그램을 사용할 수 있는 권한을 주신 Helge Klein (https://helgeklein.com/setacl/)에게 감사드립니다
 
-				테스트에 많은 시간을 할애해 주셔서 감사합니다: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (나와 함께 디버깅하는 데 시간이 걸렸습니다)
+				테스트에 시간을 내주신 분들께 큰 감사를 드립니다: Gamer1291 (optimus), Octopuss (Amd Enduro), nedooo` (저와 함께 디버깅에 시간을 할애해 주심)
 				Extraordinary (버그 수정 테스트)
 
-				시스템을 위험에 빠뜨린 모든 분께 감사드립니다. (Dellon132에 대한 특별한 감사)
+				시스템을 위험에 빠뜨린 모든 분께 감사드립니다. (Dellon132에게 특별히 감사드립니다)
 
 				*DDU, 그 제작자 및 제휴사는 Driver Sweeper 또는 그 제작자와 어떠한 관련이 없습니다.
 			</Text>
@@ -520,14 +520,14 @@
 
 		<Tos>
 			<Text>
-				Display Driver Uninstaller  ("DDU") 사용자 계약
+				Display Driver Uninstaller ("DDU") 사용자 계약
 
-				DDU 소프트웨어를 사용하면 DDU ("사용자")의 사용자가 됩니다. 이 계약은 프로그램을 사용하여 드라이버를 제거하는 즉시 적용됩니다.
+				DDU 소프트웨어를 사용함으로써 귀하는 DDU 사용자 ("사용자")가 됩니다. 이 계약은 귀하가 드라이버를 제거하기 위해 프로그램을 사용하는 즉시 효력이 발생합니다.
 
 				DDU를 사용하면 DDU 또는 DDU의 제작자 및 계열사가 PC를 손상시키거나 부정적인 영향을 끼친다고 비난하지 않는 것에 동의합니다.
 
-				DDU를 사용하면 NVIDIA ("NVIDIA, GeForce") 또는 Advanced Micro Devices ("AMD, Radeon")가 이 프로그램과 관련이 있으며 
-				DDU 또는 DDU의 제작자와 관련이 없다는 것을 확인할 수 있습니다.
+				DDU를 사용함으로써 귀하는 NVIDIA ("NVIDIA, GeForce") 또는 Advanced Micro Devices ("AMD, Radeon")가 이 프로그램과 아무런 관련이 없으며,
+				DDU 또는 그 제작자와 어떠한 제휴 관계도 없음을 인정하는 것입니다.
 			</Text>
 		</Tos>
 	</Misc>
