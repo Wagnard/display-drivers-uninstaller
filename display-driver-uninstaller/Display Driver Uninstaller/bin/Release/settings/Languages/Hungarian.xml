@@ -114,9 +114,9 @@
 		<VisitDDUHomeMenuItem>
 			<Text>A DDU weboldalának meglátogatása</Text>
 		</VisitDDUHomeMenuItem>
-		      <VisitDDUShopMenuItem>
-            <Text>Látogasd meg a hivatalos DDU Merch Shopot</Text>
-        </VisitDDUShopMenuItem>
+		<VisitDDUShopMenuItem>
+			<Text>A hivatalos DDU Merch Shop meglátogatása</Text>
+		</VisitDDUShopMenuItem>
 		<VisitDiscord>
 			<Text>Csatlakozz a Discord szerverünkhöz</Text>
 		</VisitDiscord>
@@ -499,7 +499,7 @@
 
 				Programozók: Wagnard, Devmltk és Shady7557
 
-				Tesztelő: Dellon132
+				Tesztelők: Dellon132 és Mats/Onyx
 
 				Logók: juanchacin
 
@@ -536,7 +536,7 @@
 		<Translator>
 			<User>istvanszabo890629</User>
 			<Details>istvanszabo890629@gmail.com</Details>
-			<LastUpdate>14/07/2025</LastUpdate>
+			<LastUpdate>27/01/2026</LastUpdate>
 		</Translator>
 
 		<Translator2>
