@@ -248,6 +248,7 @@ Section "MainSection" SEC01
   File "${SOURCE_PATH}\Settings\INTEL\packagesigs.cfg"
   File "${SOURCE_PATH}\Settings\INTEL\packagesoneapi.cfg"
   File "${SOURCE_PATH}\Settings\INTEL\packagesendurance.cfg"
+  File "${SOURCE_PATH}\Settings\INTEL\packagesnpu.cfg"
   File "${SOURCE_PATH}\Settings\INTEL\services.cfg"
   File "${SOURCE_PATH}\Settings\INTEL\servicesigs.cfg"
   File "${SOURCE_PATH}\Settings\INTEL\servicesaudio.cfg"
