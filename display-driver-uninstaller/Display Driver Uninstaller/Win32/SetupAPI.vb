@@ -2273,160 +2273,161 @@ Namespace Display_Driver_Uninstaller.Win32
 			Return Nothing
 		End Function
 
-		Public Shared Function GetDevicesByCHID(ByVal text As String, ByVal includeSiblings As Boolean, ByVal includeParents As Boolean, ByVal includechilds As Boolean, Optional ByVal driverDetails As Boolean = False) As List(Of Device)  'Get devices by Compatible Hardware IDs
-			Dim Devices As List(Of Device) = New List(Of Device)(500)
+        Public Shared Function GetDevicesByCompatibleID(ByVal compatibleIdFilter As String, ByVal includeSiblings As Boolean, ByVal includeParents As Boolean, ByVal includechilds As Boolean, Optional ByVal driverDetails As Boolean = False) As List(Of Device)  'Get devices by Compatible Hardware IDs
+            Dim Devices As List(Of Device) = New List(Of Device)(500)
 
-			Try
-				Dim hardwareIds(0) As String
-				Dim lowerfilters(0) As String
-				Dim upperfilters(0) As String
-				Dim friendlyname As String
-				Dim service As String
-				Dim desc As String = Nothing
-				Dim className As String = Nothing
-				Dim match As Boolean = False
+            Try
+                Dim hardwareIds(0) As String
+                Dim lowerfilters(0) As String
+                Dim upperfilters(0) As String
+                Dim friendlyname As String
+                Dim service As String
+                Dim desc As String = Nothing
+                Dim className As String = Nothing
+                Dim match As Boolean = False
 
-				Dim errCode As UInteger = 0UI
-				Dim devInst As UInteger = 0UI
+                Dim errCode As UInteger = 0UI
+                Dim devInst As UInteger = 0UI
 
-				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(IntPtr.Zero, Nothing, IntPtr.Zero, DIGCF.ALLCLASSES)
-					If infoSet.IsInvalid Then
-						Throw New Win32Exception()
-					End If
+                Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(IntPtr.Zero, Nothing, IntPtr.Zero, DIGCF.ALLCLASSES)
+                    If infoSet.IsInvalid Then
+                        Throw New Win32Exception()
+                    End If
 
-					Dim ptrDevInfo As StructPtr = Nothing
-					Try
-						If Is64 Then
-							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
-						Else
-							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X86)))})
-						End If
+                    Dim ptrDevInfo As StructPtr = Nothing
+                    Try
+                        If Is64 Then
+                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X64)))})
+                        Else
+                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = GetUInt32(Marshal.SizeOf(GetType(SP_DEVINFO_DATA_X86)))})
+                        End If
 
-						Dim i As UInteger = 0UI
+                        Dim i As UInteger = 0UI
 
-						While True
-							If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
-								errCode = GetLastWin32ErrorU()
+                        While True
+                            If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
+                                errCode = GetLastWin32ErrorU()
 
-								If errCode = Errors.NO_MORE_ITEMS Then
-									Exit While
-								Else
-									Throw New Win32Exception(GetInt32(errCode))
-								End If
-							End If
+                                If errCode = Errors.NO_MORE_ITEMS Then
+                                    Exit While
+                                Else
+                                    Throw New Win32Exception(GetInt32(errCode))
+                                End If
+                            End If
 
-							i += 1UI
-							match = False
-							desc = Nothing
-							className = Nothing
-							hardwareIds = Nothing
-							lowerfilters = Nothing
-							upperfilters = Nothing
-							friendlyname = Nothing
-							service = Nothing
+                            i += 1UI
+                            match = False
+                            desc = Nothing
+                            className = Nothing
+                            hardwareIds = Nothing
+                            lowerfilters = Nothing
+                            upperfilters = Nothing
+                            friendlyname = Nothing
+                            service = Nothing
 
-							If Not String.IsNullOrEmpty(text) Then
-								hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.COMPATIBLEIDS)
-								If hardwareIds IsNot Nothing Then
-									For Each hdID As String In hardwareIds
-										If hdID.IndexOf(text, StringComparison.OrdinalIgnoreCase) <> -1 Then
-											match = True
-										End If
-									Next
-								End If
-							Else
-								match = True
-							End If
+                            If Not String.IsNullOrEmpty(compatibleIdFilter) Then
+                                hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.COMPATIBLEIDS)
+                                If hardwareIds IsNot Nothing Then
+                                    For Each hdID As String In compatibleIdFilter
+                                        If hdID.IndexOf(compatibleIdFilter, StringComparison.OrdinalIgnoreCase) <> -1 Then
+                                            match = True
+                                        End If
+                                    Next
+                                End If
+                            Else
+                                match = True
+                            End If
 
-							If match Then
-								If Is64 Then
-									devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
-								Else
-									devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
-								End If
+                            If match Then
+                                If Is64 Then
+                                    devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X64)), SP_DEVINFO_DATA_X64).DevInst
+                                Else
+                                    devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, GetType(SP_DEVINFO_DATA_X86)), SP_DEVINFO_DATA_X86).DevInst
+                                End If
 
-								Dim d As Device = New Device() With
-								{
-								 .devInst = devInst,
-								 .Description = desc,
-								 .ClassName = className,
-								 .HardwareIDs = hardwareIds,
-								 .LowerFilters = lowerfilters,
-								 .UpperFilters = upperfilters,
-								 .FriendlyName = friendlyname,
-								 .Service = service
-								}
+                                Dim d As Device = New Device() With
+                                {
+                                 .devInst = devInst,
+                                 .Description = desc,
+                                 .ClassName = className,
+                                 .HardwareIDs = hardwareIds,
+                                 .LowerFilters = lowerfilters,
+                                 .UpperFilters = upperfilters,
+                                 .FriendlyName = friendlyname,
+                                 .Service = service
+                                }
 
-								GetDeviceDetails(infoSet, ptrDevInfo.Ptr, d, True)
+                                GetDeviceDetails(infoSet, ptrDevInfo.Ptr, d, True)
 
-								If driverDetails Then
-									GetDriverDetails(infoSet, ptrDevInfo.Ptr, d)
-								End If
+                                If driverDetails Then
+                                    GetDriverDetails(infoSet, ptrDevInfo.Ptr, d)
+                                End If
 
-								GetDeviceStatus(ptrDevInfo.Ptr, d)
+                                GetDeviceStatus(ptrDevInfo.Ptr, d)
 
-								Devices.Add(d)
-							End If
+                                Devices.Add(d)
+                            End If
 
-						End While
+                        End While
 
-						If Devices IsNot Nothing Then
-							If Devices.Count > 0 Then
-								If includeSiblings Then
-									For Each dev As Device In Devices
-										GetSiblings(dev)
+                        If Devices IsNot Nothing Then
+                            If Devices.Count > 0 Then
+                                If includeSiblings Then
+                                    For Each dev As Device In Devices
+                                        GetSiblings(dev)
 
-										If dev.SiblingDevices IsNot Nothing AndAlso dev.SiblingDevices.Length > 0 Then
-											UpdateDevicesByID(dev.SiblingDevices, driverDetails)
-										End If
-									Next
-								End If
+                                        If dev.SiblingDevices IsNot Nothing AndAlso dev.SiblingDevices.Length > 0 Then
+                                            UpdateDevicesByID(dev.SiblingDevices, driverDetails)
+                                        End If
+                                    Next
+                                End If
 
-								If includeParents Then
-									For Each dev As Device In Devices
-										GetParents(dev)
-										If dev.ParentDevices IsNot Nothing AndAlso dev.ParentDevices.Length > 0 Then
-											UpdateDevicesByID(dev.ParentDevices, driverDetails)
-										End If
-									Next
-								End If
+                                If includeParents Then
+                                    For Each dev As Device In Devices
+                                        GetParents(dev)
+                                        If dev.ParentDevices IsNot Nothing AndAlso dev.ParentDevices.Length > 0 Then
+                                            UpdateDevicesByID(dev.ParentDevices, driverDetails)
+                                        End If
+                                    Next
+                                End If
 
-								If includechilds Then
-									Dim allDevicesWithParents = GetAllDeviceParent(driverDetails)
-									ExtractChilds(driverDetails, Devices, allDevicesWithParents)
-								End If
+                                If includechilds Then
+                                    Dim allDevicesWithParents = GetAllDeviceParent(driverDetails)
+                                    ExtractChilds(driverDetails, Devices, allDevicesWithParents)
+                                End If
 
-								UpdateDevicesByID(Devices, driverDetails)
-							End If
-							Dim logEntry As LogEntry = Application.Log.CreateEntry()
-							logEntry.Message = String.Format("Devices found: {0}", Devices.Count.ToString())
-							logEntry.Add("-> vendorID", If(String.IsNullOrWhiteSpace(text), "<empty>", text))
-							logEntry.Add("-> includeSiblings", includeSiblings.ToString())
+                                UpdateDevicesByID(Devices, driverDetails)
+                            End If
+                            Dim logEntry As LogEntry = Application.Log.CreateEntry()
+                            logEntry.Message = String.Format("Devices found: {0}", Devices.Count.ToString())
+                            logEntry.Add("-> className", className)
+                            logEntry.Add("-> compatibleIdFilter", If(String.IsNullOrWhiteSpace(compatibleIdFilter), "<empty>", compatibleIdFilter))
+                            logEntry.Add("-> includeSiblings", includeSiblings.ToString())
 
-							If Devices.Count > 0 Then
-								logEntry.Add(KvP.Empty)
-								logEntry.AddDevices(False, Devices.ToArray())
-							End If
+                            If Devices.Count > 0 Then
+                                logEntry.Add(KvP.Empty)
+                                logEntry.AddDevices(False, Devices.ToArray())
+                            End If
 
-							Application.Log.Add(logEntry)
-						End If
+                            Application.Log.Add(logEntry)
+                        End If
 
-						Return Devices
-					Finally
-						If ptrDevInfo IsNot Nothing Then
-							ptrDevInfo.Dispose()
-						End If
-					End Try
-				End Using
+                        Return Devices
+                    Finally
+                        If ptrDevInfo IsNot Nothing Then
+                            ptrDevInfo.Dispose()
+                        End If
+                    End Try
+                End Using
 
-			Catch ex As Exception
-				ShowException(ex)
-			End Try
+            Catch ex As Exception
+                ShowException(ex)
+            End Try
 
-			Return Nothing
-		End Function
+            Return Nothing
+        End Function
 
-		Public Shared Function GetDevicesByHID(ByVal text As String, ByVal includeSiblings As Boolean, ByVal includeParents As Boolean, ByVal includechilds As Boolean, Optional ByVal driverDetails As Boolean = False) As List(Of Device)  'Get devices by Compatible Hardware IDs
+        Public Shared Function GetDevicesByHID(ByVal text As String, ByVal includeSiblings As Boolean, ByVal includeParents As Boolean, ByVal includechilds As Boolean, Optional ByVal driverDetails As Boolean = False) As List(Of Device)  'Get devices by Compatible Hardware IDs
 			Dim Devices As List(Of Device) = New List(Of Device)(500)
 
 			Try
@@ -2584,130 +2585,130 @@ Namespace Display_Driver_Uninstaller.Win32
 			Return Nothing
 		End Function
 
-		Public Shared Function GetDevices(ByVal className As String, Optional ByVal vendorID As String = Nothing, Optional ByVal includeSiblings As Boolean = True, Optional ByVal includeParents As Boolean = False, Optional ByVal includeChilds As Boolean = False, Optional ByVal driverDetails As Boolean = False, Optional ByVal logging As Boolean = True) As List(Of Device)
+        Public Shared Function GetDevices(ByVal className As String, Optional ByVal instancePathFilter As String = Nothing, Optional ByVal includeSiblings As Boolean = True, Optional ByVal includeParents As Boolean = False, Optional ByVal includeChilds As Boolean = False, Optional ByVal driverDetails As Boolean = False, Optional ByVal logging As Boolean = True) As List(Of Device)
 
-			Try
-				If String.IsNullOrWhiteSpace(className) Then
-					Throw New ArgumentNullException("className")
-				End If
+            Try
+                If String.IsNullOrWhiteSpace(className) Then
+                    Throw New ArgumentNullException("className")
+                End If
 
-				Dim Devices As List(Of Device) = New List(Of Device)(5)
-				Dim typeDevInfo As Type = If(Is64, GetType(SP_DEVINFO_DATA_X64), GetType(SP_DEVINFO_DATA_X86))
+                Dim Devices As List(Of Device) = New List(Of Device)(5)
+                Dim typeDevInfo As Type = If(Is64, GetType(SP_DEVINFO_DATA_X64), GetType(SP_DEVINFO_DATA_X86))
 
-				Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(IntPtr.Zero, Nothing, IntPtr.Zero, DIGCF.ALLCLASSES)
-					If infoSet.IsInvalid Then
-						Throw New Win32Exception()
-					End If
+                Using infoSet As SafeDeviceHandle = SetupDiGetClassDevs(IntPtr.Zero, Nothing, IntPtr.Zero, DIGCF.ALLCLASSES)
+                    If infoSet.IsInvalid Then
+                        Throw New Win32Exception()
+                    End If
 
-					Dim ptrDevInfo As StructPtr = Nothing
-					Try
-						If Is64 Then
-							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = GetUInt32(Marshal.SizeOf(typeDevInfo))})
-						Else
-							ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = GetUInt32(Marshal.SizeOf(typeDevInfo))})
-						End If
+                    Dim ptrDevInfo As StructPtr = Nothing
+                    Try
+                        If Is64 Then
+                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X64() With {.cbSize = GetUInt32(Marshal.SizeOf(typeDevInfo))})
+                        Else
+                            ptrDevInfo = New StructPtr(New SP_DEVINFO_DATA_X86() With {.cbSize = GetUInt32(Marshal.SizeOf(typeDevInfo))})
+                        End If
 
-						Dim i As UInteger = 0UI
-						Dim device As Device = Nothing
-						Dim devClass As String = Nothing
-						Dim devInst As UInteger
-						Dim errCode As UInteger = 0UI
+                        Dim i As UInteger = 0UI
+                        Dim device As Device = Nothing
+                        Dim devClass As String = Nothing
+                        Dim devInst As UInteger
+                        Dim errCode As UInteger = 0UI
 
-						While True
-							If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
-								errCode = GetLastWin32ErrorU()
+                        While True
+                            If Not SetupDiEnumDeviceInfo(infoSet, i, ptrDevInfo.Ptr) Then
+                                errCode = GetLastWin32ErrorU()
 
-								If errCode = Errors.NO_MORE_ITEMS Then
-									Exit While
-								Else
-									Throw New Win32Exception(GetInt32(errCode))
-								End If
-							End If
+                                If errCode = Errors.NO_MORE_ITEMS Then
+                                    Exit While
+                                Else
+                                    Throw New Win32Exception(GetInt32(errCode))
+                                End If
+                            End If
 
-							i += 1UI
+                            i += 1UI
 
-							devClass = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASS)
+                            devClass = GetStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.CLASS)
 
-							If Not String.IsNullOrWhiteSpace(devClass) AndAlso devClass.Equals(className, StringComparison.OrdinalIgnoreCase) Then
-								If Is64 Then
-									devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, typeDevInfo), SP_DEVINFO_DATA_X64).DevInst
-								Else
-									devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, typeDevInfo), SP_DEVINFO_DATA_X86).DevInst
-								End If
+                            If Not String.IsNullOrWhiteSpace(devClass) AndAlso devClass.Equals(className, StringComparison.OrdinalIgnoreCase) Then
+                                If Is64 Then
+                                    devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, typeDevInfo), SP_DEVINFO_DATA_X64).DevInst
+                                Else
+                                    devInst = DirectCast(Marshal.PtrToStructure(ptrDevInfo.Ptr, typeDevInfo), SP_DEVINFO_DATA_X86).DevInst
+                                End If
 
-								device = New Device() With
-								{
-								 .devInst = devInst,
-								 .ClassName = devClass,
-								 .DeviceID = GetDeviceID(devInst)
-								}
+                                device = New Device() With
+                                {
+                                 .devInst = devInst,
+                                 .ClassName = devClass,
+                                 .DeviceID = GetDeviceID(devInst)
+                                }
 
-								If vendorID IsNot Nothing AndAlso Not StrContainsAny(device.DeviceID, True, vendorID) Then
-									Continue While
-								End If
+                                If instancePathFilter IsNot Nothing AndAlso Not StrContainsAny(device.DeviceID, True, instancePathFilter) Then
+                                    Continue While
+                                End If
 
-								Devices.Add(device)
-							End If
-						End While
+                                Devices.Add(device)
+                            End If
+                        End While
 
-						If Devices IsNot Nothing Then
-							If Devices.Count > 0 Then
-								If includeSiblings Then
-									For Each dev As Device In Devices
-										GetSiblings(dev)
+                        If Devices IsNot Nothing Then
+                            If Devices.Count > 0 Then
+                                If includeSiblings Then
+                                    For Each dev As Device In Devices
+                                        GetSiblings(dev)
 
-										If dev.SiblingDevices IsNot Nothing AndAlso dev.SiblingDevices.Length > 0 Then
-											UpdateDevicesByID(dev.SiblingDevices, driverDetails)
-										End If
-									Next
-								End If
+                                        If dev.SiblingDevices IsNot Nothing AndAlso dev.SiblingDevices.Length > 0 Then
+                                            UpdateDevicesByID(dev.SiblingDevices, driverDetails)
+                                        End If
+                                    Next
+                                End If
 
-								If includeParents Then
-									For Each dev As Device In Devices
-										GetParents(dev)
-										If dev.ParentDevices IsNot Nothing AndAlso dev.ParentDevices.Length > 0 Then
-											UpdateDevicesByID(dev.ParentDevices, driverDetails)
-										End If
-									Next
-								End If
+                                If includeParents Then
+                                    For Each dev As Device In Devices
+                                        GetParents(dev)
+                                        If dev.ParentDevices IsNot Nothing AndAlso dev.ParentDevices.Length > 0 Then
+                                            UpdateDevicesByID(dev.ParentDevices, driverDetails)
+                                        End If
+                                    Next
+                                End If
 
-								If includeChilds Then
-									ExtractChilds(driverDetails, Devices, GetAllDeviceParent(driverDetails))
-								End If
+                                If includeChilds Then
+                                    ExtractChilds(driverDetails, Devices, GetAllDeviceParent(driverDetails))
+                                End If
 
-								UpdateDevicesByID(Devices, driverDetails)
-							End If
+                                UpdateDevicesByID(Devices, driverDetails)
+                            End If
 
-							If logging Then
-								Dim logEntry As LogEntry = Application.Log.CreateEntry()
-								logEntry.Message = String.Format("Device(s) found: {0}", Devices.Count.ToString())
-								logEntry.Add("-> className", className)
-								logEntry.Add("-> vendorID", If(String.IsNullOrWhiteSpace(vendorID), "<empty>", vendorID))
-								logEntry.Add("-> includeSiblings", includeSiblings.ToString())
+                            If logging Then
+                                Dim logEntry As LogEntry = Application.Log.CreateEntry()
+                                logEntry.Message = String.Format("Device(s) found: {0}", Devices.Count.ToString())
+                                logEntry.Add("-> className", className)
+                                logEntry.Add("-> instancePathFilter", If(String.IsNullOrWhiteSpace(instancePathFilter), "<empty>", instancePathFilter))
+                                logEntry.Add("-> includeSiblings", includeSiblings.ToString())
 
-								If Devices.Count > 0 Then
-									logEntry.Add(KvP.Empty)
-									logEntry.AddDevices(False, Devices.ToArray())
-								End If
+                                If Devices.Count > 0 Then
+                                    logEntry.Add(KvP.Empty)
+                                    logEntry.AddDevices(False, Devices.ToArray())
+                                End If
 
-								Application.Log.Add(logEntry)
-							End If
-						End If
+                                Application.Log.Add(logEntry)
+                            End If
+                        End If
 
-						Return Devices
-					Finally
-						If ptrDevInfo IsNot Nothing Then
-							ptrDevInfo.Dispose()
-						End If
-					End Try
-				End Using
-			Catch ex As Exception
-				Application.Log.AddException(ex, "GetDevices failed!")
-				Return New List(Of Device)(0)
-			End Try
-		End Function
+                        Return Devices
+                    Finally
+                        If ptrDevInfo IsNot Nothing Then
+                            ptrDevInfo.Dispose()
+                        End If
+                    End Try
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex, "GetDevices failed!")
+                Return New List(Of Device)(0)
+            End Try
+        End Function
 
-		Private Shared Sub ExtractChilds(driverDetails As Boolean, Devices As List(Of Device), allDevices As List(Of Device), Optional updateDevice As Boolean = False)
+        Private Shared Sub ExtractChilds(driverDetails As Boolean, Devices As List(Of Device), allDevices As List(Of Device), Optional updateDevice As Boolean = False)
 			If Devices Is Nothing Then Return
 
 			For Each dev As Device In Devices

@@ -3195,7 +3195,7 @@ Namespace Display_Driver_Uninstaller
                                 If StrContainsAny(oem.Class, True, "Extension") AndAlso StrContainsAny(oem.Catalog, True, "HdBusExt.cat") Then
                                     Dim oemRemoved = False
                                     'For some special cases, we need to disable the device before removing the inf.
-                                    Dim audiobusList As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCHID("PCI\VEN_8086&CC_040", False, False, False, True)
+                                    Dim audiobusList As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCompatibleID("PCI\VEN_8086&CC_040", False, False, False, True)
                                     If audiobusList IsNot Nothing AndAlso audiobusList.Count > 0 Then
                                         Dim disabledAudiobusList As New List(Of SetupAPI.Device)
                                         For Each audiobus As SetupAPI.Device In audiobusList
