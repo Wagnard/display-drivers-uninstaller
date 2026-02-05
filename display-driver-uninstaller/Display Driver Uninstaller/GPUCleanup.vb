@@ -1035,14 +1035,12 @@ Namespace Display_Driver_Uninstaller
                         For Each d As SetupAPI.Device In found
                             If d IsNot Nothing Then
                                 SetupAPI.UninstallDevice(d)
-                                If d.HasHardwareID AndAlso d.HardwareIDs.Length > 0 Then
-                                    cleanupEngine.RemoveMonitorConfiguration(d.HardwareIDs(0).Substring(d.HardwareIDs(0).IndexOf("\") + 1))
-                                End If
                             End If
                         Next
                         found.Clear()
                     End If
                     UpdateTextMethod(UpdateTextTranslated(27))
+                    cleanupEngine.RemoveMonitorConfiguration()
                     Application.Log.AddMessage("SetupAPI: Remove Monitor(s) Complete .")
                 End If
 
