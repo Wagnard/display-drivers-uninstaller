@@ -2328,7 +2328,7 @@ Namespace Display_Driver_Uninstaller.Win32
                             If Not String.IsNullOrEmpty(compatibleIdFilter) Then
                                 hardwareIds = GetMultiStringProperty(infoSet, ptrDevInfo.Ptr, SPDRP.COMPATIBLEIDS)
                                 If hardwareIds IsNot Nothing Then
-                                    For Each hdID As String In compatibleIdFilter
+                                    For Each hdID As String In hardwareIds
                                         If hdID.IndexOf(compatibleIdFilter, StringComparison.OrdinalIgnoreCase) <> -1 Then
                                             match = True
                                         End If
