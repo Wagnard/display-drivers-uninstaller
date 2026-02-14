@@ -131,30 +131,33 @@
 
 			</DockPanel>
 
-			<Border DockPanel.Dock="Bottom" Margin="0,0,0,25">
-				<Border.Style>
-					<Style TargetType="{x:Type Border}">
-						<Style.Triggers>
-							<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.AMD}">
-								<Setter Property="Background" Value="{StaticResource logoAMD}"/>
-							</DataTrigger>
-							<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.Nvidia}">
-								<Setter Property="Background" Value="{StaticResource logoNvidia}"/>
-							</DataTrigger>
-							<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.Intel}">
-								<Setter Property="Background" Value="{StaticResource logoIntel}"/>
-							</DataTrigger>
-							<DataTrigger Binding="{Binding Path=Settings.SelectedAUDIO, Mode=OneWay}" Value="{x:Static local:AudioVendor.Realtek}">
-								<Setter Property="Background" Value="{StaticResource logoRealtek}"/>
-							</DataTrigger>
-							<DataTrigger Binding="{Binding Path=Settings.SelectedAUDIO, Mode=OneWay}" Value="{x:Static local:AudioVendor.SoundBlaster}">
-								<Setter Property="Background" Value="{StaticResource logoSoundBlaster}"/>
-							</DataTrigger>
-						</Style.Triggers>
-					</Style>
-				</Border.Style>
-			</Border>
-		</DockPanel>
+            <Border DockPanel.Dock="Bottom" Margin="0,0,0,25">
+                <Border.Style>
+                    <Style TargetType="{x:Type Border}">
+
+                        <Setter Property="Background" Value="Transparent"/>
+
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.AMD}">
+                                <Setter Property="Background" Value="{StaticResource logoAMD}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.Nvidia}">
+                                <Setter Property="Background" Value="{StaticResource logoNvidia}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.Intel}">
+                                <Setter Property="Background" Value="{StaticResource logoIntel}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=Settings.SelectedAUDIO, Mode=OneWay}" Value="{x:Static local:AudioVendor.Realtek}">
+                                <Setter Property="Background" Value="{StaticResource logoRealtek}"/>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=Settings.SelectedAUDIO, Mode=OneWay}" Value="{x:Static local:AudioVendor.SoundBlaster}">
+                                <Setter Property="Background" Value="{StaticResource logoSoundBlaster}"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </Border.Style>
+            </Border>
+        </DockPanel>
 
 		<DockPanel Grid.Row="2" x:Name="ButtonsPanel" >
 			<DockPanel.Resources>
@@ -263,7 +266,7 @@
 		</Border>
 		<DockPanel Grid.Column="3" Grid.Row="3" >
 			<StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-				<ComboBox Name="cbSelectedType" HorizontalAlignment="Stretch" VerticalAlignment="Center"  DockPanel.Dock="Top" Margin="10,0,10,0" />
+				<ComboBox Name="cbSelectedType" HorizontalAlignment="Stretch" VerticalAlignment="Center"  DockPanel.Dock="Top" Margin="10,0,10,0" SelectedIndex="0" />
 				<ComboBox x:Name="cbSelectedGPU" HorizontalAlignment="Stretch" VerticalAlignment="Center" DockPanel.Dock="Top" SelectedIndex="0" Margin="10,0,10,0" />
 			</StackPanel>
 		</DockPanel>

@@ -44,9 +44,10 @@ Namespace Display_Driver_Uninstaller
 		Private _serviceInstaller As New ServiceInstaller
 		Private _gpuCleanup As New GPUCleanup
 		Private _audioCleanup As New AUDIOCleanup
-		Private _enduro As Boolean = False
+        Private _enduro As Boolean = False
+        Private isUpdatingComboBox As Boolean = False
 
-		Friend Shared Property CleaningTask As Task
+        Friend Shared Property CleaningTask As Task
 			Get
 				Return _cleaningTask
 			End Get
@@ -244,41 +245,61 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Private Sub CbLanguage_SelectedIndexChanged(sender As Object, e As SelectionChangedEventArgs) Handles cbLanguage.SelectionChanged
-			If Application.Settings.SelectedLanguage IsNot Nothing Then
-				Languages.Load(Application.Settings.SelectedLanguage)
+            If Application.Settings.SelectedLanguage IsNot Nothing Then
+                isUpdatingComboBox = True
+                Languages.Load(Application.Settings.SelectedLanguage)
 
-				If StrContainsAny(Application.Settings.SelectedLanguage.ToString(), True, "he-il", "fa-ir", "ar-ye") Then
-					Application.Settings.FlowControl = FlowDirection.RightToLeft
-				Else
-					Application.Settings.FlowControl = FlowDirection.LeftToRight
-				End If
+                If StrContainsAny(Application.Settings.SelectedLanguage.ToString(), True, "he-il", "fa-ir", "ar-ye") Then
+                    Application.Settings.FlowControl = FlowDirection.RightToLeft
+                Else
+                    Application.Settings.FlowControl = FlowDirection.LeftToRight
+                End If
 
-				Languages.TranslateForm(Me)
+                Languages.TranslateForm(Me)
 
-				GetGPUDetails(False)
+                GetGPUDetails(False)
 
-				'Combobox does not translate themselve, we must push the updated ItemsSource.
-				cbSelectedType.ItemsSource = {Languages.GetTranslation("frmMain", "Options_Type", "Options1"), Languages.GetTranslation("frmMain", "Options_Type", "Options2"), Languages.GetTranslation("frmMain", "Options_Type", "Options3")}
-				cbSelectedType.SelectedIndex = If(Application.Settings.RememberLastChoice, Application.Settings.LastSelectedTypeIndex, 0)
+                Dim index As Integer = If(Application.Settings.RememberLastChoice, Application.Settings.LastSelectedTypeIndex, cbSelectedType.SelectedIndex)
+                Dim gpuIndex = If(Application.Settings.RememberLastChoice, Application.Settings.LastSelectedGPUIndex, cbSelectedGPU.SelectedIndex)
 
-				Select Case Application.Settings.SelectedType
-					Case CleanType.None, CleanType.GPU
-						cbSelectedGPU.ItemsSource = {
-			Languages.GetTranslation("frmMain", "Options_GPU", "Options1"),
-			Languages.GetTranslation("frmMain", "Options_GPU", "Options2"),
-			Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
-			Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
-			Languages.GetTranslation("frmMain", "Options_GPU", "Options5")
-		} ' The order is important, check Appsettings.vb
-					Case CleanType.Audio
-						cbSelectedGPU.ItemsSource = {
-			Languages.GetTranslation("frmMain", "Options_AUDIO", "Options1"),
-			Languages.GetTranslation("frmMain", "Options_AUDIO", "Options2"),
-			Languages.GetTranslation("frmMain", "Options_AUDIO", "Options3")
-		} ' The order is important, check Appsettings.vb
-				End Select
-			End If
-		End Sub
+                cbSelectedType.ItemsSource = {
+                    Languages.GetTranslation("frmMain", "Options_Type", "Options1"),
+                    Languages.GetTranslation("frmMain", "Options_Type", "Options2"),
+                    Languages.GetTranslation("frmMain", "Options_Type", "Options3")
+                }
+
+                cbSelectedType.SelectedIndex = index
+
+                Select Case index
+                    Case 1 ' Audio
+                        cbSelectedGPU.ItemsSource = {
+                    Languages.GetTranslation("frmMain", "Options_AUDIO", "Options1"),
+                    Languages.GetTranslation("frmMain", "Options_AUDIO", "Options2"),
+                    Languages.GetTranslation("frmMain", "Options_AUDIO", "Options3")
+                }
+                    Case 2 ' GPU
+                        cbSelectedGPU.ItemsSource = {
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options1"),
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options2"),
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options5")
+                }
+                    Case Else ' None
+                        cbSelectedGPU.ItemsSource = {
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options1"),
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options2"),
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options5")
+                }
+                End Select
+
+                cbSelectedGPU.SelectedIndex = gpuIndex
+
+                isUpdatingComboBox = False
+            End If
+        End Sub
 
         Private Sub ImgDonate_Click(sender As Object, e As EventArgs) Handles imgDonate.Click
             WinAPI.OpenVisitLink(" -visitdonate")
@@ -369,8 +390,76 @@ Namespace Display_Driver_Uninstaller
 
 		Private Sub FrmMain_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
 
-			Languages.TranslateForm(Me, False)
-		End Sub
+            Languages.TranslateForm(Me, False)
+
+            isUpdatingComboBox = True
+
+            Dim typeIndex As Integer = If(Application.Settings.RememberLastChoice, Application.Settings.LastSelectedTypeIndex, 0)
+            cbSelectedType.SelectedIndex = typeIndex
+
+
+            Select Case typeIndex
+                Case 0, -1 ' None
+                    Application.Settings.SelectedType = CleanType.None
+                    Application.Settings.SelectedGPU = GPUVendor.None
+                    Application.Settings.SelectedAUDIO = AudioVendor.None
+                    cbSelectedGPU.SelectedIndex = 0
+                    ButtonsPanel.IsEnabled = False
+                    cbSelectedGPU.IsEnabled = False
+
+                Case 1 ' Audio
+                    Application.Settings.SelectedType = CleanType.Audio
+                    Dim audioIndex As Integer = If(Application.Settings.RememberLastChoice, Application.Settings.LastSelectedGPUIndex, 0)
+                    cbSelectedGPU.SelectedIndex = audioIndex
+
+                    Select Case audioIndex
+                        Case 1
+                            Application.Settings.SelectedAUDIO = AudioVendor.Realtek
+                            Application.Settings.SelectedGPU = GPUVendor.None
+                            ButtonsPanel.IsEnabled = True
+                        Case 2
+                            Application.Settings.SelectedAUDIO = AudioVendor.SoundBlaster
+                            Application.Settings.SelectedGPU = GPUVendor.None
+                            ButtonsPanel.IsEnabled = True
+                        Case Else
+                            Application.Settings.SelectedAUDIO = AudioVendor.None
+                            Application.Settings.SelectedGPU = GPUVendor.None
+                            ButtonsPanel.IsEnabled = False
+                    End Select
+                    btnCleanCaches.IsEnabled = False
+
+                Case 2 ' GPU
+                    Application.Settings.SelectedType = CleanType.GPU
+                    Dim gpuIndex As Integer = If(Application.Settings.RememberLastChoice, Application.Settings.LastSelectedGPUIndex, GPUIdentify())
+                    cbSelectedGPU.SelectedIndex = gpuIndex
+
+                    Select Case gpuIndex
+                        Case 1
+                            Application.Settings.SelectedGPU = GPUVendor.Nvidia
+                            Application.Settings.SelectedAUDIO = AudioVendor.None
+                            ButtonsPanel.IsEnabled = True
+                        Case 2
+                            Application.Settings.SelectedGPU = GPUVendor.AMD
+                            Application.Settings.SelectedAUDIO = AudioVendor.None
+                            ButtonsPanel.IsEnabled = True
+                        Case 3
+                            Application.Settings.SelectedGPU = GPUVendor.Intel
+                            Application.Settings.SelectedAUDIO = AudioVendor.None
+                            ButtonsPanel.IsEnabled = True
+                        Case 4
+                            Application.Settings.SelectedGPU = GPUVendor.All
+                            Application.Settings.SelectedAUDIO = AudioVendor.None
+                            ButtonsPanel.IsEnabled = True
+                        Case Else
+                            Application.Settings.SelectedGPU = GPUVendor.None
+                            Application.Settings.SelectedAUDIO = AudioVendor.None
+                            ButtonsPanel.IsEnabled = False
+                    End Select
+                    btnCleanCaches.IsEnabled = True
+            End Select
+
+            isUpdatingComboBox = False
+        End Sub
 		Private Sub KillProcess(ByVal ParamArray processnames As String())
 			For Each processName As String In processnames
 				If String.IsNullOrEmpty(processName) Then
@@ -1295,101 +1384,110 @@ Namespace Display_Driver_Uninstaller
 			testWindow.ShowDialog()
 		End Sub
 
-		Private Sub CbSelectedGPU_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedGPU.SelectionChanged
+        Private Sub CbSelectedType_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedType.SelectionChanged
+            If isUpdatingComboBox Then Return
 
-			Select Case cbSelectedType.SelectedIndex
+            Application.Settings.LastSelectedTypeIndex = cbSelectedType.SelectedIndex
 
-				Case CleanType.None
-					Application.Settings.SelectedGPU = GPUVendor.None
-					Application.Settings.SelectedAUDIO = AudioVendor.None
-					ButtonsPanel.IsEnabled = False
-				Case CleanType.Audio
-					Select Case cbSelectedGPU.SelectedIndex
+            Select Case cbSelectedType.SelectedIndex
+                Case 0, -1
+                    Application.Settings.SelectedType = CleanType.None
+                    cbSelectedGPU.ItemsSource = {
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options1"),
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options2"),
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options5")
+            }
+                    cbSelectedGPU.SelectedIndex = 0
+                    cbSelectedGPU.IsEnabled = False
 
-						Case 0
-							Application.Settings.SelectedGPU = GPUVendor.None
-							Application.Settings.SelectedAUDIO = AudioVendor.None
-							ButtonsPanel.IsEnabled = False
-							'Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
-						Case 1
-							Application.Settings.SelectedAUDIO = AudioVendor.Realtek
-							cbSelectedGPU.IsEnabled = True
-							ButtonsPanel.IsEnabled = True
-							Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
-						Case 2
-							Application.Settings.SelectedAUDIO = AudioVendor.SoundBlaster
-							cbSelectedGPU.IsEnabled = True
-							ButtonsPanel.IsEnabled = True
-							Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
+                Case 1
+                    Application.Settings.SelectedType = CleanType.Audio
+                    cbSelectedGPU.IsEnabled = True
+                    cbSelectedGPU.ItemsSource = {
+                Languages.GetTranslation("frmMain", "Options_AUDIO", "Options1"),
+                Languages.GetTranslation("frmMain", "Options_AUDIO", "Options2"),
+                Languages.GetTranslation("frmMain", "Options_AUDIO", "Options3")
+            }
+                    cbSelectedGPU.SelectedIndex = 0
 
-					End Select
-					btnCleanCaches.IsEnabled = False
-				Case CleanType.GPU
+                Case 2
+                    Application.Settings.SelectedType = CleanType.GPU
+                    cbSelectedGPU.IsEnabled = True
+                    cbSelectedGPU.ItemsSource = {
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options1"),
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options2"),
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options5")
+            }
+                    cbSelectedGPU.SelectedIndex = GPUIdentify()
+            End Select
 
-					Select Case cbSelectedGPU.SelectedIndex
+            isUpdatingComboBox = False
+        End Sub
 
-						Case 0
-							Application.Settings.SelectedGPU = GPUVendor.None
-							Application.Settings.SelectedAUDIO = AudioVendor.None
-							ButtonsPanel.IsEnabled = False
-							'Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
-						Case 1
-							Application.Settings.SelectedGPU = GPUVendor.Nvidia
-							cbSelectedGPU.IsEnabled = True
-							ButtonsPanel.IsEnabled = True
-							Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
-						Case 2
-							Application.Settings.SelectedGPU = GPUVendor.AMD
-							cbSelectedGPU.IsEnabled = True
-							ButtonsPanel.IsEnabled = True
-							Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
-						Case 3
-							Application.Settings.SelectedGPU = GPUVendor.Intel
-							cbSelectedGPU.IsEnabled = True
-							ButtonsPanel.IsEnabled = True
-							Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
-						Case 4
-							Application.Settings.SelectedGPU = GPUVendor.All
-							cbSelectedGPU.IsEnabled = True
-							ButtonsPanel.IsEnabled = True
-							Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
-					End Select
-					btnCleanCaches.IsEnabled = True
-			End Select
+        Private Sub CbSelectedGPU_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedGPU.SelectionChanged
+            If isUpdatingComboBox Then Return
 
-		End Sub
+            Select Case cbSelectedType.SelectedIndex
+                Case CleanType.None
+                    Application.Settings.SelectedGPU = GPUVendor.None
+                    Application.Settings.SelectedAUDIO = AudioVendor.None
+                    ButtonsPanel.IsEnabled = False
 
-		Private Sub CbSelectedType_Changed(sender As Object, e As SelectionChangedEventArgs) Handles cbSelectedType.SelectionChanged
+                Case CleanType.Audio
+                    Select Case cbSelectedGPU.SelectedIndex
+                        Case 0
+                            Application.Settings.SelectedGPU = GPUVendor.None
+                            Application.Settings.SelectedAUDIO = AudioVendor.None
+                            ButtonsPanel.IsEnabled = False
+                        Case 1
+                            Application.Settings.SelectedAUDIO = AudioVendor.Realtek
+                            cbSelectedGPU.IsEnabled = True
+                            ButtonsPanel.IsEnabled = True
+                            Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
+                        Case 2
+                            Application.Settings.SelectedAUDIO = AudioVendor.SoundBlaster
+                            cbSelectedGPU.IsEnabled = True
+                            ButtonsPanel.IsEnabled = True
+                            Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
+                    End Select
+                    btnCleanCaches.IsEnabled = False
 
-			Application.Settings.LastSelectedTypeIndex = cbSelectedType.SelectedIndex
+                Case CleanType.GPU
+                    Select Case cbSelectedGPU.SelectedIndex
+                        Case 0
+                            Application.Settings.SelectedGPU = GPUVendor.None
+                            Application.Settings.SelectedAUDIO = AudioVendor.None
+                            ButtonsPanel.IsEnabled = False
+                        Case 1
+                            Application.Settings.SelectedGPU = GPUVendor.Nvidia
+                            cbSelectedGPU.IsEnabled = True
+                            ButtonsPanel.IsEnabled = True
+                            Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
+                        Case 2
+                            Application.Settings.SelectedGPU = GPUVendor.AMD
+                            cbSelectedGPU.IsEnabled = True
+                            ButtonsPanel.IsEnabled = True
+                            Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
+                        Case 3
+                            Application.Settings.SelectedGPU = GPUVendor.Intel
+                            cbSelectedGPU.IsEnabled = True
+                            ButtonsPanel.IsEnabled = True
+                            Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
+                        Case 4
+                            Application.Settings.SelectedGPU = GPUVendor.All
+                            cbSelectedGPU.IsEnabled = True
+                            ButtonsPanel.IsEnabled = True
+                            Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
+                    End Select
+                    btnCleanCaches.IsEnabled = True
+            End Select
+        End Sub
 
-			Select Case cbSelectedType.SelectedIndex
-				Case 0
-					Application.Settings.SelectedType = CleanType.None
-					cbSelectedGPU.IsEnabled = True
-					cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_GPU", "Options1"), Languages.GetTranslation("frmMain", "Options_GPU", "Options2"), Languages.GetTranslation("frmMain", "Options_GPU", "Options3"), Languages.GetTranslation("frmMain", "Options_GPU", "Options4"), Languages.GetTranslation("frmMain", "Options_GPU", "Options5")} 'the order is important, check Appsettings.vb
-					cbSelectedGPU.SelectedIndex = 0
-					cbSelectedGPU.IsEnabled = False
-
-
-				Case 1
-					Application.Settings.SelectedType = CleanType.Audio
-					cbSelectedGPU.IsEnabled = True
-					cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_AUDIO", "Options1"), Languages.GetTranslation("frmMain", "Options_AUDIO", "Options2"), Languages.GetTranslation("frmMain", "Options_AUDIO", "Options3")}  ' the order is important, check Appsettings.vb
-					cbSelectedGPU.SelectedIndex = 0
-					cbSelectedGPU.SelectedIndex = If(Application.Settings.RememberLastChoice, Application.Settings.LastSelectedGPUIndex, 0)
-
-				Case 2
-					Application.Settings.SelectedType = CleanType.GPU
-					cbSelectedGPU.IsEnabled = True
-					cbSelectedGPU.ItemsSource = {Languages.GetTranslation("frmMain", "Options_GPU", "Options1"), Languages.GetTranslation("frmMain", "Options_GPU", "Options2"), Languages.GetTranslation("frmMain", "Options_GPU", "Options3"), Languages.GetTranslation("frmMain", "Options_GPU", "Options4"), Languages.GetTranslation("frmMain", "Options_GPU", "Options5")} 'the order is important, check Appsettings.vb
-					cbSelectedGPU.SelectedIndex = 0
-					cbSelectedGPU.SelectedIndex = If(Application.Settings.RememberLastChoice, Application.Settings.LastSelectedGPUIndex, GPUIdentify())
-
-			End Select
-
-		End Sub
-		Private Sub Cleandriverstore(ByVal config As ThreadSettings)
+        Private Sub Cleandriverstore(ByVal config As ThreadSettings)
 			_cleanupEngine.Cleandriverstore(config)
 		End Sub
 
