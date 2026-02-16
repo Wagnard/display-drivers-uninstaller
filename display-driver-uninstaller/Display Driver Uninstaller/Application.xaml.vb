@@ -21,9 +21,10 @@ Namespace Display_Driver_Uninstaller
 		Private Const URL_DISCORD As String = "https://discord.gg/JsSsKyqzjF"
         Private Const URL_DDUHOME As String = "https://www.wagnardsoft.com/"
         Private Const URL_DDUSHOP As String = "https://shop.wagnardsoft.com"
-        Private Const URL_GURU3D_AMD As String = "http://forums.guru3d.com/showthread.php?t=379505"
-		Private Const URL_GURU3D_NVIDIA As String = "http://forums.guru3d.com/showthread.php?t=379506"
-		Private Const URL_GEFORCE As String = "https://www.nvidia.com/en-us/geforce/forums/game-ready-drivers/13/1001/wagnard-tools-ddu-more/"
+        Private Const URL_AMD As String = "https://www.amd.com/en/support/download/drivers.html"
+        Private Const URL_NVIDIA As String = "https://www.nvidia.com/Download/index.aspx"
+        Private Const URL_INTEL As String = "https://www.intel.com/content/www/us/en/download-center/home.html"
+        Private Const URL_GEFORCE As String = "https://www.nvidia.com/en-us/geforce/forums/game-ready-drivers/13/1001/wagnard-tools-ddu-more/"
 		Private Const URL_SVN As String = "https://github.com/Wagnard/display-drivers-uninstaller"
 		Private Const URL_OFFER As String = "https://www.drivereasy.com/update-display-drivers"
 
@@ -570,10 +571,12 @@ Namespace Display_Driver_Uninstaller
                 webAddress = URL_PATRON
             ElseIf Application.LaunchOptions.VisitDiscord Then
                 webAddress = URL_DISCORD
-            ElseIf Application.LaunchOptions.VisitGuru3DNvidia Then
-                webAddress = URL_GURU3D_NVIDIA
-            ElseIf Application.LaunchOptions.VisitGuru3DAMD Then
-                webAddress = URL_GURU3D_AMD
+            ElseIf Application.LaunchOptions.VisitNvidia Then
+                webAddress = URL_NVIDIA
+            ElseIf Application.LaunchOptions.VisitAMD Then
+                webAddress = URL_AMD
+            ElseIf Application.LaunchOptions.VisitINTEL Then
+                webAddress = URL_INTEL
             ElseIf Application.LaunchOptions.VisitGeforce Then
                 webAddress = URL_GEFORCE
             ElseIf Application.LaunchOptions.VisitDDUHome Then

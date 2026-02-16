@@ -91,14 +91,23 @@
 		<Menu Name="MenuStrip1" FontSize="14" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="4" Background="#28000000">
 			<MenuItem x:Name="OptionsMenuItem" Header="OptionsMenuItem"/>
 
-			<MenuItem x:Name="LinksMenuItem" Header="LinksMenuItem">
-				<MenuItem x:Name="VisitDDUHomeMenuItem" Header="VisitDDUHomeMenuItem" />
-                <MenuItem x:Name="VisitDDUShopMenuItem" Header="VisitDDUShopMenuItem" />
-				<MenuItem x:Name="VisitDiscord" Header="VisitDiscord" />
-				<MenuItem x:Name="VisitSVNMenuItem" Header="VisitSVNMenuItem" />
-			</MenuItem>
+            <MenuItem x:Name="LinksMenuItem" Header="Links">
+                <MenuItem x:Name="VisitDDUHomeMenuItem" Header="DDU Website" />
+                <MenuItem x:Name="VisitDDUShopMenuItem" Header="DDU Merch Shop" />
 
-			<MenuItem x:Name="ExtendedLogMenuItem" Header="ExtendedLogMenuItem"/>
+                <Separator />
+
+                <MenuItem x:Name="DownloadNvidiaMenuItem" Header="NVIDIA Driver Downloads" />
+                <MenuItem x:Name="DownloadAmdMenuItem" Header="AMD Driver Downloads" />
+                <MenuItem x:Name="DownloadIntelMenuItem" Header="Intel Driver Downloads" />
+
+                <Separator />
+
+                <MenuItem x:Name="VisitDiscord" Header="Discord Server" />
+                <MenuItem x:Name="VisitSVNMenuItem" Header="GitHub Repository" />
+            </MenuItem>
+
+            <MenuItem x:Name="ExtendedLogMenuItem" Header="ExtendedLogMenuItem"/>
 
 			<MenuItem x:Name="InfoMenuItem" Header="InfoMenuItem">
 				<MenuItem x:Name="ToSMenuItem" Header="ToSMenuItem" />

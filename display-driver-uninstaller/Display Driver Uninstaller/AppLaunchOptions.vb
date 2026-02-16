@@ -62,8 +62,9 @@ Namespace Display_Driver_Uninstaller
 		Public VisitPatron As Boolean = False
 		Public VisitDiscord As Boolean = False
 		Public VisitSVN As Boolean = False
-		Public VisitGuru3DNvidia As Boolean = False
-		Public VisitGuru3DAMD As Boolean = False
+        Public VisitNvidia As Boolean = False
+        Public VisitAMD As Boolean = False
+        Public VisitINTEL As Boolean = False
         Public VisitDDUHome As Boolean = False
         Public VisitDDUShop As Boolean = False
         Public VisitGeforce As Boolean = False
@@ -75,8 +76,9 @@ Namespace Display_Driver_Uninstaller
              VisitPatron OrElse
              VisitDiscord OrElse
              VisitSVN OrElse
-             VisitGuru3DNvidia OrElse
-             VisitGuru3DAMD OrElse
+             VisitNvidia OrElse
+             VisitAMD OrElse
+             VisitINTEL OrElse
              VisitDDUHome OrElse
              VisitDDUShop OrElse
              VisitGeforce OrElse
@@ -104,8 +106,9 @@ Namespace Display_Driver_Uninstaller
 						Case StrContainsAny(Argument, True, "-visitpatron") : VisitPatron = True
 						Case StrContainsAny(Argument, True, "-visitdiscord") : VisitDiscord = True
 						Case StrContainsAny(Argument, True, "-visitsvn") : VisitSVN = True
-						Case StrContainsAny(Argument, True, "-visitguru3dnvidia") : VisitGuru3DNvidia = True
-						Case StrContainsAny(Argument, True, "-visitguru3damd") : VisitGuru3DAMD = True
+                        Case StrContainsAny(Argument, True, "-visitnvidia") : VisitNvidia = True
+                        Case StrContainsAny(Argument, True, "-visitamd") : VisitAMD = True
+                        Case StrContainsAny(Argument, True, "-visitintel") : VisitINTEL = True
                         Case StrContainsAny(Argument, True, "-visitdduhome") : VisitDDUHome = True
                         Case StrContainsAny(Argument, True, "-visitddushop") : VisitDDUShop = True
                         Case StrContainsAny(Argument, True, "-visitgeforce") : VisitGeforce = True

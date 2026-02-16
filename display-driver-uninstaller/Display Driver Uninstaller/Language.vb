@@ -280,14 +280,17 @@ notFound:
 
 		Private Shared Sub GetMenuItems(ByVal parent As MenuItem, ByRef controls As List(Of DependencyObject))
 			If parent.HasItems Then
-				For Each menuitem As MenuItem In parent.Items
-					controls.Add(menuitem)
+                For Each item In parent.Items
+                    If TypeOf item Is MenuItem Then
+                        Dim mItem As MenuItem = DirectCast(item, MenuItem)
+                        controls.Add(mItem)
 
-					If menuitem.HasItems Then
-						GetMenuItems(menuitem, controls)
-					End If
-				Next
-			End If
+                        If mItem.HasItems Then
+                            GetMenuItems(mItem, controls)
+                        End If
+                    End If
+                Next
+            End If
 		End Sub
 
 		Private Shared Sub TranslateControl(ByVal window As String, ByVal ctrl As DependencyObject)

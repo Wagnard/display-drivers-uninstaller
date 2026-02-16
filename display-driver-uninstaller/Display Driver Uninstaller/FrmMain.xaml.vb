@@ -1499,8 +1499,20 @@ Namespace Display_Driver_Uninstaller
 			WinAPI.OpenVisitLink(" -visitoffer")
 		End Sub
 
-		Private Sub VisitDiscord_Click(sender As Object, e As RoutedEventArgs) Handles VisitDiscord.Click
-			WinAPI.OpenVisitLink(" -visitdiscord")
-		End Sub
-	End Class
+        Private Sub VisitDiscord_Click(sender As Object, e As RoutedEventArgs) Handles VisitDiscord.Click
+            WinAPI.OpenVisitLink(" -visitdiscord")
+        End Sub
+
+        Private Sub DownloadNvidiaMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles DownloadNvidiaMenuItem.Click
+            WinAPI.OpenVisitLink(" -visitnvidia")
+        End Sub
+
+        Private Sub DownloadAmdMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles DownloadAmdMenuItem.Click
+            WinAPI.OpenVisitLink(" -visitamd")
+        End Sub
+
+        Private Sub DownloadIntelMenuItem_Click(sender As Object, e As RoutedEventArgs) Handles DownloadIntelMenuItem.Click
+            WinAPI.OpenVisitLink(" -visitintel")
+        End Sub
+    End Class
 End Namespace

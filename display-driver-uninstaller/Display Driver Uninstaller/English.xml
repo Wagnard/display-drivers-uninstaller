@@ -112,26 +112,26 @@
 			<Text>Patrons</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Visit Official DDU Website</Text>
+			<Text>DDU Website</Text>
 		</VisitDDUHomeMenuItem>
         <VisitDDUShopMenuItem>
-            <Text>Visit Official DDU Merch Shop</Text>
+            <Text>DDU Merch Shop</Text>
         </VisitDDUShopMenuItem>
 		<VisitDiscord>
-			<Text>Join Our Discord</Text>
+			<Text>Discord Server</Text>
 		</VisitDiscord>
 		<VisitSVNMenuItem>
-			<Text>Visit GitHub Website</Text>
+			<Text>GitHub Repository</Text>
 		</VisitSVNMenuItem>
-		<VisitGuru3DNvidiaMenuItem>
-			<Text>Visit Guru3d NVIDIA thread</Text>
-		</VisitGuru3DNvidiaMenuItem>
-		<VisitGuru3DAMDMenuItem>
-			<Text>Visit Guru3d AMD thread</Text>
-		</VisitGuru3DAMDMenuItem>
-		<VisitGeforceMenuItem>
-			<Text>Visit GeForce thread</Text>
-		</VisitGeforceMenuItem>
+        <DownloadNvidiaMenuItem>
+			<Text>NVIDIA Driver Downloads</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdManuItem>
+			<Text>AMD Driver Downloads</Text>
+		</DownloadAmdManuItem>
+        <DownloadIntelMenuItem>
+			<Text>Intel Driver Downloads</Text>
+		</DownloadIntelMenuItem>
 
 		<Messages>
 			<Text1>Updates are available! Visit DDU website now?</Text1>
