@@ -124,7 +124,15 @@
 		<VisitGeforceMenuItem>
 			<Text>ไปที่หัวข้อ Guru3d GeForce</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>ดาวน์โหลดไดรเวอร์ NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>ดาวน์โหลดไดรเวอร์ AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>ดาวน์โหลดไดรเวอร์ Intel</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>มีการปรับปรุง! เยี่ยมชมเว็บไซต์ DDU ตอนนี้หรือไม่?</Text1>
 			<Text2>คาดว่าการสนับสนุนเวอร์ชันเก่าจะมี จำกัด ไม่มากไปกว่ารุ่นล่าสุด โปรดตรวจสอบเวอร์ชันที่ใหม่กว่าก่อนรายงานข้อบกพร่อง</Text2>
@@ -442,6 +450,11 @@
 			<User>DevMltk</User>
 			<LastUpdate>31/05/2016</LastUpdate>
 		</Translator2>
+		
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
 	</LanguageTranslators>
-
 </DisplayDriverUninstaller>

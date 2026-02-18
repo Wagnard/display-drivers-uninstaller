@@ -117,6 +117,9 @@
 		<VisitDDUShopMenuItem>
             <Text>访问DDU官方周边商店</Text>
         </VisitDDUShopMenuItem>
+			<VisitDiscord>
+			<Text>Discord 伺服器</Text>
+		</VisitDiscord>
 		<VisitSVNMenuItem>
 			<Text>DDU GitHub 仓库</Text>
 		</VisitSVNMenuItem>
@@ -129,6 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>NVIDIA 论坛 DDU 讨论帖</Text>
 		</VisitGeforceMenuItem>
+        <DownloadNvidiaMenuItem>
+			<Text>NVIDIA 驱动程序下载</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>AMD 驱动程序下载</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Intel 驱动程序下载</Text>
+		</DownloadIntelMenuItem>
 
 		<Messages>
 			<Text1>新版 DDU 已发布。是否立刻前往 DDU 官方网站下载更新?</Text1>
@@ -498,4 +510,12 @@
 			<LastUpdate>26/03/2021</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
+			<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
+
 </DisplayDriverUninstaller>

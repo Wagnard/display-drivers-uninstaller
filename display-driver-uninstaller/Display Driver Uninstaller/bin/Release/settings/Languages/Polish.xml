@@ -132,7 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Odwiedź forum Geforce </Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>Pobranie sterowników NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Pobranie sterowników AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Pobranie sterowników Intel</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Dostępna aktualizacja! Chcesz teraz odwiedzić stronę DDU?</Text1>
 			<Text2>Ograniczone wsparcie dla starszych wersji. Zaktualizuj do nowszej wersji, zanim zgłosisz błędy.</Text2>
@@ -540,5 +548,11 @@
 			<LastUpdate>04.04.2025</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
-
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 </DisplayDriverUninstaller>

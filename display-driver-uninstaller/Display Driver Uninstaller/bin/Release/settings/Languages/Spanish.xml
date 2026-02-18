@@ -123,6 +123,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Visita el hilo de GeForce</Text>
 		</VisitGeforceMenuItem>
+		        <DownloadNvidiaMenuItem>
+			<Text>Descarga de controladores NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Descarga de controladores AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Descarga de controladores Intel</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>¡Actualizaciones disponibles! ¿Ir al sitio web de DDU?</Text1>
 			<Text2>La compatibilidad con versiones anteriores a la más reciente es limitada. Compruebe la versión más reciente antes de informar de errores.</Text2>
@@ -497,5 +506,10 @@
 			<Details>Traductor</Details>
 			<LastUpdate>07/07/2023</LastUpdate>
 		</Translator2>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
 	</LanguageTranslators>
 </DisplayDriverUninstaller>

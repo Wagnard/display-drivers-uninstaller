@@ -128,7 +128,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Відвідайте тему Geforce</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>Завантажити драйвери NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Завантажити драйвери AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Завантажити драйвери Intel</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Доступні оновлення! Бажаєте відвідати веб-сайт DDU зараз?</Text1>
 			<Text2>Для версій, старіших ніж найостанніша, підтримку обмежено. Перевірте нову версію, перш ніж повідомляти про помилки.</Text2>
@@ -507,6 +515,11 @@
 			<User>YuriPet</User>
 			<Details>yuripet@gmail.com</Details>
 			<LastUpdate>02/04/2023</LastUpdate>
+		</Translator>
+			<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 

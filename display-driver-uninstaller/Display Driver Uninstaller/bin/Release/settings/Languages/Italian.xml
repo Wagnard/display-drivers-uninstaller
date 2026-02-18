@@ -124,7 +124,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Visita forum GeForce</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>Download driver NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Download driver AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Download driver Intel</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Aggiornamento disponibile! Vuoi visitare il sito di DDU?</Text1>
 			<Text2>Supporto limitato per le vecchie versioni del programma. Prima di segnalare bugverifica se sono disponibili nuove versioni .</Text2>
@@ -505,12 +513,16 @@
 			<Details>feat. ChefTanoMerda</Details>
 			<LastUpdate>19/08/2023</LastUpdate>
 		</Translator>
-
 		<Translator2>
 			<User>bovirus</User>
 			<LastUpdate>04/10/2024</LastUpdate>
 		</Translator2>
-
 	</LanguageTranslators>
-
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 </DisplayDriverUninstaller>

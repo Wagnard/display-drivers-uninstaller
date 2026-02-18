@@ -132,7 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Visiter le forum GeForce</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>Téléchargements des pilotes NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Téléchargements des pilotes AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Téléchargements des pilotes Intel</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Mises à jour disponibles ! Visiter le site web de DDU maintenant ?</Text1>
 			<Text2>Prévoyez un soutien limité pour les versions plus anciennes que la plus récente. Vérifiez la version la plus récente avant de signaler les bogues.</Text2>
@@ -545,6 +553,14 @@ Votre " MOT DE PASSE " Windows *peut* être requis ! (Le PIN *pourrait* NE PAS f
 			<User>Talex v18.0.7.7</User>
 			<LastUpdate>22/06/2024</LastUpdate>
 		</Translator3>
+	</LanguageTranslators>
+	
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

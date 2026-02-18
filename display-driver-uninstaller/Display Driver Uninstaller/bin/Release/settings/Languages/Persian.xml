@@ -124,7 +124,15 @@
 		<VisitGeforceMenuItem>
 			<Text>بازدید از موضوع Geforce</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>دانلود درایورهای NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>دانلود درایورهای AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>دانلود درایورهای Intel</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>به روز رسانی در دسترس است! اکنون از وب سایت DDU بازدید می کنید؟</Text1>
 			<Text2>نسخه های قدیمی این نرم افزار پشتیبانی محدودی دارند ، باید قبل از گزارش اشکالات از وجود نسخه های جدیدتر اطمینان حاصل کنید.</Text2>
@@ -475,5 +483,11 @@
 			<LastUpdate>23/06/2021</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
-
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 </DisplayDriverUninstaller>

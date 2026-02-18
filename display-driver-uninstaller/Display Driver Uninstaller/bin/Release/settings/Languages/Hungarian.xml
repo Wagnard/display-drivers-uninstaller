@@ -132,7 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>A GeForce fórumok meglátogatása</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>NVIDIA illesztőprogram letöltések</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>AMD illesztőprogram letöltések</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Intel illesztőprogram letöltések</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Új frissítés érhető el! Meglátogatod most a DDU honlapját?</Text1>
 			<Text2>A program régebbi verzióin korlátozott támogatásra számíthatsz. Kérlek először próbáld ki az újabb verziókat, mielőtt hibát jelentenél!</Text2>
@@ -550,5 +558,11 @@
 			<LastUpdate>31/05/2016</LastUpdate>
 		</Translator3>
 	</LanguageTranslators>
-
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
+	</LanguageTranslators> 
 </DisplayDriverUninstaller>

@@ -128,7 +128,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Poseti ja Geforce sekcija</Text>
 		</VisitGeforceMenuItem>
-
+       <DownloadNvidiaMenuItem>
+			<Text>NVIDIA возачски преземања</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>AMD возачски преземања</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Intel возачски преземања</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Nova verzija e dostapna! Dali sakate da ja posetite stranata na DDU?</Text1>
 			<Text2>Ocekuvajte ogranicena podrska na starata verzija vo odnos na ponovata. Preporacano e da probate so ponovata verzija pred prijavuvanje na greski.</Text2>
@@ -436,6 +444,12 @@
 			<LastUpdate>17/5/2020</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
-
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

@@ -132,6 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>GeForce のフォーラムを開く</Text>
 		</VisitGeforceMenuItem>
+       <DownloadNvidiaMenuItem>
+			<Text>NVIDIAドライバーダウンロード</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>AMDドライバーダウンロード</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>インテルドライバーダウンロード</Text>
+		</DownloadIntelMenuItem>
 
 		<Messages>
 			<Text1>アップデートがあります！ DDU のウェブサイトを開きますか？</Text1>
@@ -545,5 +554,11 @@
 			<LastUpdate>07/12/2025</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
-
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 </DisplayDriverUninstaller>

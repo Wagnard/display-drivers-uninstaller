@@ -117,6 +117,9 @@
 		<VisitDDUShopMenuItem>
             <Text>造訪DDU官方周邊商店</Text>
         </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Discord 伺服器</Text>
+		</VisitDiscord>
 		<VisitSVNMenuItem>
 			<Text>造訪 GitHub</Text>
 		</VisitSVNMenuItem>
@@ -129,6 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>造訪 GeForce 論壇上的討論串</Text>
 		</VisitGeforceMenuItem>
+        <DownloadNvidiaMenuItem>
+			<Text>NVIDIA 驅動程式下載</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>AMD 驅動程式下載</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Intel 驅動程式下載</Text>
+		</DownloadIntelMenuItem>
 
 		<Messages>
 			<Text1>有可用更新！是否造訪 DDU 網站？</Text1>
@@ -552,6 +564,13 @@
 			<LastUpdate>30/01/2019</LastUpdate>
 		</Translator2>
 				
+	</LanguageTranslators>
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

@@ -132,7 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Geforce-Thread besuchen</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>NVIDIA Treiber-Downloads</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>AMD Treiber-Downloads</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Intel Treiber-Downloads</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Updates sind verfügbar! Jetzt die DDU-Website besuchen?</Text1>
 			<Text2>Für ältere Versionen als die aktuellste gibt es nur begrenzten Support. Bitte prüfen Sie auf eine neuere Version, bevor Sie Bugs melden.</Text2>
@@ -546,7 +554,7 @@
 		
 		<Translator3>
 			<User>Mats/Onyx</User>
-			<LastUpdate>03/12/2025</LastUpdate>
+			<LastUpdate>17/02/2026</LastUpdate>
 		</Translator3>
 	</LanguageTranslators>
 

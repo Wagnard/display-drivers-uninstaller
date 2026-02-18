@@ -125,7 +125,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Посети Geforce одељак</Text>
 		</VisitGeforceMenuItem>
-
+  <DownloadNvidiaMenuItem>
+			<Text>Преузимање НВИДИА драјвера</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Преузимање АМД драјвера</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Преузимање драјвера Интел</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Нова верзија је расположива! Желите ли сада да посетите DDU сајт?</Text1>
 			<Text2>Очекујте ограничену подршку за старије верзије уодносу на тренутно најновије. Молимо покушајте са најновијом верзијом пре пријављивања грешака.</Text2>
@@ -439,5 +447,11 @@
 			<LastUpdate>18/03/2017</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
-
+			<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 </DisplayDriverUninstaller>

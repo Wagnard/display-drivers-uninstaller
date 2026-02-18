@@ -132,6 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Navštívit GeForce vlánko</Text>
 		</VisitGeforceMenuItem>
+        <DownloadNvidiaMenuItem>
+			<Text>Stažení ovladačů NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Stažení ovladačů AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Stažení ovladačů Intel</Text>
+		</DownloadIntelMenuItem>
 
 		<Messages>
 			<Text1>Jsou k dispozici aktualizace! Navštívit web DDU nyní?</Text1>
@@ -516,6 +525,13 @@
 			<User>Jan 'ThatJohnS' Szotkowski</User>
 			<Details>thatjohns.eu</Details>
 			<LastUpdate>30.09.2023</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 

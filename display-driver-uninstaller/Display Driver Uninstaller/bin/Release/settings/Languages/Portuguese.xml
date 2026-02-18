@@ -132,7 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Visite os Tópicos Geforce</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>Downloads de drivers NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Downloads de drivers AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Downloads de drivers Intel</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Estão disponíveis actualizações! Visitar o site DDU agora?</Text1>
 			<Text2>É de esperar apoio limitado em versões mais antigas do que na mais recente. Por favor veja se existe uma nova versão antes de reportar erros.</Text2>
@@ -539,11 +547,12 @@
 			<Details>luis.a.neves@sapo.pt</Details>
 			<LastUpdate>17/04/2025</LastUpdate>
 		</Translator>
-
-		<Translator2>
-			<User></User>
-			<LastUpdate></LastUpdate>
-		</Translator2>
 	</LanguageTranslators>
-
+			<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 </DisplayDriverUninstaller>

@@ -121,7 +121,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Επισκεφθείτε το GeForce Νήμα</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>Λήψεις Οδηγών NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Λήψεις Οδηγών AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Λήψεις Οδηγών Intel</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Υπάρχουν διαθέσιμες ενημερώσεις! Επίσκεψη στην ιστοσελίδα DDU τώρα;</Text1>
 			<Text2>Θα έχετε περιορισμένη υποστήριξη σε παλαιότερες εκδόσεις από την πιο πρόσφατη. Ελέγξτε τη νεότερη έκδοση προτού αναφέρετε σφάλματα.</Text2>
@@ -413,6 +421,13 @@
 			<User></User>
 			<Details></Details>
 			<LastUpdate></LastUpdate>
+		</Translator>
+	</LanguageTranslators>
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 

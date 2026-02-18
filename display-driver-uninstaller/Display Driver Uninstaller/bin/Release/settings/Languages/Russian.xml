@@ -132,7 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Посетить тему DDU на GeForce</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>Загрузки драйверов NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Загрузки драйверов AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Загрузки драйверов Intel</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Доступны обновления! Открыть сайт DDU?</Text1>
 			<Text2>Для старых версий техподдержка ограниченная. Прежде чем сообщать об ошибке, установите новейшую версию и проверьте.</Text2>
@@ -537,5 +545,11 @@
 			<LastUpdate>02.10.2020</LastUpdate>
 		</Translator3>
 	</LanguageTranslators>
-
+			<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 </DisplayDriverUninstaller>

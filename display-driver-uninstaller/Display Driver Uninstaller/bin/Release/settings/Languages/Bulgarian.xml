@@ -132,6 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Отваряне на темата за GeForce</Text>
 		</VisitGeforceMenuItem>
+        <DownloadNvidiaMenuItem>
+			<Text>Изтегля  драйвери NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Изтегляния на драйвери AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Изтеглна драйвери Intel</Text>
+		</DownloadIntelMenuItem>
 
 		<Messages>
 			<Text1>Налични са актуализации! Желаете ли да посетите страницата на DDU сега?</Text1>
@@ -541,6 +550,13 @@
 			<User>DevMltk</User>
 			<LastUpdate>31/05/2016</LastUpdate>
 		</Translator2>
+	</LanguageTranslators>
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

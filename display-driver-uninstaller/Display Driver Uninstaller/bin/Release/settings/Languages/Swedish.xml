@@ -132,7 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Besök Geforce tråd</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>Ladda ner NVIDIA-drivers</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>adda ner AMD-drivers</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Ladda ner Intel-drivers</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Uppdateringar hittades! Besök DDUs webbplats nu?</Text1>
 			<Text2>Förvänta dig begränsad support på äldre versioner än den senaste. Var god kontrollera med nyare version innnan du rapporterar fel.</Text2>
@@ -538,6 +546,10 @@ Tack till Helge Klein (https://helgeklein.com/setacl/) : för tillståndet att a
 			<Details>hanseriksson980@gmail.com</Details>
 			<LastUpdate>02/06/2025</LastUpdate>
 		</Translator>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
 	</LanguageTranslators>
-
 </DisplayDriverUninstaller>

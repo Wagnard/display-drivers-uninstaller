@@ -132,6 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Geforce 스레드 방문</Text>
 		</VisitGeforceMenuItem>
+     <DownloadNvidiaMenuItem>
+			<Text>NVIDIA 드라이버 다운로드</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>AMD 드라이버 다운로드</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>인텔 드라이버 다운로드</Text>
+		</DownloadIntelMenuItem>
 
 		<Messages>
 			<Text1>업데이트를 사용할 수 있습니다! DDU 웹 사이트를 지금 방문하시겠습니까?</Text1>
@@ -544,5 +553,11 @@
 			<LastUpdate>2016년 5월 31일</LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
-
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 </DisplayDriverUninstaller>

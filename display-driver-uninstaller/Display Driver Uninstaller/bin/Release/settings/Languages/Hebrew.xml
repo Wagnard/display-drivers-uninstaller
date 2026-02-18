@@ -124,7 +124,15 @@
 		<VisitGeforceMenuItem>
 			<Text>בקר בשרשור GeForce</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>הורדות דרייברים של NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>הורדות דרייברים של AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>הורדות דרייברים של Intel</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>עדכונים זמינים! האם לבקר באתר DDU עכשיו?</Text1>
 			<Text2>צפה לתמיכה מוגבלת בגרסאות ישנות יותר מאשר בגרסה העדכנית ביותר. אנא בדוק אם קיימת גרסה חדשה יותר לפני דיווח על באגים.</Text2>
@@ -511,6 +519,13 @@
 			<User>DevMltk</User>
 			<LastUpdate>31/05/2016</LastUpdate>
 		</Translator2>
+	</LanguageTranslators>
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

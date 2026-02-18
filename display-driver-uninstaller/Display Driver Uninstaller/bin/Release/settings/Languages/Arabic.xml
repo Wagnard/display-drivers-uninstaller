@@ -124,6 +124,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Geforce Thread زيارة</Text>
 		</VisitGeforceMenuItem>
+        <DownloadNvidiaMenuItem>
+			<Text>تنزيل برامج تشغيل NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>تنزيل برامج تشغيل AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>تنزيل برامج تشغيل إنتل</Text>
+		</DownloadIntelMenuItem>
 
 		<Messages>
 			<Text1>تتوفر تحديثات جديدة! هل ترغب في زيارة موقع البرنامج؟</Text1>
@@ -482,5 +491,12 @@
 		</Translator3>
 	</LanguageTranslators>
 
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

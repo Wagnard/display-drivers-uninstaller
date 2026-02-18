@@ -102,6 +102,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Visite o fórum GeForce</Text>
 		</VisitGeforceMenuItem>
+        <DownloadNvidiaMenuItem>
+			<Text>Downloads de drivers NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Downloads de drivers AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Downloads de drivers Intel</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Atualização disponível! Visitar o site do DDU agora?</Text1>
 			<Text2>Suporte limitado para versões antigas. Por favor, verifique se está na versão mais recente antes de reportar erros.</Text2>
@@ -469,5 +478,12 @@ Esta opção não foi desenvolvida para corrigir problemas e pode não corrigir 
 			<User>igorruckert</User>
 			<LastUpdate>16/02/2025</LastUpdate>
 		</Translator2>
+	</LanguageTranslators>
+			<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
 	</LanguageTranslators>
 </DisplayDriverUninstaller>

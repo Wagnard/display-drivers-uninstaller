@@ -124,7 +124,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Obisk niti GeForce</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>Prenos gonilnikov NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Prenos gonilnikov AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Prenos gonilnikov Intel</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Na voljo so posodobitve! Želite zdaj obiskati spletno stran DDU?</Text1>
 			<Text2>Pričakujte omejeno podporo pri starejših različicah od zadnje. Pred prijavo napak posodobite na novejšo različico.</Text2>
@@ -514,5 +522,11 @@
 			<LastUpdate></LastUpdate>
 		</Translator2>
 	</LanguageTranslators>
-
+			<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
 </DisplayDriverUninstaller>

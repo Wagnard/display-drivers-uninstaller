@@ -124,7 +124,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Geforce Başlığını Ziyaret Edin</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>NVIDIA Sürücülerini İndir</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>AMD Sürücülerini İndir</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Intel Sürücülerini İndir</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Güncellemeler mevcut! Şimdi DDU web sitesini ziyaret etmek ister misin?</Text1>
 			<Text2>En son sürümden daha eski sürümlerde sınırlı destek veriyoruz. Hata bildirmeden önce yeni bir sürüme geçin.</Text2>
@@ -517,6 +525,10 @@
 			<User>JustEmo</User>
 			<LastUpdate>05.11.2024</LastUpdate>
 		</Translator2>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
 	</LanguageTranslators>
-
 </DisplayDriverUninstaller>

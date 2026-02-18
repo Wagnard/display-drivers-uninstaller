@@ -128,7 +128,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Poseti Geforce odeljak</Text>
 		</VisitGeforceMenuItem>
-
+        <DownloadNvidiaMenuItem>
+			<Text>Preuzmi drajvere NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Preuzmi drajvere AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Preuzmi drajvere Intela</Text>
+		</DownloadIntelMenuItem>
 		<Messages>
 			<Text1>Nova verzija je raspoloživa! Želite li sada da posetite DDU sajt?</Text1>
 			<Text2>Očekujte ograničenu podršku za starije verzije uodnosu na trenutno najnovije. Molimo pokušajte sa najnovijom verzijom pre prijavljivanja grešaka.</Text2>

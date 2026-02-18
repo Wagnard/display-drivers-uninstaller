@@ -119,9 +119,24 @@
 		<VisitGuru3DAMDMenuItem>
 			<Text>Apmeklējiet Guru3d AMD pavedienu</Text>
 		</VisitGuru3DAMDMenuItem>
+		  <VisitDDUShopMenuItem>
+            <Text>DDU Preču veikals</Text>
+        </VisitDDUShopMenuItem>
+			<VisitDiscord>
+			<Text>Discord Serveris</Text>
+		</VisitDiscord>
 		<VisitGeforceMenuItem>
 			<Text>Apmeklējiet GeForce pavedienu</Text>
 		</VisitGeforceMenuItem>
+        <DownloadNvidiaMenuItem>
+			<Text>NVIDIA draiveru lejupielādes</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>AMD draiveru lejupielādes</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Intel Driver Downloads</Text>
+		</DownloadIntelMenuItem>
 
 		<Messages>
 			<Text1>Ir pieejami atjauninājumi! Apmeklējiet DDU vietni tūlīt?</Text1>

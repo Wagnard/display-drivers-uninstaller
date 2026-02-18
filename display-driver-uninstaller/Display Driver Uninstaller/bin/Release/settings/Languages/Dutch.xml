@@ -132,6 +132,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Bezoek de GeForce thread</Text>
 		</VisitGeforceMenuItem>
+        <DownloadNvidiaMenuItem>
+			<Text>NVIDIA-stuurprogramma Downloads</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>AMD-stuurprogramma Downloads</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Intel-stuurprogramma Downloads</Text>
+		</DownloadIntelMenuItem>
 
 		<Messages>
 			<Text1>Updates gevonden! Nu de DDU website bezoeken?</Text1>
@@ -512,6 +521,13 @@
 			<User>MojoW</User>
 			<LastUpdate>09/06/2022</LastUpdate>
 		</Translator2>
+	</LanguageTranslators>
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

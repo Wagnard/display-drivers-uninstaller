@@ -129,6 +129,15 @@
 		<VisitGeforceMenuItem>
 			<Text>Avaa Geforce viestiketju</Text>
 		</VisitGeforceMenuItem>
+        <DownloadNvidiaMenuItem>
+			<Text>NVIDIA-ohjainten lataukset</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>AMD-ohjainten lataukset</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Intel-ohjainten lataukset</Text>
+		</DownloadIntelMenuItem>
 
 		<Messages>
 			<Text1>Päivityksiä saatavilla! Vieraile DDU verkkosivulla nyt?</Text1>
@@ -431,6 +440,13 @@
 			<User>DevMltk</User>
 			<Details></Details>
 			<LastUpdate>08/06/2017</LastUpdate>
+		</Translator>
+	</LanguageTranslators>
+		<LanguageTranslators>
+		<Translator>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
 		</Translator>
 	</LanguageTranslators>
 
