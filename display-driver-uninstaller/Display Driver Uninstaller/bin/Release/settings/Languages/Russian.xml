@@ -544,12 +544,11 @@
 			<User>Dmitry Yerokhin (erodim@mail.ru)</User>
 			<LastUpdate>02.10.2020</LastUpdate>
 		</Translator3>
-	</LanguageTranslators>
-			<LanguageTranslators>
-		<Translator>
+
+		<Translator4>
 			<User>Mats/Onyx</User>
 			<Details>Twitter:onyxwz1</Details>
 			<LastUpdate>17/02/2026</LastUpdate>
-		</Translator>
+		</Translator4>
 	</LanguageTranslators>
 </DisplayDriverUninstaller>

@@ -443,13 +443,12 @@
 			<Details>nestorovantonio@gmail.com</Details>
 			<LastUpdate>17/5/2020</LastUpdate>
 		</Translator>
-	</LanguageTranslators>
-		<LanguageTranslators>
-		<Translator>
+
+		<Translator2>
 			<User>Mats/Onyx</User>
 			<Details>Twitter:onyxwz1</Details>
 			<LastUpdate>17/02/2026</LastUpdate>
-		</Translator>
+		</Translator2>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

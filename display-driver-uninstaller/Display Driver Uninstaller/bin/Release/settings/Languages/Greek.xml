@@ -124,9 +124,9 @@
         <DownloadNvidiaMenuItem>
 			<Text>Λήψεις Οδηγών NVIDIA</Text>
 		</DownloadNvidiaMenuItem>
-        <DownloadAmdMenuItem>
+        <DownloadAmdManuItem>
 			<Text>Λήψεις Οδηγών AMD</Text>
-		</DownloadAmdMenuItem>
+		</DownloadAmdManuItem>
         <DownloadIntelMenuItem>
 			<Text>Λήψεις Οδηγών Intel</Text>
 		</DownloadIntelMenuItem>
@@ -422,13 +422,12 @@
 			<Details></Details>
 			<LastUpdate></LastUpdate>
 		</Translator>
-	</LanguageTranslators>
-		<LanguageTranslators>
-		<Translator>
+
+		<Translator2>
 			<User>Mats/Onyx</User>
 			<Details>Twitter:onyxwz1</Details>
 			<LastUpdate>17/02/2026</LastUpdate>
-		</Translator>
+		</Translator2>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

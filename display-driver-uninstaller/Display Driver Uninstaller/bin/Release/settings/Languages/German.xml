@@ -135,9 +135,9 @@
         <DownloadNvidiaMenuItem>
 			<Text>NVIDIA Treiber-Downloads</Text>
 		</DownloadNvidiaMenuItem>
-        <DownloadAmdMenuItem>
+        <DownloadAmdManuItem>
 			<Text>AMD Treiber-Downloads</Text>
-		</DownloadAmdMenuItem>
+		</DownloadAmdManuItem>
         <DownloadIntelMenuItem>
 			<Text>Intel Treiber-Downloads</Text>
 		</DownloadIntelMenuItem>

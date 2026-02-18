@@ -135,9 +135,9 @@
         <DownloadNvidiaMenuItem>
 			<Text>NVIDIA illesztőprogram letöltések</Text>
 		</DownloadNvidiaMenuItem>
-        <DownloadAmdMenuItem>
+        <DownloadAmdManuItem>
 			<Text>AMD illesztőprogram letöltések</Text>
-		</DownloadAmdMenuItem>
+		</DownloadAmdManuItem>
         <DownloadIntelMenuItem>
 			<Text>Intel illesztőprogram letöltések</Text>
 		</DownloadIntelMenuItem>
@@ -557,12 +557,11 @@
 			<User>DevMltk</User>
 			<LastUpdate>31/05/2016</LastUpdate>
 		</Translator3>
-	</LanguageTranslators>
-		<LanguageTranslators>
-		<Translator>
+
+		<Translator4>
 			<User>Mats/Onyx</User>
 			<Details>Twitter:onyxwz1</Details>
 			<LastUpdate>17/02/2026</LastUpdate>
-		</Translator>
+		</Translator4>
 	</LanguageTranslators> 
 </DisplayDriverUninstaller>

@@ -547,12 +547,11 @@
 			<Details>Oficjalny tłumacz</Details>
 			<LastUpdate>04.04.2025</LastUpdate>
 		</Translator2>
-	</LanguageTranslators>
-		<LanguageTranslators>
-		<Translator>
+
+		<Translator3>
 			<User>Mats/Onyx</User>
 			<Details>Twitter:onyxwz1</Details>
 			<LastUpdate>17/02/2026</LastUpdate>
-		</Translator>
+		</Translator3>
 	</LanguageTranslators>
 </DisplayDriverUninstaller>

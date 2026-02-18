@@ -127,9 +127,9 @@
         <DownloadNvidiaMenuItem>
 			<Text>הורדות דרייברים של NVIDIA</Text>
 		</DownloadNvidiaMenuItem>
-        <DownloadAmdMenuItem>
+        <DownloadAmdManuItem>
 			<Text>הורדות דרייברים של AMD</Text>
-		</DownloadAmdMenuItem>
+		</DownloadAmdManuItem>
         <DownloadIntelMenuItem>
 			<Text>הורדות דרייברים של Intel</Text>
 		</DownloadIntelMenuItem>
@@ -519,13 +519,12 @@
 			<User>DevMltk</User>
 			<LastUpdate>31/05/2016</LastUpdate>
 		</Translator2>
-	</LanguageTranslators>
-		<LanguageTranslators>
-		<Translator>
+
+		<Translator3>
 			<User>Mats/Onyx</User>
 			<Details>Twitter:onyxwz1</Details>
 			<LastUpdate>17/02/2026</LastUpdate>
-		</Translator>
+		</Translator3>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

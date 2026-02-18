@@ -449,7 +449,12 @@
 			<Details>boris.precep@hotmail.com</Details>
 			<LastUpdate>18/03/2017</LastUpdate>
 		</Translator2>
-	</LanguageTranslators>
 
+		<Translator3>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator3>
+	</LanguageTranslators>
 
 </DisplayDriverUninstaller>

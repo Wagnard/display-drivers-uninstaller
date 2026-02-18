@@ -477,12 +477,11 @@
 			<Details>Traductor</Details>
 			<LastUpdate>12/03/2020</LastUpdate>
 		</Translator>
-	</LanguageTranslators>
-			<LanguageTranslators>
-		<Translator>
+
+		<Translator2>
 			<User>Mats/Onyx</User>
 			<Details>Twitter:onyxwz1</Details>
 			<LastUpdate>17/02/2026</LastUpdate>
-		</Translator>
+		</Translator2>
 	</LanguageTranslators>
 </DisplayDriverUninstaller>
