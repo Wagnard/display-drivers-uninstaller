@@ -624,17 +624,16 @@ Namespace Display_Driver_Uninstaller
 				EnableDriverSearch(False)
 			End If
 
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
+            Dim canImpersonate As Boolean = False
 
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				MsgBox("Could not impersonate the SYSTEM account, it is NOT recommended to use DDU in this state.")
-			End If
+            ImpersonateUser.RunImpersonatedSystem(
+                Sub()
+                    canImpersonate = WindowsIdentity.GetCurrent().IsSystem
+                End Sub)
 
-			If WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.ReleaseToken()
-			End If
+            If Not canImpersonate Then
+                MsgBox("Could not impersonate the SYSTEM account, it is NOT recommended to use DDU in this state.")
+            End If
             Application.RemoveRegOption()
         End Sub
 
@@ -662,21 +661,13 @@ Namespace Display_Driver_Uninstaller
 #Region "Cleaning Threads"
 
 		Private Sub CleaningThread_Work(ByVal config As ThreadSettings)
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
 
-			Try
+            Try
 				If config Is Nothing Then
 					Throw New ArgumentNullException("config", "Null ThreadSettings in CleaningWorker as e.Argument!")
 				End If
 
-				Dim card1 As Integer = Nothing
-				Dim vendid As String = ""
-
-				Dim removegfe As Boolean = config.RemoveGFE
-
-				UpdateTextMethod(UpdateTextTranslated(19))
+                UpdateTextMethod(UpdateTextTranslated(19))
 
 				Select Case config.SelectedType
 					Case CleanType.GPU
@@ -697,11 +688,7 @@ Namespace Display_Driver_Uninstaller
 		Private Sub CleaningThread_Completed(ByVal config As ThreadSettings)
 			Try
 
-				If WindowsIdentity.GetCurrent().IsSystem Then
-					ImpersonateLoggedOnUser.ReleaseToken()
-				End If
-
-				Application.Log.AddMessage("Clean uninstall completed!" & CRLF & ">> GPU: " & config.SelectedGPU.ToString())
+                Application.Log.AddMessage("Clean uninstall completed!" & CRLF & ">> GPU: " & config.SelectedGPU.ToString())
 
 				If Not config.Success AndAlso config.GPURemovedSuccess Then
 					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), "Error!", MessageBoxButton.OK, MessageBoxImage.Error)
@@ -725,12 +712,7 @@ Namespace Display_Driver_Uninstaller
 
 				UpdateTextMethod(UpdateTextTranslated(9))
 
-
-				If WindowsIdentity.GetCurrent().IsSystem Then
-					ImpersonateLoggedOnUser.ReleaseToken()
-				End If
-
-			Catch ex As Exception
+            Catch ex As Exception
 				Application.Log.AddException(ex)
 			End Try
 		End Sub

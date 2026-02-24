@@ -13,20 +13,16 @@ Namespace Display_Driver_Uninstaller
 			Dim vendidexpected As String = ""
 			Dim VendidSC As String() = Nothing   ' "SoftwareComponent" Vendor ID
 
-			If WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.ReleaseToken()
-			End If
+            Select Case config.SelectedAUDIO
+                Case AudioVendor.Realtek
+                    vendidexpected = "VEN_10EC" : VendidSC = {"VEN_10EC&ASIO", "VEN_10EC&AID", "VEN_10EC&SID", "VEN_10EC&HID"}
+                Case AudioVendor.SoundBlaster
+                    vendidexpected = "VEN_1102" : VendidSC = {"VEN_1102"}
+                Case AudioVendor.None
+                    vendidexpected = "NONE" : VendidSC = {"NONE"}
+            End Select
 
-			Select Case config.SelectedAUDIO
-				Case AudioVendor.Realtek
-					vendidexpected = "VEN_10EC" : VendidSC = {"VEN_10EC&ASIO", "VEN_10EC&AID", "VEN_10EC&SID", "VEN_10EC&HID"}
-				Case AudioVendor.SoundBlaster
-					vendidexpected = "VEN_1102" : VendidSC = {"VEN_1102"}
-				Case AudioVendor.None
-					vendidexpected = "NONE" : VendidSC = {"NONE"}
-			End Select
-
-			If vendidexpected = "NONE" Then
+            If vendidexpected = "NONE" Then
 				Application.Log.AddWarningMessage("VendID is NONE, this is unexpected, cleaning aborted.")
 				Exit Sub
 			End If
@@ -133,188 +129,181 @@ Namespace Display_Driver_Uninstaller
 
 			Application.Log.AddMessage("Cleaning known Regkeys")
 
-			If WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.ReleaseToken()
-			End If
-
-			'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
-			If win10 Then
+            'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
+            If win10 Then
                 _cleanupEngine.RemoveAppxAsync("RealtekAudioControl").Wait()
             End If
 
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
+            ImpersonateUser.RunImpersonatedSystem(
+            Sub()
 
-			Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
+                Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
 
-			_cleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\classroot.cfg"), config)  '// add each line as String Array.
+                _cleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\classroot.cfg"), config)  '// add each line as String Array.
 
-			_cleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\clsidleftover.cfg"))
+                _cleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\clsidleftover.cfg"))
 
-			Application.Log.AddMessage("Removing known Packages")
+                Application.Log.AddMessage("Removing known Packages")
 
-			packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\packages.cfg")   '// add each line as String Array.
+                packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\packages.cfg")   '// add each line as String Array.
 
-			Try
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-			"Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
-					If regkey IsNot Nothing Then
-						For Each child As String In regkey.GetSubKeyNames()
-							If String.IsNullOrWhiteSpace(child) Then Continue For
+                Try
+                    Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
+            "Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
+                        If regkey IsNot Nothing Then
+                            For Each child As String In regkey.GetSubKeyNames()
+                                If String.IsNullOrWhiteSpace(child) Then Continue For
 
-							Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
+                                Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
 
-								If subregkey IsNot Nothing Then
-									If String.IsNullOrWhiteSpace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then Continue For
-									wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
-									If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
-									For i As Integer = 0 To packages.Length - 1
-										If String.IsNullOrWhiteSpace(packages(i)) Then Continue For
-										If StrContainsAny(wantedvalue, True, packages(i)) Then
-											Try
-												Deletesubregkey(regkey, child)
-											Catch ex As Exception
-												Application.Log.AddException(ex)
-											End Try
-										End If
-									Next
-								End If
-							End Using
-						Next
-					End If
-				End Using
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-			End Try
+                                    If subregkey IsNot Nothing Then
+                                        If String.IsNullOrWhiteSpace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then Continue For
+                                        wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
+                                        If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
+                                        For i As Integer = 0 To packages.Length - 1
+                                            If String.IsNullOrWhiteSpace(packages(i)) Then Continue For
+                                            If StrContainsAny(wantedvalue, True, packages(i)) Then
+                                                Try
+                                                    Deletesubregkey(regkey, child)
+                                                Catch ex As Exception
+                                                    Application.Log.AddException(ex)
+                                                End Try
+                                            End If
+                                        Next
+                                    End If
+                                End Using
+                            Next
+                        End If
+                    End Using
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
 
-			If IntPtr.Size = 8 Then
-				packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\packages.cfg")   '// add each line as String Array.
-				Try
-					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-				 "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
-						If regkey IsNot Nothing Then
-							For Each child As String In regkey.GetSubKeyNames()
-								If String.IsNullOrWhiteSpace(child) Then Continue For
-								Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-								 "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
-									If subregkey IsNot Nothing Then
-										If String.IsNullOrWhiteSpace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then Continue For
-										wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
-										If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
-										For i As Integer = 0 To packages.Length - 1
-											If String.IsNullOrWhiteSpace(packages(i)) Then Continue For
-											If StrContainsAny(wantedvalue, True, packages(i)) Then
-												Try
-													Deletesubregkey(regkey, child)
-												Catch ex As Exception
-													Application.Log.AddException(ex)
-												End Try
-											End If
-										Next
-									End If
-								End Using
-							Next
-						End If
-					End Using
-				Catch ex As Exception
-					Application.Log.AddException(ex)
-				End Try
-			End If
+                If IntPtr.Size = 8 Then
+                    packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\packages.cfg")   '// add each line as String Array.
+                    Try
+                        Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
+                 "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
+                            If regkey IsNot Nothing Then
+                                For Each child As String In regkey.GetSubKeyNames()
+                                    If String.IsNullOrWhiteSpace(child) Then Continue For
+                                    Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
+                                 "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
+                                        If subregkey IsNot Nothing Then
+                                            If String.IsNullOrWhiteSpace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then Continue For
+                                            wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
+                                            If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
+                                            For i As Integer = 0 To packages.Length - 1
+                                                If String.IsNullOrWhiteSpace(packages(i)) Then Continue For
+                                                If StrContainsAny(wantedvalue, True, packages(i)) Then
+                                                    Try
+                                                        Deletesubregkey(regkey, child)
+                                                    Catch ex As Exception
+                                                        Application.Log.AddException(ex)
+                                                    End Try
+                                                End If
+                                            Next
+                                        End If
+                                    End Using
+                                Next
+                            End If
+                        End Using
+                    Catch ex As Exception
+                        Application.Log.AddException(ex)
+                    End Try
+                End If
 
-			Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-			"Software", True)
-				If regkey IsNot Nothing Then
-					For Each child As String In regkey.GetSubKeyNames()
-						If String.IsNullOrWhiteSpace(child) Then Continue For
-						If StrContainsAny(child, True, "realtek", "ASIO") Then
-							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
-								If regkey2 IsNot Nothing Then
-									For Each child2 As String In regkey2.GetSubKeyNames()
-										If String.IsNullOrWhiteSpace(child2) Then Continue For
-										If StrContainsAny(child2, True, "aecbf", "audio", "realtekeffects", "realtekoptions", "smartampcmd", "spkprotection", "Realtek ASIO") Then
-											Try
-												Deletesubregkey(regkey2, child2)
-											Catch ex As Exception
-												Application.Log.AddException(ex)
-											End Try
-										End If
-									Next
-									If regkey2.SubKeyCount = 0 Then
-										Try
-											Deletesubregkey(regkey, child)
-										Catch ex As Exception
-										End Try
-									Else
-										For Each data As String In regkey2.GetSubKeyNames()
-											If String.IsNullOrWhiteSpace(data) Then Continue For
-											Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
-										Next
-									End If
-								End If
-							End Using
-						End If
-					Next
-				End If
-			End Using
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
+            "Software", True)
+                    If regkey IsNot Nothing Then
+                        For Each child As String In regkey.GetSubKeyNames()
+                            If String.IsNullOrWhiteSpace(child) Then Continue For
+                            If StrContainsAny(child, True, "realtek", "ASIO") Then
+                                Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
+                                    If regkey2 IsNot Nothing Then
+                                        For Each child2 As String In regkey2.GetSubKeyNames()
+                                            If String.IsNullOrWhiteSpace(child2) Then Continue For
+                                            If StrContainsAny(child2, True, "aecbf", "audio", "realtekeffects", "realtekoptions", "smartampcmd", "spkprotection", "Realtek ASIO") Then
+                                                Try
+                                                    Deletesubregkey(regkey2, child2)
+                                                Catch ex As Exception
+                                                    Application.Log.AddException(ex)
+                                                End Try
+                                            End If
+                                        Next
+                                        If regkey2.SubKeyCount = 0 Then
+                                            Try
+                                                Deletesubregkey(regkey, child)
+                                            Catch ex As Exception
+                                            End Try
+                                        Else
+                                            For Each data As String In regkey2.GetSubKeyNames()
+                                                If String.IsNullOrWhiteSpace(data) Then Continue For
+                                                Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
+                                            Next
+                                        End If
+                                    End If
+                                End Using
+                            End If
+                        Next
+                    End If
+                End Using
 
-			If IntPtr.Size = 8 Then
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-	"Software\WOW6432Node", True)
-					If regkey IsNot Nothing Then
-						For Each child As String In regkey.GetSubKeyNames()
-							If String.IsNullOrWhiteSpace(child) Then Continue For
-							If StrContainsAny(child, True, "realtek", "ASIO") Then
-								Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
-									If regkey2 IsNot Nothing Then
-										For Each child2 As String In regkey2.GetSubKeyNames()
-											If String.IsNullOrWhiteSpace(child2) Then Continue For
-											If StrContainsAny(child2, True, "aecbf", "audio", "realtekeffects", "realtekoptions", "smartampcmd", "spkprotection", "Realtek ASIO") Then
-												Try
-													Deletesubregkey(regkey2, child2)
-												Catch ex As Exception
-													Application.Log.AddException(ex)
-												End Try
-											End If
-										Next
-										If regkey2.SubKeyCount = 0 Then
-											Try
-												Deletesubregkey(regkey, child)
-											Catch ex As Exception
-											End Try
-										Else
-											For Each data As String In regkey2.GetSubKeyNames()
-												If String.IsNullOrWhiteSpace(data) Then Continue For
-												Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
-											Next
-										End If
-									End If
-								End Using
-							End If
-						Next
-					End If
-				End Using
-			End If
+                If IntPtr.Size = 8 Then
+                    Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
+    "Software\WOW6432Node", True)
+                        If regkey IsNot Nothing Then
+                            For Each child As String In regkey.GetSubKeyNames()
+                                If String.IsNullOrWhiteSpace(child) Then Continue For
+                                If StrContainsAny(child, True, "realtek", "ASIO") Then
+                                    Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
+                                        If regkey2 IsNot Nothing Then
+                                            For Each child2 As String In regkey2.GetSubKeyNames()
+                                                If String.IsNullOrWhiteSpace(child2) Then Continue For
+                                                If StrContainsAny(child2, True, "aecbf", "audio", "realtekeffects", "realtekoptions", "smartampcmd", "spkprotection", "Realtek ASIO") Then
+                                                    Try
+                                                        Deletesubregkey(regkey2, child2)
+                                                    Catch ex As Exception
+                                                        Application.Log.AddException(ex)
+                                                    End Try
+                                                End If
+                                            Next
+                                            If regkey2.SubKeyCount = 0 Then
+                                                Try
+                                                    Deletesubregkey(regkey, child)
+                                                Catch ex As Exception
+                                                End Try
+                                            Else
+                                                For Each data As String In regkey2.GetSubKeyNames()
+                                                    If String.IsNullOrWhiteSpace(data) Then Continue For
+                                                    Application.Log.AddWarningMessage("Remaining Key(s) found " + " : " + regkey2.ToString + "\ --> " + data)
+                                                Next
+                                            End If
+                                        End If
+                                    End Using
+                                End If
+                            Next
+                        End If
+                    End Using
+                End If
 
-			Try
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\Run", True)
-					If regkey IsNot Nothing Then
-						Try
-							Deletevalue(regkey, "RtkAudUService")
-						Catch ex As Exception
-						End Try
-					End If
-				End Using
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-			End Try
+                Try
+                    Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\Run", True)
+                        If regkey IsNot Nothing Then
+                            Try
+                                Deletevalue(regkey, "RtkAudUService")
+                            Catch ex As Exception
+                            End Try
+                        End If
+                    End Using
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
 
-			If WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.ReleaseToken()
-			End If
-		End Sub
+            End Sub)
+        End Sub
 
-		Private Sub CleanRealtekFolders(ByVal config As ThreadSettings)
+        Private Sub CleanRealtekFolders(ByVal config As ThreadSettings)
 			Dim filePath As String = Nothing
 			UpdateTextMethod(UpdateTextTranslated(1))
 
@@ -322,85 +311,82 @@ Namespace Display_Driver_Uninstaller
 
 			_cleanupEngine.Folderscleanup(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\REALTEK\driverfiles.cfg"))
 
-			If Not WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.Taketoken()
-			End If
+            ImpersonateUser.RunImpersonatedSystem(
+            Sub()
 
-			filePath = config.Paths.ProgramFiles + "Realtek"
-			If _fileIO.ExistsDir(filePath) Then
+                filePath = config.Paths.ProgramFiles + "Realtek"
+                If _fileIO.ExistsDir(filePath) Then
 
-				For Each child As String In _fileIO.GetDirectories(filePath)
-					If String.IsNullOrWhiteSpace(child) = False Then
-						If StrContainsAny(child, True, "audio") Then
+                    For Each child As String In _fileIO.GetDirectories(filePath)
+                        If String.IsNullOrWhiteSpace(child) = False Then
+                            If StrContainsAny(child, True, "audio") Then
 
-							Delete(child)
+                                Delete(child)
 
-						End If
-					End If
-				Next
-				If _fileIO.CountDirectories(filePath) = 0 Then
+                            End If
+                        End If
+                    Next
+                    If _fileIO.CountDirectories(filePath) = 0 Then
 
-					Delete(filePath)
+                        Delete(filePath)
 
-				Else
-					For Each data As String In _fileIO.GetDirectories(filePath)
-						If String.IsNullOrWhiteSpace(data) Then Continue For
-						Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
-					Next
-				End If
-			End If
+                    Else
+                        For Each data As String In _fileIO.GetDirectories(filePath)
+                            If String.IsNullOrWhiteSpace(data) Then Continue For
+                            Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+                        Next
+                    End If
+                End If
 
-			filePath = config.Paths.SysWOW64 + "RTCOM"
-			If _fileIO.ExistsDir(filePath) Then
-				If filePath IsNot Nothing Then
-					If _fileIO.CountDirectories(filePath) = 0 Then
-						Delete(filePath)
-					Else
-						For Each data As String In _fileIO.GetDirectories(filePath)
-							If String.IsNullOrWhiteSpace(data) Then Continue For
-							Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
-						Next
-					End If
-				End If
-			End If
+                filePath = config.Paths.SysWOW64 + "RTCOM"
+                If _fileIO.ExistsDir(filePath) Then
+                    If filePath IsNot Nothing Then
+                        If _fileIO.CountDirectories(filePath) = 0 Then
+                            Delete(filePath)
+                        Else
+                            For Each data As String In _fileIO.GetDirectories(filePath)
+                                If String.IsNullOrWhiteSpace(data) Then Continue For
+                                Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+                            Next
+                        End If
+                    End If
+                End If
 
 
-			'64Bit zone
-			If IntPtr.Size = 8 Then
-				filePath = config.Paths.ProgramFilesx86 + "Realtek"
-				If _fileIO.ExistsDir(filePath) Then
-					If filePath IsNot Nothing Then
+                '64Bit zone
+                If IntPtr.Size = 8 Then
+                    filePath = config.Paths.ProgramFilesx86 + "Realtek"
+                    If _fileIO.ExistsDir(filePath) Then
+                        If filePath IsNot Nothing Then
 
-						For Each child As String In _fileIO.GetDirectories(filePath)
-							If String.IsNullOrWhiteSpace(child) = False Then
-								If StrContainsAny(child, True, "Audio") Then
+                            For Each child As String In _fileIO.GetDirectories(filePath)
+                                If String.IsNullOrWhiteSpace(child) = False Then
+                                    If StrContainsAny(child, True, "Audio") Then
 
-									Delete(child)
+                                        Delete(child)
 
-								End If
-							End If
-						Next
-						If _fileIO.CountDirectories(filePath) = 0 Then
+                                    End If
+                                End If
+                            Next
+                            If _fileIO.CountDirectories(filePath) = 0 Then
 
-							Delete(filePath)
+                                Delete(filePath)
 
-						Else
-							For Each data As String In _fileIO.GetDirectories(filePath)
-								If String.IsNullOrWhiteSpace(data) Then Continue For
-								Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
-							Next
+                            Else
+                                For Each data As String In _fileIO.GetDirectories(filePath)
+                                    If String.IsNullOrWhiteSpace(data) Then Continue For
+                                    Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+                                Next
 
-						End If
-					End If
-				End If
-			End If
+                            End If
+                        End If
+                    End If
+                End If
 
-			If WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.ReleaseToken()
-			End If
-		End Sub
+            End Sub)
+        End Sub
 
-		Private Sub KillProcess(ByVal ParamArray processnames As String())
+        Private Sub KillProcess(ByVal ParamArray processnames As String())
 			For Each processName As String In processnames
 				If String.IsNullOrEmpty(processName) Then
 					Continue For

@@ -2730,11 +2730,7 @@ Namespace Display_Driver_Uninstaller.Win32
 		' RESERVED FOR CLEANING FROM CODE
 		Public Shared Sub UninstallDevice(ByVal device As Device)
 
-			If WindowsIdentity.GetCurrent().IsSystem Then
-				ImpersonateLoggedOnUser.ReleaseToken()
-			End If
-
-			Try
+            Try
 				If device Is Nothing Then
 					Application.Log.AddWarningMessage("Cancelling! Empty device!")
 					Return

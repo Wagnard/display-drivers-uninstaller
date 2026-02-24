@@ -1,161 +1,121 @@
-﻿Imports System.Collections.Concurrent
+﻿Imports Microsoft.Win32.SafeHandles
 Imports System.Runtime.InteropServices
-Imports System.Security
 Imports System.Security.Principal
-Imports System.Threading
 
 Namespace Display_Driver_Uninstaller.Win32
 
-	Public Class ImpersonateLoggedOnUser
-		<SuppressUnmanagedCodeSecurityAttribute()>
-		Private Declare Function OpenProcessToken Lib "advapi32" (ByVal ProcessHandle As System.IntPtr, ByVal DesiredAccess As Integer, ByRef TokenHandle As IntPtr) As Integer
+    Friend Class ImpersonateUser
 
-		<SuppressUnmanagedCodeSecurityAttribute()>
-		Private Declare Function CloseHandle Lib "kernel32" (ByVal handle As IntPtr) As Boolean
+        <DllImport("advapi32.dll", SetLastError:=True)>
+        Private Shared Function OpenProcessToken(ByVal processHandle As IntPtr, ByVal desiredAccess As Integer, ByRef tokenHandle As IntPtr) As Boolean
+        End Function
 
-		Public Declare Function DuplicateToken Lib "advapi32.dll" (ByVal ExistingTokenHandle As IntPtr, ByVal SECURITY_IMPERSONATION_LEVEL As Integer, ByRef DuplicateTokenHandle As IntPtr) As Boolean
+        <DllImport("kernel32.dll", SetLastError:=True)>
+        Private Shared Function CloseHandle(ByVal handle As IntPtr) As Boolean
+        End Function
 
-		Private Declare Auto Function RevertToSelf Lib "advapi32.dll" () As Long
+        <DllImport("advapi32.dll", SetLastError:=True)>
+        Public Shared Function DuplicateToken(ByVal existingTokenHandle As IntPtr, ByVal securityImpersonationLevel As Integer, ByRef duplicateTokenHandle As IntPtr) As Boolean
+        End Function
 
-		Declare Function ImpersonateLoggedOnUser Lib "advapi32.dll" (ByVal hToken As Integer) As Integer
+        Private Const TOKEN_DUPLICATE As Integer = 2
+        Private Const TOKEN_QUERY As Integer = 8
+        Private Const TOKEN_IMPERSONATE As Integer = 4
 
-		Private Shared ReadOnly _impersonatedUser As New ConcurrentDictionary(Of Integer, WindowsImpersonationContext)
+        Private Shared Function TakeTokenInternal() As SafeAccessTokenHandle
+            Dim hToken As IntPtr = IntPtr.Zero
+            Dim dupeTokenHandle As IntPtr = IntPtr.Zero
+            Dim tokenReturned As Boolean = False
+            Dim logEntry As New LogEntry() With {.Message = "Trying to impersonate the SYSTEM account..."}
+            logEntry.Type = LogType.Warning
 
-		Public Const TOKEN_DUPLICATE As Integer = 2
+            Try
+                ACL.AddPriviliges(ACL.SE.DEBUG_NAME, ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
 
-		Public Const TOKEN_QUERY As Integer = 8
+                Dim procs As Process() = Process.GetProcesses()
 
-		Public Const TOKEN_IMPERSONATE As Integer = 4
+                If procs.Length = 0 Then
+                    logEntry.Message &= " FAILED ! (Cleanup may not be efficient.)"
+                    logEntry.Add("No processes available to obtain SYSTEM token.")
+                    Throw New InvalidOperationException("No processes available to obtain SYSTEM token.")
+                End If
 
-		Public Shared Sub Taketoken()
-			Dim hToken As IntPtr = IntPtr.Zero
-			Dim dupeTokenHandle As IntPtr = IntPtr.Zero
-			'Dim procs As Process() = Process.GetProcessesByName("LSASS")
-			Dim procs As Process() = Process.GetProcesses()
-			Dim logEntry As New LogEntry() With {.Message = "Trying to impersonate the SYSTEM account..."}
-			logEntry.Type = LogType.Warning
+                logEntry.Add("Number of process to check", procs.Length.ToString)
 
-			If _impersonatedUser.ContainsKey(Thread.CurrentThread.ManagedThreadId) Then
-				logEntry.Type = LogType.Warning
-				logEntry.Message &= " BUG Present, Trying to impersonate when already impersonated on this thread."
-				Application.Log.Add(logEntry)
-				Return
-			End If
+                For Each proc As Process In procs
+                    If String.IsNullOrWhiteSpace(proc.ToString()) OrElse
+               StrContainsAny(proc.ProcessName, True, "searchfilterhost", "idle", "wininit", "system", "registry", "smss", "services", "csrss", "lsass") Then
+                        Continue For
+                    End If
 
-			ACL.AddPriviliges(ACL.SE.DEBUG_NAME, ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
+                    Try
+                        If Not OpenProcessToken(proc.Handle, TOKEN_QUERY Or TOKEN_IMPERSONATE Or TOKEN_DUPLICATE, hToken) Then
+                            logEntry.Add(proc.ProcessName, String.Format("OpenProcessToken Failed {0}, privilege not held", Marshal.GetLastWin32Error()))
+                            Continue For
+                        End If
 
-			If procs IsNot Nothing AndAlso procs.Length > 0 Then
-				Try
-					logEntry.Add("Number of process to check", procs.Length.ToString)
+                        Using newId As New WindowsIdentity(hToken)
+                            If Not newId.IsSystem Then
+                                logEntry.Add(proc.ProcessName, "Skipping : " & newId.User.ToString())
+                                Continue For
+                            End If
+                            logEntry.Add(proc.ProcessName, newId.User.ToString())
+                        End Using
 
-					For Each proc As Process In procs
-						If String.IsNullOrWhiteSpace(proc.ToString) OrElse StrContainsAny(proc.ProcessName, True, "searchfilterhost", "smss") Then Continue For
-						Try
-							If OpenProcessToken(proc.Handle, TOKEN_QUERY Or TOKEN_IMPERSONATE Or TOKEN_DUPLICATE, hToken) <> 0 Then
-								Dim newId As Principal.WindowsIdentity = New Principal.WindowsIdentity(hToken)
+                        Const SecurityImpersonation As Integer = 2
+                        dupeTokenHandle = DupeToken(hToken, SecurityImpersonation)
 
-								If Not newId.IsSystem Then
-									logEntry.Add(proc.ProcessName, "Skipping : " + newId.User.ToString)
-									Continue For
-								Else
-									logEntry.Add(proc.ProcessName, newId.User.ToString)
-								End If
+                        If dupeTokenHandle = IntPtr.Zero Then
+                            Throw New Exception(String.Format("DuplicateToken failed for {0}: {1}", proc.ProcessName, Marshal.GetLastWin32Error()))
+                        End If
 
-								Const SecurityImpersonation As Integer = 2
-								dupeTokenHandle = DupeToken(hToken, SecurityImpersonation)
+                        logEntry.Type = LogType.Event
+                        logEntry.Message &= " SUCCESS !"
+                        logEntry.Add(proc.ProcessName, "SYSTEM token obtained: SUCCESS")
+                        tokenReturned = True
+                        Return New SafeAccessTokenHandle(dupeTokenHandle)
 
-								If IntPtr.Zero = dupeTokenHandle Then
-									Dim s As String = String.Format("Dup failed {0}, privilege not held", Marshal.GetLastWin32Error())
-									Throw New Exception(s)
-								End If
+                    Catch ex As ComponentModel.Win32Exception
+                        logEntry.Add(proc.ProcessName, ex.Message)
+                    Catch ex As Exception
+                        logEntry.Add(proc.ProcessName, ex.Message & ex.StackTrace)
+                    Finally
+                        If hToken <> IntPtr.Zero Then
+                            CloseHandle(hToken)
+                            hToken = IntPtr.Zero
+                        End If
+                    End Try
+                Next
 
-								Dim currentThreadId = Thread.CurrentThread.ManagedThreadId
-								_impersonatedUser(currentThreadId) = newId.Impersonate()
-								' Dim accountToken As IntPtr = Principal.WindowsIdentity.GetCurrent().Token
+                logEntry.Message &= " FAILED ! (Cleanup may not be efficient.)"
+                Throw New InvalidOperationException("Could not obtain SYSTEM token.")
 
-								'	ImpersonateLoggedOnUser(CInt((hToken)))
+            Finally
+                If dupeTokenHandle <> IntPtr.Zero AndAlso Not tokenReturned Then
+                    CloseHandle(dupeTokenHandle)
+                End If
+                Application.Log.Add(logEntry)
+            End Try
+        End Function
 
-								If Principal.WindowsIdentity.GetCurrent().IsSystem Then
-									'ACL.AddPriviliges(ACL.SE.SECURITY_NAME, ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.TCB_NAME, ACL.SE.CREATE_TOKEN_NAME)
-									logEntry.Add(proc.ProcessName, "SYSTEM account impersonalisation SUCCESS")
-									logEntry.Add("ThreadID : " + currentThreadId.ToString)
-									logEntry.Type = LogType.Event
-									logEntry.Message = logEntry.Message + " SUCCESS !"
-									Exit For
-								Else
-									logEntry.Add(proc.ProcessName, "Didn't work")
-									RevertToSelf()
-								End If
-							Else
-								Dim s As String = String.Format("OpenProcess Failed {0}, privilege not held", Marshal.GetLastWin32Error())
-								'Throw New Exception(s)
+        Private Shared Function DupeToken(ByVal token As IntPtr, ByVal level As Integer) As IntPtr
+            Dim dupeTokenHandle As IntPtr = IntPtr.Zero
+            If Not DuplicateToken(token, level, dupeTokenHandle) Then
+                Application.Log.AddMessage("DuplicateToken failed: " & Marshal.GetLastWin32Error().ToString())
+            End If
+            Return dupeTokenHandle
+        End Function
 
-							End If
-						Catch exARG As ComponentModel.Win32Exception
-							'access denied ,can happen, just continue checking the next process.
-							logEntry.Add(proc.ProcessName, exARG.Message)
-						Catch ex As Exception
-							Application.Log.AddMessage(proc.ProcessName + " " + ex.Message + ex.StackTrace)
-						End Try
-					Next
-				Catch ex As Exception
-					Application.Log.AddMessage(ex.Message + ex.StackTrace)
-				Finally
-					SafeClose(hToken)
-					SafeClose(dupeTokenHandle)
-				End Try
-			Else
-				logEntry.Type = LogType.Warning
-				logEntry.Message = logEntry.Message + " FAILED ! (Cleanup may not be efficient.)"
-				logEntry.Add("Process is either NULL of there is none detected.")
-			End If
+        Public Shared Sub RunImpersonatedSystem(ByVal action As Action)
+            Try
+                Using systemToken As SafeAccessTokenHandle = TakeTokenInternal()
+                    WindowsIdentity.RunImpersonated(systemToken, action)
+                End Using
+                Application.Log.AddMessage("Reverting the Impersonalisation is successful !")
+            Catch ex As Exception
+                Application.Log.AddMessage("RunImpersonatedSystem failed: " & ex.Message)
+            End Try
+        End Sub
 
-			If Principal.WindowsIdentity.GetCurrent().IsSystem Then
-				'nothing to do.
-			Else
-				logEntry.Message = logEntry.Message + " FAILED ! (Cleanup may not be efficient.)"
-			End If
-			Application.Log.Add(logEntry)
-		End Sub
-
-		Public Shared Sub ReleaseToken()
-			Dim currentThreadId As Integer = Thread.CurrentThread.ManagedThreadId
-			Dim impersonatedUser As WindowsImpersonationContext = Nothing
-			Dim LogEntry As New LogEntry() With {.Message = "Trying to Revert impersonalisation of the SYSTEM account..."}
-			LogEntry.Type = LogType.Warning
-			'	RevertToSelf()
-			If _impersonatedUser.TryRemove(currentThreadId, impersonatedUser) Then
-				impersonatedUser?.Undo()
-				impersonatedUser?.Dispose()
-				impersonatedUser = Nothing
-				If Principal.WindowsIdentity.GetCurrent().IsSystem Then
-					LogEntry.Message = LogEntry.Message + " Reverting Impersonalisation failed!"
-					LogEntry.Add("ThreadID : " + currentThreadId.ToString)
-					LogEntry.Add("Remaining impersonated threadIDs: " & String.Join(", ", _impersonatedUser.Keys))
-				Else
-					LogEntry.Type = LogType.Event
-					LogEntry.Message = LogEntry.Message + " Reverting the Impersonalisation is successful !"
-					LogEntry.Add("ThreadID : " + currentThreadId.ToString)
-					LogEntry.Add("Remaining impersonated threadIDs: " & String.Join(", ", _impersonatedUser.Keys))
-				End If
-			Else
-				Debug.WriteLine(currentThreadId)
-			End If
-			Application.Log.Add(LogEntry)
-		End Sub
-
-		Private Shared Function DupeToken(ByVal token As IntPtr, ByVal Level As Integer) As IntPtr
-			Dim dupeTokenHandle As IntPtr = IntPtr.Zero
-			Dim retVal As Boolean = DuplicateToken(token, Level, dupeTokenHandle)
-			Return dupeTokenHandle
-		End Function
-
-		Private Shared Sub SafeClose(ByRef handle As IntPtr)
-			If handle <> IntPtr.Zero Then
-				CloseHandle(handle)
-				handle = IntPtr.Zero
-			End If
-		End Sub
-
-	End Class
+    End Class
 End Namespace
