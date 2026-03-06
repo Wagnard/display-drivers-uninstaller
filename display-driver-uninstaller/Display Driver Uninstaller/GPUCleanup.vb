@@ -1937,7 +1937,7 @@ child.ToLower.Contains("legacy_amdacpksd") Then
                             If regkey IsNot Nothing Then
                                 For Each child As String In regkey.GetSubKeyNames()
                                     If String.IsNullOrWhiteSpace(child) Then Continue For
-                                    If StrContainsAny(child, True, "AIM", "CN", "DVR", "HKIDs", "MOBILE", "SCENE", "SA", "AMDInstallManager") Then
+                                    If StrContainsAny(child, True, "AIM", "CN", "DVR", "HKIDs", "MOBILE", "SCENE", "SA", "AMDInstallManager", "BOOST", "CHILL", "DELAG") Then
                                         Deletesubregkey(regkey, child)
                                     End If
                                 Next
@@ -3259,7 +3259,7 @@ child.ToLower.Contains("hydravision") Then
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If child.ToLower.Contains("ace") Then
+                                    If StrContainsAny(child, True, "ace", "Usersettings") Then
                                         Delete(child)
                                     End If
                                 End If
@@ -8184,7 +8184,7 @@ StrContainsAny(child, True, "intel(r) NPU software & drivers") AndAlso (config.R
                 If _fileIo.ExistsDir(filePath) Then
                     For Each child As String In _fileIo.GetDirectories(filePath)
                         If String.IsNullOrWhiteSpace(child) = False Then
-                            If StrContainsAny(child, True, "shadercache", "ags", "gfxinstaller", "IGN", "FWUpdateService") Or
+                            If StrContainsAny(child, True, "shadercache", "ags", "gfxinstaller", "IGN", "FWUpdateService", "IGSDS") Or
 StrContainsAny(child, True, "gcc") AndAlso config.RemoveINTELCP Or
 StrContainsAny(child, True, "npuinstaller") AndAlso (config.RemoveIntelNpu AndAlso Not Tools.IsIntelNpuPresent) Then
                                 Delete(child)
