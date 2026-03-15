@@ -1,0 +1,555 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="sv-SE" Text="Swedish">
+	<!--
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
+
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<btnCleanRestart>
+			<Text>
+				Rensa och starta om
+				(Rekommenderas)
+			</Text>
+			<Tooltip>
+				Avinstallera nuvarande och tidigare drivrutiner, starta sedan om datorn.
+				(Rekommenderas)
+			</Tooltip>
+		</btnCleanRestart>
+		<btnClean>
+			<Text>
+				Rensa men starta INTE om.
+				(Kan orsaka fel som svart skärm)
+			</Text>
+			<Tooltip>
+				Avinstallera nuvarande och tidigare drivrutiner, men starta inte om datorn.
+				(Kan orsaka fel som svart skärm)
+			</Tooltip>
+		</btnClean>
+		<btnCleanShutdown>
+			<Text>
+				Rensa och stäng av
+				(För installation av nytt grafikkort)
+			</Text>
+			<Tooltip>
+				Avinstallera nuvarande och tidigare drivrutiner och stäng av datorn utan genomsökning.
+				(För installation av nytt grafikkort)
+			</Tooltip>
+		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Ta bort "GeForce Experience" skärmdrivrutinsinstalleringscache och filer.
+				(Notera: Drivrutiner tas inte bort)
+			</Text>
+			<Tooltip>
+				Detta används mest för att ta tillbaka lite diskutrymme som inte tas bort av en GFE-installation (Gammal GFE-version).
+			</Tooltip>
+		</btnCleanGfeDownloads>
+		<btnWuRestore>
+			<Text>
+				Använd Windows standard Enhetsinstallationsinställningar
+				 (automatisk drivrutininstallation)
+			</Text>
+		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Rensa Shader-cache (Endast)
+			</Text>
+			<Tooltip>
+				Tar endast bort shader-/compute-cachefiler. Mer effektivt i felsäkert läge.
+			</Tooltip>
+		</btnCleanCaches>
+		<lblWinVersion>
+			<Text>Detekterad Windows-version</Text>
+		</lblWinVersion>
+		<lblDonate>
+			<Text>*** Tycker du om DDU? Fundera på en donation, det kommer att hjälpa mer utveckling. ***</Text>
+		</lblDonate>
+		<lblLog>
+			<Text>Logg</Text>
+		</lblLog>
+		<lblSelectedGPU>
+			<Text>Vald grafikdrivrutin</Text>
+		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Valt språk</Text>
+		</lblLanguage>
+
+	    <lblUpdate>
+			<Text>Söker efter uppdateringar...</Text>
+			<Text2>Inga uppdateringar hittades. Programmet är uppdaterat.</Text2>
+			<Text3>Uppdateringar hittades! Förvänta dig begränsad support på äldre versioner än den senaste.</Text3>
+			<Text4>Kunde inte hämta uppdateringar!</Text4>
+		</lblUpdate>
+
+		<lblOffer>
+			<Text>Erbjudanden från våra partners. (Rekommenderat)</Text>
+			<Tooltip>Du kan stänga av detta i Alternativmenyn.</Tooltip>
+		</lblOffer>
+
+		<OptionsMenuItem>
+			<Text>Alternativ</Text>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Information</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Utökad logg</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Länkar</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>Användarvillkor (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
+			<Text>Om</Text>
+		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Översättare</Text>
+		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Donatorer</Text>
+		</PatronMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Besök officiell DDU webbplats</Text>
+		</VisitDDUHomeMenuItem>
+		       <VisitDDUShopMenuItem>
+            <Text>Besök den officiella DDU Merch-butiken</Text>
+        </VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Gå med i vår Discord</Text>
+		</VisitDiscord>
+		<VisitSVNMenuItem>
+			<Text>Besök SVN webbplats</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Besök Guru3d NVIDIA tråd</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Besök Guru3d AMD tråd</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Besök Geforce tråd</Text>
+		</VisitGeforceMenuItem>
+        <DownloadNvidiaMenuItem>
+			<Text>Ladda ner NVIDIA-drivers</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>adda ner AMD-drivers</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Ladda ner Intel-drivers</Text>
+		</DownloadIntelMenuItem>
+		<Messages>
+			<Text1>Uppdateringar hittades! Besök DDUs webbplats nu?</Text1>
+			<Text2>Förvänta dig begränsad support på äldre versioner än den senaste. Var god kontrollera med nyare version innnan du rapporterar fel.</Text2>
+			<Text3>Du använder inte DDU med Administratörsrättigheter. Programmet kommer nu att avsluta.</Text3>
+			<Text4>Kunde inte hitta PAExec. Var god se i loggen.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) ändrar mycket i ditt register. DDU kommer automatiskt att försöka skapa en Systemåterställningspunkt (bara i Normalt läge).</Text5>
+			<Text6>Ett problem hände i en av modulerna, skicka din DDU logg till utvecklaren.</Text6>
+			<Text7>DDU har detekterat att du har en AMD växlande Laptop (Enduro eller motsvarande), DDU är ännu inte fullt kompatibel och testad med Enduro system, Använd på egen risk.</Text7>
+			<Text8>DDU har detekterat att du INTE är i Felsäkert läge... För en bättre rensning utan problem, är det rekommenderat att du startar i Felsäkert läge.</Text8>
+			<Text9>Windows Enhetsinstallationsinställningar har ändrats att INTE automatiskt installera drivrutiner.</Text9>
+			<Text10>Ren avinstallering färdig! Vill du ansluta nu?</Text10>
+			<Text11>Windows Enhetsinstallationsinställningar har ändrats att automatiskt installera drivrutiner</Text11>
+			<Text12>Du är inte i Säker mod. Det är rekommenderat att du startar om i Felsäkert läge för att undvika möjliga problem. Starta om i Felsäkert läge nu?</Text12>
+			<Text13>Här är vad du behöver välja vid den blå återställningsskärmen : Felsökning -&gt; avancerade alternativ -&gt; startinställningar.</Text13>
+			<Text14>Det finns en väntande omstart, var god och starta om innan du använder DDU</Text14>
+			<Text15>Ingen ändring gjordes. Windows Enhetsinstallationsinställningar var redan satta till standard.</Text15>
+            <Text16>Ett kritiskt fel i Windows förhindrar borttagning av drivrutiner. Som en säkerhetsåtgärd, kommer DDU inte att fortsätta att ta bort i filer och registret. Du måste fixa dina systemproblem innan DDU används.</Text16>
+            <Text17>Detta verkar vara första gången du har startat DDU.
+
+					Innan du använder det, var god notera följande:
+					1: Beroende på dina problem och konfiguration, kan det hjälpa eller göra saker värre.
+					2: Du bör ha en backup.
+					3: Du bör läsa License.txt, Readme.txt, och Användarvillkor(ToS).
+					4: Vi är inte ansvariga för någon sorts skada eller dataförlust.
+					5: Vi är alltid villiga att hjälpa om det finns ett problem.
+			</Text17>
+		</Messages>
+		<Options_Type>
+			<Options1>---Välj enhetstyp---</Options1>
+			<Options2>Ljud</Options2>
+			<Options3>Grafik</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---Välj enhet---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>INTEL</Options4>
+			<Options5>Alla GPU:er</Options5>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---Välj enhet---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
+		<UpdateLog>
+			<Text1>Kör drivrutinsrensning(Ta bort OEM steg)...</Text1>
+			<Text2>Rensar katalog</Text2>
+			<Text3>Rensar kända Registernycklar... Kan ta en minut eller två.</Text3>
+			<Text4>Rensar Uppdateringar av användarkonto om det finns.</Text4>
+			<Text5>Rensar katalog</Text5>
+			<Text6>Startar Registerrensning</Text6>
+			<Text7>Klar med rensning av Registret</Text7>
+			<Text8>Startar bortagning av NVIDIA Optimus UpperFilter om det finns.</Text8>
+			<Text9>Letar efter ny enhet...</Text9>
+			<Text10>Ren avinstallering färdig!</Text10>
+			<Text11>DDU Version</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>Detekterad</Text13>
+			<Text14>GPU DeviceId</Text14>
+			<Text15>Detekterad(e) Drivrutin(er)/Version(er)</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF Sektion</Text17>
+			<Text18>GPU är inte korrekt installerad</Text18>
+			<Text19>Tar bort några speciella kataloger, det kan ta lite tid...</Text19>
+			<Text20>Rensning startad...</Text20>
+			<Text21>Avinstallerar</Text21>
+			<Text22>drivrutin</Text22>
+			<Text23>Kör SetupAPI borttagning , Var god vänta(kan ta några minuter)</Text23>
+			<Text24>GPU borttagen från Enhetshanteraren.</Text24>
+			<Text25>Kör SetupAPI ta bort Ljudkontroller.</Text25>
+			<Text26>HDljud-adapterar borttagna !</Text26>
+			<Text27>3D Vision USB Adapter bortagen från Enhetshanteraren.</Text27>
+			<Text28>Bildskärmar och dolda bildskärmar borttagna !</Text28>
+			<Text29>SetupAPI borttagning färdig</Text29>
+			<Text30>Starta S-1-5-xx regionrensning</Text30>
+			<Text31>Avsluta S-1-5-xx regionrensning</Text31>
+			<Text32>Starta Classesroot ,installering\produktrensning</Text32>
+			<Text33>Avsluta Classesroot ,installering\produktrensning</Text33>
+			<Text34>Starta localmachine ,installering\produktrensning</Text34>
+			<Text35>Avsluta localmachine ,installering\produktrensning</Text35>
+			<Text36>Starta currentuser ,installering\produktrensning</Text36>
+			<Text37>Avsluta currentuser ,installering\produktrensning</Text37>
+			<Text38>Rensar Processer/Servicer...</Text38>
+			<Text39>Processer/Servicer rensning färdig</Text39>
+			<Text40>Borttagen.</Text40>
+			<Text41>Värde borttaget.</Text41>
+			<Text42>Fil borttagen.</Text42>
+		</UpdateLog>
+	</frmMain>
+
+	<frmOptions Text="Inställningar">
+		<btnClose>
+			<Text>Stäng</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Visa erbjudanden från våra partners</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>NVIDIA Specifika alternativ</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD Specifika alternativ</Text>
+		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>INTEL Specifika alternativ</Text>
+		</lblINTELspecific>
+		<lblAdvancedO>
+			<Text>Avancerade alternativ (Ändra på egen risk)</Text>
+		</lblAdvancedO>
+		<lblGeneral>
+			<Text>Generella alternativ</Text>
+		</lblGeneral>
+		<lblRemNvidiaDirs>
+			<Text>Ta bort "C:\NVIDIA" Drivrutinskataloger</Text>
+		</lblRemNvidiaDirs>
+		<lblSaveLogs>
+			<Text>Spara loggfiler i startkatalogen (rekommenderas)</Text>
+		</lblSaveLogs>
+		<lblRemPhysX>
+			<Text>Ta bort PhysX</Text>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
+			<Text>Ta bort 3DTV Play</Text>
+		</lblRem3DtvPlay>
+		<lblCreateRestorePoint>
+			<Text>Skapa en Systemåterställningspunkt (om det går)</Text>
+		</lblCreateRestorePoint>
+		<lblRemMonitors>
+			<Text>Ta bort nuvarande och icke- närvarande bildskärmar (Rekommenderas)</Text>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
+			<Text>Ta bort AMD Ljudbuss</Text>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
+			<Text>Ta bort "C:\AMD" Drivrutinskataloger.</Text>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
+			<Text>Ta bort drivrutinen/filtret AMDKMPFD (En backup rekommenderas för AMD kretschips)</Text>
+		</lblRemAMDKMPFD>
+		<lblShowSafeModeMsg>
+			<Text>Starta Felsäkert läge-dialog (Inte rekommenderat innan du har testat Felsäkert läge manuellt)</Text>
+			<Tooltip>Inte rekommenderat om du aldrig har startat din dator själv i Felsäkert läge för att se om det fungerar. Detta val kan orsaka en uppstartsloop, svart skärm och möjligtvis mer.</Tooltip>
+		</lblShowSafeModeMsg>
+		<lblUseRoamingCfg>
+			<Text>Spara konfigurationsfil i Roamingkatalog</Text>
+		</lblUseRoamingCfg>
+		<lblCheckUpdates>
+			<Text>Automatisk kontroll för DDU-uppdateringar vid start. (Rekommenderat)</Text>
+		</lblCheckUpdates>
+		<lblRemGFE>
+			<Text>Ta bort Geforce Experience (GFE)</Text>
+		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>Ta bort NVIDIA Broadcast</Text>
+		</lblRemNVBROADCAST>
+		<lblRemNVCP>
+			<Text>(DCH-drivrutin) Ta bort NVIDIA Kontrollpanel installerad från Microsoft Store</Text>
+		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>Behåll Global NVIDIA Kontrollpanel / Programinställningar.</Text>
+			<Tooltip>
+				Om du har problem som lett dig att använda DDU för rensning, rekommenderas att undvika val av denna funktion.
+				Denna funktion är inte designad att fixa problem och kan kanske inte åtgärda det problem du har."
+			</Tooltip>
+		</lblKeepNVCPopt>
+		<lblRemINTELCP>
+			<Text>(DCH-drivrutin) Ta bort Intel® Kontrollpanel installerad från Microsoft Store</Text>
+		</lblRemINTELCP>
+		<lblRemINTELIGS>
+			<Text>Ta bort Intel® Arc Control / Intel® Graphics Software</Text>
+		</lblRemINTELIGS>
+		<lblRemOneAPI>
+			<Text>Ta bort Intel® oneAPI Level Zero SDK</Text>
+		</lblRemOneAPI>
+		<lblRemEnduranceGaming>
+			<Text>Remove Intel® Endurance Gaming</Text>
+		</lblRemEnduranceGaming>
+		<lblRemIntelNpu>
+			<Text>Ta bort Intel® NPU</Text>
+		</lblRemIntelNpu>
+		<lblRemAMDCP>
+			<Text>(DCH-drivrutin) Ta bort AMD Kontrollpanel installerad från Microsoft Store</Text>
+		</lblRemAMDCP>
+		<lblRemCrimsonCache>
+			<Text>Ta bort AMD Crimson Skuggningscachekatalog</Text>
+			<Tooltip>
+				Rekommenderas om det finns grafikfel (hastighet eller visuell korruption) orsakat av korrupt skuggningscachedata.
+				Också rekommenderat om du byter till ett annat varumärke som NVIDIA.
+			</Tooltip>
+		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Ta bort Vulkan Runtime</Text>
+			<Tooltip>Inte rekommenderat om du har två olika GPUer som kan använda Vulkans API.</Tooltip>
+		</lblVulkan>
+    <lblPreventWinUpdate>
+      <Text>Förhindra nerladdning av drivrutiner från "Windows uppdatering" när "Windows" söker efter en drivrutin för en enhet.</Text>
+      <Tooltip>I enkla termer, detta val förhindrar "Windows/Enhetshanteraren" att söka efter drivrutinsuppdateringar i "Windows Uppdatering". 
+               Notering: Detta förhindrar inte "Windows Uppdatering" att ladda ner/installera nya drivrutiner. 
+               Notering2: Det är också rekommenderat att ändra denna ändring efter du har avslutat DDU och återinstallerat din GPU drivrutin eller du får problem med andra enhetsinstallationer.</Tooltip>
+        </lblPreventWinUpdate>
+		<lblRememberLastChoice>
+			<Text>Kom ihåg sist valda GPU</Text>	
+		</lblRememberLastChoice>
+  </frmOptions>
+
+	<frmLaunch Text="Launch option">
+		<btnAccept>
+			<Text>Launch</Text>
+			<Text2>
+				Starta om i
+				Felsäkert läge
+			</Text2>
+		</btnAccept>
+		<btnWuRestore>
+			<Text>
+				Sätt Windows Enhetsinstallationsinställningar som Standard och Stäng
+			</Text>
+		</btnWuRestore>
+		<btnClose>
+			<Text>Stäng</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Starta val</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>
+				Du är inte i Felsäkert läge. Det är rekommenderat att
+				starta om i Felsäkert läge för att undvika möjliga problem.
+			</Text>
+		</lblNotSafeMode>
+		<lblWinPasswordWarn>
+			<Text>
+				Viktig notering för Windows 8/8.1/10/11 användare:
+				Ditt Windows "LÖSENORD" behövs! (PIN fungerar INTE i Felsäkert läge)
+				Avbryt omedelbart om du har förlorat eller inte vet det!
+			</Text>
+		</lblWinPasswordWarn>
+		<cbBootOption>
+			<Item1>Normalt läge</Item1>
+			<Item2>Felsäkert läge (Rekommenderat)</Item2>
+			<Item3>Felsäkert läge med Nätverk</Item3>
+		</cbBootOption>
+		<Messages>
+			<Text1>DDU stängde program kända för att störa (som MSI Afterburner och RTSS).</Text1>
+		</Messages>
+	</frmLaunch>
+
+	<frmLog Text="Utökad logg">
+		<btnClose>
+			<Text>Stäng</Text>
+		</btnClose>
+		<btnOpenLog>
+			<Text>Öppna logg</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Alternativ</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Kopiering på</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filter</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Visa händelser</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Visa varningar</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Visa fel</Text>
+		</errorsMenuItem>
+	</frmLog>
+
+	<frmSystemRestore Text="Systemåterställning">
+		<lblSystemRestore>
+			<Text>Försöker skapa en Systemåterställningspunkt.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Stäng</Text>
+		</btnClose>
+		<btnAbout>
+			<Text>Om</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Användaravtal (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Översättare</Text>
+		</btnTranslators>
+		<btnPatron>
+			<Text>Donatorer</Text>
+		</btnPatron>
+		<lblTranslators>
+			<Text>Big thanks to the following translators and also those who aren't listed!</Text>
+		</lblTranslators>
+		<lblPatron>
+			<Text>
+        Stort tack till följande Donatorer och också även till de som inte listas!
+
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Chris Ross
+				-Fabio
+				-Matti Metsikko
+				-mikalonia - mika
+				-ChaosDMNS
+				-Eduardo Macias
+				-Peter Le
+				-Kater Willschie
+				-Duke Hanson
+				-Sam Gooding
+				-Zero Chung
+				-Remy Starshade
+			</Text>
+		</lblPatron>
+	</frmAbout>
+
+	<Misc>
+		<About>
+			<Text>
+				Display Driver Uninstaller (DDU) / Rensningsverktyg för grafikdrivrutiner.(NVIDIA/AMD)
+
+				Vad det gör är att ta bort skärm/GPU drivrutinen från Enhetshanteraren och tar bort aktuell och
+				alla tidigare drivrutiner från Windows drivrutinslagring tillsammans med bortagandet av tjänster från NVIDIA/AMD.
+
+				Den omedelbara effekten av att använda detta verktyg, blir att Windows återgår till "Nyinstallerat" skick.
+
+				Verktyget fungerar ungefär som "Driver Sweeper"*, plus nämnda extrafunktioner.
+
+				Om du har några problem att installera en äldre eller ny drivrutin, ge det ett försök då det finns några rapporter att det fixar
+				dessa problem.
+
+				REKOMMENDERAD ANVÄNDNING:
+
+				- Verktyget kan köras i Normalt läge men för absolut stabilitet när använder DDU är Felsäkert läge
+                alltid det bästa.
+
+				- Vi vill samla feedback från alla, berätta om det var framgångsrikt eller inte.
+
+				- Gör en backup eller en Systemåterställningspunkt. (Men det ska normalt vara ganska säkert.)
+
+				- Om du har eller haft ett drivrutinsproblem, och detta verktyg hjälpte dig med några problem du hade eller
+				upplever nu, var god dela ditt resultat.
+
+				Kom ihåg att varken NVIDIA, AMD, eller Microsoft kan hållas ansvariga för eventuella skador eller fel
+				på din dator, inte heller DDU, dess skapare eller partners kan göras ansvariga.
+				-------------------------------
+
+				Skapat av Wagnard.
+
+				Kodare: Wagnard, Devmltk, Shady7557
+
+				Testare : Dellon132
+
+				Loggor : juanchacin
+
+Stort tack till Jackalito för donationen av en AMD7850.			
+
+Speciellt tack till Guru3D https://www.guru3d.com/ för hjälp med tidig exponering.
+
+Tack till Helge Klein (https://helgeklein.com/setacl/) : för tillståndet att använda hans program med DDU "SetAcl"
+
+				Stort tack för deras tid för att testa: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (tog sig tid att debugga med mig)
+				Extraordinärt (Testade en felfix)
+
+				Tack till alla som utsatte sina system för risker. (speciellt tack till Dellon132)
+
+				*DDU, dess skapare och partners är på inget sätt förknippade med Driver Sweeper, eller dess skapare.
+			</Text>
+		</About>
+
+		<Tos>
+			<Text>
+				Display Driver Uninstaller ("DDU") ANVÄNDARAVTAL
+
+				Du blir en användare av DDU ("Användare") genom att använda DDU. Detta avtal börjar gälla när du använder programmet för att avinstallera en drivrutin.
+
+				Genom att använda DDU förbinder du dig att inte anklaga DDU eller dess skapare och partners, att skada eller negativt påverka din dator.
+
+				Genom att använda DDU medger du kännedom om att NVIDIA ("NVIDIA, GeForce") eller Advanced Micro Devices ("AMD, Radeon")
+                inte har någonting att göra med detta program, och på inget sätt förknippas med DDU eller dess skapare.
+			</Text>
+		</Tos>
+	</Misc>
+
+	<LanguageTranslators>
+		<Translator>
+			<User>Hans Eriksson</User>
+			<Details>hanseriksson980@gmail.com</Details>
+			<LastUpdate>02/06/2025</LastUpdate>
+		</Translator>
+		<Translator2>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator2>
+	</LanguageTranslators>
+</DisplayDriverUninstaller>

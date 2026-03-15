@@ -1,0 +1,567 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="hu-HU" Text="Hungarian">
+	<!--
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
+
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<btnCleanRestart>
+			<Text>
+				Tisztítás és újraindítás
+				(Erősen ajánlott)
+			</Text>
+			<Tooltip>
+				Jelenlegi és előző meghajtóprogramok eltávolítása és a számítógép újraindítása
+				(Erősen ajánlott)
+			</Tooltip>
+		</btnCleanRestart>
+		<btnClean>
+			<Text>
+				Tisztítás újraindítás NÉLKÜL
+				(Hibákat okozhat, például fekete képernyőt)
+			</Text>
+			<Tooltip>
+				Jelenlegi és előző meghajtóprogramok eltávolítása, de ne indítsa újra a számítógépet.
+				(például elsötétülő képernyőt okozhat)
+			</Tooltip>
+		</btnClean>
+		<btnCleanShutdown>
+			<Text>
+				Tisztítás és leállítás
+				(Új videokártya beüzemeléséhez)
+			</Text>
+			<Tooltip>
+				Jelenlegi és előző meghajtóprogramok eltávolítása és a számítógép leállítása újraellenőrzés nélkül
+				(Új grafikus kártya telepítéséhez)
+			</Tooltip>
+		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				"GeForce Experience" eltávolítása a cache és az illesztőprogram fájlok közül.
+				(Megjegyzés: a meghajtó programokat nem érinti ez a változás)
+			</Text>
+			<Tooltip>
+				A rendszermeghajtódon lévő szabad terület felszabadítására használható, olyan komponenseknél, amit a GeForce Experience nem távolít el (Régi GFE verziók esetén).
+			</Tooltip>
+		</btnCleanGfeDownloads>
+		<btnWuRestore>
+			<Text>
+				Windows eszköztelepítő beállításai az alapértelmezett értékekre
+				(automatikus illesztőprogram telepítés)
+			</Text>
+		</btnWuRestore>
+		<btnCleanCaches>
+			<Text>
+				Shader-gyorsítótár törlése (kizárólagosan)
+			</Text>
+			<Tooltip>
+				Csak a Shader / Compute-gyorsítótár fájlok törlése. Csökkentett módban hatékonyabb.
+			</Tooltip>
+		</btnCleanCaches>
+		<lblWinVersion>
+			<Text>Operációs rendszer és verziója:</Text>
+		</lblWinVersion>
+		<lblDonate>
+			<Text>*** Tetszik a DDU? Gondold át egy esetleges támogatás lehetőségét, sokat segítene a fejlesztés jövőjén. ***</Text>
+		</lblDonate>
+		<lblLog>
+			<Text>Napló</Text>
+		</lblLog>
+		<lblSelectedGPU>
+			<Text>Kiválasztott grafikus illesztőprogram</Text>
+		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Kiválasztott nyelv</Text>
+		</lblLanguage>
+
+		<lblUpdate>
+			<Text>Frissítések keresése ...</Text>
+			<Text2>Nincs új frissítés! Már a legfrissebb verziót használod a programból.</Text2>
+			<Text3>Új frissítés érhető el! A régebbi verziók esetén korlátozott támogatásra számíthatsz.</Text3>
+			<Text4>Frissítések ellenőrzése nem lehetséges!</Text4>
+		</lblUpdate>
+
+		<lblOffer>
+			<Text>Ajánlatok a partnerektől</Text>
+			<Tooltip>A beállítások menüben ezt kikapcsolhatod.</Tooltip>
+		</lblOffer>
+
+		<OptionsMenuItem>
+			<Text>Beállítások</Text>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Infó</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Kibővített naplófájl</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Linkek</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>Felhasználási feltételek (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
+			<Text>Névjegy</Text>
+		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Fordítók</Text>
+		</TranslatorsMenuItem>
+		<PatronMenuItem>
+			<Text>Patreon támogatók</Text>
+		</PatronMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>A DDU weboldalának meglátogatása</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitDDUShopMenuItem>
+			<Text>A hivatalos DDU Merch Shop meglátogatása</Text>
+		</VisitDDUShopMenuItem>
+		<VisitDiscord>
+			<Text>Csatlakozz a Discord szerverünkhöz</Text>
+		</VisitDiscord>
+		<VisitSVNMenuItem>
+			<Text>A Github oldal meglátogatása</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>A Guru3d NVIDIA fórumok meglátogatása</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>A Guru3d AMD fórumok meglátogatása</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>A GeForce fórumok meglátogatása</Text>
+		</VisitGeforceMenuItem>
+        <DownloadNvidiaMenuItem>
+			<Text>NVIDIA illesztőprogram letöltések</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdManuItem>
+			<Text>AMD illesztőprogram letöltések</Text>
+		</DownloadAmdManuItem>
+        <DownloadIntelMenuItem>
+			<Text>Intel illesztőprogram letöltések</Text>
+		</DownloadIntelMenuItem>
+		<Messages>
+			<Text1>Új frissítés érhető el! Meglátogatod most a DDU honlapját?</Text1>
+			<Text2>A program régebbi verzióin korlátozott támogatásra számíthatsz. Kérlek először próbáld ki az újabb verziókat, mielőtt hibát jelentenél!</Text2>
+			<Text3>A DDU-t nem rendszergazdai jogosultsággal indítottad el! Az alkalmazás most kilép.</Text3>
+			<Text4>Nem található a PAExec, további infókért lásd a naplót!</Text4>
+			<Text5>Display Driver Uninstaller (DDU) több módosítást is végez a rendszerleíró adatbázisban. DDU automatikusan megpróbál rendszer-visszaállító pontot létrehozni (csak normál módban).</Text5>
+			<Text6>Hiba történt az egyik modulban, kérlek küldd el a DDU naplót a fejlesztőnek.</Text6>
+			<Text7>A DDU észlelte, hogy változtatható AMD laptopon (Enduro vagy hasonló) fut. A DDU még nem teljesen kompatibilis / nem tesztelt Enduro rendszereken. Csak saját felelősségedre használd!</Text7>
+			<Text8>A DDU észlelte, hogy NEM csökkentett módban fut... Az egyszerűbb és gond nélküli "illesztőprogram tisztítás" érdekében ajánlott csökkentett módba újraindítani a számítógépet.</Text8>
+			<Text9>A Windows eszköztelepítő beállításai úgy változtak meg, hogy NEM TÖLTI LE automatikusan az illesztőprogramokat.</Text9>
+			<Text10>Tiszta eltávolítás kész! Szeretnél most kilépni?</Text10>
+			<Text11>A Windows eszköztelepítő beállításai úgy változtak meg, hogy AUTOMATIKUSAN töltse le az illesztőprogramokat.</Text11>
+			<Text12>Jelenleg nem csökkentett módban vagy. Erősen ajánlott csökkentett módba újraindítani az esetleges hibák elkerülése érdekében. Újraindítod most csökkentett módba?</Text12>
+			<Text13>A kék helyreállító képernyő esetén a következőt kell kiválasztanod: Hibakeresés -&gt; Haladó beállítások -&gt; Indítópult beállítások.</Text13>
+			<Text14>Egy várakozó újraindítás van folyamatban, a DDU használata előtt kérlek indítsd újra a számítógépet</Text14>
+			<Text15>Nem következett be változás a rendszerben. A Windows eszköztelepítő beállításai, alapértékekre lett beállítva.</Text15>
+			<Text16>Egy kritikus hiba lépett fel a Windows-ban, ami megakadályozza az illesztőprogramok helyes eltávolítását. A biztonsági kockázat miatt, a DDU nem folytatja tovább a fájlok eltávolítását és a regisztrációs adatbázis módosítását. Kérlek, hárítsd el a rendszerben bekövetkezett hibá(ka)t mielőtt használnád ezt a programot!</Text16>
+			<Text17>Úgy tűnik, hogy most először használod a DDU-t ezen a PC-n.
+				
+					Mielőtt használnád a programot, mérlegeld a következőket:
+					1: A problémáidtól és a konfigurációdtól függően, a program használata ronthat, de javíthat is a helyzeten.
+					2: Készíts biztonsági másolatot!
+					3: Olvasd el a licencet, a readme-t és a felhasználási feltételeket.
+					4: Semmilyen felelősséget nem vállalunk a bármilyen bekövetkezett kárért vagy adatvesztésért.
+					5: Örömmel nyújtunk segítséget, ha bármilyen problémába ütközöl.
+			</Text17>
+		</Messages>
+		<Options_Type>
+			<Options1>---Válaszd ki az eszköz típusát---</Options1>
+			<Options2>Hangvezérlő</Options2>
+			<Options3>GPU</Options3>
+		</Options_Type>
+		<Options_GPU>
+			<Options1>---Válaszd ki az eszközt---</Options1>
+			<Options2>NVIDIA</Options2>
+			<Options3>AMD</Options3>
+			<Options4>Intel®</Options4>
+			<Options5>Összes GPU</Options5>
+		</Options_GPU>
+		<Options_AUDIO>
+			<Options1>---Válaszd ki az eszközt---</Options1>
+			<Options2>REALTEK (WIP)</Options2>
+			<Options3>SOUNDBLASTER (WIP)</Options3>
+		</Options_AUDIO>
+		<UpdateLog>
+			<Text1>Illesztőprogram tároló tisztítás végrehajtása (OEM lépés törlése)...</Text1>
+			<Text2>Könyvtár törlése</Text2>
+			<Text3>Ismert reg-kulcsok törlése... egy-két percig eltarthat.</Text3>
+			<Text4>UpdatusUser felhasználói fiókok törlése, ha léteznek.</Text4>
+			<Text5>Könyvtár törlése</Text5>
+			<Text6>Rendszerleíró tisztítás indítása</Text6>
+			<Text7>Rendszerleíró tisztítás befejezve</Text7>
+			<Text8>NVIDIA Optimus UpperFilter eltávolítása, ha megtalálható.</Text8>
+			<Text9>Új eszköz keresése...</Text9>
+			<Text10>Tiszta eltávolítás kész!</Text10>
+			<Text11>DDU verzió</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>Észlelve</Text13>
+			<Text14>GPU DeviceId</Text14>
+			<Text15>Észlelt illesztőprogram verzió(k)</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF szekció</Text17>
+			<Text18>A GPU nincs megfelelően telepítve</Text18>
+			<Text19>Néhány különleges könyvtár törlése beletelhet némi időbe...</Text19>
+			<Text20>Tisztítás elindítva...</Text20>
+			<Text21>Eltávolítás folyamatban</Text21>
+			<Text22>illesztőprogram</Text22>
+			<Text23>SetupAPI eltávolítás végrehajtása, kérlek várj (néhány percbe beletelhet)</Text23>
+			<Text24>GPU(k) eltávolítva az Eszközkezelőből.</Text24>
+			<Text25>SetupAPI hangkontroller eltávolítás végrehajtása.</Text25>
+			<Text26>HD hangadapterek eltávolítva !</Text26>
+			<Text27>3D Vision USB adapter eltávolítva az Eszközkezelőből.</Text27>
+			<Text28>Kijelzők és rejtett kijelzők eltávolítva!</Text28>
+			<Text29>SetupAPI eltávolítása befejeződött</Text29>
+			<Text30>S-1-5-xx régió takarításának indítása</Text30>
+			<Text31>S-1-5-xx régió takarításának befejezése</Text31>
+			<Text32>Classesroot indítása ,telepítő\termékek eltakarítása</Text32>
+			<Text33>Classesroot befejezése ,telepítő\termékek eltakarítása</Text33>
+			<Text34>localmachine indítása ,telepítő\termékek eltakarítása</Text34>
+			<Text35>localmachine befejezése ,telepítő\termékek eltakarítása</Text35>
+			<Text36>currentuser indítása ,telepítő\termékek eltakarítása</Text36>
+			<Text37>currentuser befejezése ,telepítő\termékek eltakarítása</Text37>
+			<Text38>Folyamat/szolgáltatások eltakarítása...</Text38>
+			<Text39>Folyamat/szolgáltatások takarítása kész</Text39>
+			<Text40>Törölve.</Text40>
+			<Text41>Érték eltávolítva.</Text41>
+			<Text42>Fájl törölve.</Text42>
+		</UpdateLog>
+	</frmMain>
+
+	<frmOptions Text="Beállítások">
+		<btnClose>
+			<Text>Bezár</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Ajánlatok mutatása a partnerektől</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>NVIDIA specifikus beállítások</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>AMD specifikus beállítások</Text>
+		</lblAmdspecific>
+		<lblINTELspecific>
+			<Text>Intel® specifikus beállítások</Text>
+		</lblINTELspecific>
+		<lblAdvancedO>
+			<Text>További beállítások (csak saját felelősségre változtasd meg)</Text>
+		</lblAdvancedO>
+		<lblGeneral>
+			<Text>Általános beállítások</Text>
+		</lblGeneral>
+		<lblRemNvidiaDirs>
+			<Text>"C:\NVIDIA" illesztőprogram mappák eltávolítása</Text>
+		</lblRemNvidiaDirs>
+		<lblSaveLogs>
+			<Text>Naplófájlok mentése az indítási útvonalra. (Erőse ajánlott)</Text>
+		</lblSaveLogs>
+		<lblRemPhysX>
+			<Text>PhysX eltávolítása</Text>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
+			<Text>3DTV Play eltávolítása</Text>
+		</lblRem3DtvPlay>
+		<lblCreateRestorePoint>
+			<Text>Rendszer-visszaállítási pont létrehozása (ha engedélyezett)</Text>
+		</lblCreateRestorePoint>
+		<lblRemMonitors>
+			<Text>Észlelhető és nem észlelhető kijelzők eltávolítása (ajánlott)</Text>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
+			<Text>AMD Audio Bus eltávolítása</Text>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
+			<Text>"C:\AMD" illesztőprogram könyvtárak eltávolítása</Text>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
+			<Text>AMDKMPFD illesztőprogram/szűrő eltávolítása (az AMD chipset illesztőprogramok biztonsági mentése ajánlott)</Text>
+		</lblRemAMDKMPFD>
+		<lblShowSafeModeMsg>
+			<Text>Csökkentett mód dialógusablak megjelenítése indításkor</Text>
+			<Tooltip>Nem ajánlott, ha még sohasem indítottad el a számítógépedet csökkentett üzemmódban, hogy kipróbáld működik-e. Ezzel a beállítással "boot loop"-ba kerülhetsz, fekete képernyőt okozhat és egyebeket.</Tooltip>
+		</lblShowSafeModeMsg>
+		<lblUseRoamingCfg>
+			<Text>Konfigurációs fájl tárolása a roaming könyvtárban</Text>
+		</lblUseRoamingCfg>
+		<lblCheckUpdates>
+			<Text>Automatikusan ellenőrizze a DDU frissítéseket indításkor. (ajánlott)</Text>
+		</lblCheckUpdates>
+		<lblRemGFE>
+			<Text>GeForce Experience (GFE) / NVIDIA App eltávolítása</Text>
+		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>NVIDIA Broadcast eltávolítása</Text>
+		</lblRemNVBROADCAST>
+		<lblRemNVCP>
+			<Text>(DCH illesztőprogram) A Microsoft Store-ból telepített NVIDIA Vezérlőpult eltávolítása</Text>
+		</lblRemNVCP>
+		<lblKeepNVCPopt>
+			<Text>Az NVIDIA Vezérlőpult globális / programbeli beállítások megtartása.</Text>
+			<Tooltip>
+				Ha olyan problémákba ütköztél, amik miatt a DDU-t használod a tisztításhoz, javasoljuk, hogy ne kapcsold be ezt a beállítást.
+				Ez a beállítás nem a problémák megoldására szolgál, és nem biztos, hogy megoldja az általad tapasztalt problémát.
+			</Tooltip>
+		</lblKeepNVCPopt>
+		<lblRemINTELCP>
+			<Text>(DCH illesztőprogram) A Microsoft Store-ból telepített Intel® Vezérlőpult eltávolítása</Text>
+		</lblRemINTELCP>
+		<lblRemINTELIGS>
+			<Text>Intel Arc vezérlőpult / Intel® Grafikus Szoftver eltávolítása</Text>
+		</lblRemINTELIGS>
+		<lblRemOneAPI>
+			<Text>Intel® oneAPI Level Zero SDK eltávolítása</Text>
+		</lblRemOneAPI>
+		<lblRemEnduranceGaming>
+			<Text>Intel® Endurance Gaming eltávolítása</Text>
+		</lblRemEnduranceGaming>
+		<lblRemIntelNpu>
+			<Text>Intel® NPU eltávolítása</Text>
+		</lblRemIntelNpu>
+		<lblRemAMDCP>
+			<Text>(DCH illesztőprogram) A Microsoft Store-ból telepített AMD Vezérlőpult eltávolítása</Text>
+		</lblRemAMDCP>
+		<lblRemCrimsonCache>
+			<Text>AMD Crimson Shader Cache könyvtár eltávolítása</Text>
+			<Tooltip>
+				Akkor ajánlott, grafikus anomáliákat tapasztalsz (sebesség vagy képalkotásbeli hibákat) a sérült shader cache adatok miatt.
+				Ajánlott, gyártóváltás esetén is, például NVIDIA márkára váltasz.
+			</Tooltip>
+		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Vulkan-meghajtók eltávolítása</Text>
+			<Tooltip>Abban az esetben nem ajánlott, ha kettő darab GPU-val rendelkezel, melyek Vulkan API képesek.</Tooltip>
+		</lblVulkan>
+	<lblPreventWinUpdate>
+		<Text>Az illesztőprogramok letöltésének megakadályozása a "Windows Update"-ből, amikor a "Windows" egy eszközhöz illesztőprogramot keres.</Text>
+		<Tooltip>Egyszerűbben fogalmazva: ezzel az opcióval megadhatod, hogy a "Windows/Gépkezelő" NE ELLENŐRIZZE az illesztőprogram frissítését a "Windows Update"-en.
+				Megjegyzés: Ez nem akadályozza meg, hogy a "Windows Update" letöltse/telepítse az új illesztőprogramokat.
+				Megjegyzés2: Szintén *ERŐSEN* ajánlott visszaállítani ezt a beállítás, miután végeztél a DDU használatával és újratelepítetted a GPU-illesztőprogramot, különben probléma adódhat más eszközök telepítése során</Tooltip>
+	</lblPreventWinUpdate>
+			<lblRememberLastChoice>
+			<Text>Utolsó kiválasztott GPU megjegyzése</Text>	
+		</lblRememberLastChoice>
+	</frmOptions>
+
+	<frmLaunch Text="Indítás beállításai">
+		<btnAccept>
+			<Text>Indítás</Text>
+			<Text2>
+				Újraindítás
+				Csökkentett módban
+			</Text2>
+		</btnAccept>
+		<btnWuRestore>
+			<Text>
+				Windows alapértelmezett eszköztelepítő alaphelyzetbe állítása, majd a program bezárása
+			</Text>
+		</btnWuRestore>
+		<btnClose>
+			<Text>Bezár</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Indítás beállítása</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>
+				Jelenleg nem csökkentett módot használsz. A használata 
+				erősen ajánlott a problémák elkerülése végett.
+			</Text>
+		</lblNotSafeMode>
+		<lblWinPasswordWarn>
+			<Text>
+				Fontos megjegyzés a Windows 8/8.1/10/11 felhasználóknak:
+				Szükség lehet a Windows "JELSZAVADRA"! (A PIN kód NEM működik a csökkentett módban)
+				Azonnal lépj ki nem tudod a jelszavadat vagy elvesztetted azt!
+			</Text>
+		</lblWinPasswordWarn>
+		<cbBootOption>
+			<Item1>Normál mód</Item1>
+			<Item2>Csökkentett mód (ajánlott)</Item2>
+			<Item3>Csökkentett mód, hálózattal</Item3>
+		</cbBootOption>
+		<Messages>
+			<Text1>A DDU bezárta a folyamatot megzavaró programokat (például MSI Afterburner és RTSS).</Text1>
+		</Messages>
+	</frmLaunch>
+
+	<frmLog Text="Bővített napló">
+		<btnClose>
+			<Text>Bezár</Text>
+		</btnClose>
+		<btnOpenLog>
+			<Text>Napló megnyitása</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Beállítások</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Másolás engedélyezve</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Szűrők</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Események mutatása</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Figyelmeztetések mutatása</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Hibák mutatása</Text>
+		</errorsMenuItem>
+	</frmLog>
+
+	<frmSystemRestore Text="Rendszer-helyreállítás">
+		<lblSystemRestore>
+			<Text>Rendszer-visszaállítási pont létrehozása.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="Névjegy">
+		<btnClose>
+			<Text>Bezár</Text>
+		</btnClose>
+		<btnAbout>
+			<Text>Névjegy</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Felhasználási feltételek (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Fordítók</Text>
+		</btnTranslators>
+		<btnPatron>
+			<Text>Támogatók</Text>
+		</btnPatron>
+		<lblTranslators>
+			<Text>Külön köszönet a felsorolt fordítóknak, és azoknak is akik nincsenek a listán!</Text>
+		</lblTranslators>
+		<lblPatron>
+			<Text>
+				Hatalmas köszönet a felsorolt támogatóknak, és ugyanakkor azoknak is, akik nem szerepelnek a listán!
+
+				-Alberto Bursi
+				-honnmaguro
+				-ZaoDaDong
+				-Kaseb
+				-Frank Brown
+				-Sergey Bolshakow
+				-James Tiller
+				-Paulo Henrique
+				-Graeme Small
+				-SMiThaYe
+				-Chris Ross
+				-Fabio
+				-Matti Metsikko
+				-mikalonia - mika
+				-ChaosDMNS
+				-Eduardo Macias
+				-Peter Le
+				-Kater Willschie
+				-Duke Hanson
+				-Sam Gooding
+				-Zero Chung
+
+			</Text>
+		</lblPatron>
+	</frmAbout>
+
+	<Misc>
+		<About>
+			<Text>
+				Illesztőprogram eltávolító (DDU) / takarító kijelző illesztőprogramokhoz.(NVIDIA/AMD)
+
+				Annyit tesz, hogy eltávolítja a kijelző illesztőprogramját az Eszközkezelőből, az aktuális és minden 
+				régebbi illesztőprogramot a Windows illesztőprogram tárolóból, valamint az NVIDIA/AMD szolgáltatásokat is.
+
+				Az eszköz alkalmazása után a Windowson szinte a "friss újratelepítés" érzése lesz úrrá.
+
+				Ez az eszköz hasonló a Driver Sweeperhez + elvégezi a fentebb említett extra dolgokat.
+
+				Ha gondod akadna egy régebbi vagy újabb illesztőprogram telepítésével, próbáld ezt ki, mivel többen is jelentették,
+				hogy megoldotta a gondjaikat.
+
+				AJÁNLOTT HASZNÁLAT :
+
+				-Ez az eszköz normál módban is használható, de a legjobb stabilitás érdekében a DDU használata
+				csökkentett módban ajánlott.
+
+				-Szeretnénk visszajelzést kapni tőled. Mondd el, hogy sikerült-e a művelet vagy sem. 
+
+				-Készíts mentést vagy rendszer-visszaállítást (de általában elég biztonságosnak kell lennie).
+
+				-Ha illesztőprogram problémád van vagy volt, és ez az eszköz segített megoldani, 
+				kérlek oszd meg az eredményt.
+
+				Megjegyzés: az NVIDIA/AMD-nek ehhez semmi köze, nem dolgozunk az NVIDIA/AMD-nek, ők pedig
+				nem vonhatók felelősségre bármely esetleges kár vagy hiba esetén, ami a rendszeredet éri.
+				-------------------------------
+
+				Készítette: Wagnard
+
+				Programozók: Wagnard, Devmltk és Shady7557
+
+				Tesztelők: Dellon132 és Mats/Onyx
+
+				Logók: juanchacin
+
+				Hatalmas köszönet Jackalitónak az ajándék AMD 7850-esért!
+
+				Külön köszönet a Guru3D-nek (https://www.guru3d.com/) a kezdeti támogatásért!
+
+				Köszönet Helge Kleinnek (https://helgeklein.com/setacl/): amiért engedélyezte a programja használatát DDU "SetAcl"-lel
+
+				Hatalmas köszönet a tesztelésért: Gamer1291 (optimus), Octopuss (Amd Enduro) , nedooo` (időt szánt a hibakeresésre)
+				Extraordinary (hibajavítást tesztelt)
+
+				Köszönet mindazoknak, akik kockára tették a rendszerüket (külön köszönet Dellon132-nek)
+
+				*A DDU, valamint annak fejlesztői semmilyen formában nem állnak kapcsolatban a Driver Sweeperrel, vagy annak fejlesztőivel.
+			</Text>
+		</About>
+
+		<Tos>
+			<Text>
+				Display Driver Uninstaller ("DDU") FELHASZNÁLÓI SZERZŐDÉS
+
+				A DDU szoftver használatba vételével a felhasználójává váltál. Ez a szerződés akkor lép érvénybe, amikor a program egy driver eltávolítására használod.
+
+				A DDU használatával elfogadod, hogy nem okolod a DDU-t vagy a készítőit vagy kapcsolatait a számítógépedet ért bármilyen sérülés vagy negatív hatás miatt.
+
+				A DDU használatával elfogadod, hogy sem az NVIDIA-nak ("NVIDIA, GeForce"), sem az Advanced Micro Devices-nek ("AMD, Radeon") semmi köze
+				ehhez a programhoz és semmilyen módon nem állnak kapcsolatban a DDU-val vagy a készítőivel.
+			</Text>
+		</Tos>
+	</Misc>
+
+	<LanguageTranslators>
+		<Translator>
+			<User>istvanszabo890629</User>
+			<Details>istvanszabo890629@gmail.com</Details>
+			<LastUpdate>27/01/2026</LastUpdate>
+		</Translator>
+
+		<Translator2>
+			<User>Wagnard</User>
+			<Details>Owner</Details>
+			<LastUpdate>03/04/2021</LastUpdate>
+		</Translator2>
+
+		<Translator3>
+			<User>DevMltk</User>
+			<LastUpdate>31/05/2016</LastUpdate>
+		</Translator3>
+
+		<Translator4>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator4>
+	</LanguageTranslators> 
+</DisplayDriverUninstaller>
