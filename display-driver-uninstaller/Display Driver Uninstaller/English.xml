@@ -436,31 +436,32 @@
 		</lblTranslators>
 		<lblPatron>
 			<Text>
-				Big thanks to the following Patrons and also those who aren't listed!
+                Big thanks to the following Patrons and also those who aren't listed!
 
-				-Alberto Bursi
-				-honnmaguro
-				-ZaoDaDong
-				-Kaseb
-				-Frank Brown
-				-Sergey Bolshakow
-				-James Tiller
-				-Paulo Henrique
-				-Graeme Small
-				-SMiThaYe
-				-Chris Ross
-				-Fabio
-				-Matti Metsikko
-				-mikalonia - mika
-				-ChaosDMNS
-				-Eduardo Macias
-				-Peter Le
-				-Kater Willschie
-				-Duke Hanson
-				-Sam Gooding
-				-Zero Chung
-				-Remy Starshade
-			</Text>
+                -Alberto Bursi
+                -honnmaguro
+                -ZaoDaDong
+                -Kaseb
+                -Frank Brown
+                -Sergey Bolshakow
+                -James Tiller
+                -Paulo Henrique
+                -Graeme Small
+                -SMiThaYe
+                -Chris Ross
+                -Fabio
+                -Matti Metsikko
+                -mikalonia - mika
+                -ChaosDMNS
+                -Eduardo Macias
+                -Peter Le
+                -Kater Willschie
+                -Duke Hanson
+                -Sam Gooding
+                -Zero Chung
+                -Remy Starshade
+                -Lion-man
+            </Text>
 		</lblPatron>
 	</frmAbout>
 
