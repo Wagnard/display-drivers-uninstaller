@@ -6,15 +6,15 @@
 	Title="Log" MinHeight="480" MinWidth="600" >
 
 	<Window.Resources>
-		<SolidColorBrush x:Key="bWindowBg" Color="#FF12161D" />
-		<SolidColorBrush x:Key="bPanelBg" Color="#FF181E27" />
-		<SolidColorBrush x:Key="bPanelHover" Color="#FF202834" />
-		<SolidColorBrush x:Key="bBorder" Color="#FF546173" />
-		<Color x:Key="cNormal">#FFF2F5F7</Color>
-		<Color x:Key="cValue">#FF7AB8FF</Color>
-		<Color x:Key="cWarning">#FFFFC857</Color>
-		<Color x:Key="cError">#FFFF7B72</Color>
-		<Color x:Key="cSelected">#FF2D3A4B</Color>
+		<SolidColorBrush x:Key="bWindowBg" Color="White" />
+		<SolidColorBrush x:Key="bPanelBg" Color="#FFF0F0F0" />
+		<SolidColorBrush x:Key="bPanelHover" Color="#FFE6E6E6" />
+		<SolidColorBrush x:Key="bBorder" Color="Black" />
+		<Color x:Key="cNormal">Black</Color>
+		<Color x:Key="cValue">#FF0000D2</Color>
+		<Color x:Key="cWarning">Black</Color>
+		<Color x:Key="cError">Red</Color>
+		<Color x:Key="cSelected">#FFCBCBCB</Color>
 
 		<SolidColorBrush x:Key="bNormal" Color="{StaticResource cNormal}"/>
 		<SolidColorBrush x:Key="bValue" Color="{StaticResource cValue}"/>
@@ -23,7 +23,7 @@
 		<SolidColorBrush x:Key="bSelected" Color="{StaticResource cSelected}" />
 
 		<Style x:Key="styleNormal" TargetType="{x:Type TextBlock}">
-			<Setter Property="Foreground" Value="{StaticResource bNormal}"/>
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}"/>
 			<Setter Property="FontWeight" Value="Bold"/>
 			<Setter Property="FontSize" Value="12"/>
 		</Style>
@@ -34,16 +34,16 @@
 		</Style>
 
 		<LinearGradientBrush x:Key="bgBrushEvent" EndPoint="1,0.5" StartPoint="0,0.5" >
-			<GradientStop Color="#FF1E3150" Offset="0" />
-			<GradientStop Color="#FF12161D" Offset="1" />
+			<GradientStop Color="#FFBEC8FF" Offset="0" />
+			<GradientStop Color="#FFFFFFFF" Offset="1" />
 		</LinearGradientBrush>
 		<LinearGradientBrush x:Key="bgBrushWarning" EndPoint="1,0.5" StartPoint="0,0.5">
-			<GradientStop Color="#FF4A3B16" Offset="0" />
-			<GradientStop Color="#FF12161D" Offset="1" />
+			<GradientStop Color="#FFFFFFB4" Offset="0" />
+			<GradientStop Color="#FFFFFFFF" Offset="1" />
 		</LinearGradientBrush>
 		<LinearGradientBrush x:Key="bgBrushError" EndPoint="1,0.5" StartPoint="0,0.5">
-			<GradientStop Color="#FF4A1F24" Offset="0" />
-			<GradientStop Color="#FF12161D" Offset="1" />
+			<GradientStop Color="#FFFFE6E6" Offset="0" />
+			<GradientStop Color="#FFFFFFFF" Offset="1" />
 		</LinearGradientBrush>
 
 		<conv:NullableBooleanToBoolean x:Key="NulBoolToBool"></conv:NullableBooleanToBoolean>
@@ -73,8 +73,7 @@
 
 				<Grid.Resources>
 					<Style TargetType="{x:Type TextBlock}" >
-
-						<Setter Property="Foreground" Value="Black" />
+						<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
 					</Style>
 				</Grid.Resources>
 
@@ -106,7 +105,7 @@
 				<TextBlock Grid.Row="1" 
 						   Grid.Column="0" 
 						   Grid.ColumnSpan="1" 
-						   Foreground="Black" 
+						   Foreground="{DynamicResource bNormal}" 
 						   Text="{Binding Time, UpdateSourceTrigger=PropertyChanged}" />
 			</Grid>
 		</ControlTemplate>
@@ -144,12 +143,12 @@
 
 		<DataTemplate x:Key="logItem" >
 			<Border BorderThickness="0.5" 
-					BorderBrush="Black">
+					BorderBrush="{DynamicResource bBorder}">
 				<Border.Style>
 					<Style TargetType="{x:Type Border}">
 						<Style.Triggers>
 							<DataTrigger Binding="{Binding IsSelected}" Value="True">
-								<Setter Property="Background" Value="{StaticResource bSelected}" />
+								<Setter Property="Background" Value="{DynamicResource bSelected}" />
 							</DataTrigger>
 							<DataTrigger Binding="{Binding IsSelected}" Value="False">
 								<Setter Property="Background" Value="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrushBg}, UpdateSourceTrigger=PropertyChanged}" />
@@ -161,14 +160,32 @@
 			</Border>
 		</DataTemplate>
 
-		<ContextMenu x:Key="cmMessage">
+		<Style x:Key="LogContextMenuStyle" TargetType="{x:Type ContextMenu}">
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bPanelBg}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource bBorder}" />
+			<Setter Property="BorderThickness" Value="1" />
+		</Style>
+
+		<Style x:Key="LogContextMenuItemStyle" TargetType="{x:Type MenuItem}">
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bPanelBg}" />
+			<Setter Property="Padding" Value="8,3" />
+			<Style.Triggers>
+				<Trigger Property="IsHighlighted" Value="True">
+					<Setter Property="Background" Value="{DynamicResource bPanelHover}" />
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<ContextMenu x:Key="cmMessage" Style="{StaticResource LogContextMenuStyle}" ItemContainerStyle="{StaticResource LogContextMenuItemStyle}">
 			<MenuItem x:Name="copyMessage" Header="Copy Message" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
 		</ContextMenu>
-		<ContextMenu x:Key="cmValues">
+		<ContextMenu x:Key="cmValues" Style="{StaticResource LogContextMenuStyle}" ItemContainerStyle="{StaticResource LogContextMenuItemStyle}">
 			<MenuItem x:Name="copyValValue" Header="Copy Value(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyValue}"/>
 			<MenuItem x:Name="copyValLine" Header="Copy Line(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
 		</ContextMenu>
-		<ContextMenu x:Key="cmException">
+		<ContextMenu x:Key="cmException" Style="{StaticResource LogContextMenuStyle}" ItemContainerStyle="{StaticResource LogContextMenuItemStyle}">
 			<MenuItem x:Name="copyExKey" Header="Copy Key(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyKey}"/>
 			<MenuItem x:Name="copyExValue" Header="Copy Value(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyValue}"/>
 			<MenuItem x:Name="copyExLine" Header="Copy Line(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
@@ -200,22 +217,22 @@
 		</Style>
 
 		<Style x:Key="LogListBoxStyle" TargetType="{x:Type ListBox}">
-			<Setter Property="Foreground" Value="{StaticResource bNormal}" />
-			<Setter Property="Background" Value="{StaticResource bWindowBg}" />
-			<Setter Property="BorderBrush" Value="{StaticResource bBorder}" />
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bWindowBg}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource bBorder}" />
 			<Setter Property="BorderThickness" Value="0" />
 		</Style>
 
 		<Style x:Key="LogMenuStyle" TargetType="{x:Type Menu}">
-			<Setter Property="Foreground" Value="{StaticResource bNormal}" />
-			<Setter Property="Background" Value="{StaticResource bWindowBg}" />
-			<Setter Property="BorderBrush" Value="{StaticResource bBorder}" />
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bWindowBg}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource bBorder}" />
 			<Setter Property="BorderThickness" Value="0,0,0,1" />
 		</Style>
 
 		<Style x:Key="LogMenuItemStyle" TargetType="{x:Type MenuItem}">
-			<Setter Property="Foreground" Value="{StaticResource bNormal}" />
-			<Setter Property="Background" Value="{StaticResource bWindowBg}" />
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bWindowBg}" />
 			<Setter Property="Padding" Value="8,3" />
 			<Setter Property="Template">
 				<Setter.Value>
@@ -232,8 +249,8 @@
 									   AllowsTransparency="True"
 									   Focusable="False"
 									   PopupAnimation="Fade">
-									<Border Background="{StaticResource bPanelBg}"
-											BorderBrush="{StaticResource bBorder}"
+									<Border Background="{DynamicResource bPanelBg}"
+											BorderBrush="{DynamicResource bBorder}"
 											BorderThickness="1"
 											Padding="1">
 										<StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
@@ -243,16 +260,16 @@
 						</Border>
 						<ControlTemplate.Triggers>
 							<Trigger Property="IsHighlighted" Value="True">
-								<Setter TargetName="MenuItemBorder" Property="Background" Value="{StaticResource bPanelHover}" />
+								<Setter TargetName="MenuItemBorder" Property="Background" Value="{DynamicResource bPanelHover}" />
 							</Trigger>
 							<Trigger Property="IsSubmenuOpen" Value="True">
-								<Setter TargetName="MenuItemBorder" Property="Background" Value="{StaticResource bPanelHover}" />
+								<Setter TargetName="MenuItemBorder" Property="Background" Value="{DynamicResource bPanelHover}" />
 							</Trigger>
 							<Trigger Property="Role" Value="SubmenuItem">
-								<Setter Property="Background" Value="{StaticResource bPanelBg}" />
+								<Setter Property="Background" Value="{DynamicResource bPanelBg}" />
 							</Trigger>
 							<Trigger Property="Role" Value="SubmenuHeader">
-								<Setter Property="Background" Value="{StaticResource bPanelBg}" />
+								<Setter Property="Background" Value="{DynamicResource bPanelBg}" />
 							</Trigger>
 						</ControlTemplate.Triggers>
 					</ControlTemplate>
@@ -261,14 +278,14 @@
 		</Style>
 
 		<Style x:Key="LogTabControlStyle" TargetType="{x:Type TabControl}">
-			<Setter Property="Background" Value="{StaticResource bWindowBg}" />
-			<Setter Property="BorderBrush" Value="{StaticResource bBorder}" />
+			<Setter Property="Background" Value="{DynamicResource bWindowBg}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource bBorder}" />
 		</Style>
 
 		<Style x:Key="LogTabItemStyle" TargetType="{x:Type TabItem}">
-			<Setter Property="Foreground" Value="{StaticResource bNormal}" />
-			<Setter Property="Background" Value="{StaticResource bPanelBg}" />
-			<Setter Property="BorderBrush" Value="{StaticResource bBorder}" />
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bPanelBg}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource bBorder}" />
 			<Setter Property="Padding" Value="10,4" />
 			<Setter Property="Template">
 				<Setter.Value>
@@ -282,10 +299,10 @@
 						</Border>
 						<ControlTemplate.Triggers>
 							<Trigger Property="IsSelected" Value="True">
-								<Setter TargetName="TabBorder" Property="Background" Value="{StaticResource bWindowBg}" />
+								<Setter TargetName="TabBorder" Property="Background" Value="{DynamicResource bWindowBg}" />
 							</Trigger>
 							<Trigger Property="IsMouseOver" Value="True">
-								<Setter TargetName="TabBorder" Property="Background" Value="{StaticResource bPanelHover}" />
+								<Setter TargetName="TabBorder" Property="Background" Value="{DynamicResource bPanelHover}" />
 							</Trigger>
 						</ControlTemplate.Triggers>
 					</ControlTemplate>
@@ -294,9 +311,9 @@
 		</Style>
 
 		<Style x:Key="LogButtonStyle" TargetType="{x:Type Button}">
-			<Setter Property="Foreground" Value="{StaticResource bNormal}" />
-			<Setter Property="Background" Value="{StaticResource bPanelBg}" />
-			<Setter Property="BorderBrush" Value="{StaticResource bBorder}" />
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bPanelBg}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource bBorder}" />
 			<Setter Property="BorderThickness" Value="1" />
 			<Setter Property="Template">
 				<Setter.Value>
@@ -309,10 +326,10 @@
 						</Border>
 						<ControlTemplate.Triggers>
 							<Trigger Property="IsMouseOver" Value="True">
-								<Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource bPanelHover}" />
+								<Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource bPanelHover}" />
 							</Trigger>
 							<Trigger Property="IsPressed" Value="True">
-								<Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource bWindowBg}" />
+								<Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource bWindowBg}" />
 							</Trigger>
 						</ControlTemplate.Triggers>
 					</ControlTemplate>
@@ -321,7 +338,7 @@
 		</Style>
 	</Window.Resources>
 
-	<Grid x:Name="gridRoot" Background="{StaticResource bWindowBg}">
+	<Grid x:Name="gridRoot" Background="{DynamicResource bWindowBg}">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*"  MinHeight="100"/>
@@ -348,7 +365,7 @@
 				 ItemsSource="{Binding}" 
 				 HorizontalContentAlignment="Stretch" 
 				 BorderThickness="0"
-				 Background="{StaticResource bWindowBg}"
+				 Background="{DynamicResource bWindowBg}"
 				 Focusable="False"
 				 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 				 ScrollViewer.VerticalScrollBarVisibility="Visible" 
@@ -382,13 +399,13 @@
 			</ListBox.Style>
 		</ListBox>
 
-		<GridSplitter Margin="0,0,0,0" Grid.Row="2" ResizeDirection="Rows" ShowsPreview="True" HorizontalAlignment="Stretch" Background="{StaticResource bBorder}" MinHeight="2" />
+		<GridSplitter Margin="0,0,0,0" Grid.Row="2" ResizeDirection="Rows" ShowsPreview="True" HorizontalAlignment="Stretch" Background="{DynamicResource bBorder}" MinHeight="2" />
 
 		<Border Grid.Row="3" 
 				DataContext="{Binding ElementName=frmLog, Path=SelectedEntry, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
 				Background="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrushBg}, UpdateSourceTrigger=PropertyChanged}"
 				BorderThickness="1" 
-				BorderBrush="{StaticResource bBorder}">
+				BorderBrush="{DynamicResource bBorder}">
 
 			<TabControl Background="{x:Null}" 
 						Grid.Row="1"
@@ -411,7 +428,7 @@
 						VirtualizingStackPanel.VirtualizationMode="Recycling"
 						SelectionMode="Extended"
 						ItemsSource="{Binding ExceptionData, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-						ItemTemplate="{StaticResource logException}" Background="{StaticResource bWindowBg}">
+						ItemTemplate="{StaticResource logException}" Background="{DynamicResource bWindowBg}">
 
 						<ListBox.CommandBindings>
 							<CommandBinding Command="Copy" Executed="CopyCommand" />
@@ -452,7 +469,7 @@
 						VirtualizingStackPanel.VirtualizationMode="Recycling"
 						SelectionMode="Extended"
 						ItemsSource="{Binding Values, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-						ItemTemplate="{StaticResource logValues}" Background="{StaticResource bWindowBg}">
+						ItemTemplate="{StaticResource logValues}" Background="{DynamicResource bWindowBg}">
 
 						<ListBox.CommandBindings>
 							<CommandBinding Command="Copy" Executed="CopyCommand" />
@@ -483,12 +500,12 @@
 						 x:Name="tabNoData"
 						 Visibility="{Binding HasAnyData, Mode=OneWay, Converter={StaticResource NotBoolToVisibility},ConverterParameter=True, UpdateSourceTrigger=PropertyChanged}" 
 						 Background="{x:Null}">
-					<TextBlock Text="&lt; No Data &gt;" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{StaticResource bNormal}"/>
+					<TextBlock Text="&lt; No Data &gt;" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{DynamicResource bNormal}"/>
 				</TabItem>
 			</TabControl>
 		</Border>
 
-		<Border Grid.Row="4" BorderThickness="0,1,0,0" BorderBrush="{StaticResource bBorder}" Background="{StaticResource bWindowBg}">
+		<Border Grid.Row="4" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource bBorder}" Background="{DynamicResource bWindowBg}">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto" />
@@ -497,7 +514,7 @@
 				</Grid.ColumnDefinitions>
 
 				<Button Grid.Column="0" Grid.ColumnSpan="1" Margin="10" Content="Open Log" Grid.Row="1" Height="30" Name="btnOpenLog" VerticalAlignment="Top" MinWidth="80" Style="{StaticResource LogButtonStyle}" />
-				<TextBlock Grid.Column="1" Grid.ColumnSpan="1" TextWrapping="Wrap" Name="tbOpenedLog" Visibility="Visible" VerticalAlignment="Center" FontWeight="Bold" Margin="10" Foreground="{StaticResource bNormal}" />
+				<TextBlock Grid.Column="1" Grid.ColumnSpan="1" TextWrapping="Wrap" Name="tbOpenedLog" Visibility="Visible" VerticalAlignment="Center" FontWeight="Bold" Margin="10" Foreground="{DynamicResource bNormal}" />
 
 				<StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Grid.Column="2" Grid.ColumnSpan="1">
 					<Button Margin="10" Content="Close" Grid.Row="1" Name="btnClose" HorizontalAlignment="Right" MinWidth="80" Height="30" Style="{StaticResource LogButtonStyle}" />

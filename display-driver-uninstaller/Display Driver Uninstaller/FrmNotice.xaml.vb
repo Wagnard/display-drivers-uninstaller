@@ -7,13 +7,20 @@ Namespace Display_Driver_Uninstaller
 
 		Public Shared Function ShowNotice(owner As Window, title As String, message As String, Optional buttons As MessageBoxButton = MessageBoxButton.OK) As MessageBoxResult
 			Dim notice As New FrmNotice With {
-				.Owner = owner,
 				.Title = If(String.IsNullOrWhiteSpace(title), Application.Settings.AppName, title),
 				.Icon = If(owner IsNot Nothing, owner.Icon, Nothing),
 				.MessageText = message
 			}
 
+			If owner IsNot Nothing AndAlso
+			   Not ReferenceEquals(owner, notice) AndAlso
+			   owner.IsLoaded AndAlso
+			   owner.IsVisible Then
+				notice.Owner = owner
+			End If
+
 			notice.ConfigureButtons(buttons)
+			System.Media.SystemSounds.Exclamation.Play()
 			notice.ShowDialog()
 			Return notice.Result
 		End Function

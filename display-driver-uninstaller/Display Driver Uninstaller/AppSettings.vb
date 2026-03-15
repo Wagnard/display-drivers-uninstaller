@@ -130,6 +130,7 @@ Namespace Display_Driver_Uninstaller
 		Private ReadOnly m_PreventWinUpdate As DependencyProperty = RegDP("PreventWinUpdate", GetType(Boolean), GetType(AppSettings), False)
 		Private ReadOnly m_FirstTimeLaunch As DependencyProperty = RegDP("FirstTimeLaunch", GetType(Boolean), GetType(AppSettings), False)
 		Private ReadOnly m_UsedBCD As DependencyProperty = RegDP("UsedBCD", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_UseDarkTheme As DependencyProperty = RegDP("UseDarkTheme", GetType(Boolean), GetType(AppSettings), False)
 		Private ReadOnly m_RememberLastChoice As DependencyProperty = RegDP("RememberLastChoice", GetType(Boolean), GetType(AppSettings), False)
 		Private ReadOnly m_LastSelectedGPUIndex As DependencyProperty = RegDP("LastSelectedGPUIndex", GetType(Integer), GetType(AppSettings), 0)
 		Private ReadOnly m_LastSelectedTypeIndex As DependencyProperty = RegDP("LastSelectedTypeIndex", GetType(Integer), GetType(AppSettings), 0)
@@ -539,6 +540,15 @@ Namespace Display_Driver_Uninstaller
 			End Set
 		End Property
 
+		Public Property UseDarkTheme As Boolean
+			Get
+				Return CBool(GetValue(m_UseDarkTheme))
+			End Get
+			Set(value As Boolean)
+				SetValue(m_UseDarkTheme, value)
+			End Set
+		End Property
+
 		Public Property RememberLastChoice As Boolean
 			Get
 				Return CBool(GetValue(m_RememberLastChoice))
@@ -745,6 +755,7 @@ Namespace Display_Driver_Uninstaller
 							.WriteElementString("EnableSafeModeDialog", EnableSafeModeDialog.ToString())
 							.WriteElementString("PreventWinUpdate", PreventWinUpdate.ToString())
 							.WriteElementString("UsedBCD", UsedBCD.ToString())
+							.WriteElementString("UseDarkTheme", UseDarkTheme.ToString())
 							.WriteElementString("KeepNVCPopt", KeepNVCPopt.ToString())
 							.WriteElementString("RememberLastChoice", RememberLastChoice.ToString())
 							.WriteElementString("LastSelectedGPUIndex", LastSelectedGPUIndex.ToString())
@@ -932,6 +943,9 @@ Namespace Display_Driver_Uninstaller
 
 								Case "usedbcd"
 									UsedBCD = Boolean.Parse(KvP.Value)
+
+								Case "usedarktheme"
+									UseDarkTheme = Boolean.Parse(KvP.Value)
 
 								Case "rememberlastchoice"
 									RememberLastChoice = Boolean.Parse(KvP.Value)

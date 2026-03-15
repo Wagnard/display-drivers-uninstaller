@@ -4,17 +4,17 @@
         xmlns:conv="clr-namespace:Display_Driver_Uninstaller.Converters"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="SetupAPI" Height="480" Width="640" MinHeight="480" MinWidth="640" Loaded="Window_Loaded" Background="#FF12161D" Foreground="#FFF4F7FA">
+        Title="SetupAPI" Height="480" Width="640" MinHeight="480" MinWidth="640" Loaded="Window_Loaded" Background="{DynamicResource DebugWindowBg}" Foreground="{DynamicResource DebugText}">
 
 	<Window.Resources>
 		<conv:IsNullConverter x:Key="IsNull" />
 		<conv:BooleanToVisibilityConverter x:Key="BoolToVis" TrueValue="Collapsed" FalseValue="Visible" />
 		<conv:CombiningConverter x:Key="NullToVis" Converter1="{StaticResource IsNull}" Converter2="{StaticResource BoolToVis}" />
-		<SolidColorBrush x:Key="DebugWindowBg" Color="#FF12161D" />
-		<SolidColorBrush x:Key="DebugPanelBg" Color="#FF181E27" />
-		<SolidColorBrush x:Key="DebugPanelHover" Color="#FF202834" />
-		<SolidColorBrush x:Key="DebugBorder" Color="#FF546173" />
-		<SolidColorBrush x:Key="DebugText" Color="#FFF4F7FA" />
+		<SolidColorBrush x:Key="DebugWindowBg" Color="#FFD2E4FF" />
+		<SolidColorBrush x:Key="DebugPanelBg" Color="White" />
+		<SolidColorBrush x:Key="DebugPanelHover" Color="#FFF2F2F2" />
+		<SolidColorBrush x:Key="DebugBorder" Color="Black" />
+		<SolidColorBrush x:Key="DebugText" Color="Black" />
 
 		<Style TargetType="{x:Type TextBlock}">
 			<Setter Property="Foreground" Value="{StaticResource DebugText}" />
@@ -427,7 +427,7 @@
 					<Setter Property="Background" Value="#FF1A2431"></Setter>
 				</Trigger>
 				<Trigger Property="ItemsControl.AlternationIndex" Value="2">
-					<Setter Property="Background" Value="#FF12161D"></Setter>
+					<Setter Property="Background" Value="{StaticResource DebugWindowBg}"></Setter>
 				</Trigger>
 			</Style.Triggers>
 		</Style>

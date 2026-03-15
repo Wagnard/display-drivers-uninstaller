@@ -7,6 +7,7 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports System.Windows.Interop
 Imports System.Windows.Markup
+Imports System.Windows.Media
 Imports Display_Driver_Uninstaller.Win32
 Imports Microsoft.Win32
 
@@ -44,6 +45,7 @@ Namespace Display_Driver_Uninstaller
 		Private Shared m_isDataSaved As Boolean = False
 		Private Shared m_allowSaveData As Boolean = False
 		Private Shared m_Data As Data
+		Private Shared m_useDarkThemeSession As Boolean = False
 
 		Public Shared ReadOnly Property Data As Data
 			Get
@@ -70,6 +72,11 @@ Namespace Display_Driver_Uninstaller
 				Return m_Data.Log
 			End Get
 		End Property
+		Public Shared ReadOnly Property UseDarkThemeSession As Boolean
+			Get
+				Return m_useDarkThemeSession
+			End Get
+		End Property
 
 		Public Shared Function ShowThemedNotice(message As String,
 												Optional title As String = Nothing,
@@ -77,6 +84,18 @@ Namespace Display_Driver_Uninstaller
 												Optional owner As Window = Nothing) As MessageBoxResult
 			Dim noticeOwner As Window = If(owner, TryCast(Current?.MainWindow, Window))
 			Dim resolvedTitle As String = If(String.IsNullOrWhiteSpace(title), Application.Settings.AppName, title)
+
+			If Not UseDarkThemeSession Then
+				If m_dispatcher Is Nothing Then
+					Return MessageBox.Show(noticeOwner, message, resolvedTitle, buttons, MessageBoxImage.Information)
+				End If
+
+				If Not m_dispatcher.CheckAccess() Then
+					Return CType(m_dispatcher.Invoke(Function() ShowThemedNotice(message, resolvedTitle, buttons, noticeOwner)), MessageBoxResult)
+				End If
+
+				Return MessageBox.Show(noticeOwner, message, resolvedTitle, buttons, MessageBoxImage.Information)
+			End If
 
 			If m_dispatcher Is Nothing Then
 				Return FrmNotice.ShowNotice(noticeOwner, resolvedTitle, message, buttons)
@@ -87,6 +106,120 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 			Return FrmNotice.ShowNotice(noticeOwner, resolvedTitle, message, buttons)
+		End Function
+
+		Public Shared Sub ApplyWindowTheme(window As Window)
+			If window Is Nothing OrElse Not UseDarkThemeSession Then
+				Return
+			End If
+
+			Select Case True
+				Case TypeOf window Is FrmMain
+					SetBrush(window, "brushMainText", "#FFF4F7FA")
+					SetBrush(window, "brushMainMutedText", "#FFB8C3D1")
+					SetBrush(window, "brushMainControlBg", "#FF181E27")
+					SetBrush(window, "brushMainControlBgHover", "#FF202834")
+					SetBrush(window, "brushMainControlBgPressed", "#FF111720")
+					SetBrush(window, "brushMainControlBorder", "#FF546173")
+					SetBrush(window, "brushMainLogBg", "#FF1B222D")
+					SetBrush(window, "brushMainMenuBg", "#FF10151D")
+					SetBrush(window, "brushMainStatusBg", "#FF0F141B")
+					SetBrush(window, "brushMainSelection", "#FF394657")
+					SetGradient(window, "brushNvidia", "#FF122315", "#FF12161D")
+					SetGradient(window, "brushIntel", "#FF13233B", "#FF12161D")
+					SetGradient(window, "brushAmd", "#FF32171B", "#FF12161D")
+					SetGradient(window, "brushRealtek", "#FF152235", "#FF12161D")
+					SetGradient(window, "brushSoundBlaster", "#FF211933", "#FF12161D")
+				Case TypeOf window Is FrmLaunch
+					SetBrush(window, "LaunchTextBrush", "#FFF4F7FA")
+					SetBrush(window, "LaunchMutedTextBrush", "#FFB8C3D1")
+					SetBrush(window, "LaunchSurfaceBrush", "#FF12161D")
+					SetBrush(window, "LaunchPanelBrush", "#FF181E27")
+					SetBrush(window, "LaunchPanelHoverBrush", "#FF202834")
+					SetBrush(window, "LaunchPanelPressedBrush", "#FF111720")
+					SetBrush(window, "LaunchBorderBrush", "#FF546173")
+					SetBrush(window, "LaunchSelectionBrush", "#FF394657")
+					SetBrush(window, "LaunchWarningBrush", "#FFFF8F8F")
+				Case TypeOf window Is FrmLog
+					SetBrush(window, "bWindowBg", "#FF12161D")
+					SetBrush(window, "bPanelBg", "#FF181E27")
+					SetBrush(window, "bPanelHover", "#FF202834")
+					SetBrush(window, "bBorder", "#FF546173")
+					SetColor(window, "cNormal", "#FFF2F5F7")
+					SetColor(window, "cValue", "#FF7AB8FF")
+					SetColor(window, "cWarning", "#FFFFC857")
+					SetColor(window, "cError", "#FFFF7B72")
+					SetColor(window, "cSelected", "#FF2D3A4B")
+					SetGradient(window, "bgBrushEvent", "#FF1E3150", "#FF12161D")
+					SetGradient(window, "bgBrushWarning", "#FF4A3B16", "#FF12161D")
+					SetGradient(window, "bgBrushError", "#FF4A1F24", "#FF12161D")
+				Case TypeOf window Is FrmAbout
+					SetBrush(window, "AboutWindowBg", "#FF12161D")
+					SetBrush(window, "AboutPanelBg", "#FF181E27")
+					SetBrush(window, "AboutPanelHover", "#FF202834")
+					SetBrush(window, "AboutBorder", "#FF546173")
+					SetBrush(window, "AboutText", "#FFF4F7FA")
+					SetBrush(window, "AboutAccent", "#FF7AB8FF")
+				Case TypeOf window Is FrmOptions
+					SetBrush(window, "OptionsWindowBg", "#FF12161D")
+					SetBrush(window, "OptionsPanelBg", "#FF181E27")
+					SetBrush(window, "OptionsTextBrush", "#FFF4F7FA")
+					SetBrush(window, "OptionsBorderBrush", "#FF546173")
+					SetBrush(window, "OptionsButtonBg", "#FF181E27")
+				Case TypeOf window Is DebugWindow
+					SetBrush(window, "DebugWindowBg", "#FF12161D")
+					SetBrush(window, "DebugPanelBg", "#FF181E27")
+					SetBrush(window, "DebugPanelHover", "#FF202834")
+					SetBrush(window, "DebugBorder", "#FF546173")
+					SetBrush(window, "DebugText", "#FFF4F7FA")
+				Case TypeOf window Is FrmSystemRestore
+					SetBrush(window, "SystemRestoreWindowBg", "#FF12161D")
+					SetBrush(window, "SystemRestorePanelBg", "#FF181E27")
+					SetBrush(window, "SystemRestoreBorderBrush", "#FF546173")
+					SetBrush(window, "SystemRestoreTextBrush", "#FFF4F7FA")
+			End Select
+		End Sub
+
+		Private Shared Sub SetBrush(window As Window, key As String, colorText As String)
+			Dim colorValue As Color = ParseColor(colorText)
+			window.Resources(key) = New SolidColorBrush(colorValue)
+		End Sub
+
+		Private Shared Sub SetColor(window As Window, key As String, colorText As String)
+			window.Resources(key) = ParseColor(colorText)
+		End Sub
+
+		Private Shared Sub SetGradient(window As Window, key As String, ParamArray colors() As String)
+			If colors Is Nothing OrElse colors.Length = 0 Then
+				Return
+			End If
+
+			Dim sourceBrush As LinearGradientBrush = TryCast(window.Resources(key), LinearGradientBrush)
+			Dim newBrush As LinearGradientBrush
+
+			If sourceBrush Is Nothing Then
+				newBrush = New LinearGradientBrush With {
+					.StartPoint = New Point(0, 0.5),
+					.EndPoint = New Point(1, 0.5)
+				}
+
+				For i As Integer = 0 To colors.Length - 1
+					Dim offset As Double = If(colors.Length = 1, 0, CDbl(i) / CDbl(colors.Length - 1))
+					newBrush.GradientStops.Add(New GradientStop(ParseColor(colors(i)), offset))
+				Next
+			Else
+				newBrush = sourceBrush.Clone()
+
+				For i As Integer = 0 To Math.Min(newBrush.GradientStops.Count, colors.Length) - 1
+					newBrush.GradientStops(i).Color = ParseColor(colors(i))
+				Next
+			End If
+
+			window.Resources(key) = newBrush
+		End Sub
+
+		Private Shared Function ParseColor(colorText As String) As Color
+			Return CType(ColorConverter.ConvertFromString(colorText), Color)
 		End Function
 
 		Public Sub New()
@@ -502,6 +635,7 @@ Namespace Display_Driver_Uninstaller
 
 				' Load AppSettings and select last used language (if settings exists)
 				Settings.Load()
+				m_useDarkThemeSession = Settings.UseDarkTheme
 
 
 				' Select language (last used -> native -> default)

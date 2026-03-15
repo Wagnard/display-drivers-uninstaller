@@ -8,6 +8,11 @@ Namespace Display_Driver_Uninstaller
 		Private disposed As Boolean
 		Private ReadOnly canClose2 As New EventWaitHandle(True, EventResetMode.ManualReset) ' Thread safe!
 
+		Public Sub New()
+			InitializeComponent()
+			Application.ApplyWindowTheme(Me)
+		End Sub
+
 		Private Sub FrmSystemRestore_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
 			Languages.TranslateForm(Me)
 		End Sub

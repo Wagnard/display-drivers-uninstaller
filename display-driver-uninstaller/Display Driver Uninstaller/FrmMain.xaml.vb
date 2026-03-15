@@ -21,6 +21,7 @@ Imports System.Reflection
 Imports System.Security.Principal
 Imports System.Text
 Imports System.Threading.Tasks
+Imports System.Windows.Media
 Imports Display_Driver_Uninstaller.Win32
 Imports Microsoft.Win32
 Imports WinForm = System.Windows.Forms
@@ -46,6 +47,57 @@ Namespace Display_Driver_Uninstaller
 		Private _audioCleanup As New AUDIOCleanup
         Private _enduro As Boolean = False
         Private isUpdatingComboBox As Boolean = False
+
+		Public Sub New()
+			SeedThemeResources()
+			InitializeComponent()
+		End Sub
+
+		Private Sub SeedThemeResources()
+			If Application.UseDarkThemeSession Then
+				Resources("brushMainText") = New SolidColorBrush(Color.FromArgb(&HFF, &HF4, &HF7, &HFA))
+				Resources("brushMainMutedText") = New SolidColorBrush(Color.FromArgb(&HFF, &HB8, &HC3, &HD1))
+				Resources("brushMainControlBg") = New SolidColorBrush(Color.FromArgb(&HFF, &H18, &H1E, &H27))
+				Resources("brushMainControlBgHover") = New SolidColorBrush(Color.FromArgb(&HFF, &H20, &H28, &H34))
+				Resources("brushMainControlBgPressed") = New SolidColorBrush(Color.FromArgb(&HFF, &H11, &H17, &H20))
+				Resources("brushMainControlBorder") = New SolidColorBrush(Color.FromArgb(&HFF, &H54, &H61, &H73))
+				Resources("brushMainLogBg") = New SolidColorBrush(Color.FromArgb(&HFF, &H1B, &H22, &H2D))
+				Resources("brushMainMenuBg") = New SolidColorBrush(Color.FromArgb(&HFF, &H10, &H15, &H1D))
+				Resources("brushMainStatusBg") = New SolidColorBrush(Color.FromArgb(&HFF, &HF, &H14, &H1B))
+				Resources("brushMainSelection") = New SolidColorBrush(Color.FromArgb(&HFF, &H39, &H46, &H57))
+				Resources("brushNvidia") = CreateThemeGradient("#FF122315", "#FF12161D")
+				Resources("brushIntel") = CreateThemeGradient("#FF13233B", "#FF12161D")
+				Resources("brushAmd") = CreateThemeGradient("#FF32171B", "#FF12161D")
+				Resources("brushRealtek") = CreateThemeGradient("#FF152235", "#FF12161D")
+				Resources("brushSoundBlaster") = CreateThemeGradient("#FF211933", "#FF12161D")
+			Else
+				Resources("brushMainText") = New SolidColorBrush(Colors.Black)
+				Resources("brushMainMutedText") = New SolidColorBrush(CType(ColorConverter.ConvertFromString("#FF5C6670"), Color))
+				Resources("brushMainControlBg") = New SolidColorBrush(Colors.White)
+				Resources("brushMainControlBgHover") = New SolidColorBrush(CType(ColorConverter.ConvertFromString("#FFF2F2F2"), Color))
+				Resources("brushMainControlBgPressed") = New SolidColorBrush(CType(ColorConverter.ConvertFromString("#FFE6E6E6"), Color))
+				Resources("brushMainControlBorder") = New SolidColorBrush(CType(ColorConverter.ConvertFromString("#FF7A7A7A"), Color))
+				Resources("brushMainLogBg") = New SolidColorBrush(Colors.White)
+				Resources("brushMainMenuBg") = New SolidColorBrush(CType(ColorConverter.ConvertFromString("#28FFFFFF"), Color))
+				Resources("brushMainStatusBg") = New SolidColorBrush(CType(ColorConverter.ConvertFromString("#28FFFFFF"), Color))
+				Resources("brushMainSelection") = New SolidColorBrush(CType(ColorConverter.ConvertFromString("#FFCBDCF4"), Color))
+				Resources("brushNvidia") = CreateThemeGradient("#FFDCFFDC", "#FFFFFFFF")
+				Resources("brushIntel") = CreateThemeGradient("#FFDCDCFF", "#FFFFFFFF")
+				Resources("brushAmd") = CreateThemeGradient("#FFFFE6E6", "#FFFFFFFF")
+				Resources("brushRealtek") = CreateThemeGradient("#FFDCDCFF", "#FFFFFFFF")
+				Resources("brushSoundBlaster") = CreateThemeGradient("#FFDCDCFF", "#FFFFFFFF")
+			End If
+		End Sub
+
+		Private Shared Function CreateThemeGradient(firstColor As String, secondColor As String) As LinearGradientBrush
+			Dim brush As New LinearGradientBrush With {
+				.StartPoint = New Point(0.5, 0),
+				.EndPoint = New Point(0.5, 1)
+			}
+			brush.GradientStops.Add(New GradientStop(CType(ColorConverter.ConvertFromString(firstColor), Color), 0))
+			brush.GradientStops.Add(New GradientStop(CType(ColorConverter.ConvertFromString(secondColor), Color), 1))
+			Return brush
+		End Function
 
         Friend Shared Property CleaningTask As Task
 			Get
@@ -183,7 +235,7 @@ Namespace Display_Driver_Uninstaller
 		End Sub
 
 		Private Function ShowThemedNotice(message As String, Optional title As String = Nothing, Optional buttons As MessageBoxButton = MessageBoxButton.OK) As MessageBoxResult
-			Return FrmNotice.ShowNotice(Me, If(String.IsNullOrWhiteSpace(title), Application.Settings.AppName, title), message, buttons)
+			Return Application.ShowThemedNotice(message, title, buttons, Me)
 		End Function
 
 		Private Sub CloseDDU()
@@ -392,8 +444,7 @@ Namespace Display_Driver_Uninstaller
 #Region "frmMain Events"
 
 		Private Sub FrmMain_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
-
-            Languages.TranslateForm(Me, False)
+			Languages.TranslateForm(Me, False)
 
             isUpdatingComboBox = True
 
@@ -617,13 +668,7 @@ Namespace Display_Driver_Uninstaller
 				Select Case System.Windows.Forms.SystemInformation.BootMode
 
 					Case Forms.BootMode.Normal
-						Dim frmNotice As New FrmNotice With {
-							.Owner = Me,
-							.Icon = Me.Icon,
-							.Title = Application.Settings.AppName,
-							.MessageText = Languages.GetTranslation("frmMain", "Messages", "Text8")
-						}
-						frmNotice.ShowDialog()
+						ShowThemedNotice(Languages.GetTranslation("frmMain", "Messages", "Text8"))
 
 				End Select
 			End If

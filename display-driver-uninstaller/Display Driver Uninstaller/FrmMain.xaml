@@ -17,17 +17,6 @@
 		<conv:BooleanToString x:Key="BoolToStr" TrueValue="x64" FalseValue="x86" />
 		<conv:EnumToTextConverter x:Key="EnumToText" />
 
-		<SolidColorBrush x:Key="brushMainText" Color="#FFF4F7FA" />
-		<SolidColorBrush x:Key="brushMainMutedText" Color="#FFB8C3D1" />
-		<SolidColorBrush x:Key="brushMainControlBg" Color="#FF181E27" />
-		<SolidColorBrush x:Key="brushMainControlBgHover" Color="#FF202834" />
-		<SolidColorBrush x:Key="brushMainControlBgPressed" Color="#FF111720" />
-		<SolidColorBrush x:Key="brushMainControlBorder" Color="#FF546173" />
-		<SolidColorBrush x:Key="brushMainLogBg" Color="#FF1B222D" />
-		<SolidColorBrush x:Key="brushMainMenuBg" Color="#FF10151D" />
-		<SolidColorBrush x:Key="brushMainStatusBg" Color="#FF0F141B" />
-		<SolidColorBrush x:Key="brushMainSelection" Color="#FF394657" />
-
 		<Style x:Key="MainButtonTextStyle" TargetType="{x:Type TextBlock}">
 			<Setter Property="Foreground" Value="{StaticResource brushMainText}" />
 			<Setter Property="TextWrapping" Value="Wrap" />
@@ -281,31 +270,11 @@
 		<ImageBrush x:Key="logoRealtek" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/realtek-logo.png" Stretch="Uniform" AlignmentY="Center" />
 		<ImageBrush x:Key="logoSoundBlaster" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/creative_logo.png" Stretch="Uniform" AlignmentY="Center" />
 
-		<LinearGradientBrush x:Key="brushNvidia" EndPoint="0.5,1" StartPoint="0.5,0">
-			<GradientStop Color="#FF122315" Offset="0" />
-			<GradientStop Color="#FF12161D" Offset="1" />
-		</LinearGradientBrush>
-		<LinearGradientBrush x:Key="brushIntel" EndPoint="0.5,1" StartPoint="0.5,0">
-			<GradientStop Color="#FF13233B" Offset="0" />
-			<GradientStop Color="#FF12161D" Offset="1" />
-		</LinearGradientBrush>
-		<LinearGradientBrush x:Key="brushAmd" EndPoint="0.5,1" StartPoint="0.5,0">
-			<GradientStop Color="#FF32171B" Offset="0" />
-			<GradientStop Color="#FF12161D" Offset="1" />
-		</LinearGradientBrush>
-		<LinearGradientBrush x:Key="brushRealtek" EndPoint="0.5,1" StartPoint="0.5,0">
-			<GradientStop Color="#FF152235" Offset="0" />
-			<GradientStop Color="#FF12161D" Offset="1" />
-		</LinearGradientBrush>
-		<LinearGradientBrush x:Key="brushSoundBlaster" EndPoint="0.5,1" StartPoint="0.5,0">
-			<GradientStop Color="#FF211933" Offset="0" />
-			<GradientStop Color="#FF12161D" Offset="1" />
-		</LinearGradientBrush>
 	</Window.Resources>
 
 	<Window.Style>
 		<Style TargetType="{x:Type Window}">
-			<Setter Property="Background" Value="#FF12161D" />
+			<Setter Property="Background" Value="{StaticResource brushMainControlBg}" />
 			<Style.Triggers>
 				<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.AMD}">
 					<Setter Property="Background" Value="{StaticResource brushAmd}"/>

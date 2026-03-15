@@ -6,18 +6,25 @@
 	ShowInTaskbar="False"
 	SizeToContent="WidthAndHeight"
 	ResizeMode="NoResize"
-	Background="#FF12161D"
-	Foreground="#FFF4F7FA">
+	Background="{DynamicResource SystemRestoreWindowBg}"
+	Foreground="{DynamicResource SystemRestoreTextBrush}">
 
-	<Grid Background="#FF12161D">
-		<Border Background="#FF181E27" BorderBrush="#FF546173" BorderThickness="1" Padding="18,14">
+	<Window.Resources>
+		<SolidColorBrush x:Key="SystemRestoreWindowBg" Color="White" />
+		<SolidColorBrush x:Key="SystemRestorePanelBg" Color="White" />
+		<SolidColorBrush x:Key="SystemRestoreBorderBrush" Color="Black" />
+		<SolidColorBrush x:Key="SystemRestoreTextBrush" Color="Black" />
+	</Window.Resources>
+
+	<Grid Background="{DynamicResource SystemRestoreWindowBg}">
+		<Border Background="{DynamicResource SystemRestorePanelBg}" BorderBrush="{DynamicResource SystemRestoreBorderBrush}" BorderThickness="1" Padding="18,14">
 			<Label x:Name="lblSystemRestore"
 				   Content="lblSystemRestore"
 				   HorizontalContentAlignment="Center"
 				   VerticalContentAlignment="Center"
 				   FontFamily="Calibri"
 				   FontSize="14"
-				   Foreground="#FFF4F7FA" />
+				   Foreground="{DynamicResource SystemRestoreTextBrush}" />
 		</Border>
 	</Grid>
 </Window>
