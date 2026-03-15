@@ -2,8 +2,11 @@
 	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 	Title="Display Driver Uninstaller"
-	Height="170" Width="400"
-	MinHeight="170" MinWidth="400"
+	Width="520"
+	MinWidth="420"
+	MinHeight="190"
+	MaxHeight="420"
+	SizeToContent="Height"
 	ResizeMode="NoResize"
 	ShowInTaskbar="False"
 	WindowStartupLocation="CenterOwner"
@@ -79,12 +82,16 @@
 						   Margin="0,-2,0,0" />
 			</Border>
 
-			<TextBlock x:Name="txtMessage"
-					   Grid.Column="1"
-					   TextWrapping="Wrap"
-					   VerticalAlignment="Center"
-					   Foreground="{StaticResource NoticeTextBrush}"
-					   FontSize="14" />
+			<ScrollViewer Grid.Column="1"
+						  VerticalAlignment="Center"
+						  VerticalScrollBarVisibility="Auto"
+						  HorizontalScrollBarVisibility="Disabled"
+						  MaxHeight="180">
+				<TextBlock x:Name="txtMessage"
+						   TextWrapping="Wrap"
+						   Foreground="{StaticResource NoticeTextBrush}"
+						   FontSize="14" />
+			</ScrollViewer>
 		</Grid>
 
 		<Border Grid.Row="1"
