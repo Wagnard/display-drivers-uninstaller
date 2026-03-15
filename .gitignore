@@ -1,3 +1,6 @@
 obj
 **/bin/Debug/
+**/bin/Release/
 .vs
+.dotnet/
+artifacts/
