@@ -1,0 +1,427 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DisplayDriverUninstaller ISO="sk-SK" Text="Slovak">
+	<!--
+		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
+		for quick guide
+	-->
+
+	<frmMain Text="Display Driver Uninstaller (DDU)">
+		<btnCleanRestart>
+			<Text>
+				Vyčistiť a reštartovať
+				(Silno odporúčané)
+			</Text>
+			<Tooltip
+				>
+				Odinštalovať aktuálne aj predchádzajúce ovládače a reštartovať počítač
+				(Silno odporúčané)
+			</Tooltip>
+		</btnCleanRestart>
+		<btnClean>
+			<Text>
+				Vyčistiť a NEreštartovať
+				(Môže spôsobiť problémy ako čiernu obrazovku)
+			</Text>
+			<Tooltip>
+				Odinštalovať aktuálne aj predchádzajúce ovládače a NEreštartovať počítač.
+				(Môže spôsobiť problémy ako je čierna obrazovka)
+			</Tooltip>
+		</btnClean>
+		<btnCleanShutdown>
+			<Text>
+				Vyčistiť a vypnúť
+				(Na inštaláciu novej grafickej karty)
+			</Text>
+			<Tooltip>
+				Odinštalovať aktuálne aj predchádzajúce ovládače a Vypnúť počítač bez vyhľadania hardvéru
+				(Na inštaláciu novej grafickej karty)
+			</Tooltip>
+		</btnCleanShutdown>
+		<btnCleanGfeDownloads>
+			<Text>
+				Odstrániť cache/súbory inštalátora grafického ovládača „GeForce Experience“. (Poznámka: Ovládače nebudú odstránené)
+			</Text>
+			<Tooltip>
+				Toto sa väčšinou používa na obnovenie miesta na HDD/SSD, ktoré nebolo vyčistené GFE/Driver Installerom.
+			</Tooltip>
+		</btnCleanGfeDownloads>
+		<btnWuRestore>
+			<Text>Obnoviť nastavenia inštalácie ovládačov cez Windows Update.</Text>
+		</btnWuRestore>
+		<lblWinVersion>
+			<Text>Zistená verzia Windows</Text>
+		</lblWinVersion>
+		<lblDonate>
+			<Text>*** Máte radi DDU? Zvážte poskytnutie finančného príspevku, ktorý pomôže ďalšiemu vývoju. ***</Text>
+		</lblDonate>
+		<lblLog>
+			<Text>Záznam</Text>
+		</lblLog>
+		<lblSelectedGPU>
+			<Text>Vyberte grafický ovládač</Text>
+		</lblSelectedGPU>
+		<lblLanguage>
+			<Text>Vybraný jazyk</Text>
+		</lblLanguage>
+
+		<Label9>
+			<Text>Poznámka: Akákoľvek chyba alebo škoda na PC je na Vašu zodpovednosť.</Text>
+		</Label9>
+		<Label10>
+			<Text>Odporúčame použiť DDU v Núdzovom režime.</Text>
+		</Label10>
+
+		<lblUpdate>
+			<Text>Kontrola aktualizácií...</Text>
+			<Text2>Nenašli sa žiadne aktualizácie. Program je aktuálny.</Text2>
+			<Text3>„Nájdené aktualizácie! Očakávajte obmedzenú podporu pre staršie verzie ako najnovšia.</Text3>
+			<Text4>Nie je možné načítať aktualizácie!</Text4>
+		</lblUpdate>
+
+		<lblOffer>
+			<Text>Ponuky od našich partnerov</Text>
+			<Tooltip>Toto môžete vypnúť z ponuky možností.</Tooltip>
+		</lblOffer>
+
+		<OptionsMenuItem>
+			<Text>Možnosti</Text>
+		</OptionsMenuItem>
+		<InfoMenuItem>
+			<Text>Informácie</Text>
+		</InfoMenuItem>
+		<ExtendedLogMenuItem>
+			<Text>Rozšírený protokol</Text>
+		</ExtendedLogMenuItem>
+		<LinksMenuItem>
+			<Text>Odkazy</Text>
+		</LinksMenuItem>
+		<ToSMenuItem>
+			<Text>Všeobecné obchodné podmienky (ToS)</Text>
+		</ToSMenuItem>
+		<AboutMenuItem>
+			<Text>O nás</Text>
+		</AboutMenuItem>
+		<TranslatorsMenuItem>
+			<Text>Prekladatelia</Text>
+		</TranslatorsMenuItem>
+		<VisitDDUHomeMenuItem>
+			<Text>Navštívte oficiálnu webovú stránku DDU</Text>
+		</VisitDDUHomeMenuItem>
+		<VisitSVNMenuItem>
+			<Text>Navštívte webovú stránku SVN</Text>
+		</VisitSVNMenuItem>
+		<VisitGuru3DNvidiaMenuItem>
+			<Text>Navštívte vlákno Guru3d NVIDIA</Text>
+		</VisitGuru3DNvidiaMenuItem>
+		<VisitGuru3DAMDMenuItem>
+			<Text>Navštívte vlákno Guru3d AMD</Text>
+		</VisitGuru3DAMDMenuItem>
+		<VisitGeforceMenuItem>
+			<Text>Navštívte vlákno Geforce</Text>
+		</VisitGeforceMenuItem>
+       <DownloadNvidiaMenuItem>
+			<Text>Stiahnutie ovládačov NVIDIA</Text>
+		</DownloadNvidiaMenuItem>
+        <DownloadAmdMenuItem>
+			<Text>Stiahnutie ovládačov AMD</Text>
+		</DownloadAmdMenuItem>
+        <DownloadIntelMenuItem>
+			<Text>Stiahnutie ovládačov Intel</Text>
+		</DownloadIntelMenuItem>
+		<Messages>
+			<Text1>Našli sa aktualizácie! Chcete navštíviť webstránku DDU?</Text1>
+			<Text2>Počítajte s obmedzenou podporou starších verzií, než najnovšej. Pred nahlasovaním chýb skontrolujte, či máte najnovšiu verziu.</Text2>
+			<Text3>Nemáte spustený DDU s povoleniami správcu. Aplikácia bude ukončená.</Text3>
+			<Text4>Nedá sa nájsť ddudr. Pozrite sa do záznamov.</Text4>
+			<Text5>Display Driver Uninstaller (DDU) silno zasahuje do registrov. DDU sa pokúsi automaticky vytvoriť a bod obnovy systému (Len v normálnom móde).</Text5>
+			<Text6>V jednom z modulov sa vyskytol problém, pošlite svoje záznamy vývojárovi.</Text6>
+			<Text7>DDU zistil, že máte notebook s prepínateľnou grafikou AMD (Enduro alebo ekvivalentný), DDU nie je zatiaľ plne kompatibilný / testovaný so systémami Enduro, použitie na vlastné nebezpečenstvo.</Text7>
+			<Text8>DDU zistil, že nie ste v núdzovom režime... Pre lepšie a bezproblémové vyčistenie vám odporúčame reštartovať do núdzového režimu.</Text8>
+			<Text9>DDU zmenil nastavenie, ktoré zabraňuje automatickému sťahovaniu ovládačov z Windows Update. Ak chcete, môžete ho po inštalácii nového ovládača zmeniť na predvolené.</Text9>
+			<Text10>Čistá odinštalácia hotová! Chcete ukončiť aplikáciu?</Text10>
+			<Text11>Hotovo!</Text11>
+			<Text12>Nie ste v núdzovom režime. Odporúčame reštartovať do núdzového režimu, aby ste predišli možným problémom., Chcete reštartovať do núdzového režimu?"</Text12>
+			<Text13>Tu je, čo musíte vybrať na modrej obrazovke obnovy: Riešiť problémy -> Rozšírené možnosti -> Nastavenia spustenia.</Text13>
+			<Text14>Čaká na reštart, prosím reštartujte pred použitím DDU</Text14>
+			<Text15>Žiadna zmena nebola vykonaná. Nastavenia inštalácie zariadení Windows boli už nastavené na predvolené.</Text15>
+		</Messages>
+
+		<UpdateLog>
+			<Text1>Spúšťanie čistenia úložiska ovládačov (Krok odstraňovanie OEM)...</Text1>
+			<Text2>Čistenie priečinka</Text2>
+			<Text3>Čistenie známych registrov... Môže trvať minútu aj dve.</Text3>
+			<Text4>Čistenie účtu UpdatusUser, ak existuje.</Text4>
+			<Text5>Čistenie priečinka</Text5>
+			<Text6>Spúšťanie čistenia registrov</Text6>
+			<Text7>Čistenie registrov hotové</Text7>
+			<Text8>Začiatok odstraňovania nVidia Optimus UpperFilter, ak existuje.</Text8>
+			<Text9>Hľadanie nového zariadenia...</Text9>
+			<Text10>Čistá odinštalácia hotová!</Text10>
+			<Text11>DDU Verzia</Text11>
+			<Text12>GPU #</Text12>
+			<Text13>Zistené</Text13>
+			<Text14>GPU DeviceId</Text14>
+			<Text15>Zistená verzia ovládača</Text15>
+			<Text16>INF</Text16>
+			<Text17>INF Sekcia</Text17>
+			<Text18>Nesprávne nainštalované GPU</Text18>
+			<Text19>Odstraňovanie špeciálnych priečinkov, môže to chvíľu trvať...</Text19>
+			<Text20>Čistenie začalo...</Text20>
+			<Text21>Odinštalovanie</Text21>
+			<Text22>ovládača</Text22>
+			<Text23>Spúšťanie odstránenia ddudr, čakajte prosím(môže trvať pár minút)</Text23>
+			<Text24>GPU odstránené zo správcu zariadení.</Text24>
+			<Text25>Spúšťanie DDUDR odstránenie audio kontroléra.</Text25>
+			<Text26>HD audio adaptéry odstránené !</Text26>
+			<Text27>3D Vision USB adaptér odstránený zo správcu zariadení.</Text27>
+			<Text28>Monitory a skryté monitory odstránené !</Text28>
+			<Text29>Odstránenie ddudr hotové</Text29>
+			<Text30>Štart čistenia regiónu S-1-5-xx</Text30>
+			<Text31>Koniec čistenia regiónu S-1-5-xx</Text31>
+			<Text32>Štart čistenia Classesroot ,installer\products</Text32>
+			<Text33>Koniec čistenia Classesroot ,installer\products</Text33>
+			<Text34>Štart čistenia localmachine ,installer\products</Text34>
+			<Text35>Koniec čistenia localmachine ,installer\products</Text35>
+			<Text36>Štart čistenia currentuser ,installer\products</Text36>
+			<Text37>Koniec čistenia currentuser ,installer\products</Text37>
+			<Text38>Čistenie procesov/služieb...</Text38>
+			<Text39>Čistenie procesov/služieb hotové</Text39>
+			<Text40>Vymazané.</Text40>
+			<Text41>Hodnota odstránená.</Text41>
+			<Text42>Súbor vymazaný.</Text42>
+		</UpdateLog>
+	</frmMain>
+
+	<frmOptions Text="Options">
+		<btnClose>
+			<Text>Zatvoriť</Text>
+		</btnClose>
+		<lblOffer>
+			<Text>Zobraziť ponuky od našich partnerov</Text>
+		</lblOffer>
+		<lblNvidiaspecific>
+			<Text>Špecifické možnosti NVIDIA</Text>
+		</lblNvidiaspecific>
+		<lblAmdspecific>
+			<Text>Špecifické možnosti AMD</Text>
+		</lblAmdspecific>
+		<lblGeneral>
+			<Text>Všeobecné možnosti</Text>
+		</lblGeneral>
+		<lblRemNvidiaDirs>
+			<Text>Odstrániť priečinky ovládačov „C:\nVidia“ (NEODPORÚČA SA)</Text>
+		</lblRemNvidiaDirs>
+		<lblSaveLogs>
+			<Text>Uložiť súbory záznamov v ceste po spustení (odporúčané)</Text>
+		</lblSaveLogs>
+		<lblRemPhysX>
+			<Text>Odstrániť PhysX</Text>
+		</lblRemPhysX>
+		<lblRem3DtvPlay>
+			<Text>Odstrániť 3DTV Play</Text>
+		</lblRem3DtvPlay>
+		<lblCreateRestorePoint>
+			<Text>Vytvoriť bod obnovenia systému (ak je povolené)</Text>
+		</lblCreateRestorePoint>
+		<lblRemMonitors>
+			<Text>Odstrániť existujúce a non - súčasné monitory ( odporúčané)</Text>
+		</lblRemMonitors>
+		<lblRemAMDAudioBus>
+			<Text>Odstrániť AMD Audio Bus</Text>
+		</lblRemAMDAudioBus>
+		<lblRemAMDDirs>
+			<Text>Odstrániť priečinky ovládačov „C:\AMD“ (NEODPORÚČA SA)</Text>
+		</lblRemAMDDirs>
+		<lblRemAMDKMPFD>
+			<Text>Povoliť priamy bezpečný režim Windows 8+.</Text>
+		</lblRemAMDKMPFD>
+		<lblShowSafeModeMsg>
+			<Text>Zobraziť správu bezpečného režimu pri spustení</Text>
+		</lblShowSafeModeMsg>
+		<lblUseRoamingCfg>
+			<Text>Uložiť konfiguračný súbor do priečinka roamingu</Text>
+		</lblUseRoamingCfg>
+		<lblCheckUpdates>
+			<Text>Automaticky kontrolovať aktualizácie DDU pri spustení. (Odporúča sa)</Text>
+		</lblCheckUpdates>
+		<lblRemGFE>
+			<Text>Odstrániť GeForce Experience (GFE)</Text>
+		</lblRemGFE>
+		<lblRemCrimsonCache>
+			<Text>Odstrániť priečinok AMD Crimson Shader Cache</Text>
+			<Tooltip>
+				Odporúčané, ak sa vyskytujú grafické anomálie (rýchlosť alebo vizuálna poškodzenie) spôsobené poškodenými dátami shader cache.
+				Tiež odporúčané, ak prechádzate na inú značku ako nVidia.
+			</Tooltip>
+		</lblRemCrimsonCache>
+		<lblVulkan>
+			<Text>Odstrániť Vulkan Runtime</Text>
+			<Tooltip>Neodporúča sa ak máte 2 rôzne GPU schopné použiť Vulkan API.</Tooltip>
+		</lblVulkan>
+		<lblUseSetupAPI>
+			<Text>Použiť SetupAPI *Experimentálne*</Text>
+			<Tooltip>Použiť SetupAPI namiesto externého nástroja DDUDR (DEVCON)</Tooltip>
+		</lblUseSetupAPI>
+	</frmOptions>
+
+	<frmLaunch Text="Launch option">
+		<btnAccept>
+			<Text>Spustiť</Text>
+			<Text2>
+				Reštartovať do bezpečného režimu
+				
+			</Text2>
+		</btnAccept>
+		<btnClose>
+			<Text>Zatvoriť</Text>
+		</btnClose>
+		<lblLaunchOption>
+			<Text>Možnosti spustenia</Text>
+		</lblLaunchOption>
+		<lblNotSafeMode>
+			<Text>
+				Nie ste v bezpečnom režime. Silne sa odporúča reštartovať do bezpečného režimu, aby ste predišli možným problémom
+				.
+			</Text>
+		</lblNotSafeMode>
+		<lblWinPasswordWarn>
+			<Text>
+             „Dôležitá poznámka pre používateľov Windows 8/8.1/10:
+            Vaše heslo Windows je požadované! (PIN nefunguje v bezpečnom režime)
+             Okamžite ukončite, ak ste ho stratili alebo nepoznáte!“
+			</Text>
+		</lblWinPasswordWarn>
+		<cbBootOption>
+			<Item1>Normálny</Item1>
+			<Item2>Bezpečný režim (Odporúčané)</Item2>
+			<Item3>Bezpečný režim s sieťovým pripojením</Item3>
+		</cbBootOption>
+		<Messages>
+			<Text1>DDU zatvoril programy známe tým, že interferujú (ako MSI Afterburner a RTSS).</Text1>
+		</Messages>
+	</frmLaunch>
+
+	<frmLog Text="Extended log">
+		<btnClose>
+			<Text>Zatvoriť</Text>
+		</btnClose>
+		<btnOpenLog>
+			<Text>Otvoriť protokol</Text>
+		</btnOpenLog>
+
+		<optionsMenuItem>
+			<Text>Možnosti</Text>
+		</optionsMenuItem>
+		<copyMenuItem>
+			<Text>Kopírovať povolené</Text>
+		</copyMenuItem>
+
+		<filtersMenuItem>
+			<Text>Filtre</Text>
+		</filtersMenuItem>
+		<eventsMenuItem>
+			<Text>Zobraziť udalosti</Text>
+		</eventsMenuItem>
+		<warningsMenuItem>
+			<Text>Zobraziť varovania</Text>
+		</warningsMenuItem>
+		<errorsMenuItem>
+			<Text>Zobraziť chyby</Text>
+		</errorsMenuItem>
+	</frmLog>
+
+	<frmSystemRestore Text="System Restore">
+		<lblSystemRestore>
+			<Text>Pokúšam sa vytvoriť bod obnovy systému.</Text>
+		</lblSystemRestore>
+	</frmSystemRestore>
+
+	<frmAbout Text="About">
+		<btnClose>
+			<Text>Zatvoriť</Text>
+		</btnClose>
+		<btnAbout>
+			<Text>O programe</Text>
+		</btnAbout>
+		<btnTos>
+			<Text>Podmienky používania (ToS)</Text>
+		</btnTos>
+		<btnTranslators>
+			<Text>Prekladatelia</Text>
+		</btnTranslators>
+		<lblTranslators>
+			<Text>Veľké ďakujeme nasledujúcim prekladateľom a tiež tým, ktorí nie sú uvedení!</Text>
+		</lblTranslators>
+	</frmAbout>
+
+	<Misc>
+		<About>
+			<Text>
+				Odinštalátor ovládačov (DDU) / Čistič grafických ovládačov.(NVIDIA/AMD)
+
+				Tento program odstraňuje aktuálne aj staré verzie grafických ovládačov NVIDIA/AMD
+				zo správcu zariadení a katalógu ovládačov systému Windows vrátane ich služieb.
+
+				Po použití tohto programu nastane efekt podobný tomu, ako by bol Windows čerstvo nainštalovaný.
+
+				Tento program robí to čo Driver sweeper + veci uvedené vyššie.
+
+				Ak máte akýkoľvek problém s inštaláciou staršieho či novšieho ovládača, skúste použiť tento program,
+				ohlasy ukazujú, že pomohol veľa ľuďom.
+
+				ODPORÚČANÉ POUŽITIE:
+
+				- Osobne odporúčam počas použitia odpojiť internet, aby windows update nezačal bez opýtania
+				inštalovať ovládače...
+
+				- Tento nástroj môže byť použitý v Normálnom režime, ale pre úplnú stabilitu je pri použití DDU
+				najlepší Núdzový režim.
+
+				- Radi od Vás dostaneme odozvu. Povedzte nám, či program pomohol alebo nie. Spravte si
+				pre istotu zálohu alebo bod obnovy (aj keď by to nemalo byť potrebné).
+
+				- Ak ste mali alebo máte problém s ovládačmi, a tento program Vám pomohol,
+				podeľte sa o výsledky.
+
+				Berte na vedomie, že NVIDIA/AMD nemajú s týmto programom nič spoločné, Nepracujeme pre NVIDIA/AMD
+				a oni nenesú žiadnu zodpovednosť za škody na Vašom systéme spôsobené týmto programom.
+				-------------------------------
+
+				Vytvoril Wagnard.
+
+				Spolumajiteľ: Shady7557
+				Tester: Dellon132
+				Logá: juanchacin
+				Slovenský preklad: Gyrxiur - Prípadné chyby v preklade mi hláste na gyrxiur@gmail.com
+
+				Ďakujeme všetkým, ktorí testovali program (špeciálne poďakovanie patrí Dellon132).
+			</Text>
+		</About>
+		<Tos>
+			<Text>
+				Display Driver Uninstaller ("DDU") - UŽIVATEĽSKÁ ZMLUVA
+
+				Použitím DDU softvéru sa stávate jeho užívateľom. Táto zmluva vstupuje do platnosti hneď, ako použijete program na odinštaláciu ovládača.
+
+				Použitím DDU súhlasíte, že nebudete obviňovať DDU alebo jeho tvorcov a spolutvorcov, z pokazenia alebo negatívneho ovplvynenia vášho PC.
+
+				Použitím DDU beriete na vedomie, že NVIDIA ("NVIDIA, GeForce") ani Advanced Micro Devices ("AMD, Radeon") nemajú
+				nič spoločné s týmto programom a v žiadnom prípade nespolupracujú s DDU a jeho tvorcami.
+			</Text>
+		</Tos>
+	</Misc>
+
+	<LanguageTranslators>
+		<Translator>
+			<User></User>
+			<Details></Details>
+			<LastUpdate></LastUpdate>
+		</Translator>
+
+		<Translator2>
+			<User>Mats/Onyx</User>
+			<Details>Twitter:onyxwz1</Details>
+			<LastUpdate>17/02/2026</LastUpdate>
+		</Translator2>
+	</LanguageTranslators>
+</DisplayDriverUninstaller>

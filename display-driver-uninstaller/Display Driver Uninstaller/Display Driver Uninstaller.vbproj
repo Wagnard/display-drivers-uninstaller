@@ -135,6 +135,9 @@
     <Compile Include="FrmLaunch.xaml.vb">
       <DependentUpon>FrmLaunch.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FrmNotice.xaml.vb">
+      <DependentUpon>FrmNotice.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FrmLog.xaml.vb">
       <DependentUpon>FrmLog.xaml</DependentUpon>
     </Compile>
@@ -158,6 +161,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FrmLaunch.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FrmNotice.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

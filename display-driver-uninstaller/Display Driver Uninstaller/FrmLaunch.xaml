@@ -10,9 +10,154 @@
 		<conv:BooleanToVisibilityConverter x:Key="BoolToVis" TrueValue="Visible" FalseValue="Collapsed" />
 		<conv:CombiningConverter x:Key="ValueToVis" Converter1="{StaticResource ValueEqualsOrGreater}" Converter2="{StaticResource BoolToVis}" />
 		<conv:NullableBooleanToBoolean x:Key="NulBoolToBool"></conv:NullableBooleanToBoolean>
+		<SolidColorBrush x:Key="LaunchTextBrush" Color="#FFF4F7FA" />
+		<SolidColorBrush x:Key="LaunchMutedTextBrush" Color="#FFB8C3D1" />
+		<SolidColorBrush x:Key="LaunchSurfaceBrush" Color="#FF12161D" />
+		<SolidColorBrush x:Key="LaunchPanelBrush" Color="#FF181E27" />
+		<SolidColorBrush x:Key="LaunchPanelHoverBrush" Color="#FF202834" />
+		<SolidColorBrush x:Key="LaunchPanelPressedBrush" Color="#FF111720" />
+		<SolidColorBrush x:Key="LaunchBorderBrush" Color="#FF546173" />
+		<SolidColorBrush x:Key="LaunchSelectionBrush" Color="#FF394657" />
+		<SolidColorBrush x:Key="LaunchWarningBrush" Color="#FFFF8F8F" />
+
+		<Style TargetType="{x:Type Label}">
+			<Setter Property="Foreground" Value="{StaticResource LaunchTextBrush}" />
+		</Style>
+
+		<Style TargetType="{x:Type ComboBox}">
+			<Setter Property="Foreground" Value="{StaticResource LaunchTextBrush}" />
+			<Setter Property="Background" Value="{StaticResource LaunchPanelBrush}" />
+			<Setter Property="BorderBrush" Value="{StaticResource LaunchBorderBrush}" />
+			<Setter Property="BorderThickness" Value="1" />
+			<Setter Property="Padding" Value="8,2,28,2" />
+			<Setter Property="MinHeight" Value="24" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type ComboBox}">
+						<Grid>
+							<ToggleButton x:Name="ToggleButton"
+										  Focusable="False"
+										  ClickMode="Press"
+										  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+								<ToggleButton.Template>
+									<ControlTemplate TargetType="{x:Type ToggleButton}">
+										<Border x:Name="ComboBorder"
+												Background="{StaticResource LaunchPanelBrush}"
+												BorderBrush="{TemplateBinding BorderBrush}"
+												BorderThickness="{TemplateBinding BorderThickness}">
+											<Grid>
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition Width="*" />
+													<ColumnDefinition Width="28" />
+												</Grid.ColumnDefinitions>
+												<ContentPresenter Margin="8,2,4,2"
+																  VerticalAlignment="Center"
+																  HorizontalAlignment="Left"
+																  Content="{TemplateBinding Content}" />
+												<TextBlock Grid.Column="1"
+														   Text="▼"
+														   Foreground="{StaticResource LaunchTextBrush}"
+														   VerticalAlignment="Center"
+														   HorizontalAlignment="Center"
+														   FontSize="10" />
+											</Grid>
+										</Border>
+										<ControlTemplate.Triggers>
+											<Trigger Property="IsMouseOver" Value="True">
+												<Setter TargetName="ComboBorder" Property="Background" Value="{StaticResource LaunchPanelHoverBrush}" />
+											</Trigger>
+											<Trigger Property="IsChecked" Value="True">
+												<Setter TargetName="ComboBorder" Property="Background" Value="{StaticResource LaunchPanelHoverBrush}" />
+											</Trigger>
+										</ControlTemplate.Triggers>
+									</ControlTemplate>
+								</ToggleButton.Template>
+							</ToggleButton>
+
+							<ContentPresenter IsHitTestVisible="False"
+											  Margin="8,2,28,2"
+											  VerticalAlignment="Center"
+											  HorizontalAlignment="Left"
+											  Content="{TemplateBinding SelectionBoxItem}"
+											  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+											  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" />
+
+							<Popup x:Name="Popup"
+								   Placement="Bottom"
+								   IsOpen="{TemplateBinding IsDropDownOpen}"
+								   AllowsTransparency="True"
+								   Focusable="False"
+								   PopupAnimation="Slide">
+								<Border Background="{StaticResource LaunchPanelBrush}"
+										BorderBrush="{StaticResource LaunchBorderBrush}"
+										BorderThickness="1">
+									<ScrollViewer SnapsToDevicePixels="True">
+										<ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
+									</ScrollViewer>
+								</Border>
+							</Popup>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<Trigger Property="HasItems" Value="False">
+								<Setter TargetName="Popup" Property="MinHeight" Value="24" />
+							</Trigger>
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter Property="Opacity" Value="0.55" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style TargetType="{x:Type ComboBoxItem}">
+			<Setter Property="Foreground" Value="{StaticResource LaunchTextBrush}" />
+			<Setter Property="Background" Value="{StaticResource LaunchPanelBrush}" />
+			<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+			<Style.Triggers>
+				<Trigger Property="IsHighlighted" Value="True">
+					<Setter Property="Background" Value="{StaticResource LaunchPanelHoverBrush}" />
+				</Trigger>
+				<Trigger Property="IsSelected" Value="True">
+					<Setter Property="Background" Value="{StaticResource LaunchSelectionBrush}" />
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style TargetType="{x:Type Button}">
+			<Setter Property="Foreground" Value="{StaticResource LaunchTextBrush}" />
+			<Setter Property="Background" Value="{StaticResource LaunchPanelBrush}" />
+			<Setter Property="BorderBrush" Value="{StaticResource LaunchBorderBrush}" />
+			<Setter Property="BorderThickness" Value="1" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Border x:Name="ButtonBorder"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}">
+							<ContentPresenter HorizontalAlignment="Center"
+											  VerticalAlignment="Center"
+											  Margin="{TemplateBinding Padding}" />
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource LaunchPanelHoverBrush}" />
+							</Trigger>
+							<Trigger Property="IsPressed" Value="True">
+								<Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource LaunchPanelPressedBrush}" />
+							</Trigger>
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter TargetName="ButtonBorder" Property="Opacity" Value="0.55" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 	</Window.Resources>
 
-	<Grid>
+	<Grid Background="{StaticResource LaunchSurfaceBrush}">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="*" />
 			<ColumnDefinition Width="*" />
@@ -25,7 +170,7 @@
 			<RowDefinition Height="55" />
 		</Grid.RowDefinitions>
 
-		<Border BorderThickness="1" BorderBrush="Black" Margin="-1,-1,-1,0" Grid.ColumnSpan="2">
+		<Border BorderThickness="1" BorderBrush="{StaticResource LaunchBorderBrush}" Background="{StaticResource LaunchPanelBrush}" Margin="-1,-1,-1,0" Grid.ColumnSpan="2">
 			<Image Name="Image1" Source="/Resources/ddu_logo.png" Stretch="Uniform" Margin="6" />
 		</Border>
 
@@ -34,12 +179,12 @@
 			<ComboBox DockPanel.Dock="Top" x:Name="cbBootOption" SelectedIndex="0" Grid.Row="2" FlowDirection="{Binding Path=Settings.FlowControl}"/>
 		</DockPanel>
 		<DockPanel Grid.Row="2" Grid.ColumnSpan="2">
-			<Label DockPanel.Dock="Top" Name="lblNotSafeMode" Content="lblNotSafeMode" Grid.Row="3" Margin="6" Foreground="Black" FontSize="13" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center" FlowDirection="{Binding Path=Settings.FlowControl}"/>
-			<Label DockPanel.Dock="Top" Name="lblWinPasswordWarn" Content="lblWinPasswordWarn" Grid.Row="3" Margin="6" Foreground="#FFEB0000" FontSize="13" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center"
+			<Label DockPanel.Dock="Top" Name="lblNotSafeMode" Content="lblNotSafeMode" Grid.Row="3" Margin="6" Foreground="{StaticResource LaunchTextBrush}" FontSize="13" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center" FlowDirection="{Binding Path=Settings.FlowControl}"/>
+			<Label DockPanel.Dock="Top" Name="lblWinPasswordWarn" Content="lblWinPasswordWarn" Grid.Row="3" Margin="6" Foreground="{StaticResource LaunchWarningBrush}" FontSize="13" FontStyle="Normal" FontWeight="SemiBold" VerticalContentAlignment="Center"
 				   Visibility="{Binding Path=Settings.WinVersion, Mode=OneWay, Converter={StaticResource ValueToVis}, ConverterParameter={x:Static local:OSVersion.Win8}}" FlowDirection="{Binding Path=Settings.FlowControl}"/>
 		</DockPanel>
 
-		<Border Grid.Row="3" BorderBrush="Black" BorderThickness="1" Margin="-1,0,-1,-1" Grid.ColumnSpan="2">
+		<Border Grid.Row="3" BorderBrush="{StaticResource LaunchBorderBrush}" BorderThickness="1" Background="{StaticResource LaunchSurfaceBrush}" Margin="-1,0,-1,-1" Grid.ColumnSpan="2">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*" />

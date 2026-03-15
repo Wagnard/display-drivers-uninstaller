@@ -172,7 +172,7 @@ Namespace Display_Driver_Uninstaller
 			Catch ex As Exception
 				Application.Log.AddException(ex)
 
-				MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+				ShowThemedNotice(Languages.GetTranslation("frmMain", "Messages", "Text6"))
 
 				Return GPUVendor.None
 			End Try
@@ -181,6 +181,10 @@ Namespace Display_Driver_Uninstaller
 		Private Sub SaveData()
 			Application.SaveData()
 		End Sub
+
+		Private Function ShowThemedNotice(message As String, Optional title As String = Nothing, Optional buttons As MessageBoxButton = MessageBoxButton.OK) As MessageBoxResult
+			Return FrmNotice.ShowNotice(Me, If(String.IsNullOrWhiteSpace(title), Application.Settings.AppName, title), message, buttons)
+		End Function
 
 		Private Sub CloseDDU()
 			If Not Dispatcher.CheckAccess() Then
@@ -326,7 +330,6 @@ Namespace Display_Driver_Uninstaller
 
 			With frmOptions
 				.Owner = Me
-				.Background = Me.Background
 				.DataContext = Me.DataContext
 				.Icon = Me.Icon
 				.SizeToContent = SizeToContent.WidthAndHeight
@@ -495,7 +498,7 @@ Namespace Display_Driver_Uninstaller
 		  "nvidiaInspector")
 
 			If Application.Settings.ProcessKilled AndAlso (Not Application.LaunchOptions.Silent) Then
-				MessageBox.Show(Languages.GetTranslation("frmLaunch", "Messages", "Text1"), Application.Settings.AppName, Nothing, MessageBoxImage.Information)
+				ShowThemedNotice(Languages.GetTranslation("frmLaunch", "Messages", "Text1"))
 				Application.Settings.ProcessKilled = False
 			End If
 
@@ -595,12 +598,11 @@ Namespace Display_Driver_Uninstaller
 			End Try
 
 			If Application.Settings.FirstTimeLaunch AndAlso Not Application.LaunchOptions.Silent Then
-				Microsoft.VisualBasic.MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text17"), MsgBoxStyle.Information, Application.Settings.AppName)
+				ShowThemedNotice(Languages.GetTranslation("frmMain", "Messages", "Text17"))
 				Dim frmOptions As New FrmOptions
 
 				With frmOptions
 					.Owner = Me
-					.Background = Me.Background
 					.DataContext = Me.DataContext
 					.Icon = Me.Icon
 					.SizeToContent = SizeToContent.WidthAndHeight
@@ -615,7 +617,13 @@ Namespace Display_Driver_Uninstaller
 				Select Case System.Windows.Forms.SystemInformation.BootMode
 
 					Case Forms.BootMode.Normal
-						Microsoft.VisualBasic.MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text8"), MsgBoxStyle.Information, Application.Settings.AppName)
+						Dim frmNotice As New FrmNotice With {
+							.Owner = Me,
+							.Icon = Me.Icon,
+							.Title = Application.Settings.AppName,
+							.MessageText = Languages.GetTranslation("frmMain", "Messages", "Text8")
+						}
+						frmNotice.ShowDialog()
 
 				End Select
 			End If
@@ -632,7 +640,7 @@ Namespace Display_Driver_Uninstaller
                 End Sub)
 
             If Not canImpersonate Then
-                MsgBox("Could not impersonate the SYSTEM account, it is NOT recommended to use DDU in this state.")
+                ShowThemedNotice("Could not impersonate the SYSTEM account, it is NOT recommended to use DDU in this state.")
             End If
             Application.RemoveRegOption()
         End Sub
@@ -642,7 +650,7 @@ Namespace Display_Driver_Uninstaller
 			Try
 				If CleaningTask IsNot Nothing AndAlso Not CleaningTask.IsCompleted Then
 					Application.Log.SaveToFile()
-					Select Case MessageBox.Show("If DDU hasn't progressed since 5 minutes and you think it is stuck, you can click *Yes* If not then at your own risk of corruption.", "Warning, DDU is still executing ! Are you sure you want to close ? ", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation)
+					Select Case ShowThemedNotice("If DDU hasn't progressed since 5 minutes and you think it is stuck, you can click *Yes* If not then at your own risk of corruption.", "Warning, DDU is still executing ! Are you sure you want to close ?", MessageBoxButton.YesNoCancel)
 						Case MessageBoxResult.Yes
 
 						Case MessageBoxResult.No
@@ -678,7 +686,7 @@ Namespace Display_Driver_Uninstaller
 
 			Catch ex As Exception
 				Application.Log.AddException(ex)
-				Microsoft.VisualBasic.MsgBox(ex.Message + ex.StackTrace)
+				ShowThemedNotice(ex.Message + ex.StackTrace, "Error!")
 				config.Success = False
 			Finally
 				CleaningThread_Completed(config)
@@ -691,7 +699,7 @@ Namespace Display_Driver_Uninstaller
                 Application.Log.AddMessage("Clean uninstall completed!" & CRLF & ">> GPU: " & config.SelectedGPU.ToString())
 
 				If Not config.Success AndAlso config.GPURemovedSuccess Then
-					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), "Error!", MessageBoxButton.OK, MessageBoxImage.Error)
+					ShowThemedNotice(Languages.GetTranslation("frmMain", "Messages", "Text6"), "Error!")
 					Application.Log.SaveToFile()    ' Save to file
 					'Scan for new hardware to not let users into a non working state.
 					SetupAPI.ReScanDevices()
@@ -701,7 +709,7 @@ Namespace Display_Driver_Uninstaller
 				End If
 
 				If Not config.GPURemovedSuccess Then
-					MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text16"), "Error!", MessageBoxButton.OK, MessageBoxImage.Error)
+					ShowThemedNotice(Languages.GetTranslation("frmMain", "Messages", "Text16"), "Error!")
 					Application.Log.SaveToFile()    ' Save to file
 					'Scan for new hardware to not let users into a non working state.
 					SetupAPI.ReScanDevices()
@@ -748,7 +756,7 @@ Namespace Display_Driver_Uninstaller
 				Return
 			End If
 
-			If MessageBox.Show(Application.Current.MainWindow, Languages.GetTranslation("frmMain", "Messages", "Text10"), config.AppName, MessageBoxButton.YesNo, MessageBoxImage.Information) = MessageBoxResult.Yes Then
+			If FrmNotice.ShowNotice(Application.Current.MainWindow, config.AppName, Languages.GetTranslation("frmMain", "Messages", "Text10"), MessageBoxButton.YesNo) = MessageBoxResult.Yes Then
 				CloseDDU()
 				Return
 			End If
@@ -1149,13 +1157,13 @@ Namespace Display_Driver_Uninstaller
 
 								If Not Application.LaunchOptions.Silent Then
 									If enable Then
-										MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
+										FrmNotice.ShowNotice(Application.Current.MainWindow, Application.Settings.AppName, Languages.GetTranslation("frmMain", "Messages", "Text11"))
 									Else
-										MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+										FrmNotice.ShowNotice(Application.Current.MainWindow, Application.Settings.AppName, Languages.GetTranslation("frmMain", "Messages", "Text9"))
 									End If
 								End If
 							ElseIf enable <> False AndAlso Not Application.LaunchOptions.Silent Then
-								MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
+								FrmNotice.ShowNotice(Application.Current.MainWindow, Application.Settings.AppName, Languages.GetTranslation("frmMain", "Messages", "Text15"))
 							End If
 						End If
 					End Using
@@ -1176,13 +1184,13 @@ Namespace Display_Driver_Uninstaller
 
 									If Not Application.LaunchOptions.Silent Then
 										If enable Then
-											MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text11"))
+											FrmNotice.ShowNotice(Application.Current.MainWindow, Application.Settings.AppName, Languages.GetTranslation("frmMain", "Messages", "Text11"))
 										Else
-											MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text9"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Information)
+											FrmNotice.ShowNotice(Application.Current.MainWindow, Application.Settings.AppName, Languages.GetTranslation("frmMain", "Messages", "Text9"))
 										End If
 									End If
 								ElseIf enable <> False AndAlso Not Application.LaunchOptions.Silent Then
-									MsgBox(Languages.GetTranslation("frmMain", "Messages", "Text15"))
+									FrmNotice.ShowNotice(Application.Current.MainWindow, Application.Settings.AppName, Languages.GetTranslation("frmMain", "Messages", "Text15"))
 								End If
 							End If
 						End If
@@ -1307,7 +1315,7 @@ Namespace Display_Driver_Uninstaller
 		 .DefaultExt = ".txt"
 		}
 
-			Dim delete As Boolean = (MessageBox.Show("Delete tasks?" & CRLF & "Yes = Ask delete for each task" & CRLF & "No = Just save to file", "Question", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) = MessageBoxResult.Yes)
+			Dim delete As Boolean = (ShowThemedNotice("Delete tasks?" & CRLF & "Yes = Ask delete for each task" & CRLF & "No = Just save to file", "Question", MessageBoxButton.YesNo) = MessageBoxResult.Yes)
 
 			If sfd.ShowDialog() = True Then
 
@@ -1325,7 +1333,7 @@ Namespace Display_Driver_Uninstaller
 							If task.Description IsNot Nothing Then sw.WriteLine("Description:  ".PadLeft(14, " "c) & task.Description)
 
 							If delete Then
-								Select Case MessageBox.Show("Task:" & CRLF & task.Name & CRLF & task.Description & CRLF & CRLF & "Delete?", "Delete task?", MessageBoxButton.YesNoCancel, MessageBoxImage.Exclamation)
+								Select Case ShowThemedNotice("Task:" & CRLF & task.Name & CRLF & task.Description & CRLF & CRLF & "Delete?", "Delete task?", MessageBoxButton.YesNoCancel)
 									Case MessageBoxResult.Yes
 									'	task.Delete()  ' USE WITH CAUTION! 
 

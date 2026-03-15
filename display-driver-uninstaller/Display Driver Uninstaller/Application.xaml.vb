@@ -71,6 +71,24 @@ Namespace Display_Driver_Uninstaller
 			End Get
 		End Property
 
+		Public Shared Function ShowThemedNotice(message As String,
+												Optional title As String = Nothing,
+												Optional buttons As MessageBoxButton = MessageBoxButton.OK,
+												Optional owner As Window = Nothing) As MessageBoxResult
+			Dim noticeOwner As Window = If(owner, TryCast(Current?.MainWindow, Window))
+			Dim resolvedTitle As String = If(String.IsNullOrWhiteSpace(title), Application.Settings.AppName, title)
+
+			If m_dispatcher Is Nothing Then
+				Return FrmNotice.ShowNotice(noticeOwner, resolvedTitle, message, buttons)
+			End If
+
+			If Not m_dispatcher.CheckAccess() Then
+				Return CType(m_dispatcher.Invoke(Function() ShowThemedNotice(message, resolvedTitle, buttons, noticeOwner)), MessageBoxResult)
+			End If
+
+			Return FrmNotice.ShowNotice(noticeOwner, resolvedTitle, message, buttons)
+		End Function
+
 		Public Sub New()
 			m_Data = New Data()
 			m_dispatcher = Me.Dispatcher
@@ -249,11 +267,11 @@ Namespace Display_Driver_Uninstaller
 				Log.SaveToFile()
 				m_isDataSaved = True
 
-				MessageBox.Show("Launching Main Window failed!" & CRLF &
+				ShowThemedNotice("Launching Main Window failed!" & CRLF &
 			 CRLF &
 			 ex.Message & CRLF &
 			 CRLF &
-			 ex.StackTrace, "Display Driver Uninstaller", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly)
+			 ex.StackTrace, "Display Driver Uninstaller")
 
 				Me.Shutdown(0)
 			End Try
@@ -366,13 +384,13 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 			If Not IsNet48OrNewer() Then
-				Microsoft.VisualBasic.MsgBox("Minimum requirement is Microsoft .NET Framework 4.8. Please update your current .NET Framework.")
+				ShowThemedNotice("Minimum requirement is Microsoft .NET Framework 4.8. Please update your current .NET Framework.")
 				Me.Shutdown()
 				Exit Sub
 			End If
 
 			If Not IsNet45OrNewer() Then
-				Microsoft.VisualBasic.MsgBox("Minimum requirement is Microsoft .NET Framework 4.8. Please update your current .NET Framework.")
+				ShowThemedNotice("Minimum requirement is Microsoft .NET Framework 4.8. Please update your current .NET Framework.")
 				Me.Shutdown()
 				Exit Sub
 			End If
@@ -418,7 +436,7 @@ Namespace Display_Driver_Uninstaller
 								msg = String.Format("Administrator rights are required to use application.{0}{0}{1}", CRLF, msg)
 							End If
 
-							MessageBox.Show(msg, "Display Driver Uninstaller", MessageBoxButton.OK, MessageBoxImage.Exclamation, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly)
+							ShowThemedNotice(msg, "Display Driver Uninstaller")
 							Log.AddMessage("No admin rights, denied by user via UAC")
 							Log.SaveToFile()
 						Catch ex2 As Exception
@@ -504,7 +522,7 @@ Namespace Display_Driver_Uninstaller
 
 					'We check if there are any reboot from windows update pending. and if so we quit.
 					If Not LaunchOptions.Silent AndAlso WinUpdatePending() Then
-						MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text14"), Application.Settings.AppName, MessageBoxButton.OK, MessageBoxImage.Warning)
+						ShowThemedNotice(Languages.GetTranslation("frmMain", "Messages", "Text14"))
 						Log.SaveToFile()
 						Me.Shutdown(0)
 						Exit Sub
@@ -519,14 +537,14 @@ Namespace Display_Driver_Uninstaller
 
 				'Verify is there is missing files in DDU\settings folder (only check for 2 atm)
 				If Not _fileIo.ExistsFile(Application.Paths.AppBase & "settings\NVIDIA\services.cfg") Then
-					Microsoft.VisualBasic.MsgBox(Application.Paths.AppBase & "settings\NVIDIA\services.cfg does not exist. please reinstall or extract DDU correctly", MsgBoxStyle.Critical)
+					ShowThemedNotice(Application.Paths.AppBase & "settings\NVIDIA\services.cfg does not exist. please reinstall or extract DDU correctly")
 					Log.SaveToFile()
 					Me.Shutdown(0)
 					Exit Sub
 				End If
 
 				If Not _fileIo.ExistsFile(Application.Paths.AppBase & "settings\AMD\services.cfg") Then
-					Microsoft.VisualBasic.MsgBox(Application.Paths.AppBase & "settings\AMD\services.cfg does not exist. please reinstall or extract DDU correctly", MsgBoxStyle.Critical)
+					ShowThemedNotice(Application.Paths.AppBase & "settings\AMD\services.cfg does not exist. please reinstall or extract DDU correctly")
 					Log.SaveToFile()
 					Me.Shutdown(0)
 					Exit Sub
@@ -544,10 +562,10 @@ Namespace Display_Driver_Uninstaller
 				Log.AddException(ex, "Some part of application startup failed!" & CRLF & ">> Application_Startup()")
 				Log.SaveToFile()    ' Save to file
 
-				MessageBox.Show("Launching Application failed!" & CRLF &
+				ShowThemedNotice("Launching Application failed!" & CRLF &
 			 "A problem occurred in one of the module, send your DDU logs to the developer." & CRLF &
 			   CRLF &
-			   ex.Message, "Display Driver Uninstaller", MessageBoxButton.OK, MessageBoxImage.Error, MessageBoxResult.OK, MessageBoxOptions.DefaultDesktopOnly)
+			   ex.Message, "Display Driver Uninstaller")
 
 				Me.Shutdown(0)
 			End Try

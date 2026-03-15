@@ -101,7 +101,7 @@ Namespace Display_Driver_Uninstaller
 
 				If status = UpdateStatus.UpdateAvailable Then
 					If Not System.Security.Principal.WindowsIdentity.GetCurrent().IsSystem AndAlso Not Application.LaunchOptions.Silent Then
-						Select Case MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text1"), "Display Driver Uninstaller", MessageBoxButton.YesNoCancel, MessageBoxImage.Information)
+						Select Case Application.ShowThemedNotice(Languages.GetTranslation("frmMain", "Messages", "Text1"), "Display Driver Uninstaller", MessageBoxButton.YesNoCancel)
 							Case MessageBoxResult.Yes
 								WinAPI.OpenVisitLink(" -visitdduhome")
 
@@ -109,7 +109,7 @@ Namespace Display_Driver_Uninstaller
 								Return
 
 							Case MessageBoxResult.No
-								MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text2"), "Display Driver Uninstaller", MessageBoxButton.OK, MessageBoxImage.Information)
+								Application.ShowThemedNotice(Languages.GetTranslation("frmMain", "Messages", "Text2"), "Display Driver Uninstaller")
 						End Select
 					End If
 				End If

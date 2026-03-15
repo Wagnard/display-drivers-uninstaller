@@ -1,0 +1,123 @@
+<Window x:Class="Display_Driver_Uninstaller.FrmNotice"
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	Title="Display Driver Uninstaller"
+	Height="170" Width="400"
+	MinHeight="170" MinWidth="400"
+	ResizeMode="NoResize"
+	ShowInTaskbar="False"
+	WindowStartupLocation="CenterOwner"
+	Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico"
+	Background="#FF12161D"
+	Foreground="#FFF4F7FA">
+
+	<Window.Resources>
+		<SolidColorBrush x:Key="NoticeTextBrush" Color="#FFF4F7FA" />
+		<SolidColorBrush x:Key="NoticeSurfaceBrush" Color="#FF12161D" />
+		<SolidColorBrush x:Key="NoticePanelBrush" Color="#FF181E27" />
+		<SolidColorBrush x:Key="NoticePanelHoverBrush" Color="#FF202834" />
+		<SolidColorBrush x:Key="NoticeBorderBrush" Color="#FF546173" />
+		<SolidColorBrush x:Key="NoticeAccentBrush" Color="#FF58A6FF" />
+
+		<Style TargetType="{x:Type Button}">
+			<Setter Property="Foreground" Value="{StaticResource NoticeTextBrush}" />
+			<Setter Property="Background" Value="{StaticResource NoticePanelBrush}" />
+			<Setter Property="BorderBrush" Value="{StaticResource NoticeBorderBrush}" />
+			<Setter Property="BorderThickness" Value="1" />
+			<Setter Property="Padding" Value="18,5" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Border x:Name="ButtonBorder"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}">
+							<ContentPresenter HorizontalAlignment="Center"
+											  VerticalAlignment="Center"
+											  Margin="{TemplateBinding Padding}" />
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource NoticePanelHoverBrush}" />
+							</Trigger>
+							<Trigger Property="IsPressed" Value="True">
+								<Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource NoticeSurfaceBrush}" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Window.Resources>
+
+	<Grid Background="{StaticResource NoticeSurfaceBrush}">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="*" />
+			<RowDefinition Height="Auto" />
+		</Grid.RowDefinitions>
+
+		<Grid Margin="16,16,16,10">
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="Auto" />
+				<ColumnDefinition Width="*" />
+			</Grid.ColumnDefinitions>
+
+			<Border Width="34"
+					Height="34"
+					Margin="0,2,12,0"
+					VerticalAlignment="Top"
+					CornerRadius="17"
+					Background="{StaticResource NoticeAccentBrush}"
+					BorderBrush="#FFBFD9FF"
+					BorderThickness="1">
+				<TextBlock Text="i"
+						   FontSize="22"
+						   FontWeight="Bold"
+						   Foreground="White"
+						   HorizontalAlignment="Center"
+						   VerticalAlignment="Center"
+						   Margin="0,-2,0,0" />
+			</Border>
+
+			<TextBlock x:Name="txtMessage"
+					   Grid.Column="1"
+					   TextWrapping="Wrap"
+					   VerticalAlignment="Center"
+					   Foreground="{StaticResource NoticeTextBrush}"
+					   FontSize="14" />
+		</Grid>
+
+		<Border Grid.Row="1"
+				BorderBrush="{StaticResource NoticeBorderBrush}"
+				BorderThickness="0,1,0,0"
+				Background="{StaticResource NoticeSurfaceBrush}">
+			<Grid Margin="12,10,12,12">
+				<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+					<Button x:Name="btnYes"
+							Content="Yes"
+							Width="76"
+							Height="30"
+							Margin="0,0,8,0"
+							Visibility="Collapsed" />
+					<Button x:Name="btnNo"
+							Content="No"
+							Width="76"
+							Height="30"
+							Margin="0,0,8,0"
+							Visibility="Collapsed" />
+					<Button x:Name="btnCancel"
+							Content="Cancel"
+							Width="76"
+							Height="30"
+							Margin="0,0,8,0"
+							Visibility="Collapsed" />
+					<Button x:Name="btnOk"
+							Content="OK"
+							Width="76"
+							Height="30"
+							Visibility="Collapsed" />
+				</StackPanel>
+			</Grid>
+		</Border>
+	</Grid>
+</Window>

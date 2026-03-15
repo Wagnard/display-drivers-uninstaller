@@ -14,18 +14,69 @@
         <conv:CombiningConverter x:Key="StrNotNullToVis" Converter1="{StaticResource StrNotNull}" Converter2="{StaticResource BoolToVis}" />
         <conv:CombiningConverter x:Key="NonZeroToVis" Converter1="{StaticResource NonZero}" Converter2="{StaticResource BoolToVis}" />
         <conv:CombiningConverter x:Key="NotNullToVis" Converter1="{StaticResource NotNull}" Converter2="{StaticResource BoolToVis}" />
+        <SolidColorBrush x:Key="AboutWindowBg" Color="#FF12161D" />
+        <SolidColorBrush x:Key="AboutPanelBg" Color="#FF181E27" />
+        <SolidColorBrush x:Key="AboutPanelHover" Color="#FF202834" />
+        <SolidColorBrush x:Key="AboutBorder" Color="#FF546173" />
+        <SolidColorBrush x:Key="AboutText" Color="#FFF4F7FA" />
+        <SolidColorBrush x:Key="AboutAccent" Color="#FF7AB8FF" />
+
+        <Style TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="{StaticResource AboutText}" />
+        </Style>
+
+        <Style TargetType="{x:Type Label}">
+            <Setter Property="Foreground" Value="{StaticResource AboutText}" />
+        </Style>
+
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Foreground" Value="{StaticResource AboutText}" />
+            <Setter Property="Background" Value="{StaticResource AboutPanelBg}" />
+            <Setter Property="BorderBrush" Value="{StaticResource AboutBorder}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource AboutPanelHover}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource AboutWindowBg}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
 
         <ControlTemplate x:Key="tempText">
-            <ScrollViewer Grid.Row="2">
-                <TextBlock Text="{Binding ElementName=frmAbout, Path=Text, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Padding="10" TextWrapping="Wrap" />
+            <ScrollViewer Grid.Row="2" Background="{StaticResource AboutPanelBg}">
+                <TextBlock Text="{Binding ElementName=frmAbout, Path=Text, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                           Padding="10"
+                           TextWrapping="Wrap"
+                           Foreground="{StaticResource AboutText}" />
             </ScrollViewer>
         </ControlTemplate>
 
         <ControlTemplate x:Key="tempTranslators">
             <DockPanel>
-                <TextBlock DockPanel.Dock="Top" Text="{Binding ElementName=frmAbout, Path=Text, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Background="#28000000" Grid.Row="2" FontSize="16" FontWeight="Bold" Height="30" />
+                <TextBlock DockPanel.Dock="Top"
+                           Text="{Binding ElementName=frmAbout, Path=Text, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                           Background="#22000000"
+                           Foreground="{StaticResource AboutText}"
+                           Grid.Row="2"
+                           FontSize="16"
+                           FontWeight="Bold"
+                           Height="30" />
 
-                <ScrollViewer DockPanel.Dock="Top">
+                <ScrollViewer DockPanel.Dock="Top" Background="{StaticResource AboutPanelBg}">
                     <ItemsControl Grid.Row="1" ItemsSource="{Binding Settings.LanguageOptions}" AlternationCount="2" >
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -66,7 +117,7 @@
 										</Style>
 									</Grid.Style>-->
 
-                                    <TextBlock FontWeight="Bold" Foreground="DarkBlue" FontSize="16" >
+                                    <TextBlock FontWeight="Bold" Foreground="{StaticResource AboutAccent}" FontSize="16" >
                                         <TextBlock.Text>
                                             <MultiBinding StringFormat="{}{0} ({1})">
                                                 <Binding Path="DisplayText" />
@@ -130,7 +181,7 @@
         </Style>
     </Window.Style>
 
-    <Grid>
+    <Grid Background="{StaticResource AboutWindowBg}">
         <Grid.RowDefinitions>
             <RowDefinition Height="150" />
             <RowDefinition Height="*" />
@@ -139,7 +190,7 @@
 
         <Image DockPanel.Dock="Top" Source="Resources/ddu_logo.png" Stretch="Uniform" Grid.Row="0" Margin="0,0,0,23"/>
 
-        <Border Grid.Row="1" BorderBrush="Black" Margin="-1,0" BorderThickness="1">
+        <Border Grid.Row="1" BorderBrush="{StaticResource AboutBorder}" Background="{StaticResource AboutPanelBg}" Margin="-1,0" BorderThickness="1">
             <ContentControl x:Name="contCtrl">
                 <ContentControl.Style>
                     <Style TargetType="{x:Type ContentControl}">
@@ -164,7 +215,7 @@
 
         <DockPanel Grid.Row="2" LastChildFill="False" >
             <DockPanel.Resources>
-                <Style TargetType="Button" >
+                <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
                     <Setter Property="MinWidth" Value="100" />
                     <Setter Property="Padding" Value="6,0" />
                     <Setter Property="Height" Value="30" />
