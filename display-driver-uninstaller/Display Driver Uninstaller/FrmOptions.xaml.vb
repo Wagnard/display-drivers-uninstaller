@@ -9,7 +9,6 @@
 		Private Sub FrmOptions_Loaded(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles MyBase.Loaded
 			Languages.TranslateForm(Me)
 			Application.Settings.PreventWinUpdate = FrmMain.InfoDriverSearch
-			lblUseDarkTheme.Content = "Use dark theme (restart required)"
 			'AdjustWindow(Me)
 		End Sub
 
