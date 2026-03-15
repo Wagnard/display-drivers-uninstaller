@@ -428,7 +428,7 @@
 						VirtualizingStackPanel.VirtualizationMode="Recycling"
 						SelectionMode="Extended"
 						ItemsSource="{Binding ExceptionData, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-						ItemTemplate="{StaticResource logException}" Background="{DynamicResource bWindowBg}">
+						ItemTemplate="{StaticResource logException}" Background="{x:Null}">
 
 						<ListBox.CommandBindings>
 							<CommandBinding Command="Copy" Executed="CopyCommand" />
@@ -469,7 +469,7 @@
 						VirtualizingStackPanel.VirtualizationMode="Recycling"
 						SelectionMode="Extended"
 						ItemsSource="{Binding Values, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
-						ItemTemplate="{StaticResource logValues}" Background="{DynamicResource bWindowBg}">
+						ItemTemplate="{StaticResource logValues}" Background="{x:Null}">
 
 						<ListBox.CommandBindings>
 							<CommandBinding Command="Copy" Executed="CopyCommand" />

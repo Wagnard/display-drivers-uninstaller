@@ -59,7 +59,7 @@
 						<CheckBox x:Name="lblVulkan" IsChecked="{Binding RemoveVulkan, Converter={StaticResource NulBoolToBool}}" Content="lblVulkan" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
 						<CheckBox x:Name="lblOffer" IsChecked="{Binding ShowOffer, Converter={StaticResource NulBoolToBool}}" Content="lblOffer" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
 						<CheckBox x:Name="lblRememberLastChoice" IsChecked="{Binding RememberLastChoice, Converter={StaticResource NulBoolToBool}}" Content="lblRememberLastChoice" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
-						<CheckBox x:Name="lblUseDarkTheme" IsChecked="{Binding UseDarkTheme, Converter={StaticResource NulBoolToBool}}" Content="Use dark theme (restart required)" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
+						<CheckBox x:Name="lblUseDarkTheme" IsChecked="{Binding UseDarkTheme, Converter={StaticResource NulBoolToBool}}" Content="lblUseDarkTheme" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                     </UniformGrid>
                 </DockPanel>
 

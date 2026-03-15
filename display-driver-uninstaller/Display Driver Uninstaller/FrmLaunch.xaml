@@ -90,7 +90,8 @@
 								   PopupAnimation="Slide">
 								<Border Background="{DynamicResource LaunchPanelBrush}"
 										BorderBrush="{DynamicResource LaunchBorderBrush}"
-										BorderThickness="1">
+										BorderThickness="1"
+										MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}">
 									<ScrollViewer SnapsToDevicePixels="True">
 										<ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
 									</ScrollViewer>
