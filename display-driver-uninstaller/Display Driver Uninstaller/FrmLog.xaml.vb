@@ -174,10 +174,34 @@ Namespace Display_Driver_Uninstaller
 
 			' This call is required by the designer.
 			InitializeComponent()
+			Application.ApplyWindowTheme(Me)
+			RefreshThemeBindings()
 
 			' Add any initialization after the InitializeComponent() call.
 
 			EventManager.RegisterClassHandler(GetType(ListBoxItem), ListBoxItem.MouseLeftButtonDownEvent, New RoutedEventHandler(AddressOf ListBoxItem_MouseLeftButtonDown))
+		End Sub
+
+		Private Sub RefreshThemeBindings()
+			Resources("bNormal") = New SolidColorBrush(CType(Resources("cNormal"), Color))
+			Resources("bValue") = New SolidColorBrush(CType(Resources("cValue"), Color))
+			Resources("bWarning") = New SolidColorBrush(CType(Resources("cWarning"), Color))
+			Resources("bError") = New SolidColorBrush(CType(Resources("cError"), Color))
+			Resources("bSelected") = New SolidColorBrush(CType(Resources("cSelected"), Color))
+
+			Dim typeToBrush = TryCast(Resources("TypeToBrush"), Converters.LogTypeToBrush)
+			If typeToBrush IsNot Nothing Then
+				typeToBrush.Brush1 = CType(Resources("bValue"), Brush)
+				typeToBrush.Brush2 = CType(Resources("bWarning"), Brush)
+				typeToBrush.Brush3 = CType(Resources("bError"), Brush)
+			End If
+
+			Dim typeToBrushBg = TryCast(Resources("TypeToBrushBg"), Converters.LogTypeToBrush)
+			If typeToBrushBg IsNot Nothing Then
+				typeToBrushBg.Brush1 = CType(Resources("bgBrushEvent"), Brush)
+				typeToBrushBg.Brush2 = CType(Resources("bgBrushWarning"), Brush)
+				typeToBrushBg.Brush3 = CType(Resources("bgBrushError"), Brush)
+			End If
 		End Sub
 
 		Private Sub FilterChanged()

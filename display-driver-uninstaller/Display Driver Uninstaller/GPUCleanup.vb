@@ -634,7 +634,7 @@ Namespace Display_Driver_Uninstaller
                             found.Clear()
                         End If
                     Catch ex As Exception
-                        MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+                        Application.ShowThemedNotice(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName)
                         Application.Log.AddException(ex)
                     End Try
 
@@ -656,7 +656,7 @@ Namespace Display_Driver_Uninstaller
                             found.Clear()
                         End If
                     Catch ex As Exception
-                        MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButton.OK, MessageBoxImage.Error)
+                        Application.ShowThemedNotice(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName)
                         Application.Log.AddException(ex)
                     End Try
 

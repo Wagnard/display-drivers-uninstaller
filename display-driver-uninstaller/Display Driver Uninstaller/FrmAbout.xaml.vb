@@ -42,6 +42,11 @@ Namespace Display_Driver_Uninstaller
 			End Set
 		End Property
 
+		Public Sub New()
+			InitializeComponent()
+			Application.ApplyWindowTheme(Me)
+		End Sub
+
 		Private Sub FrmAbout_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
 			Languages.TranslateForm(Me, False)
 			lblVersion.Content = Application.Settings.AppVersion.ToString

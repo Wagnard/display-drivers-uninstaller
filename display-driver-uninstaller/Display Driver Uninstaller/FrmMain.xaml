@@ -17,36 +17,265 @@
 		<conv:BooleanToString x:Key="BoolToStr" TrueValue="x64" FalseValue="x86" />
 		<conv:EnumToTextConverter x:Key="EnumToText" />
 
+		<Style x:Key="MainButtonTextStyle" TargetType="{x:Type TextBlock}">
+			<Setter Property="Foreground" Value="{StaticResource brushMainText}" />
+			<Setter Property="TextWrapping" Value="Wrap" />
+			<Setter Property="TextAlignment" Value="Center" />
+			<Setter Property="Margin" Value="6,0" />
+		</Style>
+
+		<Style x:Key="MainMenuStyle" TargetType="{x:Type Menu}">
+			<Setter Property="Foreground" Value="{StaticResource brushMainText}" />
+			<Setter Property="Background" Value="{StaticResource brushMainMenuBg}" />
+			<Setter Property="BorderBrush" Value="{StaticResource brushMainMenuBg}" />
+			<Setter Property="BorderThickness" Value="0,1,0,1" />
+			<Setter Property="Padding" Value="0" />
+		</Style>
+
+		<Style x:Key="MainMenuItemStyle" TargetType="{x:Type MenuItem}">
+			<Setter Property="Padding" Value="8,3" />
+			<Setter Property="Foreground" Value="{StaticResource brushMainText}" />
+			<Setter Property="Background" Value="{StaticResource brushMainMenuBg}" />
+			<Setter Property="BorderBrush" Value="{StaticResource brushMainControlBorder}" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type MenuItem}">
+						<Border x:Name="MenuItemBorder"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="0">
+							<Grid>
+								<ContentPresenter x:Name="HeaderHost"
+												  ContentSource="Header"
+												  Margin="{TemplateBinding Padding}"
+												  RecognizesAccessKey="True" />
+								<Popup x:Name="PART_Popup"
+									   Placement="Bottom"
+									   IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+									   AllowsTransparency="True"
+									   Focusable="False"
+									   PopupAnimation="Fade">
+									<Border Background="{StaticResource brushMainControlBg}"
+											BorderBrush="{StaticResource brushMainControlBorder}"
+											BorderThickness="1"
+											Padding="1">
+										<StackPanel IsItemsHost="True"
+													KeyboardNavigation.DirectionalNavigation="Cycle" />
+									</Border>
+								</Popup>
+							</Grid>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="Role" Value="TopLevelHeader">
+								<Setter TargetName="MenuItemBorder" Property="BorderThickness" Value="0" />
+							</Trigger>
+							<Trigger Property="Role" Value="TopLevelItem">
+								<Setter TargetName="MenuItemBorder" Property="BorderThickness" Value="0" />
+							</Trigger>
+							<Trigger Property="Role" Value="SubmenuHeader">
+								<Setter TargetName="MenuItemBorder" Property="BorderThickness" Value="0" />
+								<Setter Property="Background" Value="{StaticResource brushMainControlBg}" />
+							</Trigger>
+							<Trigger Property="Role" Value="SubmenuItem">
+								<Setter TargetName="MenuItemBorder" Property="BorderThickness" Value="0" />
+								<Setter Property="Background" Value="{StaticResource brushMainControlBg}" />
+							</Trigger>
+							<Trigger Property="IsHighlighted" Value="True">
+								<Setter TargetName="MenuItemBorder" Property="Background" Value="{StaticResource brushMainControlBgHover}" />
+							</Trigger>
+							<Trigger Property="IsSubmenuOpen" Value="True">
+								<Setter TargetName="MenuItemBorder" Property="Background" Value="{StaticResource brushMainControlBgHover}" />
+							</Trigger>
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter Property="Opacity" Value="0.55" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="MainActionButtonStyle" TargetType="{x:Type Button}">
+			<Setter Property="Foreground" Value="{StaticResource brushMainText}" />
+			<Setter Property="Background" Value="{StaticResource brushMainControlBg}" />
+			<Setter Property="BorderBrush" Value="{StaticResource brushMainControlBorder}" />
+			<Setter Property="BorderThickness" Value="1" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Border x:Name="ButtonBorder"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								SnapsToDevicePixels="True">
+							<ContentPresenter HorizontalAlignment="Center"
+											  VerticalAlignment="Center"
+											  Margin="{TemplateBinding Padding}" />
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource brushMainControlBgHover}" />
+							</Trigger>
+							<Trigger Property="IsPressed" Value="True">
+								<Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource brushMainControlBgPressed}" />
+							</Trigger>
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter TargetName="ButtonBorder" Property="Opacity" Value="0.55" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="MainComboBoxStyle" TargetType="{x:Type ComboBox}">
+			<Setter Property="Foreground" Value="{StaticResource brushMainText}" />
+			<Setter Property="Background" Value="{StaticResource brushMainControlBg}" />
+			<Setter Property="BorderBrush" Value="{StaticResource brushMainControlBorder}" />
+			<Setter Property="BorderThickness" Value="1" />
+			<Setter Property="Padding" Value="8,2,28,2" />
+			<Setter Property="Height" Value="22" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type ComboBox}">
+						<Grid>
+							<ToggleButton x:Name="ToggleButton"
+										  Focusable="False"
+										  ClickMode="Press"
+										  IsChecked="{Binding IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+								<ToggleButton.Template>
+									<ControlTemplate TargetType="{x:Type ToggleButton}">
+										<Border x:Name="ComboBorder"
+												Background="{StaticResource brushMainControlBg}"
+												BorderBrush="{TemplateBinding BorderBrush}"
+												BorderThickness="{TemplateBinding BorderThickness}"
+												SnapsToDevicePixels="True">
+											<Grid>
+												<Grid.ColumnDefinitions>
+													<ColumnDefinition Width="*" />
+													<ColumnDefinition Width="28" />
+												</Grid.ColumnDefinitions>
+												<ContentPresenter Margin="8,2,4,2"
+																  VerticalAlignment="Center"
+																  HorizontalAlignment="Left"
+																  Content="{TemplateBinding Content}" />
+												<TextBlock Grid.Column="1"
+														   Text="▼"
+														   Foreground="{StaticResource brushMainText}"
+														   VerticalAlignment="Center"
+														   HorizontalAlignment="Center"
+														   FontSize="10" />
+											</Grid>
+										</Border>
+										<ControlTemplate.Triggers>
+											<Trigger Property="IsMouseOver" Value="True">
+												<Setter TargetName="ComboBorder" Property="Background" Value="{StaticResource brushMainControlBgHover}" />
+											</Trigger>
+											<Trigger Property="IsChecked" Value="True">
+												<Setter TargetName="ComboBorder" Property="Background" Value="{StaticResource brushMainControlBgHover}" />
+											</Trigger>
+										</ControlTemplate.Triggers>
+									</ControlTemplate>
+								</ToggleButton.Template>
+							</ToggleButton>
+
+							<ContentPresenter IsHitTestVisible="False"
+											  Margin="8,2,28,2"
+											  VerticalAlignment="Center"
+											  HorizontalAlignment="Left"
+											  Content="{TemplateBinding SelectionBoxItem}"
+											  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+											  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" />
+
+							<Popup x:Name="Popup"
+								   Placement="Bottom"
+								   IsOpen="{TemplateBinding IsDropDownOpen}"
+								   AllowsTransparency="True"
+								   Focusable="False"
+								   PopupAnimation="Slide">
+								<Border Background="{StaticResource brushMainControlBg}"
+										BorderBrush="{StaticResource brushMainControlBorder}"
+										BorderThickness="1"
+										MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+										SnapsToDevicePixels="True">
+									<ScrollViewer SnapsToDevicePixels="True">
+										<ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
+									</ScrollViewer>
+								</Border>
+							</Popup>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<Trigger Property="HasItems" Value="False">
+								<Setter TargetName="Popup" Property="MinHeight" Value="22" />
+							</Trigger>
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter Property="Opacity" Value="0.55" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="MainComboBoxItemStyle" TargetType="{x:Type ComboBoxItem}">
+			<Setter Property="Foreground" Value="{StaticResource brushMainText}" />
+			<Setter Property="Background" Value="{StaticResource brushMainControlBg}" />
+			<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+			<Style.Triggers>
+				<Trigger Property="IsHighlighted" Value="True">
+					<Setter Property="Background" Value="{StaticResource brushMainControlBgHover}" />
+				</Trigger>
+				<Trigger Property="IsSelected" Value="True">
+					<Setter Property="Background" Value="{StaticResource brushMainSelection}" />
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<Style x:Key="MainListBoxStyle" TargetType="{x:Type ListBox}">
+			<Setter Property="Foreground" Value="{StaticResource brushMainText}" />
+			<Setter Property="Background" Value="{StaticResource brushMainLogBg}" />
+			<Setter Property="BorderBrush" Value="{StaticResource brushMainControlBorder}" />
+			<Setter Property="BorderThickness" Value="1" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type ListBox}">
+						<Border Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}"
+								SnapsToDevicePixels="True">
+							<ScrollViewer Padding="{TemplateBinding Padding}"
+										  Focusable="False"
+										  Background="{TemplateBinding Background}">
+								<ItemsPresenter />
+							</ScrollViewer>
+						</Border>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="MainListBoxItemStyle" TargetType="{x:Type ListBoxItem}">
+			<Setter Property="Foreground" Value="{StaticResource brushMainText}" />
+			<Setter Property="Background" Value="Transparent" />
+			<Setter Property="HorizontalContentAlignment" Value="Stretch" />
+			<Style.Triggers>
+				<Trigger Property="IsSelected" Value="True">
+					<Setter Property="Background" Value="{StaticResource brushMainSelection}" />
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
 		<ImageBrush x:Key="logoAMD" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/amd_logo.png" Stretch="Uniform" AlignmentY="Center" />
 		<ImageBrush x:Key="logoNvidia" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/nvidia_logo.png" Stretch="Uniform" AlignmentY="Center" />
 		<ImageBrush x:Key="logoIntel" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/intel_logo.jpg" Stretch="Uniform" AlignmentY="Center" />
 		<ImageBrush x:Key="logoRealtek" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/realtek-logo.png" Stretch="Uniform" AlignmentY="Center" />
 		<ImageBrush x:Key="logoSoundBlaster" ImageSource="/Display%20Driver%20Uninstaller;component/Resources/creative_logo.png" Stretch="Uniform" AlignmentY="Center" />
 
-		<LinearGradientBrush x:Key="brushNvidia" EndPoint="0.5,1" StartPoint="0.5,0">
-			<GradientStop Color="#FFDCFFDC" Offset="0" />
-			<GradientStop Color="White" Offset="1" />
-		</LinearGradientBrush>
-		<LinearGradientBrush x:Key="brushIntel" EndPoint="0.5,1" StartPoint="0.5,0">
-			<GradientStop Color="#FFDCDCFF" Offset="0" />
-			<GradientStop Color="White" Offset="1" />
-		</LinearGradientBrush>
-		<LinearGradientBrush x:Key="brushAmd" EndPoint="0.5,1" StartPoint="0.5,0">
-			<GradientStop Color="#FFFFE6E6" Offset="0" />
-			<GradientStop Color="White" Offset="1" />
-		</LinearGradientBrush>
-		<LinearGradientBrush x:Key="brushRealtek" EndPoint="0.5,1" StartPoint="0.5,0">
-			<GradientStop Color="#FFDCDCFF" Offset="0" />
-			<GradientStop Color="White" Offset="1" />
-		</LinearGradientBrush>
-		<LinearGradientBrush x:Key="brushSoundBlaster" EndPoint="0.5,1" StartPoint="0.5,0">
-			<GradientStop Color="#FFDCDCFF" Offset="0" />
-			<GradientStop Color="White" Offset="1" />
-		</LinearGradientBrush>
 	</Window.Resources>
 
 	<Window.Style>
 		<Style TargetType="{x:Type Window}">
+			<Setter Property="Background" Value="{StaticResource brushMainControlBg}" />
 			<Style.Triggers>
 				<DataTrigger Binding="{Binding Path=Settings.SelectedGPU, Mode=OneWay}" Value="{x:Static local:GPUVendor.AMD}">
 					<Setter Property="Background" Value="{StaticResource brushAmd}"/>
@@ -67,7 +296,7 @@
 		</Style>
 	</Window.Style>
 
-	<Grid FlowDirection="{Binding Path=Settings.FlowControl}">
+	<Grid FlowDirection="{Binding Path=Settings.FlowControl}" Background="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=Background}">
 		<Grid.ColumnDefinitions>
 			<ColumnDefinition Width="Auto" MinWidth="200" MaxWidth="350" />
 			<ColumnDefinition Width="*" />
@@ -88,7 +317,7 @@
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
-		<Menu Name="MenuStrip1" FontSize="14" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="4" Background="#28000000">
+		<Menu Name="MenuStrip1" FontSize="14" HorizontalAlignment="Stretch" VerticalAlignment="Top" Grid.ColumnSpan="4" Style="{StaticResource MainMenuStyle}" ItemContainerStyle="{StaticResource MainMenuItemStyle}">
 			<MenuItem x:Name="OptionsMenuItem" Header="OptionsMenuItem"/>
 
             <MenuItem x:Name="LinksMenuItem" Header="Links">
@@ -124,8 +353,8 @@
 		</Menu>
 
 		<StackPanel Grid.Row="1" Grid.ColumnSpan="4" Orientation="Horizontal" Margin="10,5,10,5">
-			<TextBlock x:Name="lblWinVersion" Text="lblWinVersionText" VerticalAlignment="Center" />
-			<TextBlock FontWeight="Bold" Margin="3,0,0,0" VerticalAlignment="Center">
+			<TextBlock x:Name="lblWinVersion" Text="lblWinVersionText" VerticalAlignment="Center" Foreground="{StaticResource brushMainText}" />
+			<TextBlock FontWeight="Bold" Margin="3,0,0,0" VerticalAlignment="Center" Foreground="{StaticResource brushMainText}">
 				<TextBlock.Text>
 					<MultiBinding StringFormat="{}{0} ({1})">
 						<Binding Path="Settings.WinVersionText" />
@@ -170,7 +399,7 @@
 
 		<DockPanel Grid.Row="2" x:Name="ButtonsPanel" >
 			<DockPanel.Resources>
-				<Style TargetType="Button" >
+				<Style TargetType="Button" BasedOn="{StaticResource MainActionButtonStyle}">
 					<Setter Property="MinWidth" Value="250" />
 					<Setter Property="MaxWidth" Value="320" />
 					<Setter Property="MinHeight" Value="37" />
@@ -180,22 +409,22 @@
 			</DockPanel.Resources>
 
 			<Button DockPanel.Dock="Top" x:Name="btnCleanRestart" HorizontalAlignment="Stretch" >
-				<TextBlock Text="btnRestart" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
+				<TextBlock Text="btnRestart" Style="{StaticResource MainButtonTextStyle}" />
 			</Button>
 			<Button DockPanel.Dock="Top" x:Name="btnClean" HorizontalAlignment="Stretch" >
-				<TextBlock Text="btnClean" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
+				<TextBlock Text="btnClean" Style="{StaticResource MainButtonTextStyle}" />
 			</Button>
 			<Button DockPanel.Dock="Top" x:Name="btnCleanShutdown" HorizontalAlignment="Stretch" >
-				<TextBlock Text="btnCleanShutdown" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
+				<TextBlock Text="btnCleanShutdown" Style="{StaticResource MainButtonTextStyle}" />
 			</Button>
 			<Button DockPanel.Dock="Top" x:Name="btnCleanCaches" HorizontalAlignment="Stretch" >
-				<TextBlock Text="btnCleanCaches" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
+				<TextBlock Text="btnCleanCaches" Style="{StaticResource MainButtonTextStyle}" />
 			</Button>
 		</DockPanel>
 
 		<DockPanel Grid.Row="4" Grid.Column="3" x:Name="RightButtonsPanel" >
 			<DockPanel.Resources>
-				<Style TargetType="Button" >
+				<Style TargetType="Button" BasedOn="{StaticResource MainActionButtonStyle}">
 					<Setter Property="MinWidth" Value="230" />
 					<Setter Property="MaxWidth" Value="230" />
 					<Setter Property="MinHeight" Value="37" />
@@ -204,18 +433,18 @@
 				</Style>
 			</DockPanel.Resources>
 			<Button DockPanel.Dock="Top" x:Name="btnWuRestore" MinHeight="40" MaxHeight="60" Visibility="{Binding Settings.PreventWinUpdate, Mode=OneWay, Converter={StaticResource BoolToVisibility}}">
-				<TextBlock Text="btnWuRestore" TextWrapping="Wrap" TextAlignment="Center" Margin="6,0" />
+				<TextBlock Text="btnWuRestore" Style="{StaticResource MainButtonTextStyle}" />
 			</Button>
 		</DockPanel>
 		
 		<DockPanel LastChildFill="True" Margin="10" Grid.Row="5" Grid.Column="3">
 			<StackPanel DockPanel.Dock="Bottom">
-				<Label x:Name="lblLanguage" Content="lblLanguage" FontWeight="Bold" />
-				<ComboBox x:Name="cbLanguage" ItemsSource="{Binding Settings.LanguageOptions, Mode=OneWay}" SelectedItem="{Binding Settings.SelectedLanguage, Mode=TwoWay}" DisplayMemberPath="DisplayText" VerticalAlignment="Top" Height="22" IsReadOnly="True" />
+				<Label x:Name="lblLanguage" Content="lblLanguage" FontWeight="Bold" Foreground="{StaticResource brushMainText}" />
+				<ComboBox x:Name="cbLanguage" ItemsSource="{Binding Settings.LanguageOptions, Mode=OneWay}" SelectedItem="{Binding Settings.SelectedLanguage, Mode=TwoWay}" DisplayMemberPath="DisplayText" VerticalAlignment="Top" Height="22" IsReadOnly="True" Style="{StaticResource MainComboBoxStyle}" ItemContainerStyle="{StaticResource MainComboBoxItemStyle}" />
 			</StackPanel>
 
 			<StackPanel Visibility="{Binding Settings.ShowOffer, Mode=OneWay, Converter={StaticResource BoolToVisibility}}" DockPanel.Dock="Top" VerticalAlignment="Center">
-				<Label x:Name="lblOffer" FontWeight="Bold" Content="lblOffer" HorizontalContentAlignment="Center" FontSize="11" />
+				<Label x:Name="lblOffer" FontWeight="Bold" Content="lblOffer" HorizontalContentAlignment="Center" FontSize="11" Foreground="{StaticResource brushMainText}" />
 
 				<Button x:Name="imgOffer">
 					<Button.Template>
@@ -227,19 +456,19 @@
 			</StackPanel>
 		</DockPanel>
 
-		<Label Content="lblLog" Grid.Row="3" Name="lblLog" VerticalContentAlignment="Center" FontWeight="Bold" Margin="0,2.04,0,2" VerticalAlignment="Bottom" />
+		<Label Content="lblLog" Grid.Row="3" Name="lblLog" VerticalContentAlignment="Center" FontWeight="Bold" Margin="0,2.04,0,2" VerticalAlignment="Bottom" Foreground="{StaticResource brushMainText}" />
 
-		<ListBox Name="lbLog" Focusable="False" Grid.Row="4" Grid.ColumnSpan="2" Margin="0,3,0,0" Grid.RowSpan="2">
+		<ListBox Name="lbLog" Focusable="False" Grid.Row="4" Grid.ColumnSpan="2" Margin="0,3,0,0" Grid.RowSpan="2" Style="{StaticResource MainListBoxStyle}">
 			<ListBox.ItemContainerStyle>
-				<Style TargetType="{x:Type Control}" >
+				<Style TargetType="{x:Type ListBoxItem}" BasedOn="{StaticResource MainListBoxItemStyle}">
 					<Setter Property="Focusable" Value="False" />
 				</Style>
 			</ListBox.ItemContainerStyle>
 		</ListBox>
 
-		<Label Name="lblUpdate" Content="{Binding Settings.UpdateAvailable, Mode=OneWay, Converter={StaticResource EnumToText}}" Grid.Row="6" Grid.ColumnSpan="4" Margin="0,0,10,0" />
+		<Label Name="lblUpdate" Content="{Binding Settings.UpdateAvailable, Mode=OneWay, Converter={StaticResource EnumToText}}" Grid.Row="6" Grid.ColumnSpan="4" Margin="0,0,10,0" Foreground="{StaticResource brushMainText}" />
 
-		<Border Grid.Row="7" Grid.ColumnSpan="4" Margin="0,10,0,0" Background="#28000000">
+		<Border Grid.Row="7" Grid.ColumnSpan="4" Margin="0,10,0,0" Background="{StaticResource brushMainStatusBg}" BorderBrush="{StaticResource brushMainControlBorder}" BorderThickness="1,1,1,0">
 			<Grid HorizontalAlignment="Center">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="*" />
@@ -248,7 +477,7 @@
 					<ColumnDefinition Width="33.362"/>
 				</Grid.ColumnDefinitions>
 
-				<TextBlock x:Name="lblDonate" Grid.Column="0" Text="lblDonate" FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Margin="6,5.585,6,5.584" />
+				<TextBlock x:Name="lblDonate" Grid.Column="0" Text="lblDonate" FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center" Margin="6,5.585,6,5.584" Foreground="{StaticResource brushMainText}" />
 
 				<Button x:Name="imgDonate" Grid.Column="1" HorizontalAlignment="Left" Width="96" >
 					<Button.Template>
@@ -275,8 +504,8 @@
 		</Border>
 		<DockPanel Grid.Column="3" Grid.Row="3" >
 			<StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-				<ComboBox Name="cbSelectedType" HorizontalAlignment="Stretch" VerticalAlignment="Center"  DockPanel.Dock="Top" Margin="10,0,10,0" SelectedIndex="0" />
-				<ComboBox x:Name="cbSelectedGPU" HorizontalAlignment="Stretch" VerticalAlignment="Center" DockPanel.Dock="Top" SelectedIndex="0" Margin="10,0,10,0" />
+				<ComboBox Name="cbSelectedType" HorizontalAlignment="Stretch" VerticalAlignment="Center" DockPanel.Dock="Top" Margin="10,0,10,0" SelectedIndex="0" Style="{StaticResource MainComboBoxStyle}" ItemContainerStyle="{StaticResource MainComboBoxItemStyle}" />
+				<ComboBox x:Name="cbSelectedGPU" HorizontalAlignment="Stretch" VerticalAlignment="Center" DockPanel.Dock="Top" SelectedIndex="0" Margin="10,0,10,0" Style="{StaticResource MainComboBoxStyle}" ItemContainerStyle="{StaticResource MainComboBoxItemStyle}" />
 			</StackPanel>
 		</DockPanel>
 	</Grid>

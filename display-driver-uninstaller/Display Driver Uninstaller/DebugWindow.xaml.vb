@@ -33,20 +33,27 @@ Namespace Display_Driver_Uninstaller
 		Public Sub New()
 			' This call is required by the designer.
 			InitializeComponent()
+			Application.ApplyWindowTheme(Me)
 
 			' Add any initialization after the InitializeComponent() call.
 		End Sub
+
+		Private Function ShowThemedNotice(message As String,
+										  Optional title As String = Nothing,
+										  Optional buttons As MessageBoxButton = MessageBoxButton.OK) As MessageBoxResult
+			Return Application.ShowThemedNotice(message, title, buttons, Me)
+		End Function
 
 
 
 		Private Sub BtnDisable_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
 			If listBox1.SelectedItem Is Nothing Then
-				MessageBox.Show("No selected device!")
+				ShowThemedNotice("No selected device!")
 				Return
 			Else
 				Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
 				If d Is Nothing OrElse Not d.HasHardwareID Then
-					MessageBox.Show("Selected device doesn't contain Hardware ID!")
+					ShowThemedNotice("Selected device doesn't contain Hardware ID!")
 					Return
 				End If
 			End If
@@ -56,12 +63,12 @@ Namespace Display_Driver_Uninstaller
 
 		Private Sub BtnEnable_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
 			If listBox1.SelectedItem Is Nothing Then
-				MessageBox.Show("No selected device!")
+				ShowThemedNotice("No selected device!")
 				Return
 			Else
 				Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
 				If d Is Nothing OrElse Not d.HasHardwareID Then
-					MessageBox.Show("Selected device doesn't contain Hardware ID!")
+					ShowThemedNotice("Selected device doesn't contain Hardware ID!")
 					Return
 				End If
 			End If
@@ -71,20 +78,20 @@ Namespace Display_Driver_Uninstaller
 
 		Private Sub BtnRemove_Click(ByVal sender As Object, ByVal e As RoutedEventArgs)
 			If listBox1.SelectedItem Is Nothing Then
-				MessageBox.Show("No selected device!")
+				ShowThemedNotice("No selected device!")
 				Return
 			Else
 				Dim d As SetupAPI.Device = TryCast(listBox1.SelectedItem, SetupAPI.Device)
 
 				If d Is Nothing OrElse Not d.HasHardwareID Then
-					MessageBox.Show("Selected device doesn't contain Hardware ID!")
+					ShowThemedNotice("Selected device doesn't contain Hardware ID!")
 					Return
 				End If
 			End If
 
 			SetupAPI.UninstallDevice(DirectCast(listBox1.SelectedItem, SetupAPI.Device))
 
-			MessageBox.Show("Done! Check log for results.")
+			ShowThemedNotice("Done! Check log for results.")
 		End Sub
 
 		Private Sub BtnRemoveInf_Click(sender As System.Object, e As System.Windows.RoutedEventArgs) Handles btnRemoveInf.Click
@@ -98,7 +105,7 @@ Namespace Display_Driver_Uninstaller
 			If result IsNot Nothing AndAlso result.Value Then
 				Dim inf As Inf = New Inf(ofd.FileName)
 
-				If MessageBox.Show("Remove INF?" & CRLF & "Class: " & inf.Class & CRLF & "Provider: " & inf.Provider, inf.FileName, MessageBoxButton.YesNo) = MessageBoxResult.Yes Then
+				If ShowThemedNotice("Remove INF?" & CRLF & "Class: " & inf.Class & CRLF & "Provider: " & inf.Provider, inf.FileName, MessageBoxButton.YesNo) = MessageBoxResult.Yes Then
 					SetupAPI.RemoveInf(inf, True)
 				End If
 			End If
@@ -131,7 +138,7 @@ Namespace Display_Driver_Uninstaller
 
 #If DEBUG Then
 			sw.Stop()
-			MessageBox.Show("Time: " & sw.Elapsed.ToString())
+			ShowThemedNotice("Time: " & sw.Elapsed.ToString())
 #End If
 
 
@@ -143,9 +150,9 @@ Namespace Display_Driver_Uninstaller
 				lblDevicesDev.Content = String.Format("Devices: {0}", Devices.Count)
 				UpdateFilter()
 
-				MessageBox.Show(String.Format("{0} devices found!", Devices.Count))
+				ShowThemedNotice(String.Format("{0} devices found!", Devices.Count))
 			Else
-				MessageBox.Show("Devices not found!")
+				ShowThemedNotice("Devices not found!")
 			End If
 		End Sub
 
@@ -490,7 +497,7 @@ Namespace Display_Driver_Uninstaller
 			If result IsNot Nothing AndAlso result.Value Then
 				Dim dev As SetupAPI.Device = DirectCast(listBox1.SelectedItem, SetupAPI.Device)
 
-				Dim msgResult As MessageBoxResult = MessageBox.Show("Force update INF?" & CRLF & "Device: " & dev.Description & CRLF & "INF: " & ofd.FileName, "Update INF", MessageBoxButton.YesNoCancel)
+				Dim msgResult As MessageBoxResult = ShowThemedNotice("Force update INF?" & CRLF & "Device: " & dev.Description & CRLF & "INF: " & ofd.FileName, "Update INF", MessageBoxButton.YesNoCancel)
 
 				If msgResult = MessageBoxResult.Yes Then
 					SetupAPI.UpdateDeviceInf(dev, ofd.FileName, True)
@@ -502,7 +509,7 @@ Namespace Display_Driver_Uninstaller
 
 		Private Sub BtnReScanDevices_Click(sender As Object, e As System.Windows.RoutedEventArgs) Handles btnReScanDevices.Click
 			SetupAPI.ReScanDevices()
-			MessageBox.Show("Done!")
+			ShowThemedNotice("Done!")
 		End Sub
 
 
@@ -669,7 +676,7 @@ Namespace Display_Driver_Uninstaller
 				Return
 			End If
 
-			If MessageBox.Show("Delete path:" & CRLF & pathEntry.Path, "Delete?", MessageBoxButton.YesNo, MessageBoxImage.Warning) = MessageBoxResult.Yes Then
+			If ShowThemedNotice("Delete path:" & CRLF & pathEntry.Path, "Delete?", MessageBoxButton.YesNo) = MessageBoxResult.Yes Then
 				FileIO.Delete(pathEntry.Path)
 			End If
 		End Sub

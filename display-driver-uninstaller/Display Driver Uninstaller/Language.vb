@@ -542,16 +542,16 @@ notFound:
 			Catch ex As Exception
 				'if English translation is badly formatted/not readable (should never be)
 				If langFile.EndsWith("\English.xml", StringComparison.OrdinalIgnoreCase) Or Not onlyCheckValid Then
-					MessageBox.Show(ex.Message & sysNewLine & ex.StackTrace, "Lang: Critical Error!", MessageBoxButton.OK, MessageBoxImage.Error)
+					Application.ShowThemedNotice(ex.Message & sysNewLine & ex.StackTrace, "Lang: Critical Error!")
 				End If
 
 				If Not onlyCheckValid Then
 					Throw New InvalidDataException(String.Format("Language file is corrupted or badly formatted!{0}File: '{1}'", sysNewLine, langFile))
 				Else
 					If TypeOf (ex) Is InvalidDataException Then
-						MessageBox.Show(ex.Message & String.Format("{0}{0}File: '{1}'", sysNewLine, langFile), "Lang: Critical Error!", MessageBoxButton.OK, MessageBoxImage.Error)
+						Application.ShowThemedNotice(ex.Message & String.Format("{0}{0}File: '{1}'", sysNewLine, langFile), "Lang: Critical Error!")
 					Else
-						MessageBox.Show(String.Format("Language file is corrupted or badly formatted!{0}File: '{1}'", sysNewLine, langFile), "Lang: Critical Error!", MessageBoxButton.OK, MessageBoxImage.Error)
+						Application.ShowThemedNotice(String.Format("Language file is corrupted or badly formatted!{0}File: '{1}'", sysNewLine, langFile), "Lang: Critical Error!")
 					End If
 				End If
 
@@ -726,7 +726,7 @@ notFound:
 						fileCount += 1
 					Next
 
-					MessageBox.Show("All files checked!" & Environment.NewLine & "Files: " & fileCount.ToString())
+					Application.ShowThemedNotice("All files checked!" & Environment.NewLine & "Files: " & fileCount.ToString())
 				End If
 			End Using
 		End Sub

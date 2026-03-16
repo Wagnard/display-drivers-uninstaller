@@ -4,12 +4,68 @@
         xmlns:conv="clr-namespace:Display_Driver_Uninstaller.Converters"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="SetupAPI" Height="480" Width="640" MinHeight="480" MinWidth="640" Loaded="Window_Loaded" Background="#FFD2E4FF">
+        Title="SetupAPI" Height="480" Width="640" MinHeight="480" MinWidth="640" Loaded="Window_Loaded" Background="{DynamicResource DebugWindowBg}" Foreground="{DynamicResource DebugText}">
 
 	<Window.Resources>
 		<conv:IsNullConverter x:Key="IsNull" />
 		<conv:BooleanToVisibilityConverter x:Key="BoolToVis" TrueValue="Collapsed" FalseValue="Visible" />
 		<conv:CombiningConverter x:Key="NullToVis" Converter1="{StaticResource IsNull}" Converter2="{StaticResource BoolToVis}" />
+		<SolidColorBrush x:Key="DebugWindowBg" Color="#FFD2E4FF" />
+		<SolidColorBrush x:Key="DebugPanelBg" Color="White" />
+		<SolidColorBrush x:Key="DebugPanelHover" Color="#FFF2F2F2" />
+		<SolidColorBrush x:Key="DebugBorder" Color="Black" />
+		<SolidColorBrush x:Key="DebugText" Color="Black" />
+
+		<Style TargetType="{x:Type TextBlock}">
+			<Setter Property="Foreground" Value="{StaticResource DebugText}" />
+		</Style>
+
+		<Style TargetType="{x:Type Label}">
+			<Setter Property="Foreground" Value="{StaticResource DebugText}" />
+		</Style>
+
+		<Style TargetType="{x:Type CheckBox}">
+			<Setter Property="Foreground" Value="{StaticResource DebugText}" />
+		</Style>
+
+		<Style TargetType="{x:Type TextBox}">
+			<Setter Property="Foreground" Value="{StaticResource DebugText}" />
+			<Setter Property="Background" Value="{StaticResource DebugPanelBg}" />
+			<Setter Property="BorderBrush" Value="{StaticResource DebugBorder}" />
+		</Style>
+
+		<Style TargetType="{x:Type ComboBox}">
+			<Setter Property="Foreground" Value="{StaticResource DebugText}" />
+			<Setter Property="Background" Value="{StaticResource DebugPanelBg}" />
+			<Setter Property="BorderBrush" Value="{StaticResource DebugBorder}" />
+		</Style>
+
+		<Style TargetType="{x:Type Button}">
+			<Setter Property="Foreground" Value="{StaticResource DebugText}" />
+			<Setter Property="Background" Value="{StaticResource DebugPanelBg}" />
+			<Setter Property="BorderBrush" Value="{StaticResource DebugBorder}" />
+			<Setter Property="BorderThickness" Value="1" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Border x:Name="ButtonBorder"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}">
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}" />
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource DebugPanelHover}" />
+							</Trigger>
+							<Trigger Property="IsPressed" Value="True">
+								<Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource DebugWindowBg}" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 
 		<DataTemplate x:Key="logItem" >
 			<StackPanel>
@@ -368,18 +424,18 @@
 		<Style x:Key="alternatingListViewItemStyle" TargetType="{x:Type Control}">
 			<Style.Triggers>
 				<Trigger Property="ItemsControl.AlternationIndex" Value="1">
-					<Setter Property="Background" Value="#FFF0F0F0"></Setter>
+					<Setter Property="Background" Value="#FF1A2431"></Setter>
 				</Trigger>
 				<Trigger Property="ItemsControl.AlternationIndex" Value="2">
-					<Setter Property="Background" Value="White"></Setter>
+					<Setter Property="Background" Value="{StaticResource DebugWindowBg}"></Setter>
 				</Trigger>
 			</Style.Triggers>
 		</Style>
 	</Window.Resources>
 
-	<TabControl>
+	<TabControl Background="{StaticResource DebugWindowBg}" BorderBrush="{StaticResource DebugBorder}">
 		<TabItem Header="Setup API">
-			<Grid>
+			<Grid Background="{StaticResource DebugWindowBg}">
 				<Grid.RowDefinitions>
 					<RowDefinition Height="Auto" />
 					<RowDefinition Height="Auto" />
@@ -395,7 +451,9 @@
                  ContextMenu="{StaticResource cm}"
                  ScrollViewer.CanContentScroll="False"
                  ItemsSource="{Binding ElementName=frmMain, Path=Devices}"
-                 ItemTemplate="{StaticResource logItem}">
+                 ItemTemplate="{StaticResource logItem}"
+                 Background="{StaticResource DebugWindowBg}"
+                 BorderBrush="{StaticResource DebugBorder}">
 
 					<ListBox.CommandBindings>
 						<CommandBinding Command="Copy" Executed="CopyCommand" />
@@ -451,7 +509,7 @@
 		</TabItem>
 
 		<TabItem Header="File IO">
-			<Grid>
+			<Grid Background="{StaticResource DebugWindowBg}">
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="386*" />
 					<ColumnDefinition Width="Auto" />
@@ -463,7 +521,7 @@
 					<RowDefinition Height="*" />
 				</Grid.RowDefinitions>
 
-				<ListView Grid.ColumnSpan="3" Grid.Row="2" Name="lbPaths" ItemsSource="{Binding ElementName=frmMain, Path=PathList, Mode=OneWay}" SelectionMode="Single">
+				<ListView Grid.ColumnSpan="3" Grid.Row="2" Name="lbPaths" ItemsSource="{Binding ElementName=frmMain, Path=PathList, Mode=OneWay}" SelectionMode="Single" Background="{StaticResource DebugWindowBg}" Foreground="{StaticResource DebugText}" BorderBrush="{StaticResource DebugBorder}">
 					<ListView.ContextMenu>
 						<ContextMenu >
 							<MenuItem Header="Delete!" Name="menuFileIODelete" />

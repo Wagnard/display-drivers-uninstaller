@@ -6,6 +6,10 @@
 	Title="Log" MinHeight="480" MinWidth="600" >
 
 	<Window.Resources>
+		<SolidColorBrush x:Key="bWindowBg" Color="White" />
+		<SolidColorBrush x:Key="bPanelBg" Color="#FFF0F0F0" />
+		<SolidColorBrush x:Key="bPanelHover" Color="#FFE6E6E6" />
+		<SolidColorBrush x:Key="bBorder" Color="Black" />
 		<Color x:Key="cNormal">Black</Color>
 		<Color x:Key="cValue">#FF0000D2</Color>
 		<Color x:Key="cWarning">Black</Color>
@@ -19,7 +23,7 @@
 		<SolidColorBrush x:Key="bSelected" Color="{StaticResource cSelected}" />
 
 		<Style x:Key="styleNormal" TargetType="{x:Type TextBlock}">
-			<Setter Property="Foreground" Value="{StaticResource bNormal}"/>
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}"/>
 			<Setter Property="FontWeight" Value="Bold"/>
 			<Setter Property="FontSize" Value="12"/>
 		</Style>
@@ -69,8 +73,7 @@
 
 				<Grid.Resources>
 					<Style TargetType="{x:Type TextBlock}" >
-
-						<Setter Property="Foreground" Value="Black" />
+						<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
 					</Style>
 				</Grid.Resources>
 
@@ -102,7 +105,7 @@
 				<TextBlock Grid.Row="1" 
 						   Grid.Column="0" 
 						   Grid.ColumnSpan="1" 
-						   Foreground="Black" 
+						   Foreground="{DynamicResource bNormal}" 
 						   Text="{Binding Time, UpdateSourceTrigger=PropertyChanged}" />
 			</Grid>
 		</ControlTemplate>
@@ -140,12 +143,12 @@
 
 		<DataTemplate x:Key="logItem" >
 			<Border BorderThickness="0.5" 
-					BorderBrush="Black">
+					BorderBrush="{DynamicResource bBorder}">
 				<Border.Style>
 					<Style TargetType="{x:Type Border}">
 						<Style.Triggers>
 							<DataTrigger Binding="{Binding IsSelected}" Value="True">
-								<Setter Property="Background" Value="{StaticResource bSelected}" />
+								<Setter Property="Background" Value="{DynamicResource bSelected}" />
 							</DataTrigger>
 							<DataTrigger Binding="{Binding IsSelected}" Value="False">
 								<Setter Property="Background" Value="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrushBg}, UpdateSourceTrigger=PropertyChanged}" />
@@ -157,14 +160,32 @@
 			</Border>
 		</DataTemplate>
 
-		<ContextMenu x:Key="cmMessage">
+		<Style x:Key="LogContextMenuStyle" TargetType="{x:Type ContextMenu}">
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bPanelBg}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource bBorder}" />
+			<Setter Property="BorderThickness" Value="1" />
+		</Style>
+
+		<Style x:Key="LogContextMenuItemStyle" TargetType="{x:Type MenuItem}">
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bPanelBg}" />
+			<Setter Property="Padding" Value="8,3" />
+			<Style.Triggers>
+				<Trigger Property="IsHighlighted" Value="True">
+					<Setter Property="Background" Value="{DynamicResource bPanelHover}" />
+				</Trigger>
+			</Style.Triggers>
+		</Style>
+
+		<ContextMenu x:Key="cmMessage" Style="{StaticResource LogContextMenuStyle}" ItemContainerStyle="{StaticResource LogContextMenuItemStyle}">
 			<MenuItem x:Name="copyMessage" Header="Copy Message" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
 		</ContextMenu>
-		<ContextMenu x:Key="cmValues">
+		<ContextMenu x:Key="cmValues" Style="{StaticResource LogContextMenuStyle}" ItemContainerStyle="{StaticResource LogContextMenuItemStyle}">
 			<MenuItem x:Name="copyValValue" Header="Copy Value(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyValue}"/>
 			<MenuItem x:Name="copyValLine" Header="Copy Line(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
 		</ContextMenu>
-		<ContextMenu x:Key="cmException">
+		<ContextMenu x:Key="cmException" Style="{StaticResource LogContextMenuStyle}" ItemContainerStyle="{StaticResource LogContextMenuItemStyle}">
 			<MenuItem x:Name="copyExKey" Header="Copy Key(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyKey}"/>
 			<MenuItem x:Name="copyExValue" Header="Copy Value(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyValue}"/>
 			<MenuItem x:Name="copyExLine" Header="Copy Line(s)" Command="Copy" CommandParameter="{x:Static local:CopyOption.CopyLine}"/>
@@ -194,9 +215,130 @@
 				</DataTrigger>
 			</Style.Triggers>
 		</Style>
+
+		<Style x:Key="LogListBoxStyle" TargetType="{x:Type ListBox}">
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bWindowBg}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource bBorder}" />
+			<Setter Property="BorderThickness" Value="0" />
+		</Style>
+
+		<Style x:Key="LogMenuStyle" TargetType="{x:Type Menu}">
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bWindowBg}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource bBorder}" />
+			<Setter Property="BorderThickness" Value="0,0,0,1" />
+		</Style>
+
+		<Style x:Key="LogMenuItemStyle" TargetType="{x:Type MenuItem}">
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bWindowBg}" />
+			<Setter Property="Padding" Value="8,3" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type MenuItem}">
+						<Border x:Name="MenuItemBorder"
+								Background="{TemplateBinding Background}">
+							<Grid>
+								<ContentPresenter ContentSource="Header"
+												  Margin="{TemplateBinding Padding}"
+												  RecognizesAccessKey="True" />
+								<Popup x:Name="PART_Popup"
+									   Placement="Bottom"
+									   IsOpen="{Binding IsSubmenuOpen, RelativeSource={RelativeSource TemplatedParent}}"
+									   AllowsTransparency="True"
+									   Focusable="False"
+									   PopupAnimation="Fade">
+									<Border Background="{DynamicResource bPanelBg}"
+											BorderBrush="{DynamicResource bBorder}"
+											BorderThickness="1"
+											Padding="1">
+										<StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Cycle" />
+									</Border>
+								</Popup>
+							</Grid>
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsHighlighted" Value="True">
+								<Setter TargetName="MenuItemBorder" Property="Background" Value="{DynamicResource bPanelHover}" />
+							</Trigger>
+							<Trigger Property="IsSubmenuOpen" Value="True">
+								<Setter TargetName="MenuItemBorder" Property="Background" Value="{DynamicResource bPanelHover}" />
+							</Trigger>
+							<Trigger Property="Role" Value="SubmenuItem">
+								<Setter Property="Background" Value="{DynamicResource bPanelBg}" />
+							</Trigger>
+							<Trigger Property="Role" Value="SubmenuHeader">
+								<Setter Property="Background" Value="{DynamicResource bPanelBg}" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="LogTabControlStyle" TargetType="{x:Type TabControl}">
+			<Setter Property="Background" Value="{DynamicResource bWindowBg}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource bBorder}" />
+		</Style>
+
+		<Style x:Key="LogTabItemStyle" TargetType="{x:Type TabItem}">
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bPanelBg}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource bBorder}" />
+			<Setter Property="Padding" Value="10,4" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type TabItem}">
+						<Border x:Name="TabBorder"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="1,1,1,0"
+								Padding="{TemplateBinding Padding}">
+							<ContentPresenter ContentSource="Header" HorizontalAlignment="Center" VerticalAlignment="Center" />
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsSelected" Value="True">
+								<Setter TargetName="TabBorder" Property="Background" Value="{DynamicResource bWindowBg}" />
+							</Trigger>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter TargetName="TabBorder" Property="Background" Value="{DynamicResource bPanelHover}" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+
+		<Style x:Key="LogButtonStyle" TargetType="{x:Type Button}">
+			<Setter Property="Foreground" Value="{DynamicResource bNormal}" />
+			<Setter Property="Background" Value="{DynamicResource bPanelBg}" />
+			<Setter Property="BorderBrush" Value="{DynamicResource bBorder}" />
+			<Setter Property="BorderThickness" Value="1" />
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="{x:Type Button}">
+						<Border x:Name="ButtonBorder"
+								Background="{TemplateBinding Background}"
+								BorderBrush="{TemplateBinding BorderBrush}"
+								BorderThickness="{TemplateBinding BorderThickness}">
+							<ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" Margin="{TemplateBinding Padding}" />
+						</Border>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsMouseOver" Value="True">
+								<Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource bPanelHover}" />
+							</Trigger>
+							<Trigger Property="IsPressed" Value="True">
+								<Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource bWindowBg}" />
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
 	</Window.Resources>
 
-	<Grid x:Name="gridRoot">
+	<Grid x:Name="gridRoot" Background="{DynamicResource bWindowBg}">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="Auto" />
 			<RowDefinition Height="*"  MinHeight="100"/>
@@ -205,7 +347,7 @@
 			<RowDefinition Height="Auto" />
 		</Grid.RowDefinitions>
 
-		<Menu Grid.Row="0" FontSize="14" Background="#FFE6E6E6">
+		<Menu Grid.Row="0" FontSize="14" Style="{StaticResource LogMenuStyle}" ItemContainerStyle="{StaticResource LogMenuItemStyle}">
 			<MenuItem x:Name="filtersMenuItem" Header="Filters">
 				<MenuItem x:Name="eventsMenuItem" Header="Show Events" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListEvents, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 				<MenuItem x:Name="warningsMenuItem" Header="Show Warnings" IsCheckable="True" IsChecked="{Binding ElementName=frmLog, Path=ListWarnings, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
@@ -223,8 +365,8 @@
 				 ItemsSource="{Binding}" 
 				 HorizontalContentAlignment="Stretch" 
 				 BorderThickness="0"
+				 Background="{DynamicResource bWindowBg}"
 				 Focusable="False"
-				 Style="{StaticResource styleCMLog}"
 				 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 				 ScrollViewer.VerticalScrollBarVisibility="Visible" 
 				 ScrollViewer.IsDeferredScrollingEnabled="False"
@@ -245,19 +387,33 @@
 					<Setter Property="Focusable" Value="True" />
 				</Style>
 			</ListBox.ItemContainerStyle>
+			<ListBox.Style>
+				<Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource LogListBoxStyle}">
+					<Setter Property="ContextMenu" Value="{StaticResource cmMessage}" />
+					<Style.Triggers>
+						<DataTrigger Binding="{Binding ElementName=frmLog, Path=EnableCopy}" Value="False">
+							<Setter Property="ContextMenu" Value="{x:Null}" />
+						</DataTrigger>
+					</Style.Triggers>
+				</Style>
+			</ListBox.Style>
 		</ListBox>
 
-		<GridSplitter Margin="0,0,0,0" Grid.Row="2" ResizeDirection="Rows" ShowsPreview="True" HorizontalAlignment="Stretch" Background="Black" MinHeight="2" />
+		<GridSplitter Margin="0,0,0,0" Grid.Row="2" ResizeDirection="Rows" ShowsPreview="True" HorizontalAlignment="Stretch" Background="{DynamicResource bBorder}" MinHeight="2" />
 
 		<Border Grid.Row="3" 
 				DataContext="{Binding ElementName=frmLog, Path=SelectedEntry, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
 				Background="{Binding Type, Mode=OneWay, Converter={StaticResource TypeToBrushBg}, UpdateSourceTrigger=PropertyChanged}"
 				BorderThickness="1" 
-				BorderBrush="Black">
+				BorderBrush="{DynamicResource bBorder}">
 
 			<TabControl Background="{x:Null}" 
 						Grid.Row="1"
-						Name="tabControl">	
+						Name="tabControl"
+						Style="{StaticResource LogTabControlStyle}">	
+				<TabControl.ItemContainerStyle>
+					<Style TargetType="{x:Type TabItem}" BasedOn="{StaticResource LogTabItemStyle}" />
+				</TabControl.ItemContainerStyle>
 				<TabItem Header="[ Exception ]" 
 						 x:Name="tabEx"
 						 Visibility="{Binding Path=HasException, Mode=OneWay, Converter={StaticResource BoolToVisibility}, UpdateSourceTrigger=PropertyChanged}" 
@@ -265,7 +421,6 @@
 
 					<ListBox 
 						Name="lbException"
-						Style="{StaticResource styleCMValues}"
 						ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 						ScrollViewer.VerticalScrollBarVisibility="Visible"
 						ScrollViewer.CanContentScroll="True"
@@ -287,6 +442,16 @@
 								<Setter Property="Focusable" Value="{Binding ElementName=frmLog, Path=EnableCopy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 							</Style>
 						</ListBox.ItemContainerStyle>
+						<ListBox.Style>
+							<Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource LogListBoxStyle}">
+								<Setter Property="ContextMenu" Value="{StaticResource cmValues}" />
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding ElementName=frmLog, Path=EnableCopy}" Value="False">
+										<Setter Property="ContextMenu" Value="{x:Null}" />
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</ListBox.Style>
 					</ListBox>
 				</TabItem>
 
@@ -297,7 +462,6 @@
 
 					<ListBox 
 						Name="lbValues"
-						Style="{StaticResource styleCMException}"
 						ScrollViewer.HorizontalScrollBarVisibility="Disabled"
 						ScrollViewer.VerticalScrollBarVisibility="Visible"
 						ScrollViewer.CanContentScroll="True"
@@ -319,6 +483,16 @@
 								<Setter Property="Focusable" Value="{Binding ElementName=frmLog, Path=EnableCopy, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
 							</Style>
 						</ListBox.ItemContainerStyle>
+						<ListBox.Style>
+							<Style TargetType="{x:Type ListBox}" BasedOn="{StaticResource LogListBoxStyle}">
+								<Setter Property="ContextMenu" Value="{StaticResource cmException}" />
+								<Style.Triggers>
+									<DataTrigger Binding="{Binding ElementName=frmLog, Path=EnableCopy}" Value="False">
+										<Setter Property="ContextMenu" Value="{x:Null}" />
+									</DataTrigger>
+								</Style.Triggers>
+							</Style>
+						</ListBox.Style>
 					</ListBox>
 				</TabItem>
 
@@ -326,12 +500,12 @@
 						 x:Name="tabNoData"
 						 Visibility="{Binding HasAnyData, Mode=OneWay, Converter={StaticResource NotBoolToVisibility},ConverterParameter=True, UpdateSourceTrigger=PropertyChanged}" 
 						 Background="{x:Null}">
-					<TextBlock Text="&lt; No Data &gt;" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+					<TextBlock Text="&lt; No Data &gt;" FontSize="28" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{DynamicResource bNormal}"/>
 				</TabItem>
 			</TabControl>
 		</Border>
 
-		<Border Grid.Row="4" BorderThickness="0,1,0,0" BorderBrush="Black">
+		<Border Grid.Row="4" BorderThickness="0,1,0,0" BorderBrush="{DynamicResource bBorder}" Background="{DynamicResource bWindowBg}">
 			<Grid>
 				<Grid.ColumnDefinitions>
 					<ColumnDefinition Width="Auto" />
@@ -339,11 +513,11 @@
 					<ColumnDefinition Width="Auto" />
 				</Grid.ColumnDefinitions>
 
-				<Button Grid.Column="0" Grid.ColumnSpan="1" Margin="10" Content="Open Log" Grid.Row="1" Height="30" Name="btnOpenLog" VerticalAlignment="Top" MinWidth="80" />
-				<TextBlock Grid.Column="1" Grid.ColumnSpan="1" TextWrapping="Wrap" Name="tbOpenedLog" Visibility="Visible" VerticalAlignment="Center" FontWeight="Bold" Margin="10" />
+				<Button Grid.Column="0" Grid.ColumnSpan="1" Margin="10" Content="Open Log" Grid.Row="1" Height="30" Name="btnOpenLog" VerticalAlignment="Top" MinWidth="80" Style="{StaticResource LogButtonStyle}" />
+				<TextBlock Grid.Column="1" Grid.ColumnSpan="1" TextWrapping="Wrap" Name="tbOpenedLog" Visibility="Visible" VerticalAlignment="Center" FontWeight="Bold" Margin="10" Foreground="{DynamicResource bNormal}" />
 
 				<StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" Grid.Column="2" Grid.ColumnSpan="1">
-					<Button Margin="10" Content="Close" Grid.Row="1" Name="btnClose" HorizontalAlignment="Right" MinWidth="80" Height="30" />
+					<Button Margin="10" Content="Close" Grid.Row="1" Name="btnClose" HorizontalAlignment="Right" MinWidth="80" Height="30" Style="{StaticResource LogButtonStyle}" />
 				</StackPanel>
 			</Grid>
 		</Border>
