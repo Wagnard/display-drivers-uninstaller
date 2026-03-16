@@ -135,9 +135,9 @@
         <DownloadNvidiaMenuItem>
 			<Text>NVIDIA-stuurprogramma Downloads</Text>
 		</DownloadNvidiaMenuItem>
-        <DownloadAmdManuItem>
+        <DownloadAmdMenuItem>
 			<Text>AMD-stuurprogramma Downloads</Text>
-		</DownloadAmdManuItem>
+		</DownloadAmdMenuItem>
         <DownloadIntelMenuItem>
 			<Text>Intel-stuurprogramma Downloads</Text>
 		</DownloadIntelMenuItem>

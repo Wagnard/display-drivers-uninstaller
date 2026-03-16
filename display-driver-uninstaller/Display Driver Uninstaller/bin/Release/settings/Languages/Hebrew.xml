@@ -127,9 +127,9 @@
         <DownloadNvidiaMenuItem>
 			<Text>הורדות דרייברים של NVIDIA</Text>
 		</DownloadNvidiaMenuItem>
-        <DownloadAmdManuItem>
+        <DownloadAmdMenuItem>
 			<Text>הורדות דרייברים של AMD</Text>
-		</DownloadAmdManuItem>
+		</DownloadAmdMenuItem>
         <DownloadIntelMenuItem>
 			<Text>הורדות דרייברים של Intel</Text>
 		</DownloadIntelMenuItem>

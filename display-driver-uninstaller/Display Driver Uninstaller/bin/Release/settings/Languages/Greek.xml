@@ -124,9 +124,9 @@
         <DownloadNvidiaMenuItem>
 			<Text>Λήψεις Οδηγών NVIDIA</Text>
 		</DownloadNvidiaMenuItem>
-        <DownloadAmdManuItem>
+        <DownloadAmdMenuItem>
 			<Text>Λήψεις Οδηγών AMD</Text>
-		</DownloadAmdManuItem>
+		</DownloadAmdMenuItem>
         <DownloadIntelMenuItem>
 			<Text>Λήψεις Οδηγών Intel</Text>
 		</DownloadIntelMenuItem>

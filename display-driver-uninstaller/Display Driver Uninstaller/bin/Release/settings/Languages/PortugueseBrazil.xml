@@ -105,9 +105,9 @@
         <DownloadNvidiaMenuItem>
 			<Text>Downloads de drivers NVIDIA</Text>
 		</DownloadNvidiaMenuItem>
-        <DownloadAmdManuItem>
+        <DownloadAmdMenuItem>
 			<Text>Downloads de drivers AMD</Text>
-		</DownloadAmdManuItem>
+		</DownloadAmdMenuItem>
         <DownloadIntelMenuItem>
 			<Text>Downloads de drivers Intel</Text>
 		</DownloadIntelMenuItem>

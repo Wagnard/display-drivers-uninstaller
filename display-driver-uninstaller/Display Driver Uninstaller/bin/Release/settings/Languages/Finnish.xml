@@ -132,9 +132,9 @@
         <DownloadNvidiaMenuItem>
 			<Text>NVIDIA-ohjainten lataukset</Text>
 		</DownloadNvidiaMenuItem>
-        <DownloadAmdManuItem>
+        <DownloadAmdMenuItem>
 			<Text>AMD-ohjainten lataukset</Text>
-		</DownloadAmdManuItem>
+		</DownloadAmdMenuItem>
         <DownloadIntelMenuItem>
 			<Text>Intel-ohjainten lataukset</Text>
 		</DownloadIntelMenuItem>

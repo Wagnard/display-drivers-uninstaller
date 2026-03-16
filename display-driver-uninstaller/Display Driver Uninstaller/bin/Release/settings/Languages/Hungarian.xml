@@ -135,9 +135,9 @@
         <DownloadNvidiaMenuItem>
 			<Text>NVIDIA illesztőprogram letöltések</Text>
 		</DownloadNvidiaMenuItem>
-        <DownloadAmdManuItem>
+        <DownloadAmdMenuItem>
 			<Text>AMD illesztőprogram letöltések</Text>
-		</DownloadAmdManuItem>
+		</DownloadAmdMenuItem>
         <DownloadIntelMenuItem>
 			<Text>Intel illesztőprogram letöltések</Text>
 		</DownloadIntelMenuItem>
