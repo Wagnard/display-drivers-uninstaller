@@ -87,14 +87,14 @@ Namespace Display_Driver_Uninstaller
 
 			If Not UseDarkThemeSession Then
 				If m_dispatcher Is Nothing Then
-					Return MessageBox.Show(noticeOwner, message, resolvedTitle, buttons, MessageBoxImage.Information)
+					Return ShowStandardNotice(noticeOwner, message, resolvedTitle, buttons)
 				End If
 
 				If Not m_dispatcher.CheckAccess() Then
 					Return CType(m_dispatcher.Invoke(Function() ShowThemedNotice(message, resolvedTitle, buttons, noticeOwner)), MessageBoxResult)
 				End If
 
-				Return MessageBox.Show(noticeOwner, message, resolvedTitle, buttons, MessageBoxImage.Information)
+				Return ShowStandardNotice(noticeOwner, message, resolvedTitle, buttons)
 			End If
 
 			If m_dispatcher Is Nothing Then
@@ -106,6 +106,17 @@ Namespace Display_Driver_Uninstaller
 			End If
 
 			Return FrmNotice.ShowNotice(noticeOwner, resolvedTitle, message, buttons)
+		End Function
+
+		Private Shared Function ShowStandardNotice(owner As Window,
+												   message As String,
+												   title As String,
+												   buttons As MessageBoxButton) As MessageBoxResult
+			If owner Is Nothing Then
+				Return MessageBox.Show(message, title, buttons, MessageBoxImage.Information)
+			End If
+
+			Return MessageBox.Show(owner, message, title, buttons, MessageBoxImage.Information)
 		End Function
 
 		Public Shared Sub ApplyWindowTheme(window As Window)

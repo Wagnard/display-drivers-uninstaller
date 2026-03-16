@@ -196,6 +196,7 @@
 								<Border Background="{StaticResource brushMainControlBg}"
 										BorderBrush="{StaticResource brushMainControlBorder}"
 										BorderThickness="1"
+										MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
 										SnapsToDevicePixels="True">
 									<ScrollViewer SnapsToDevicePixels="True">
 										<ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
