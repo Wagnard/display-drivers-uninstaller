@@ -76,10 +76,10 @@
 		</lblLanguage>
 
 		<lblUpdate>
-			<Text>Nach Aktualisierungen wird gesucht …</Text>
-			<Text2>Keine Aktualisierung notwendig. Programm ist auf dem neuesten Stand.</Text2>
-			<Text3>Aktualisierung vorhanden! Für ältere Versionen als die aktuellste ist nur mit begrenztem Support zu rechnen.</Text3>
-			<Text4>Aktualisierungen konnten nicht abgerufen werden!</Text4>
+			<Text>Suche nach Updates ...</Text>
+			<Text2>Keine Updates gefunden. Programm ist auf dem neuesten Stand.</Text2>
+			<Text3>Updates gefunden! Für ältere Versionen als die aktuellste ist nur mit begrenztem Support zu rechnen.</Text3>
+			<Text4>Updates können nicht abgerufen werden!</Text4>
 		</lblUpdate>
 
 		<lblOffer>
@@ -94,7 +94,7 @@
 			<Text>Info</Text>
 		</InfoMenuItem>
 		<ExtendedLogMenuItem>
-			<Text>Ausführliches Protokoll</Text>
+			<Text>Erweitertes Log</Text>
 		</ExtendedLogMenuItem>
 		<LinksMenuItem>
 			<Text>Links</Text>
@@ -109,13 +109,13 @@
 			<Text>Übersetzer</Text>
 		</TranslatorsMenuItem>
 		<PatronMenuItem>
-			<Text>Unterstützer</Text>
+			<Text>Patrons</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
 			<Text>Offizielle DDU-Website besuchen</Text>
 		</VisitDDUHomeMenuItem>
 		<VisitDDUShopMenuItem>
-            <Text>Unseren offiziellen DDU-Fanshop besuchen</Text>
+            <Text>Unseren offiziellen DDU Merch-Shop besuchen</Text>
         </VisitDDUShopMenuItem>
 		<VisitDiscord>
 			<Text>Unserem Discord beitreten</Text>
@@ -141,16 +141,15 @@
         <DownloadIntelMenuItem>
 			<Text>Intel Treiber-Downloads</Text>
 		</DownloadIntelMenuItem>
-
 		<Messages>
-			<Text1>Aktualisierungen sind verfügbar! Jetzt die DDU-Website besuchen?</Text1>
+			<Text1>Updates sind verfügbar! Jetzt die DDU-Website besuchen?</Text1>
 			<Text2>Für ältere Versionen als die aktuellste gibt es nur begrenzten Support. Bitte prüfen Sie auf eine neuere Version, bevor Sie Bugs melden.</Text2>
 			<Text3>Sie verwenden DDU nicht mit Administratorrechten. Die Applikation wird jetzt beendet.</Text3>
 			<Text4>PAExec kann nicht gefunden werden. Bitte bziehen Sie sich auf das Log.</Text4>
 			<Text5>Display Driver Uninstaller (DDU) modifiziert Ihre Registry sehr stark. DDU wird versuchen, automatisch einen Systemwiederherstellungspunkt zu erstellen (nur normaler Modus).</Text5>
 			<Text6>Ein Problem ist in einem der Module aufgetreten, senden Sie Ihre DDU-Logs an den Developer.</Text6>
 			<Text7>DDU hat festgestellt, dass Sie einen AMD Switching-Laptop (Enduro oder gleichwertig) haben. DDU ist noch nicht vollständig kompatibel und getestet mit Enduro-Systemen. Verwendung auf eigene Gefahr.</Text7>
-			<Text8>DDU hat festgestellt, dass Sie sich NICHT im abgesicherten Modus befinden … Für eine bessere und problemlose Bereinigung wird empfohlen, dass Sie im Safemodus rebooten.</Text8>
+			<Text8>DDU hat festgestellt, dass Sie sich NICHT im abgesicherten Modus befinden ... Für eine bessere und problemlose Bereinigung wird empfohlen, dass Sie im Safemodus rebooten.</Text8>
 			<Text9>Windows-Geräte-Installationseinstellungen sind so geändert worden, dass Treiber NICHT automatisch installiert werden.</Text9>
 			<Text10>Saubere Deinstallation abgeschlossen! Möchten Sie jetzt beenden?</Text10>
 			<Text11>Windows-Geräte-Installationseinstellungen sind geändert worden, um Treiber automatisch zu installieren.</Text11>
@@ -169,7 +168,7 @@
 					5: Wir sind immer bereit zu helfen, wenn es ein Problem gibt.
 			</Text17>
 		</Messages>
-		<Options_Type>
+        <Options_Type>
 			<Options1>---Gerätetyp auswählen---</Options1>
 			<Options2>Audio</Options2>
 			<Options3>GPU</Options3>
@@ -187,15 +186,15 @@
 			<Options3>SOUNDBLASTER (WIP)</Options3>
 		</Options_AUDIO>
 		<UpdateLog>
-			<Text1>Driver Store-Bereinigung (Step OEM löschen) wird ausgeführt …</Text1>
-			<Text2>Ordner wird bereinigt</Text2>
-			<Text3>Bekannter Regkeys werden bereinigt … (kann ein oder zwei Minuten dauern)</Text3>
-			<Text4>Benutzerkonto UpdatusUser wird bereinigt, falls vorhanden.</Text4>
-			<Text5>Ordner wird bereinigt</Text5>
-			<Text6>Bereinigung der Registrierung wird ausgeführt</Text6>
-			<Text7>Bereinigung der Registry abgeschlossen</Text7>
-			<Text8>Entfernung von NVIDIA Optimus UpperFilter wird ausgeführt, falls vorhanden.</Text8>
-			<Text9>Nach neuen Geräten wird gesucht …</Text9>
+			<Text1>Ausführung der Driver Store-Bereinigung (Step OEM löschen) ...</Text1>
+			<Text2>Säuberung des Verzeichnisses</Text2>
+			<Text3>Säuberung bekannter Regkeys ... kann ein oder zwei Minuten dauern.</Text3>
+			<Text4>Säuberung des User-Accounts UpdatusUser, falls vorhanden.</Text4>
+			<Text5>Säuberung des Verzeichnisses</Text5>
+			<Text6>Starten der Registry-Bereinigung</Text6>
+			<Text7>Säuberung der Registry beendet</Text7>
+			<Text8>Starten der Entfernung von NVIDIA Optimus UpperFilter, falls vorhanden.</Text8>
+			<Text9>Scanning nach neuen Geräten ...</Text9>
 			<Text10>Saubere Deinstallation abgeschlossen!</Text10>
 			<Text11>DDU-Version</Text11>
 			<Text12>GPU #</Text12>
@@ -204,27 +203,27 @@
 			<Text15>Erkannte Treiberversion(en)</Text15>
 			<Text16>INF</Text16>
 			<Text17>INF-Abschnitt</Text17>
-			<Text18>GPU ist nicht korrekt installiert</Text18>
-			<Text19>Einger spezieller Ordner werden gelöscht (dies kann einige Zeit dauern) …</Text19>
-			<Text20>Bereinigung gestartet …</Text20>
-			<Text21>Wird deinstalliert</Text21>
+			<Text18>GPU nicht richtig installiert</Text18>
+			<Text19>Löschung einger spezieller Ordner, es kann einige Zeit dauern ...</Text19>
+			<Text20>Bereinigung gestartet ...</Text20>
+			<Text21>Deinstallation</Text21>
 			<Text22>Treiber</Text22>
-			<Text23>Entfernen der SetupAPI wird ausgeführt (Bitte warten (kann ein paar Minuten dauern)</Text23>
-			<Text24>GPU(s) aus Geräte-Manager entfernt.</Text24>
-			<Text25>Entfernen der SetupAPI Audio-Controller wird ausgeführt.</Text25>
+			<Text23>Ausführung von SetupAPI-Entfernen, bitte warten (kann ein paar Minuten dauern)</Text23>
+			<Text24>GPU(s) entfernt aus Geräte-Manager.</Text24>
+			<Text25>Ausführung von SetupAPI-Entfernen Audio-Controller.</Text25>
 			<Text26>HD-Audio-Adapter entfernt!</Text26>
-			<Text27>3D Vision USB Adapter aus Geräte-Manager entfernt.</Text27>
+			<Text27>3D Vision USB Adapter entfernt aus Geräte-Manager.</Text27>
 			<Text28>Monitore und ausgeblendete Monitore entfernt!</Text28>
-			<Text29>Entfernen der SetupAPI abgeschlossen</Text29>
-			<Text30>Bereinigung der Region S-1-5-xx wird gestartet</Text30>
-			<Text31>Bereinigung der Region S-1-5-xx abgeschlossen</Text31>
-			<Text32>Bereinigung Classesroot ,installer\products gestartet</Text32>
-			<Text33>Bereinigung Classesroot ,installer\products abgeschlossen</Text33>
-			<Text34>Bereinigung localmachine ,installer\products gestartet</Text34>
-			<Text35>Bereinigung localmachine ,installer\products abgeschlossen</Text35>
-			<Text36>Bereinigung currentuser ,installer\products gestartet</Text36>
-			<Text37>Bereinigung currentuser ,installer\products abgeschlossen</Text37>
-			<Text38>Prozesse/Dienste werden bereinigt …</Text38>
+			<Text29>SetupAPI-Entfernen abgeschlossen</Text29>
+			<Text30>Starten der Bereinigung der Region S-1-5-xx</Text30>
+			<Text31>Ende der Bereinigung der Region S-1-5-xx</Text31>
+			<Text32>Beginn der Bereinigung Classesroot ,installer\products</Text32>
+			<Text33>Ende der Bereinigung Classesroot ,installer\products</Text33>
+			<Text34>Start der Bereinigung localmachine ,installer\products</Text34>
+			<Text35>Ende der Bereinigung localmachine ,installer\products</Text35>
+			<Text36>Start der Bereinigung currentuser ,installer\products</Text36>
+			<Text37>Ende der Bereinigung currentuser ,installer\products</Text37>
+			<Text38>Säuberung der Prozesse/Dienste ...</Text38>
 			<Text39>Bereinigung von Prozessen/Diensten abgeschlossen</Text39>
 			<Text40>Gelöscht.</Text40>
 			<Text41>Wert entfernt.</Text41>
@@ -258,7 +257,7 @@
 			<Text>Treiberordner "C:\NVIDIA" entfernen</Text>
 		</lblRemNvidiaDirs>
 		<lblSaveLogs>
-			<Text>Protokolle im Startup-Pfad speichern (nachdrücklich empfohlen)</Text>
+			<Text>Logdateien im Startup-Pfad speichern (nachdrücklich empfohlen)</Text>
 		</lblSaveLogs>
 		<lblRemPhysX>
 			<Text>PhysX entfernen</Text>
@@ -279,17 +278,17 @@
 			<Text>Treiberordner "C:\AMD" entfernen</Text>
 		</lblRemAMDDirs>
 		<lblRemAMDKMPFD>
-			<Text>Treiber/Filter AMDKMPFD entfernen (für AMD-Chipsätze wird eine Datensicherung empfohlen)</Text>
+			<Text>Entfernen des Treibers/Filters AMDKMPFD (für AMD-Chipsätze wird ein Backup empfohlen)</Text>
 		</lblRemAMDKMPFD>
 		<lblShowSafeModeMsg>
 			<Text>Dialog Abgesicherter Modus aktivieren (nicht empfohlen, bis Sie den abgesicherten Modus manuell getestet haben)</Text>
-			<Tooltip>Nicht empfohlen, wenn Sie Ihren Computer noch nie im abgesicherten Modus gestartet haben, um zu sehen, ob er funktioniert. Diese Option kann eine Bootschleife, einen schwarzen Bildschirm (Blackscreen) und möglicherweise mehr verursachen.</Tooltip>
+			<Tooltip>Nicht empfohlen, wenn Sie Ihren Computer noch nie im abgesicherten Modus gebootet haben, um zu sehen, ob er funktioniert. Diese Option kann eine Bootschleife, einen schwarzen Bildschirm (Blackscreen) und möglicherweise mehr verursachen.</Tooltip>
 		</lblShowSafeModeMsg>
 		<lblUseRoamingCfg>
-			<Text>Konfigurationsdatei im Ordner Roaming sichern</Text>
+			<Text>Config-Datei in Roaming-Ordner sichern</Text>
 		</lblUseRoamingCfg>
 		<lblCheckUpdates>
-			<Text>Beim Start automatisch nach DDU-Aktualisierungen suchen (empfohlen)</Text>
+			<Text>Beim Start automatisch nach DDU-Updates suchen (empfohlen)</Text>
 		</lblCheckUpdates>
 		<lblRemGFE>
 			<Text>GeForce Experience (GFE) / NVIDIA-App entfernen</Text>
@@ -298,7 +297,7 @@
 			<Text>NVIDIA Broadcast entfernen</Text>
 		</lblRemNVBROADCAST>
 		<lblRemNVCP>
-			<Text>(DCH Driver) Aus dem Microsoft Store installierten NVIDIA Control Panel entfernen</Text>
+			<Text>(DCH Driver) Entfernen des aus dem Microsoft Store installierten NVIDIA Control Panel</Text>
 		</lblRemNVCP>
 		<lblKeepNVCPopt>
 			<Text>NVIDIA Control Panel Global / Programmeinstellungen beibehalten</Text>
@@ -308,7 +307,7 @@
 			</Tooltip>
 		</lblKeepNVCPopt>
 		<lblRemINTELCP>
-			<Text>(DCH Driver) Aus dem Microsoft Store installierten Intel® Control Panel entfernen</Text>
+			<Text>(DCH Driver) Entfernen des aus dem Microsoft Store installierten Intel® Control Panel</Text>
 		</lblRemINTELCP>
 		<lblRemINTELIGS>
 			<Text>Intel® Arc Control / Intel® Graphics Software entfernen</Text>
@@ -323,7 +322,7 @@
 			<Text>Intel® NPU entfernen</Text>
 		</lblRemIntelNpu>
 		<lblRemAMDCP>
-			<Text>(DCH Driver) Aus dem Microsoft Store installierten AMD Control Panel entfernen</Text>
+			<Text>(DCH Driver) Entfernen des aus dem Microsoft Store installierten AMD Control Panel</Text>
 		</lblRemAMDCP>
 		<lblRemCrimsonCache>
 			<Text>AMD Crimson Shader Cache-Ordner entfernen</Text>
@@ -338,9 +337,9 @@
 		</lblVulkan>
 		<lblPreventWinUpdate>
 			<Text>Downlaods von Treibern von "Windows Update" verhindern, wenn "Windows" nach einem Treiber für ein Gerät sucht</Text>
-			<Tooltip>Vereinfacht ausgedrückt, diese Option verweigert dem "Windows/Geräte-Manager" die Suche nach einer Treiber-Aktualisierung über "Windows Update". 
+			<Tooltip>Vereinfacht ausgedrückt, diese Option verweigert dem "Windows/Geräte-Manager" die Suche nach einem Treiber-Update über "Windows Update". 
                Hinweis 1: Dies hindert "Windows Update" nicht daran, neue Treiber herunterzuladen und zu installieren. 
-               Hinweis 2: Es wird außerdem *NACHDRUECKLICH* empfohlen, diese Änderung zu widerrufen, nachdem Sie die Verwendung von DDU beendet und Ihren GPU-Treiber neu installiert haben, da es sonst zu Problemen bei der Installation anderer Geräte kommen kann.</Tooltip>
+               Hinweis 2: Es wird außerdem *NACHDRUECKLICH* empfohlen, diese Änderung rückgängig zu machen, nachdem Sie die Verwendung von DDU beendet und Ihren GPU-Treiber neu installiert haben, da es sonst zu Problemen bei der Installation anderer Geräte kommen kann.</Tooltip>
 		</lblPreventWinUpdate>
 		<lblRememberLastChoice>
 			<Text>Zuletzt ausgewählte GPU merken</Text>	
@@ -351,8 +350,8 @@
 		<btnAccept>
 			<Text>Starten</Text>
 			<Text2>
-				In den abgesicherten
-				Modus neu starten
+				Reboot in
+				abgesicherten Modus
 			</Text2>
 		</btnAccept>
 		<btnWuRestore>
@@ -374,7 +373,7 @@
 		</lblNotSafeMode>
 		<lblWinPasswordWarn>
 			<Text>
-				Wichtiger Hinweis für Nutzer von Windows 8/8.1/10/11:
+				Wichtiger Hinweis für User von Windows 8/8.1/10/11:
 				Ihr Windows "PASSWORT" *kann* erforderlich sein! (PIN funktioniert *möglicherweise* NICHT im abgesicherten Modus)
 				Beenden Sie sofort, wenn Sie es verloren haben oder es nicht wissen!
 			</Text>
@@ -389,12 +388,12 @@
 		</Messages>
 	</frmLaunch>
 
-	<frmLog Text="Ausführliches Protokoll">
+	<frmLog Text="Erweitertes Log">
 		<btnClose>
 			<Text>Schließen</Text>
 		</btnClose>
 		<btnOpenLog>
-			<Text>Protokoll öffnen</Text>
+			<Text>Log öffnen</Text>
 		</btnOpenLog>
 
 		<optionsMenuItem>
@@ -408,19 +407,19 @@
 			<Text>Filter</Text>
 		</filtersMenuItem>
 		<eventsMenuItem>
-			<Text>Ereignisse anzeigen</Text>
+			<Text>Ereignisse zeigen</Text>
 		</eventsMenuItem>
 		<warningsMenuItem>
-			<Text>Warnungen anzeigen</Text>
+			<Text>Warnungen zeigen</Text>
 		</warningsMenuItem>
 		<errorsMenuItem>
-			<Text>Fehler anzeigen</Text>
+			<Text>Fehler zeigen</Text>
 		</errorsMenuItem>
 	</frmLog>
 
 	<frmSystemRestore Text="System-Restore">
 		<lblSystemRestore>
-			<Text>Versuchen, einen Systemwiederherstellungspunkt zu erstellen.</Text>
+			<Text>Versuch, einen Systemwiederherstellungspunkt zu erstellen.</Text>
 		</lblSystemRestore>
 	</frmSystemRestore>
 
@@ -438,14 +437,14 @@
 			<Text>Übersetzer</Text>
 		</btnTranslators>
 		<btnPatron>
-			<Text>Unterstützer</Text>
+			<Text>Patrons</Text>
 		</btnPatron>
 		<lblTranslators>
-			<Text>Großes Dankeschön an die folgenden Übersetzer:innen und auch an diejenigen, die hier nicht aufgeführt sind!</Text>
+			<Text> Großes Dankeschön an die folgenden Übersetzer:innen und auch an diejenigen, die nicht gelistet sind!</Text>
 		</lblTranslators>
 		<lblPatron>
 			<Text>
-				Großes Dankeschön an die folgenden Unterstützer und auch an diejenigen, die hier nicht aufgeführt sind!
+				Großes Dankeschön an die folgenden Patrons und auch an diejenigen, die nicht gelistet sind!
 
 				-Alberto Bursi
 				-honnmaguro
@@ -476,7 +475,7 @@
 	<Misc>
 		<About>
 			<Text>
-				Display Driver Uninstaller (DDU) / Bereiniger für Grafiktreiber (GPU) (NVIDIA/AMD)
+				Display Driver Uninstaller (DDU) / Cleaner gemacht für Anzeige- (GPU-) Treiber (NVIDIA/AMD)
 
 				Was es bewirkt, der Anzeige-/GPU-Treiber wird aus dem Geräte-Manager entfernt und der aktuelle sowie alle
 				vorhergehenden Treiber aus dem Windows-Driver Store zusammen mit dem Entfernen der Dienste von NVIDIA/AMD.
@@ -557,11 +556,6 @@
 			<User>Mats/Onyx</User>
 			<LastUpdate>17/02/2026</LastUpdate>
 		</Translator3>
-
-		<Translator4>
-			<User>AndyKl</User>
-			<LastUpdate>15/03/2026</LastUpdate>
-		</Translator4>
 	</LanguageTranslators>
 
 </DisplayDriverUninstaller>
