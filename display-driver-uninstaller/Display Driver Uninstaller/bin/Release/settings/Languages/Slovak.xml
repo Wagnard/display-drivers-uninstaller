@@ -262,6 +262,9 @@
 			<Text>Použiť SetupAPI *Experimentálne*</Text>
 			<Tooltip>Použiť SetupAPI namiesto externého nástroja DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
+				<lblUseDarkTheme>
+			<Text>Použite tmavý motív (vyžaduje reštart)</Text>
+		</lblUseDarkTheme>
 	</frmOptions>
 
 	<frmLaunch Text="Launch option">

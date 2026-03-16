@@ -344,6 +344,9 @@
 		<lblRememberLastChoice>
 			<Text>Kom ihåg sist valda GPU</Text>	
 		</lblRememberLastChoice>
+				<lblUseDarkTheme>
+			<Text>Använd mörkt tema (startas om krävs</Text>
+		</lblUseDarkTheme>
   </frmOptions>
 
 	<frmLaunch Text="Launch option">

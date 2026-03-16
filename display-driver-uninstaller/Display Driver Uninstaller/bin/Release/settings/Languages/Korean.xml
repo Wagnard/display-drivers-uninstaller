@@ -345,6 +345,9 @@
 		<lblRememberLastChoice>
 			<Text>마지막으로 선택한 GPU 기억</Text>	
 		</lblRememberLastChoice>
+				<lblUseDarkTheme>
+			<Text>다크 테마 사용 (재시작 필요)</Text>
+		</lblUseDarkTheme>
   </frmOptions>
 
 	<frmLaunch Text="실행 옵션">

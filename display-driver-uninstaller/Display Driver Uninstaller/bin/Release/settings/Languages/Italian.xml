@@ -323,6 +323,9 @@
 	<lblRememberLastChoice>
 			<Text>Ricorda l'ultimo GPU selezionato</Text>	
 	</lblRememberLastChoice>
+			<lblUseDarkTheme>
+			<Text>Utilizza tema scuro (riavvio richiesto)</Text>
+		</lblUseDarkTheme>
 	</frmOptions>
 
 	<frmLaunch Text="Display Driver Uninstaller (DDU)">

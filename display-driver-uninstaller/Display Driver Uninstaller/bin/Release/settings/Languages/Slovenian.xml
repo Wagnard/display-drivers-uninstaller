@@ -320,6 +320,9 @@
                Opomba: To ne preprečuje 'Windows Update' prenos/namestitev novih gonilnikov. 
                Opomba2: Prav tako je *ZELO* priporočeno, da povrnete to spremembo, ko končate z uporabo programa DDU in ponovno namestite gonilnik vašega grafičnega procesorja (GPE) ali imate težave z namestitvijo druge naprave.</Tooltip>
      </lblPreventWinUpdate>
+	 		<lblUseDarkTheme>
+			<Text>Uporabi temno temo (potreben ponovni zagon)</Text>
+		</lblUseDarkTheme>
   </frmOptions>
 
 	<frmLaunch Text="Možnost zagona">

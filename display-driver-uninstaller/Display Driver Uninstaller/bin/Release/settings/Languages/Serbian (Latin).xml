@@ -271,6 +271,9 @@
 			<Text>Koristi SetupAPI *Eksperimentalno*</Text>
 			<Tooltip>Koristi SetupAPI umesto eksternog alata DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
+				<lblUseDarkTheme>
+			<Text>Користите тамну тему (неопходан рестарт)</Text>
+		</lblUseDarkTheme>
 	</frmOptions>
 
 	<frmLaunch Text="Launch option">

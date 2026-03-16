@@ -345,6 +345,9 @@
 		<lblRememberLastChoice>
 			<Text>Помни последно избрания ГП</Text>	
 		</lblRememberLastChoice>
+				<lblUseDarkTheme>
+			<Text>Използвай тъмна тема (изисква рестарт)</Text>
+		</lblUseDarkTheme>
   </frmOptions>
    
 	<frmLaunch Text="Настройки за стартиране">

@@ -345,6 +345,9 @@
 		<lblRememberLastChoice>
 			<Text>Son seçilen GPU'yu hatırla</Text>
 		</lblRememberLastChoice>
+				<lblUseDarkTheme>
+			<Text>Karanlık tema kullan (yeniden başlatma gerekli)</Text>
+		</lblUseDarkTheme>
   </frmOptions>
 
 	<frmLaunch Text="Başlatma seçeneği">

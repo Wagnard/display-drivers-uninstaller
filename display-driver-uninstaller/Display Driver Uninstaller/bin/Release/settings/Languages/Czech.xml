@@ -330,6 +330,9 @@
                Poznámka: Tato možnost nezabrání službě "Windows Update" stažení/instalaci nových ovladačů. 
                Poznámka 2: Zároveň je *VYSOCE* doporučeno vrácení této změny po tom, co dokončíte používání DDU a reinstalujete ovladač grafické karty, jinak můžete mít problém s instalací jiných zařízení.</Tooltip>
      </lblPreventWinUpdate>
+	 		<lblUseDarkTheme>
+			<Text>Použij tmavé téma (vyžaduje restart)</Text>
+		</lblUseDarkTheme>
 	</frmOptions>
 
 	<frmLaunch Text="Možnosti spuštění">

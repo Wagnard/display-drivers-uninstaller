@@ -325,6 +325,9 @@
                Piezīme. Tas neliedz programmai Windows Update lejupielādēt/instalēt jaunus draiverus.
                2. piezīme. Ir arī *ĻOTI* ieteicams atsaukt šīs izmaiņas pēc tam, kad esat pabeidzis lietot DDU un atkārtoti instalējis GPU draiveri, pretējā gadījumā var rasties problēmas ar citas ierīces instalēšanu.</Tooltip>
      </lblPreventWinUpdate>
+	 		<lblUseDarkTheme>
+			<Text>Izmantojiet tumšo tēmu (nepieciešama pārstartēšana)</Text>
+		</lblUseDarkTheme>
   </frmOptions>
 
 	<frmLaunch Text="Launch option">

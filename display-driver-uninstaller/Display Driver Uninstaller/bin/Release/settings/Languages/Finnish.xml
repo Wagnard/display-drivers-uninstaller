@@ -277,6 +277,9 @@
 			<Text>Käytä SetupAPI ohjelmointirajapintaa</Text>
 			<Tooltip>Käytä SetupAPI ulkoisen ohjelman DDUDR (DEVCON) sijasta.</Tooltip>
 		</lblUseSetupAPI>
+		<lblUseDarkTheme>
+			<Text>Käytä tummaa teemaa (vaatii uudelleenkäynnistyksen)</Text>
+		</lblUseDarkTheme>
 	</frmOptions>
 
 	<frmLaunch Text="Käynnistysvalinta">

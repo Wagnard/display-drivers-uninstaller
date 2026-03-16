@@ -264,6 +264,9 @@
 			<Text>Αφαίρεση του Vulkan Runtime</Text>
 			<Tooltip>Δεν συνιστάται αν έχετε δύο διαφορετικές μονάδες GPU που μπορούν να χρησιμοποιήσουν το Vulkan API.</Tooltip>
 		</lblVulkan>
+				<lblUseDarkTheme>
+			<Text>Χρήση σκούρου θέματος (απαιτεί επανεκκίνηση)</Text>
+		</lblUseDarkTheme>
 	</frmOptions>
 
 	<frmLaunch Text="Launch option">

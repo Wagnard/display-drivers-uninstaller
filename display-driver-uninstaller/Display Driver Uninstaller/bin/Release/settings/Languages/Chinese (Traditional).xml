@@ -349,6 +349,9 @@
 	 	<lblRememberLastChoice>
 			<Text>記住上次選擇的GPU</Text>	
 		</lblRememberLastChoice>
+						<lblUseDarkTheme>
+			<Text>使用深色主題（需要重新啟動）</Text>
+		</lblUseDarkTheme>
   </frmOptions>
 
 	<frmLaunch Text="啟動選項">

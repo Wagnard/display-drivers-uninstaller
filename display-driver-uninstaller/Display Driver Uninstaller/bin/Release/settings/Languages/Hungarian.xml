@@ -344,6 +344,9 @@
 			<lblRememberLastChoice>
 			<Text>Utolsó kiválasztott GPU megjegyzése</Text>	
 		</lblRememberLastChoice>
+				<lblUseDarkTheme>
+			<Text>Használj sötét témát (újraindítás szükséges)</Text>
+		</lblUseDarkTheme>
 	</frmOptions>
 
 	<frmLaunch Text="Indítás beállításai">

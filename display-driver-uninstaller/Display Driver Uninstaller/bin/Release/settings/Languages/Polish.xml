@@ -341,6 +341,9 @@
 		<lblRememberLastChoice>
 			<Text>Pamiętaj ostatnio wybraną kartę graficzną</Text>	
 		</lblRememberLastChoice>
+				<lblUseDarkTheme>
+			<Text>Użyj ciemnego motywu (wymagany restart)</Text>
+		</lblUseDarkTheme>
   </frmOptions>
 
 	<frmLaunch Text="Opcja uruchamiania">
