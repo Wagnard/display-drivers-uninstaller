@@ -16,7 +16,11 @@
 			Me.Close()
 		End Sub
 
-		Private Sub Chk_lblPreventWinUpdate(sender As Object, e As RoutedEventArgs) Handles lblPreventWinUpdate.Click
+        Private Sub lblUseDarkTheme_Click(sender As Object, e As RoutedEventArgs) Handles lblUseDarkTheme.Click
+            Application.ApplyThemeToAllWindows()
+        End Sub
+
+        Private Sub Chk_lblPreventWinUpdate(sender As Object, e As RoutedEventArgs) Handles lblPreventWinUpdate.Click
 
 			If lblPreventWinUpdate.IsChecked Then
 				FrmMain.EnableDriverSearch(False)

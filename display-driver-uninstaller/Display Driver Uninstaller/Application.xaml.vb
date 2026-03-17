@@ -72,13 +72,14 @@ Namespace Display_Driver_Uninstaller
 				Return m_Data.Log
 			End Get
 		End Property
-		Public Shared ReadOnly Property UseDarkThemeSession As Boolean
-			Get
-				Return m_useDarkThemeSession
-			End Get
-		End Property
+        Public Shared ReadOnly Property UseDarkThemeSession As Boolean
+            Get
+                If m_Data IsNot Nothing Then Return Settings.UseDarkTheme
+                Return m_useDarkThemeSession
+            End Get
+        End Property
 
-		Public Shared Function ShowThemedNotice(message As String,
+        Public Shared Function ShowThemedNotice(message As String,
 												Optional title As String = Nothing,
 												Optional buttons As MessageBoxButton = MessageBoxButton.OK,
 												Optional owner As Window = Nothing) As MessageBoxResult
@@ -119,79 +120,157 @@ Namespace Display_Driver_Uninstaller
 			Return MessageBox.Show(owner, message, title, buttons, MessageBoxImage.Information)
 		End Function
 
-		Public Shared Sub ApplyWindowTheme(window As Window)
-			If window Is Nothing OrElse Not UseDarkThemeSession Then
-				Return
-			End If
+        Public Shared Sub ApplyWindowTheme(window As Window)
+            If window Is Nothing Then Return
 
-			Select Case True
-				Case TypeOf window Is FrmMain
-					SetBrush(window, "brushMainText", "#FFF4F7FA")
-					SetBrush(window, "brushMainMutedText", "#FFB8C3D1")
-					SetBrush(window, "brushMainControlBg", "#FF181E27")
-					SetBrush(window, "brushMainControlBgHover", "#FF202834")
-					SetBrush(window, "brushMainControlBgPressed", "#FF111720")
-					SetBrush(window, "brushMainControlBorder", "#FF546173")
-					SetBrush(window, "brushMainLogBg", "#FF1B222D")
-					SetBrush(window, "brushMainMenuBg", "#FF10151D")
-					SetBrush(window, "brushMainStatusBg", "#FF0F141B")
-					SetBrush(window, "brushMainSelection", "#FF394657")
-					SetGradient(window, "brushNvidia", "#FF122315", "#FF12161D")
-					SetGradient(window, "brushIntel", "#FF13233B", "#FF12161D")
-					SetGradient(window, "brushAmd", "#FF32171B", "#FF12161D")
-					SetGradient(window, "brushRealtek", "#FF152235", "#FF12161D")
-					SetGradient(window, "brushSoundBlaster", "#FF211933", "#FF12161D")
-				Case TypeOf window Is FrmLaunch
-					SetBrush(window, "LaunchTextBrush", "#FFF4F7FA")
-					SetBrush(window, "LaunchMutedTextBrush", "#FFB8C3D1")
-					SetBrush(window, "LaunchSurfaceBrush", "#FF12161D")
-					SetBrush(window, "LaunchPanelBrush", "#FF181E27")
-					SetBrush(window, "LaunchPanelHoverBrush", "#FF202834")
-					SetBrush(window, "LaunchPanelPressedBrush", "#FF111720")
-					SetBrush(window, "LaunchBorderBrush", "#FF546173")
-					SetBrush(window, "LaunchSelectionBrush", "#FF394657")
-					SetBrush(window, "LaunchWarningBrush", "#FFFF8F8F")
-				Case TypeOf window Is FrmLog
-					SetBrush(window, "bWindowBg", "#FF12161D")
-					SetBrush(window, "bPanelBg", "#FF181E27")
-					SetBrush(window, "bPanelHover", "#FF202834")
-					SetBrush(window, "bBorder", "#FF546173")
-					SetColor(window, "cNormal", "#FFF2F5F7")
-					SetColor(window, "cValue", "#FF7AB8FF")
-					SetColor(window, "cWarning", "#FFFFC857")
-					SetColor(window, "cError", "#FFFF7B72")
-					SetColor(window, "cSelected", "#FF2D3A4B")
-					SetGradient(window, "bgBrushEvent", "#FF1E3150", "#FF12161D")
-					SetGradient(window, "bgBrushWarning", "#FF4A3B16", "#FF12161D")
-					SetGradient(window, "bgBrushError", "#FF4A1F24", "#FF12161D")
-				Case TypeOf window Is FrmAbout
-					SetBrush(window, "AboutWindowBg", "#FF12161D")
-					SetBrush(window, "AboutPanelBg", "#FF181E27")
-					SetBrush(window, "AboutPanelHover", "#FF202834")
-					SetBrush(window, "AboutBorder", "#FF546173")
-					SetBrush(window, "AboutText", "#FFF4F7FA")
-					SetBrush(window, "AboutAccent", "#FF7AB8FF")
-				Case TypeOf window Is FrmOptions
-					SetBrush(window, "OptionsWindowBg", "#FF12161D")
-					SetBrush(window, "OptionsPanelBg", "#FF181E27")
-					SetBrush(window, "OptionsTextBrush", "#FFF4F7FA")
-					SetBrush(window, "OptionsBorderBrush", "#FF546173")
-					SetBrush(window, "OptionsButtonBg", "#FF181E27")
-				Case TypeOf window Is DebugWindow
-					SetBrush(window, "DebugWindowBg", "#FF12161D")
-					SetBrush(window, "DebugPanelBg", "#FF181E27")
-					SetBrush(window, "DebugPanelHover", "#FF202834")
-					SetBrush(window, "DebugBorder", "#FF546173")
-					SetBrush(window, "DebugText", "#FFF4F7FA")
-				Case TypeOf window Is FrmSystemRestore
-					SetBrush(window, "SystemRestoreWindowBg", "#FF12161D")
-					SetBrush(window, "SystemRestorePanelBg", "#FF181E27")
-					SetBrush(window, "SystemRestoreBorderBrush", "#FF546173")
-					SetBrush(window, "SystemRestoreTextBrush", "#FFF4F7FA")
-			End Select
-		End Sub
+            If Not UseDarkThemeSession Then
+                Select Case True
+                    Case TypeOf window Is FrmMain
+                        SetBrush(window, "brushMainText", "#FF000000")
+                        SetBrush(window, "brushMainMutedText", "#FF5C6670")
+                        SetBrush(window, "brushMainControlBg", "#FFFFFFFF")
+                        SetBrush(window, "brushMainControlBgHover", "#FFF2F2F2")
+                        SetBrush(window, "brushMainControlBgPressed", "#FFE6E6E6")
+                        SetBrush(window, "brushMainControlBorder", "#FF7A7A7A")
+                        SetBrush(window, "brushMainLogBg", "#FFFFFFFF")
+                        SetBrush(window, "brushMainMenuBg", "#28FFFFFF")
+                        SetBrush(window, "brushMainStatusBg", "#28FFFFFF")
+                        SetBrush(window, "brushMainSelection", "#FFCBDCF4")
+                        SetGradient(window, "brushNvidia", "#FFDCFFDC", "#FFFFFFFF")
+                        SetGradient(window, "brushIntel", "#FFDCDCFF", "#FFFFFFFF")
+                        SetGradient(window, "brushAmd", "#FFFFE6E6", "#FFFFFFFF")
+                        SetGradient(window, "brushRealtek", "#FFDCDCFF", "#FFFFFFFF")
+                        SetGradient(window, "brushSoundBlaster", "#FFDCDCFF", "#FFFFFFFF")
+                    Case TypeOf window Is FrmLaunch
+                        SetBrush(window, "LaunchTextBrush", "#FF000000")
+                        SetBrush(window, "LaunchMutedTextBrush", "#FF5C6670")
+                        SetBrush(window, "LaunchSurfaceBrush", "#FFFFFFFF")
+                        SetBrush(window, "LaunchPanelBrush", "#FFFFFFFF")
+                        SetBrush(window, "LaunchPanelHoverBrush", "#FFF2F2F2")
+                        SetBrush(window, "LaunchPanelPressedBrush", "#FFE6E6E6")
+                        SetBrush(window, "LaunchBorderBrush", "#FF000000")
+                        SetBrush(window, "LaunchSelectionBrush", "#FFCBDCF4")
+                        SetBrush(window, "LaunchWarningBrush", "#FFEB0000")
+                    Case TypeOf window Is FrmLog
+                        SetBrush(window, "bWindowBg", "#FFFFFFFF")
+                        SetBrush(window, "bPanelBg", "#FFF0F0F0")
+                        SetBrush(window, "bPanelHover", "#FFE6E6E6")
+                        SetBrush(window, "bBorder", "#FF000000")
+                        SetColor(window, "cNormal", "#FF000000")
+                        SetColor(window, "cValue", "#FF0000D2")
+                        SetColor(window, "cWarning", "#FF000000")
+                        SetColor(window, "cError", "#FFFF0000")
+                        SetColor(window, "cSelected", "#FFCBCBCB")
+                        SetGradient(window, "bgBrushEvent", "#FFBEC8FF", "#FFFFFFFF")
+                        SetGradient(window, "bgBrushWarning", "#FFFFFFB4", "#FFFFFFFF")
+                        SetGradient(window, "bgBrushError", "#FFFFE6E6", "#FFFFFFFF")
+                    Case TypeOf window Is FrmAbout
+                        SetBrush(window, "AboutWindowBg", "#FFFFFFFF")
+                        SetBrush(window, "AboutPanelBg", "#FFFFFFFF")
+                        SetBrush(window, "AboutPanelHover", "#FFF2F2F2")
+                        SetBrush(window, "AboutBorder", "#FF000000")
+                        SetBrush(window, "AboutText", "#FF000000")
+                        SetBrush(window, "AboutAccent", "#FF000000")
+                    Case TypeOf window Is FrmOptions
+                        SetBrush(window, "OptionsWindowBg", "#FFFFFFFF")
+                        SetBrush(window, "OptionsPanelBg", "#FFFFFFFF")
+                        SetBrush(window, "OptionsTextBrush", "#FF000000")
+                        SetBrush(window, "OptionsBorderBrush", "#FF000000")
+                        SetBrush(window, "OptionsButtonBg", "#FFF0F0F0")
+                    Case TypeOf window Is DebugWindow
+                        SetBrush(window, "DebugWindowBg", "#FFD2E4FF")
+                        SetBrush(window, "DebugPanelBg", "#FFFFFFFF")
+                        SetBrush(window, "DebugPanelHover", "#FFF2F2F2")
+                        SetBrush(window, "DebugBorder", "#FF000000")
+                        SetBrush(window, "DebugText", "#FF000000")
+                    Case TypeOf window Is FrmSystemRestore
+                        SetBrush(window, "SystemRestoreWindowBg", "#FFFFFFFF")
+                        SetBrush(window, "SystemRestorePanelBg", "#FFFFFFFF")
+                        SetBrush(window, "SystemRestoreBorderBrush", "#FF000000")
+                        SetBrush(window, "SystemRestoreTextBrush", "#FF000000")
+                End Select
+                Return
+            End If
 
-		Private Shared Sub SetBrush(window As Window, key As String, colorText As String)
+            Select Case True
+                Case TypeOf window Is FrmMain
+                    SetBrush(window, "brushMainText", "#FFF4F7FA")
+                    SetBrush(window, "brushMainMutedText", "#FFB8C3D1")
+                    SetBrush(window, "brushMainControlBg", "#FF181E27")
+                    SetBrush(window, "brushMainControlBgHover", "#FF202834")
+                    SetBrush(window, "brushMainControlBgPressed", "#FF111720")
+                    SetBrush(window, "brushMainControlBorder", "#FF546173")
+                    SetBrush(window, "brushMainLogBg", "#FF1B222D")
+                    SetBrush(window, "brushMainMenuBg", "#FF10151D")
+                    SetBrush(window, "brushMainStatusBg", "#FF0F141B")
+                    SetBrush(window, "brushMainSelection", "#FF394657")
+                    SetGradient(window, "brushNvidia", "#FF122315", "#FF12161D")
+                    SetGradient(window, "brushIntel", "#FF13233B", "#FF12161D")
+                    SetGradient(window, "brushAmd", "#FF32171B", "#FF12161D")
+                    SetGradient(window, "brushRealtek", "#FF152235", "#FF12161D")
+                    SetGradient(window, "brushSoundBlaster", "#FF211933", "#FF12161D")
+                Case TypeOf window Is FrmLaunch
+                    SetBrush(window, "LaunchTextBrush", "#FFF4F7FA")
+                    SetBrush(window, "LaunchMutedTextBrush", "#FFB8C3D1")
+                    SetBrush(window, "LaunchSurfaceBrush", "#FF12161D")
+                    SetBrush(window, "LaunchPanelBrush", "#FF181E27")
+                    SetBrush(window, "LaunchPanelHoverBrush", "#FF202834")
+                    SetBrush(window, "LaunchPanelPressedBrush", "#FF111720")
+                    SetBrush(window, "LaunchBorderBrush", "#FF546173")
+                    SetBrush(window, "LaunchSelectionBrush", "#FF394657")
+                    SetBrush(window, "LaunchWarningBrush", "#FFFF8F8F")
+                Case TypeOf window Is FrmLog
+                    SetBrush(window, "bWindowBg", "#FF12161D")
+                    SetBrush(window, "bPanelBg", "#FF181E27")
+                    SetBrush(window, "bPanelHover", "#FF202834")
+                    SetBrush(window, "bBorder", "#FF546173")
+                    SetColor(window, "cNormal", "#FFF2F5F7")
+                    SetColor(window, "cValue", "#FF7AB8FF")
+                    SetColor(window, "cWarning", "#FFFFC857")
+                    SetColor(window, "cError", "#FFFF7B72")
+                    SetColor(window, "cSelected", "#FF2D3A4B")
+                    SetGradient(window, "bgBrushEvent", "#FF1E3150", "#FF12161D")
+                    SetGradient(window, "bgBrushWarning", "#FF4A3B16", "#FF12161D")
+                    SetGradient(window, "bgBrushError", "#FF4A1F24", "#FF12161D")
+                Case TypeOf window Is FrmAbout
+                    SetBrush(window, "AboutWindowBg", "#FF12161D")
+                    SetBrush(window, "AboutPanelBg", "#FF181E27")
+                    SetBrush(window, "AboutPanelHover", "#FF202834")
+                    SetBrush(window, "AboutBorder", "#FF546173")
+                    SetBrush(window, "AboutText", "#FFF4F7FA")
+                    SetBrush(window, "AboutAccent", "#FF7AB8FF")
+                Case TypeOf window Is FrmOptions
+                    SetBrush(window, "OptionsWindowBg", "#FF12161D")
+                    SetBrush(window, "OptionsPanelBg", "#FF181E27")
+                    SetBrush(window, "OptionsTextBrush", "#FFF4F7FA")
+                    SetBrush(window, "OptionsBorderBrush", "#FF546173")
+                    SetBrush(window, "OptionsButtonBg", "#FF181E27")
+                Case TypeOf window Is DebugWindow
+                    SetBrush(window, "DebugWindowBg", "#FF12161D")
+                    SetBrush(window, "DebugPanelBg", "#FF181E27")
+                    SetBrush(window, "DebugPanelHover", "#FF202834")
+                    SetBrush(window, "DebugBorder", "#FF546173")
+                    SetBrush(window, "DebugText", "#FFF4F7FA")
+                Case TypeOf window Is FrmSystemRestore
+                    SetBrush(window, "SystemRestoreWindowBg", "#FF12161D")
+                    SetBrush(window, "SystemRestorePanelBg", "#FF181E27")
+                    SetBrush(window, "SystemRestoreBorderBrush", "#FF546173")
+                    SetBrush(window, "SystemRestoreTextBrush", "#FFF4F7FA")
+            End Select
+        End Sub
+
+        Public Shared Sub ApplyThemeToAllWindows()
+            If m_dispatcher Is Nothing Then Return
+            If Not m_dispatcher.CheckAccess() Then
+                m_dispatcher.Invoke(Sub() ApplyThemeToAllWindows())
+                Return
+            End If
+            For Each w As Window In Current.Windows
+                ApplyWindowTheme(w)
+            Next
+        End Sub
+
+        Private Shared Sub SetBrush(window As Window, key As String, colorText As String)
 			Dim colorValue As Color = ParseColor(colorText)
 			window.Resources(key) = New SolidColorBrush(colorValue)
 		End Sub
