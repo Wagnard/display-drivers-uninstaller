@@ -337,7 +337,7 @@
 			<Text>Remember last selected GPU</Text>	
 		</lblRememberLastChoice>
 		<lblUseDarkTheme>
-			<Text>Use dark theme (restart required)</Text>
+			<Text>Use dark theme</Text>
 		</lblUseDarkTheme>
   </frmOptions>
 
@@ -540,7 +540,7 @@
 		<Translator>
 			<User>Wagnard</User>
 			<Details>Owner</Details>
-			<LastUpdate>03/04/2021</LastUpdate>
+			<LastUpdate>17/03/2026</LastUpdate>
 		</Translator>
 
 		<Translator2>

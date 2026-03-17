@@ -177,6 +177,8 @@ Namespace Display_Driver_Uninstaller
                         SetBrush(window, "OptionsTextBrush", "#FF000000")
                         SetBrush(window, "OptionsBorderBrush", "#FF000000")
                         SetBrush(window, "OptionsButtonBg", "#FFF0F0F0")
+                        SetBrush(window, "OptionsButtonBgHover", "#FFE5E5E5")
+                        SetBrush(window, "OptionsButtonBgPressed", "#FFCCCCCC")
                     Case TypeOf window Is DebugWindow
                         SetBrush(window, "DebugWindowBg", "#FFD2E4FF")
                         SetBrush(window, "DebugPanelBg", "#FFFFFFFF")
@@ -245,6 +247,8 @@ Namespace Display_Driver_Uninstaller
                     SetBrush(window, "OptionsTextBrush", "#FFF4F7FA")
                     SetBrush(window, "OptionsBorderBrush", "#FF546173")
                     SetBrush(window, "OptionsButtonBg", "#FF181E27")
+                    SetBrush(window, "OptionsButtonBgHover", "#FF202834")
+                    SetBrush(window, "OptionsButtonBgPressed", "#FF111720")
                 Case TypeOf window Is DebugWindow
                     SetBrush(window, "DebugWindowBg", "#FF12161D")
                     SetBrush(window, "DebugPanelBg", "#FF181E27")

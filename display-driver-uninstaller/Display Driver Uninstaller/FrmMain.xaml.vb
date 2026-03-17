@@ -1457,6 +1457,7 @@ Namespace Display_Driver_Uninstaller
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options5")
             }
+                    cbSelectedGPU.SelectedIndex = 0
                     cbSelectedGPU.SelectedIndex = GPUIdentify()
             End Select
 
