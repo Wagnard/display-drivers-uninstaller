@@ -9,22 +9,18 @@
 	Background="{DynamicResource SystemRestoreWindowBg}"
 	Foreground="{DynamicResource SystemRestoreTextBrush}">
 
-	<Window.Resources>
-		<SolidColorBrush x:Key="SystemRestoreWindowBg" Color="White" />
-		<SolidColorBrush x:Key="SystemRestorePanelBg" Color="White" />
-		<SolidColorBrush x:Key="SystemRestoreBorderBrush" Color="Black" />
-		<SolidColorBrush x:Key="SystemRestoreTextBrush" Color="Black" />
-	</Window.Resources>
+    <Window.Resources>
+    </Window.Resources>
 
-	<Grid Background="{DynamicResource SystemRestoreWindowBg}">
-		<Border Background="{DynamicResource SystemRestorePanelBg}" BorderBrush="{DynamicResource SystemRestoreBorderBrush}" BorderThickness="1" Padding="18,14">
-			<Label x:Name="lblSystemRestore"
+    <Grid Background="{DynamicResource SystemRestoreWindowBg}">
+        <Border Background="{DynamicResource SystemRestorePanelBg}" BorderBrush="{DynamicResource SystemRestoreBorderBrush}" BorderThickness="1" Padding="18,14">
+            <Label x:Name="lblSystemRestore"
 				   Content="lblSystemRestore"
 				   HorizontalContentAlignment="Center"
 				   VerticalContentAlignment="Center"
 				   FontFamily="Calibri"
 				   FontSize="14"
 				   Foreground="{DynamicResource SystemRestoreTextBrush}" />
-		</Border>
-	</Grid>
+        </Border>
+    </Grid>
 </Window>

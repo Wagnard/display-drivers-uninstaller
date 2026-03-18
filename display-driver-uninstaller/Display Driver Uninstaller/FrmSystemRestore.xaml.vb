@@ -3,124 +3,142 @@ Imports Microsoft.Win32
 
 Namespace Display_Driver_Uninstaller
 
-	Public Class FrmSystemRestore
-		Implements IDisposable
-		Private disposed As Boolean
-		Private ReadOnly canClose2 As New EventWaitHandle(True, EventResetMode.ManualReset) ' Thread safe!
+    Public Class FrmSystemRestore
+        Implements IDisposable
+        Private disposed As Boolean
+        Private ReadOnly canClose2 As New EventWaitHandle(True, EventResetMode.ManualReset) ' Thread safe!
 
-		Public Sub New()
-			InitializeComponent()
-			Application.ApplyWindowTheme(Me)
-		End Sub
+        Public Sub New()
+            SeedThemeResources()
+            InitializeComponent()
+        End Sub
 
-		Private Sub FrmSystemRestore_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
-			Languages.TranslateForm(Me)
-		End Sub
+        Private Sub SeedThemeResources()
+            If Application.UseDarkThemeSession Then
+                Me.Background = New SolidColorBrush(Color.FromRgb(&H12, &H16, &H1D))
+                Me.Foreground = New SolidColorBrush(Color.FromRgb(&HF4, &HF7, &HFA))
+                Resources("SystemRestoreWindowBg") = New SolidColorBrush(Color.FromRgb(&H12, &H16, &H1D))
+                Resources("SystemRestorePanelBg") = New SolidColorBrush(Color.FromRgb(&H18, &H1E, &H27))
+                Resources("SystemRestoreBorderBrush") = New SolidColorBrush(Color.FromRgb(&H54, &H61, &H73))
+                Resources("SystemRestoreTextBrush") = New SolidColorBrush(Color.FromRgb(&HF4, &HF7, &HFA))
+            Else
+                Me.Background = New SolidColorBrush(Colors.White)
+                Me.Foreground = New SolidColorBrush(Colors.Black)
+                Resources("SystemRestoreWindowBg") = New SolidColorBrush(Colors.White)
+                Resources("SystemRestorePanelBg") = New SolidColorBrush(Colors.White)
+                Resources("SystemRestoreBorderBrush") = New SolidColorBrush(Colors.Black)
+                Resources("SystemRestoreTextBrush") = New SolidColorBrush(Colors.Black)
+            End If
+        End Sub
 
-		Private Sub CreateSystemRestore()
+        Private Sub FrmSystemRestore_Loaded(sender As Object, e As RoutedEventArgs) Handles MyBase.Loaded
+            Languages.TranslateForm(Me)
+        End Sub
 
-			canClose2.Reset()
+        Private Sub CreateSystemRestore()
 
-			Try
-				Try
-					Using regKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore", RegistryKeyPermissionCheck.ReadWriteSubTree, Security.AccessControl.RegistryRights.SetValue)
-						If regKey IsNot Nothing Then
-							regKey.SetValue("SystemRestorePointCreationFrequency", 0, RegistryValueKind.DWord)
-						End If
-					End Using
-				Catch ex As Exception
-					Application.Log.AddException(ex, "Settings value for RegistryKey 'SystemRestorePointCreationFrequency' failed!")
-				End Try
+            canClose2.Reset()
 
-				Dim result As Int64 = 0
+            Try
+                Try
+                    Using regKey As RegistryKey = Registry.LocalMachine.OpenSubKey("SOFTWARE\Microsoft\Windows NT\CurrentVersion\SystemRestore", RegistryKeyPermissionCheck.ReadWriteSubTree, Security.AccessControl.RegistryRights.SetValue)
+                        If regKey IsNot Nothing Then
+                            regKey.SetValue("SystemRestorePointCreationFrequency", 0, RegistryValueKind.DWord)
+                        End If
+                    End Using
+                Catch ex As Exception
+                    Application.Log.AddException(ex, "Settings value for RegistryKey 'SystemRestorePointCreationFrequency' failed!")
+                End Try
 
-				' RESTORE_TYPE.CHECKPOINT is used be System  (which also overrides Description)
-				Win32.SystemRestore.StartRestore("DDU Restore Point", Win32.SystemRestore.RESTORE_TYPE.CHECKPOINT, result)
+                Dim result As Int64 = 0
 
-
-				Win32.SystemRestore.EndRestore(result)
-
-				Application.Log.AddMessage("Restore Point Created")
+                ' RESTORE_TYPE.CHECKPOINT is used be System  (which also overrides Description)
+                Win32.SystemRestore.StartRestore("DDU Restore Point", Win32.SystemRestore.RESTORE_TYPE.CHECKPOINT, result)
 
 
-				'Added a timer here because some recent windows 10 update would not create the restore point if we reboot immediately after we try to create.
-				'This also avoid some VSS error message in the event log.
-				Using objAuto As AutoResetEvent = New AutoResetEvent(False)
-					objAuto.WaitOne(5000)
+                Win32.SystemRestore.EndRestore(result)
 
-				End Using
-				'Application.Log.AddMessage("Trying to Create a System Restored Point")
-				'Dim oScope As New ManagementScope("\\localhost\root\default")
-				'Dim oPath As New ManagementPath("SystemRestore")
-				'Dim oGetOp As New ObjectGetOptions()
-				'Dim oProcess As New ManagementClass(oScope, oPath, oGetOp)
+                Application.Log.AddMessage("Restore Point Created")
 
-				'Dim oInParams As ManagementBaseObject = oProcess.GetMethodParameters("CreateRestorePoint")
-				'oInParams("Description") = "DDU System Restored Point"
-				'oInParams("RestorePointType") = 12UI ' MODIFY_SETTINGS
-				'oInParams("EventType") = 100UI
 
-				'Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
+                'Added a timer here because some recent windows 10 update would not create the restore point if we reboot immediately after we try to create.
+                'This also avoid some VSS error message in the event log.
+                Using objAuto As AutoResetEvent = New AutoResetEvent(False)
+                    objAuto.WaitOne(5000)
 
-				'Dim errCode As UInt32 = CUInt(oOutParams("ReturnValue"))
+                End Using
+                'Application.Log.AddMessage("Trying to Create a System Restored Point")
+                'Dim oScope As New ManagementScope("\\localhost\root\default")
+                'Dim oPath As New ManagementPath("SystemRestore")
+                'Dim oGetOp As New ObjectGetOptions()
+                'Dim oProcess As New ManagementClass(oScope, oPath, oGetOp)
 
-				'If errCode <> 0UI Then
-				'	Throw New COMException("System Restored Point Could not be Created!", Win32.GetInt32(errCode))
-				'End If
+                'Dim oInParams As ManagementBaseObject = oProcess.GetMethodParameters("CreateRestorePoint")
+                'oInParams("Description") = "DDU System Restored Point"
+                'oInParams("RestorePointType") = 12UI ' MODIFY_SETTINGS
+                'oInParams("EventType") = 100UI
 
-				'Application.Log.AddMessage("System Restored Point Created. Code: " + errCode.ToString())
+                'Dim oOutParams As ManagementBaseObject = oProcess.InvokeMethod("CreateRestorePoint", oInParams, Nothing)
 
-			Catch ex As Exception
-				Application.Log.AddWarning(ex, "System Restored Point could not be Created!")
-			Finally
-				canClose2.Set()
-				CloseDDU()
-			End Try
-		End Sub
+                'Dim errCode As UInt32 = CUInt(oOutParams("ReturnValue"))
 
-		Private Sub FrmSystemRestore_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles MyBase.Closing
-			If Not canClose2.WaitOne(0) Then
-				e.Cancel = True
-				Exit Sub
-			End If
-		End Sub
+                'If errCode <> 0UI Then
+                '	Throw New COMException("System Restored Point Could not be Created!", Win32.GetInt32(errCode))
+                'End If
 
-		Private Sub FrmSystemRestore_ContentRendered(sender As Object, e As EventArgs) Handles MyBase.ContentRendered
+                'Application.Log.AddMessage("System Restored Point Created. Code: " + errCode.ToString())
 
-			Dim thread As New Thread(AddressOf CreateSystemRestore)
-			thread.Start()
+            Catch ex As Exception
+                Application.Log.AddWarning(ex, "System Restored Point could not be Created!")
+            Finally
+                canClose2.Set()
+                CloseDDU()
+            End Try
+        End Sub
 
-		End Sub
+        Private Sub FrmSystemRestore_Closing(sender As Object, e As ComponentModel.CancelEventArgs) Handles MyBase.Closing
+            If Not canClose2.WaitOne(0) Then
+                e.Cancel = True
+                Exit Sub
+            End If
+        End Sub
 
-		Protected Overridable Sub Dispose(disposing As Boolean)
-			If Not Me.disposed Then
-				If disposing Then
-					Try
-						canClose2.Close()
-					Catch ex As Exception
-					End Try
-				End If
-			End If
-		End Sub
+        Private Sub FrmSystemRestore_ContentRendered(sender As Object, e As EventArgs) Handles MyBase.ContentRendered
 
-		Public Sub Dispose() Implements IDisposable.Dispose
-			Dispose(True)
-			canClose2?.Dispose()
-			GC.SuppressFinalize(Me)
-		End Sub
+            Dim thread As New Thread(AddressOf CreateSystemRestore)
+            thread.Start()
 
-		Private Sub CloseDDU()
-			If Not Dispatcher.CheckAccess() Then
-				Dispatcher.Invoke(Sub() CloseDDU())
-				Return
-			End If
+        End Sub
 
-			Try
-				Me.Close()
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-			End Try
-		End Sub
+        Protected Overridable Sub Dispose(disposing As Boolean)
+            If Not Me.disposed Then
+                If disposing Then
+                    Try
+                        canClose2.Close()
+                    Catch ex As Exception
+                    End Try
+                End If
+            End If
+        End Sub
 
-	End Class
+        Public Sub Dispose() Implements IDisposable.Dispose
+            Dispose(True)
+            canClose2?.Dispose()
+            GC.SuppressFinalize(Me)
+        End Sub
+
+        Private Sub CloseDDU()
+            If Not Dispatcher.CheckAccess() Then
+                Dispatcher.Invoke(Sub() CloseDDU())
+                Return
+            End If
+
+            Try
+                Me.Close()
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+            End Try
+        End Sub
+
+    End Class
 End Namespace
