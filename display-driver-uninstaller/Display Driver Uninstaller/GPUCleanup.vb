@@ -7408,7 +7408,7 @@ child.ToLower.Contains("nvidia.gfe") Then
                                 If regkey IsNot Nothing Then
                                     For Each child As String In regkey.GetSubKeyNames()
                                         If String.IsNullOrWhiteSpace(child) = False Then
-                                            If StrContainsAny(child, True, "display", "IGN") OrElse (config.RemoveINTELIGS AndAlso StrContainsAny(child, True, "IntelGraphicsSoftware", "presentmon")) Then
+                                            If StrContainsAny(child, True, "display", "IGN") OrElse (config.RemoveINTELIGS AndAlso StrContainsAny(child, True, "IntelGraphicsSoftware", "presentmon", "gameassist")) Then
                                                 Try
                                                     Deletesubregkey(regkey, child)
                                                 Catch ex As Exception
