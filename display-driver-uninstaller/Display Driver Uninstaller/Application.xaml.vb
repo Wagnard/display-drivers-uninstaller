@@ -190,6 +190,13 @@ Namespace Display_Driver_Uninstaller
                         SetBrush(window, "SystemRestorePanelBg", "#FFFFFFFF")
                         SetBrush(window, "SystemRestoreBorderBrush", "#FF000000")
                         SetBrush(window, "SystemRestoreTextBrush", "#FF000000")
+                    Case TypeOf window Is FrmNotice
+                        SetBrush(window, "NoticeTextBrush", "#FF000000")
+                        SetBrush(window, "NoticeSurfaceBrush", "#FFFFFFFF")
+                        SetBrush(window, "NoticePanelBrush", "#FFF0F0F0")
+                        SetBrush(window, "NoticePanelHoverBrush", "#FFE5E5E5")
+                        SetBrush(window, "NoticeBorderBrush", "#FF000000")
+                        SetBrush(window, "NoticeAccentBrush", "#FF0078D4")
                 End Select
                 Return
             End If
@@ -260,6 +267,13 @@ Namespace Display_Driver_Uninstaller
                     SetBrush(window, "SystemRestorePanelBg", "#FF181E27")
                     SetBrush(window, "SystemRestoreBorderBrush", "#FF546173")
                     SetBrush(window, "SystemRestoreTextBrush", "#FFF4F7FA")
+                Case TypeOf window Is FrmNotice
+                    SetBrush(window, "NoticeTextBrush", "#FFF4F7FA")
+                    SetBrush(window, "NoticeSurfaceBrush", "#FF12161D")
+                    SetBrush(window, "NoticePanelBrush", "#FF181E27")
+                    SetBrush(window, "NoticePanelHoverBrush", "#FF202834")
+                    SetBrush(window, "NoticeBorderBrush", "#FF546173")
+                    SetBrush(window, "NoticeAccentBrush", "#FF58A6FF")
             End Select
         End Sub
 

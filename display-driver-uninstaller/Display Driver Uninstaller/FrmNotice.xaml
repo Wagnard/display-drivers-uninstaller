@@ -11,123 +11,117 @@
 	ShowInTaskbar="False"
 	WindowStartupLocation="CenterOwner"
 	Icon="/Display%20Driver%20Uninstaller;component/Resources/DDU.ico"
-	Background="#FF12161D"
-	Foreground="#FFF4F7FA">
+	Background="{DynamicResource NoticeSurfaceBrush}"
+	Foreground="{DynamicResource NoticeTextBrush}">
 
-	<Window.Resources>
-		<SolidColorBrush x:Key="NoticeTextBrush" Color="#FFF4F7FA" />
-		<SolidColorBrush x:Key="NoticeSurfaceBrush" Color="#FF12161D" />
-		<SolidColorBrush x:Key="NoticePanelBrush" Color="#FF181E27" />
-		<SolidColorBrush x:Key="NoticePanelHoverBrush" Color="#FF202834" />
-		<SolidColorBrush x:Key="NoticeBorderBrush" Color="#FF546173" />
-		<SolidColorBrush x:Key="NoticeAccentBrush" Color="#FF58A6FF" />
+    <Window.Resources>
 
-		<Style TargetType="{x:Type Button}">
-			<Setter Property="Foreground" Value="{StaticResource NoticeTextBrush}" />
-			<Setter Property="Background" Value="{StaticResource NoticePanelBrush}" />
-			<Setter Property="BorderBrush" Value="{StaticResource NoticeBorderBrush}" />
-			<Setter Property="BorderThickness" Value="1" />
-			<Setter Property="Padding" Value="0" />
-			<Setter Property="Template">
-				<Setter.Value>
-					<ControlTemplate TargetType="{x:Type Button}">
-						<Border x:Name="ButtonBorder"
+        <Style TargetType="{x:Type Button}">
+            <Setter Property="Foreground" Value="{DynamicResource NoticeTextBrush}" />
+            <Setter Property="Background" Value="{DynamicResource NoticePanelBrush}" />
+            <Setter Property="BorderBrush" Value="{DynamicResource NoticeBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border x:Name="ButtonBorder"
 								Background="{TemplateBinding Background}"
 								BorderBrush="{TemplateBinding BorderBrush}"
 								BorderThickness="{TemplateBinding BorderThickness}">
-							<ContentPresenter HorizontalAlignment="Center"
+                            <ContentPresenter HorizontalAlignment="Center"
 											  VerticalAlignment="Center"
 											  Margin="{TemplateBinding Padding}" />
-						</Border>
-						<ControlTemplate.Triggers>
-							<Trigger Property="IsMouseOver" Value="True">
-								<Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource NoticePanelHoverBrush}" />
-							</Trigger>
-							<Trigger Property="IsPressed" Value="True">
-								<Setter TargetName="ButtonBorder" Property="Background" Value="{StaticResource NoticeSurfaceBrush}" />
-							</Trigger>
-						</ControlTemplate.Triggers>
-					</ControlTemplate>
-				</Setter.Value>
-			</Setter>
-		</Style>
-	</Window.Resources>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource NoticePanelHoverBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="{DynamicResource NoticeSurfaceBrush}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
 
-	<Grid Background="{StaticResource NoticeSurfaceBrush}">
-		<Grid.RowDefinitions>
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="Auto" />
-		</Grid.RowDefinitions>
+    <Grid Background="{DynamicResource NoticeSurfaceBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
 
-		<Grid Margin="16,15,16,8">
-			<Grid.ColumnDefinitions>
-				<ColumnDefinition Width="Auto" />
-				<ColumnDefinition Width="*" />
-			</Grid.ColumnDefinitions>
+        <Grid Margin="16,15,16,8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-			<Border Width="32"
+            <Border Width="32"
 					Height="32"
 					Margin="0,2,12,0"
 					VerticalAlignment="Top"
 					CornerRadius="16"
-					Background="{StaticResource NoticeAccentBrush}"
+					Background="{DynamicResource NoticeAccentBrush}"
 					BorderBrush="#FFBFD9FF"
 					BorderThickness="1">
-				<TextBlock Text="i"
+                <TextBlock Text="i"
 						   FontSize="21"
 						   FontWeight="Bold"
 						   Foreground="White"
 						   HorizontalAlignment="Center"
 						   VerticalAlignment="Center"
 						   Margin="0,-2,0,0" />
-			</Border>
+            </Border>
 
-			<ScrollViewer Grid.Column="1"
+            <ScrollViewer Grid.Column="1"
 						  VerticalAlignment="Top"
 						  VerticalScrollBarVisibility="Auto"
 						  HorizontalScrollBarVisibility="Disabled"
 						  MaxHeight="170"
 						  Margin="0,1,0,0">
-				<TextBlock x:Name="txtMessage"
+                <TextBlock x:Name="txtMessage"
 						   TextWrapping="Wrap"
-						   Foreground="{StaticResource NoticeTextBrush}"
+						   Foreground="{DynamicResource NoticeTextBrush}"
 						   FontSize="12"
 						   LineHeight="15.5"
 						   MaxWidth="308" />
-			</ScrollViewer>
-		</Grid>
+            </ScrollViewer>
+        </Grid>
 
-		<Border Grid.Row="1"
-				BorderBrush="{StaticResource NoticeBorderBrush}"
+        <Border Grid.Row="1"
+				BorderBrush="{DynamicResource NoticeBorderBrush}"
 				BorderThickness="0,1,0,0"
-				Background="{StaticResource NoticeSurfaceBrush}">
-			<Grid Margin="12,7,12,8">
-				<StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-					<Button x:Name="btnYes"
+				Background="{DynamicResource NoticeSurfaceBrush}">
+            <Grid Margin="12,7,12,8">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="btnYes"
 							Content="Yes"
 							Width="75"
 							Height="23"
 							Margin="0,0,8,0"
 							Visibility="Collapsed" />
-					<Button x:Name="btnNo"
+                    <Button x:Name="btnNo"
 							Content="No"
 							Width="75"
 							Height="23"
 							Margin="0,0,8,0"
 							Visibility="Collapsed" />
-					<Button x:Name="btnCancel"
+                    <Button x:Name="btnCancel"
 							Content="Cancel"
 							Width="75"
 							Height="23"
 							Margin="0,0,8,0"
 							Visibility="Collapsed" />
-					<Button x:Name="btnOk"
+                    <Button x:Name="btnOk"
 							Content="OK"
 							Width="75"
 							Height="23"
 							Visibility="Collapsed" />
-				</StackPanel>
-			</Grid>
-		</Border>
-	</Grid>
+                </StackPanel>
+            </Grid>
+        </Border>
+    </Grid>
 </Window>
