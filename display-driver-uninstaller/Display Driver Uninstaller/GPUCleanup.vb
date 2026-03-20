@@ -2167,7 +2167,15 @@ child.ToLower.Contains("legacy_amdacpksd") Then
                                                 Next
                                             End If
                                         End Using
-                                        If MyRegistry.OpenSubKey(regkey, child).SubKeyCount = 0 Then
+                                        Dim shouldDelete As Boolean = False
+
+                                        Using checkKey As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+                                            If checkKey IsNot Nothing AndAlso checkKey.SubKeyCount = 0 Then
+                                                shouldDelete = True
+                                            End If
+                                        End Using
+
+                                        If shouldDelete Then
                                             Try
                                                 Deletesubregkey(regkey, child)
                                             Catch ex As Exception
