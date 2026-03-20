@@ -299,7 +299,7 @@ Esta opção não foi desenvolvida para corrigir problemas e pode não corrigir 
 			<Text>Lembrar última GPU selecionada</Text>
 		</lblRememberLastChoice>
 				<lblUseDarkTheme>
-			<Text>Use o tema escuro (reinicialização necessária)</Text>
+			<Text>Usar tema escuro</Text>
 		</lblUseDarkTheme>
 	</frmOptions>
 	<frmLaunch Text="Opções de inicialização">

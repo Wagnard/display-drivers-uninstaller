@@ -272,7 +272,7 @@
 			<Tooltip>Brug SetupAPI i stedet for det eksterne værktøj DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 				<lblUseDarkTheme>
-			<Text>Brug mørkt tema (genstart påkrævet)</Text>
+			<Text>Brug mørkt tema</Text>
 		</lblUseDarkTheme>
 	</frmOptions>
 

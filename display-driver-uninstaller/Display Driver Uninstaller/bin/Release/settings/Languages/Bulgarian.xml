@@ -346,7 +346,7 @@
 			<Text>Помни последно избрания ГП</Text>	
 		</lblRememberLastChoice>
 				<lblUseDarkTheme>
-			<Text>Използвай тъмна тема (изисква рестарт)</Text>
+			<Text>Използване на тъмна тема</Text>
 		</lblUseDarkTheme>
   </frmOptions>
    

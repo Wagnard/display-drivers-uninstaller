@@ -342,7 +342,7 @@
 			<Text>Pamiętaj ostatnio wybraną kartę graficzną</Text>	
 		</lblRememberLastChoice>
 				<lblUseDarkTheme>
-			<Text>Użyj ciemnego motywu (wymagany restart)</Text>
+			<Text>Użyj ciemnego motywu</Text>
 		</lblUseDarkTheme>
   </frmOptions>
 

@@ -324,7 +324,7 @@
                Note2: It is also *HIGHLY* recommended to revert this change after you have finished using DDU and re-installed your GPU driver or you may have problem with other device installation.</Tooltip>
      </lblPreventWinUpdate>
 	 		<lblUseDarkTheme>
-			<Text>Gebruik donker thema (herstart vereist)</Text>
+			<Text>Donker thema gebruiken</Text>
 		</lblUseDarkTheme>
   </frmOptions>
 

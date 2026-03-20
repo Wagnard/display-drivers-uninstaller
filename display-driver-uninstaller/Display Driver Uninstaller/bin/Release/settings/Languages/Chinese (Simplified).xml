@@ -328,7 +328,7 @@
 			<Text>记住上次选择的GPU</Text>	
 		</lblRememberLastChoice>
 						<lblUseDarkTheme>
-			<Text>使用深色主题（需要重启）</Text>
+			<Text>使用深色主题</Text>
 		</lblUseDarkTheme>
 	</frmOptions>
 

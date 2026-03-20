@@ -346,7 +346,7 @@
 			<Text>最後に選択した GPU を記憶する</Text>	
 		</lblRememberLastChoice>
 				<lblUseDarkTheme>
-			<Text>ダークテーマを使用（再起動が必要）</Text>
+			<Text>ダークテーマを使用する</Text>
 		</lblUseDarkTheme>
   </frmOptions>
 

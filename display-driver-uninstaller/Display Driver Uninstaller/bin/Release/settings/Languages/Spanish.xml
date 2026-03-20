@@ -319,7 +319,7 @@
                Nota2: También es *ALTAMENTE* recomendable revertir este cambio después de haber terminado de usar DDU y reinstalado el controlador de tu GPU o podrías tener problemas con la instalación de otros dispositivos.</Tooltip>
 		</lblPreventWinUpdate>
 				<lblUseDarkTheme>
-			<Text>Usa el tema oscuro (se requiere reinicio)</Text>
+			<Text>Usar tema oscuro</Text>
 		</lblUseDarkTheme>
 	</frmOptions>
 	<frmLaunch Text="Opciones de arranque">

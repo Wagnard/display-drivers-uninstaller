@@ -269,7 +269,7 @@
 			<Tooltip>ไม่แนะนำถ้าคุณมี GPU สองแบบที่สามารถใช้ API Vulkan ได้</Tooltip>
 		</lblVulkan>
 				<lblUseDarkTheme>
-			<Text>ใช้ธีมสีเข้ม (ต้องรีสตาร์ท)</Text>
+			<Text>ใช้ธีมมืด</Text>
 		</lblUseDarkTheme>
 	</frmOptions>
 

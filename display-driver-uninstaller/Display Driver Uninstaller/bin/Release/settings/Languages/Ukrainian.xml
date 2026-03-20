@@ -334,7 +334,7 @@
 				 інакше у вас можуть виникнути проблеми з інсталяцією іншого пристрою.</Tooltip>
  		</lblPreventWinUpdate>
 				<lblUseDarkTheme>
-			<Text>Використовувати темну тему (потрібен перезапуск)</Text>
+			<Text>Використовувати темну тему</Text>
 		</lblUseDarkTheme>
 	</frmOptions>
 

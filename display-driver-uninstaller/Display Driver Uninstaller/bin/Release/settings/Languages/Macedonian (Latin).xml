@@ -272,7 +272,7 @@
 			<Tooltip>Koristi SetupAPI namestno eksterniot alat DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 		<lblUseDarkTheme>
-			<Text>Користете темна тема (барање рестарт)</Text>
+			<Text>Koristi temna tema</Text>
 		</lblUseDarkTheme>
 	</frmOptions>
 

@@ -263,7 +263,7 @@
 			<Tooltip>Použiť SetupAPI namiesto externého nástroja DDUDR (DEVCON)</Tooltip>
 		</lblUseSetupAPI>
 				<lblUseDarkTheme>
-			<Text>Použite tmavý motív (vyžaduje reštart)</Text>
+			<Text>Použiť tmavú tému</Text>
 		</lblUseDarkTheme>
 	</frmOptions>
 

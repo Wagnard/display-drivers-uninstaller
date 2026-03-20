@@ -321,7 +321,7 @@
                שים לב2: מומלץ *מאוד* להחזיר שינוי זה לאחר שסיימת להשתמש ב-DDU והתקנת מחדש את דרייבר ה-GPU שלך אחרת תיתקל בבעיות בהתקנת התקנים אחרים.</Tooltip>
      </lblPreventWinUpdate>
 	 		<lblUseDarkTheme>
-			<Text>השתמש ב-them כהה (דורש אתחול)</Text>
+			<Text>השתמש בערכת נושא כהה</Text>
 		</lblUseDarkTheme>
   </frmOptions>
 

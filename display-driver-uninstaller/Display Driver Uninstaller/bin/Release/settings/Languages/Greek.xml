@@ -265,7 +265,7 @@
 			<Tooltip>Δεν συνιστάται αν έχετε δύο διαφορετικές μονάδες GPU που μπορούν να χρησιμοποιήσουν το Vulkan API.</Tooltip>
 		</lblVulkan>
 				<lblUseDarkTheme>
-			<Text>Χρήση σκούρου θέματος (απαιτεί επανεκκίνηση)</Text>
+			<Text>Χρήση σκούρου θέματος</Text>
 		</lblUseDarkTheme>
 	</frmOptions>
 

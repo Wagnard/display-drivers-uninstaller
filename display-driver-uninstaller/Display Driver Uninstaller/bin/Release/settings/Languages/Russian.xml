@@ -345,7 +345,7 @@
          <Text>Запомнить последний выбранный графический процессор</Text>
      </lblRememberLastChoice>
 	 		<lblUseDarkTheme>
-			<Text>Использовать темную тему (требуется перезапуск)</Text>
+			<Text>Использовать темную тему</Text>
 		</lblUseDarkTheme>
   </frmOptions>
 
