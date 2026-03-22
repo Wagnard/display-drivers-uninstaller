@@ -112,26 +112,17 @@
 			<Text>Patrons</Text>
 		</PatronMenuItem>
 		<VisitDDUHomeMenuItem>
-			<Text>Offizielle DDU-Website besuchen</Text>
+			<Text>DDU-Website</Text>
 		</VisitDDUHomeMenuItem>
-		<VisitDDUShopMenuItem>
-            <Text>Unseren offiziellen DDU Merch-Shop besuchen</Text>
+        <VisitDDUShopMenuItem>
+            <Text>DDU Merch-Shop</Text>
         </VisitDDUShopMenuItem>
 		<VisitDiscord>
-			<Text>Unserem Discord beitreten</Text>
-		</VisitDiscord> 
+			<Text>Discord-Server</Text>
+		</VisitDiscord>
 		<VisitSVNMenuItem>
-			<Text>GitHub-Website besuchen</Text>
+			<Text>GitHub-Repository</Text>
 		</VisitSVNMenuItem>
-		<VisitGuru3DNvidiaMenuItem>
-			<Text>Guru3d NVIDIA-Thread besuchen</Text>
-		</VisitGuru3DNvidiaMenuItem>
-		<VisitGuru3DAMDMenuItem>
-			<Text>Guru3d AMD-Thread besuchen</Text>
-		</VisitGuru3DAMDMenuItem>
-		<VisitGeforceMenuItem>
-			<Text>Geforce-Thread besuchen</Text>
-		</VisitGeforceMenuItem>
         <DownloadNvidiaMenuItem>
 			<Text>NVIDIA Treiber-Downloads</Text>
 		</DownloadNvidiaMenuItem>
@@ -141,6 +132,7 @@
         <DownloadIntelMenuItem>
 			<Text>Intel Treiber-Downloads</Text>
 		</DownloadIntelMenuItem>
+
 		<Messages>
 			<Text1>Updates sind verfügbar! Jetzt die DDU-Website besuchen?</Text1>
 			<Text2>Für ältere Versionen als die aktuellste gibt es nur begrenzten Support. Bitte prüfen Sie auf eine neuere Version, bevor Sie Bugs melden.</Text2>
@@ -344,7 +336,7 @@
 		<lblRememberLastChoice>
 			<Text>Zuletzt ausgewählte GPU merken</Text>	
 		</lblRememberLastChoice>
-				<lblUseDarkTheme>
+		<lblUseDarkTheme>
 			<Text>Dunkles Design verwenden</Text>
 		</lblUseDarkTheme>
   </frmOptions>
@@ -471,6 +463,7 @@
 				-Sam Gooding
 				-Zero Chung
 				-Remy Starshade
+				-Lion-man
 			</Text>
 		</lblPatron>
 	</frmAbout>
@@ -552,7 +545,7 @@
 
 		<Translator2>
 			<User>_rk_</User>
-			<LastUpdate>15/02/2026</LastUpdate>			
+			<LastUpdate>22/03/2026</LastUpdate>			
 		</Translator2>
 		
 		<Translator3>
