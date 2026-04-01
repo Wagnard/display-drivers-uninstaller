@@ -1694,11 +1694,13 @@ Namespace Display_Driver_Uninstaller
                                     If regkey2 IsNot Nothing Then
                                         If ServiceInstaller.GetServiceStatus(service) = Nothing AndAlso ServiceInstaller.GetServiceStatus(service, False) = Nothing Then
                                             ' Absent mais registry résiduel - delete directement en SYSTEM
-                                            Try
-                                                Deletesubregkey(regkey, service, False)
-                                            Catch ex As Exception
-                                                Application.Log.AddException(ex)
-                                            End Try
+                                            If Not (config.SelectedGPU = GPUVendor.Nvidia AndAlso config.NVIDIA_App_Installed AndAlso (Not config.RemoveGFE) AndAlso StrContainsAny(service, True, "nvlddmkm")) Then
+                                                Try
+                                                    Deletesubregkey(regkey, service, False)
+                                                Catch ex As Exception
+                                                    Application.Log.AddException(ex)
+                                                End Try
+                                            End If
                                         Else
                                             serviceExists = True
                                         End If
@@ -2115,7 +2117,7 @@ Namespace Display_Driver_Uninstaller
             End Try
         End Sub
 
-        Public Sub Clsidleftover(ByVal clsidleftover As String())
+        Public Sub Clsidleftover(ByVal clsidleftover As String(), config As ThreadSettings)
 
             Dim wantedvalue As String
             Dim wantedvalue2 As String
@@ -2131,7 +2133,6 @@ Namespace Display_Driver_Uninstaller
                     If regkey IsNot Nothing Then
                         For Each child As String In regkey.GetSubKeyNames()
                             If String.IsNullOrWhiteSpace(child) Then Continue For
-
                             If StrContainsAny(child, True, clsidleftover) Then
                                 Try
                                     appid = TryCast(MyRegistry.OpenSubKey(regkey, child).GetValue("AppID", String.Empty), String)
@@ -2170,6 +2171,8 @@ Namespace Display_Driver_Uninstaller
                                 If subregkey IsNot Nothing Then
                                     wantedvalue = TryCast(subregkey.GetValue("", String.Empty), String)
                                     If Not String.IsNullOrWhiteSpace(wantedvalue) Then
+
+                                        If config.SelectedGPU = GPUVendor.Nvidia AndAlso config.NVIDIA_App_Installed AndAlso (Not config.RemoveGFE) AndAlso StrContainsAny(wantedvalue, True, "nvui") Then Continue For
 
                                         If StrContainsAny(wantedvalue, True, clsidleftover) Then
 

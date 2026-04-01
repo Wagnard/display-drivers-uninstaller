@@ -141,7 +141,7 @@ Namespace Display_Driver_Uninstaller
 
                 _cleanupEngine.ClassRoot(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\classroot.cfg"), config)  '// add each line as String Array.
 
-                _cleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\clsidleftover.cfg"))
+                _cleanupEngine.Clsidleftover(IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\clsidleftover.cfg"), config)
 
                 Application.Log.AddMessage("Removing known Packages")
 

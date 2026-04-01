@@ -1385,7 +1385,7 @@ wantedvalue2.ToLower.Contains("ati video") Then
                     Application.Log.AddMessage("AppID and clsidleftover cleanUP")
                     'old dcom 
 
-                    CLSIDCleanThread(clsidleftover)
+                    CLSIDCleanThread(clsidleftover, config)
                 End Sub)
                 Return
             End If
@@ -3876,15 +3876,15 @@ child2.ToLower.Contains("hdaudio.driver") Then
 
                     'for GFE removal only
                     If removegfe Then
-                        Dim thread1 As Task = Task.Run(Sub() CLSIDCleanThread(clsidleftoverGFE))
+                    Dim thread1 As Task = Task.Run(Sub() CLSIDCleanThread(clsidleftoverGFE, config))
                         TaskList.Add(thread1)
                     Else
-                        Dim thread1 As Task = Task.Run(Sub() CLSIDCleanThread(clsidleftover))
+                    Dim thread1 As Task = Task.Run(Sub() CLSIDCleanThread(clsidleftover, config))
                         TaskList.Add(thread1)
                     End If
 
                     If removenvbroadcast Then
-                        Dim thread2 As Task = Task.Run(Sub() CLSIDCleanThread(clsidleftoverNVB))
+                    Dim thread2 As Task = Task.Run(Sub() CLSIDCleanThread(clsidleftoverNVB, config))
                         TaskList.Add(thread2)
                     End If
 
@@ -7276,10 +7276,10 @@ child.ToLower.Contains("nvidia.gfe") Then
 
                     CleanupEngine.Interfaces(reginterface) '// add each line as String Array.
 
-                    CleanupEngine.Clsidleftover(clsidleftover) '// add each line as String Array.
+                    CleanupEngine.Clsidleftover(clsidleftover, config) '// add each line as String Array.
 
                     If config.RemoveINTELIGS Then
-                        CleanupEngine.Clsidleftover(clsidleftoverigs) '// add each line as String Array.
+                        CleanupEngine.Clsidleftover(clsidleftoverigs, config) '// add each line as String Array.
                     End If
 
                 End Sub)
@@ -8797,11 +8797,11 @@ filepath & "\ati.ace\core-static"
             CleanupEngine.Deletevalue(value1, value2, throwOnMissingSubKey)
         End Sub
 
-        Private Sub CLSIDCleanThread(ByVal Clsidleftover As String())
+        Private Sub CLSIDCleanThread(ByVal Clsidleftover As String(), config As ThreadSettings)
             ImpersonateUser.RunImpersonatedSystem(
                 Sub()
                     Dim engine As New CleanupEngine
-                    engine.Clsidleftover(Clsidleftover)
+                    engine.Clsidleftover(Clsidleftover, config)
                 End Sub)
         End Sub
 
