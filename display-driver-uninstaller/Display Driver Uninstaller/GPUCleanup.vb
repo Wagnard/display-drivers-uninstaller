@@ -2704,66 +2704,8 @@ child.Contains("HydraVision\") Then
                 End If
 
                 'Task Scheduler cleanUP (AMD Updater)
-                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames
-                            If String.IsNullOrWhiteSpace(child) Then Continue For
-                            Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-                                If regkey2 IsNot Nothing Then
-                                    If Not String.IsNullOrWhiteSpace(regkey2.GetValue("Description", String.Empty).ToString) Then
-                                        If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "AMD Updater", "AMDLinkUpdate", "ModifyLinkUpdate", "AMDInstallUEP", "AMDInstallLauncher") Then
-                                            Deletesubregkey(regkey, child)
-                                        End If
-                                    End If
-                                    If Not String.IsNullOrWhiteSpace(regkey2.GetValue("Path", String.Empty).ToString) Then
-                                        If StrContainsAny(regkey2.GetValue("Path", String.Empty).ToString, True, "\StartCN", "\StartCNBM", "\AMD ThankingURL", "\StartAUEP") Then
-                                            Deletesubregkey(regkey, child)
-                                        End If
-                                    End If
-                                End If
-                            End Using
-                        Next
-                    End If
-                End Using
-                Using schedule As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache", True)
-                    If schedule IsNot Nothing Then
-                        Using regkey As RegistryKey = MyRegistry.OpenSubKey(schedule, "Tree", True)
-                            If regkey IsNot Nothing Then
-                                For Each child As String In regkey.GetSubKeyNames
-                                    If String.IsNullOrWhiteSpace(child) Then Continue For
-                                    If StrContainsAny(child, True, "AMD Updater", "AMDLinkUpdate", "StartCN", "StartDVR", "StartCNBM", "ModifyLinkUpdate", "AMD ThankingURL", "AMDInstallLauncher", "AMDInstallUEP", "StartAUEP", "AMD Install Manager") Then
-                                        For Each ScheduleChild As String In schedule.GetSubKeyNames
-                                            If String.IsNullOrWhiteSpace(ScheduleChild) Then Continue For
-                                            Try
-                                                Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-                                                    If regkey2 IsNot Nothing Then
-                                                        If Not String.IsNullOrWhiteSpace(regkey2.GetValue("Id", String.Empty).ToString) Then
-                                                            wantedvalue = regkey2.GetValue("Id", String.Empty).ToString
-                                                            If String.IsNullOrEmpty(wantedvalue) Then Continue For
-                                                            Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(schedule, ScheduleChild, True)
-                                                                If regkey3 IsNot Nothing Then
-                                                                    For Each child2 As String In regkey3.GetSubKeyNames
-                                                                        If String.IsNullOrWhiteSpace(child2) Then Continue For
-                                                                        If StrContainsAny(wantedvalue, True, child2) Then
-                                                                            Deletesubregkey(regkey3, child2)
-                                                                        End If
-                                                                    Next
-                                                                End If
-                                                            End Using
-                                                        End If
-                                                    End If
-                                                End Using
-                                            Catch ex As Exception
-                                                Application.Log.AddException(ex)
-                                            End Try
-                                        Next
-                                        Deletesubregkey(regkey, child)
-                                    End If
-                                Next
-                            End If
-                        End Using
-                    End If
-                End Using
+
+                DeepManualDeleteTasks(config, "AMD Updater", "AMDLinkUpdate", "StartCN", "StartDVR", "StartCNBM", "ModifyLinkUpdate", "AMD ThankingURL", "AMDInstallLauncher", "AMDInstallUEP", "StartAUEP", "AMD Install Manager")
 
                 '      Dim OldValue As String = Nothing
                 'Select Case System.Windows.Forms.SystemInformation.BootMode
@@ -5857,75 +5799,10 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                 End If
 
                 'Task Scheduler cleanUP 
-                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tasks", True)
-                    If regkey IsNot Nothing Then
-                        For Each child As String In regkey.GetSubKeyNames
-                            If String.IsNullOrWhiteSpace(child) Then Continue For
-                            Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-                                If regkey2 IsNot Nothing Then
-                                    If Not String.IsNullOrWhiteSpace(regkey2.GetValue("Description", String.Empty).ToString) Then
-                                        If StrContainsAny(regkey2.GetValue("Description", String.Empty).ToString, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NVIDIA Profile Updater", "NVIDIA telemetry monitor", "NVIDIA crash and telemetry reporter", "batteryboost", "nvngx", "NVIDIA App SelfUpdate") AndAlso config.RemoveGFE Then
-                                            Deletesubregkey(regkey, child)
-                                        End If
-                                    End If
-                                End If
-                            End Using
-                        Next
-                    End If
-                End Using
 
-                Using schedule As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache", True)
-                    If schedule IsNot Nothing Then
-                        Using regkey As RegistryKey = MyRegistry.OpenSubKey(schedule, "Tree", True)
-                            If regkey IsNot Nothing Then
-                                For Each child As String In regkey.GetSubKeyNames
-                                    If String.IsNullOrWhiteSpace(child) Then Continue For
-                                    If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NvBatteryBoostCheckOnLogon", "nvngx", "NVIDIA App SelfUpdate") AndAlso config.RemoveGFE Then
-                                        For Each ScheduleChild As String In schedule.GetSubKeyNames
-                                            If String.IsNullOrWhiteSpace(ScheduleChild) Then Continue For
-                                            Try
-                                                Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-                                                    If regkey2 IsNot Nothing Then
-                                                        If Not String.IsNullOrWhiteSpace(regkey2.GetValue("Id", String.Empty).ToString) Then
-                                                            wantedvalue = regkey2.GetValue("Id", String.Empty).ToString
-                                                            Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(schedule, ScheduleChild, True)
-                                                                If regkey3 IsNot Nothing Then
-                                                                    For Each child2 As String In regkey3.GetSubKeyNames
-                                                                        If String.IsNullOrWhiteSpace(child2) Then Continue For
-                                                                        If StrContainsAny(wantedvalue, True, child2) Then
-                                                                            Deletesubregkey(regkey3, child2)
-                                                                        End If
-                                                                    Next
-                                                                End If
-                                                            End Using
-                                                        End If
-                                                    End If
-                                                End Using
-                                            Catch ex As Exception
-                                                Application.Log.AddException(ex)
-                                            End Try
-                                        Next
-                                        Deletesubregkey(regkey, child)
-                                    End If
-                                Next
-                            End If
-                        End Using
-                    End If
-                End Using
-
-                Dim filePath As String = config.Paths.System32 + "Tasks"
-                If _fileIo.ExistsDir(filePath) Then
-                    If filePath IsNot Nothing Then
-                        For Each child As String In _fileIo.GetFiles(filePath)
-                            If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NvBatteryBoostCheckOnLogon", "nvngx") AndAlso config.RemoveGFE Then
-                                    Delete(child)
-                                End If
-                            End If
-                        Next
-                    End If
+                If config.RemoveGFE Then
+                    DeepManualDeleteTasks(config, "nvprofileupdater", "nvnodelauncher", "nvtmmon", "nvtmrep", "NvDriverUpdateCheckDaily", "NVIDIA GeForce Experience", "NvBatteryBoostCheckOnLogon", "nvngx", "NVIDIA App SelfUpdate", "NVIDIA Shader Compiler")
                 End If
-
 
                 '      Dim OldValue As String = Nothing
                 '      Select Case System.Windows.Forms.SystemInformation.BootMode
@@ -5997,6 +5874,134 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                 KillProcess("explorer")
             End Sub)
         End Sub
+
+        Private Sub DeepManualDeleteTasks(config As ThreadSettings, ParamArray taskNames As String())
+            If taskNames Is Nothing OrElse taskNames.Length = 0 Then Return
+
+            For Each taskName In taskNames
+                If String.IsNullOrWhiteSpace(taskName) Then Continue For
+                InternalDeleteTask(taskName, config)
+            Next
+        End Sub
+
+        Private Sub InternalDeleteTask(taskPath As String, config As ThreadSettings)
+            Dim taskGuid As String = String.Empty
+            Dim baseRegPath As String = "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache"
+
+            Dim cleanPath As String = taskPath.Trim("\"c)
+
+            If Not cleanPath.Contains("\") Then
+                Dim resolvedPath As String = FindTaskPathInTree(cleanPath)
+                If resolvedPath IsNot Nothing Then
+                    cleanPath = resolvedPath
+                End If
+            End If
+
+            Try
+                Using treeKey = MyRegistry.OpenSubKey(Registry.LocalMachine, $"{baseRegPath}\Tree\{cleanPath}")
+                    If treeKey IsNot Nothing Then
+                        taskGuid = treeKey.GetValue("Id")?.ToString()
+                    End If
+                End Using
+
+                Registry.LocalMachine.DeleteSubKeyTree($"{baseRegPath}\Tree\{cleanPath}", False)
+
+                If Not String.IsNullOrEmpty(taskGuid) Then
+                    Registry.LocalMachine.DeleteSubKeyTree($"{baseRegPath}\Tasks\{taskGuid}", False)
+
+                    Dim triggers() As String = {"Logon", "Boot", "Plain", "Maintenance"}
+                    For Each trigger In triggers
+                        Using triggerKey = MyRegistry.OpenSubKey(Registry.LocalMachine, $"{baseRegPath}\{trigger}", True)
+                            If triggerKey IsNot Nothing Then
+                                triggerKey.DeleteSubKey(taskGuid, False)
+                            End If
+                        End Using
+                    Next
+                End If
+
+                Dim system32TasksPath As String = Path.Combine(config.Paths.System32, "Tasks")
+                Dim fullTaskFilePath As String = Path.Combine(system32TasksPath, cleanPath)
+
+                If _fileIo.ExistsFile(fullTaskFilePath) Then
+                    _fileIo.Delete(fullTaskFilePath)
+                End If
+
+                CleanEmptyTaskDirectories(system32TasksPath, cleanPath)
+
+            Catch ex As Exception
+                Application.Log.AddException(ex, cleanPath)
+            End Try
+        End Sub
+
+        Private Sub CleanEmptyTaskDirectories(baseSystemPath As String, taskPath As String)
+
+            Dim parts() As String = taskPath.Split("\"c)
+            If parts.Length <= 1 Then Return
+
+            Dim stopRegistry As Boolean = False
+
+            For i As Integer = parts.Length - 2 To 0 Step -1
+                Dim currentRelativePath As String = String.Join("\", parts.Take(i + 1))
+
+                If Not stopRegistry Then
+                    Dim treeRegPath As String = $"SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\{currentRelativePath}"
+                    Try
+                        Using key = Registry.LocalMachine.OpenSubKey(treeRegPath)
+                            If key IsNot Nothing AndAlso key.SubKeyCount = 0 AndAlso
+                       key.GetValueNames().All(Function(v) v.Equals("SD", StringComparison.OrdinalIgnoreCase)) Then
+                                Registry.LocalMachine.DeleteSubKeyTree(treeRegPath, False)
+                            Else
+                                stopRegistry = True
+                            End If
+                        End Using
+                    Catch ex As Exception
+                        Application.Log.AddException(ex)
+                        stopRegistry = True
+                    End Try
+                End If
+
+                Dim fullDirPath As String = Path.Combine(baseSystemPath, currentRelativePath)
+                Try
+                    If _fileIo.ExistsDir(fullDirPath) AndAlso _fileIo.CountDirectories(fullDirPath) = 0 Then
+                        Delete(fullDirPath)
+                    End If
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+            Next
+
+        End Sub
+
+        Private Function FindTaskPathInTree(taskName As String) As String
+            Dim baseTreePath As String = "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree"
+
+            Return SearchTaskRecursive(Registry.LocalMachine, baseTreePath, taskName)
+        End Function
+
+        Private Function SearchTaskRecursive(hive As RegistryKey, currentRegPath As String, taskName As String) As String
+            Try
+                Using key = hive.OpenSubKey(currentRegPath)
+                    If key Is Nothing Then Return Nothing
+
+                    For Each subKeyName In key.GetSubKeyNames()
+                        If subKeyName.Equals(taskName, StringComparison.OrdinalIgnoreCase) OrElse
+                            subKeyName.StartsWith(taskName, StringComparison.OrdinalIgnoreCase) Then
+
+                            Dim fullRegPath As String = $"{currentRegPath}\{subKeyName}"
+                            Return fullRegPath.Substring("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\".Length)
+                        End If
+
+                        ' Descend récursivement
+                        Dim result As String = SearchTaskRecursive(hive, $"{currentRegPath}\{subKeyName}", taskName)
+                        If result IsNot Nothing Then Return result
+                    Next
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+            End Try
+
+            Return Nothing
+        End Function
 
         Private Sub CleanNvidiaCache(ByVal config As ThreadSettings)
             Dim filePath As String = config.Paths.System32 + "config\systemprofile\AppData\Local\NVIDIA"
@@ -7019,8 +7024,7 @@ child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If child.ToLower.Contains("nv_cache") Or
-child.ToLower.Contains("displaydriver") Then
+                                    If child.Equals("nv_cache", StringComparison.OrdinalIgnoreCase) Or child.Equals("displaydriver", StringComparison.OrdinalIgnoreCase) Then
                                         Delete(child)
                                     End If
                                 End If
@@ -7046,9 +7050,9 @@ child.ToLower.Contains("displaydriver") Then
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If (child.ToLower.Contains("geforceexperienceselfupdate") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("gfe") AndAlso config.RemoveGFE) Or
-child.ToLower.Contains("displaydriver") Then
+                                    If (child.Equals("geforceexperienceselfupdate", StringComparison.OrdinalIgnoreCase) AndAlso config.RemoveGFE) Or
+(child.Equals("gfe", StringComparison.OrdinalIgnoreCase) AndAlso config.RemoveGFE) Or
+child.Equals("displaydriver", StringComparison.OrdinalIgnoreCase) Then
                                         Delete(child)
                                     End If
                                 End If
@@ -7074,7 +7078,7 @@ child.ToLower.Contains("displaydriver") Then
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If child.ToLower.Contains("nv_cache") Then
+                                    If child.Equals("nv_cache", StringComparison.OrdinalIgnoreCase) Then
                                         Delete(child)
                                     End If
                                 End If
@@ -7139,15 +7143,15 @@ child.ToLower.Contains("displaydriver") Then
                     If _fileIo.ExistsDir(filePath) Then
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If child.ToLower.Contains("gfexperience") Or
-child.ToLower.Contains("nvidia.sett") Or
-child.ToLower.Contains("nvidia.updateservice") Or
-child.ToLower.Contains("nvidia.win32api") Or
-child.ToLower.Contains("installeruiextension") Or
-child.ToLower.Contains("installerservice") Or
-child.ToLower.Contains("gridservice") Or
-child.ToLower.Contains("shadowplay") Or
-child.ToLower.Contains("nvidia.gfe") Then
+                                If child.Equals("gfexperience", StringComparison.OrdinalIgnoreCase) Or
+child.Equals("nvidia.sett", StringComparison.OrdinalIgnoreCase) Or
+child.Equals("nvidia.updateservice", StringComparison.OrdinalIgnoreCase) Or
+child.Equals("nvidia.win32api", StringComparison.OrdinalIgnoreCase) Or
+child.Equals("installeruiextension", StringComparison.OrdinalIgnoreCase) Or
+child.Equals("installerservice", StringComparison.OrdinalIgnoreCase) Or
+child.Equals("gridservice", StringComparison.OrdinalIgnoreCase) Or
+child.Equals("shadowplay", StringComparison.OrdinalIgnoreCase) Or
+child.Equals("nvidia.gfe", StringComparison.OrdinalIgnoreCase) Then
                                     Delete(child)
                                 End If
                             End If
@@ -8822,5 +8826,8 @@ filepath & "\ati.ace\core-static"
             ThreadFinised = True
         End Sub
 
+        Private Function IsDirEmpty(path As String) As Boolean
+            Return _fileIo.GetFiles(path).Count = 0 AndAlso _fileIo.GetDirectories(path).Count = 0
+        End Function
     End Class
 End Namespace
