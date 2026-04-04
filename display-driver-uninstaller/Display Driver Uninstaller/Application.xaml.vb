@@ -1088,8 +1088,8 @@ Namespace Display_Driver_Uninstaller
 						End If
 					End Using
 				Catch ex As Exception
-					Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for APPXSvc,etc...!")
-				End Try
+                    Application.Log.AddException(ex, "Failed to set 'DDUSafeBootHandler' RegistryKey in 'SYSTEM\CurrentControlSet\Control\SafeBoot\Minimal' !")
+                End Try
 
 				Try
 					Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\SafeBoot\Network", True)
@@ -1100,8 +1100,8 @@ Namespace Display_Driver_Uninstaller
 						End If
 					End Using
 				Catch ex As Exception
-					Application.Log.AddException(ex, "Failed to set '\SafeBoot\Minimal' RegistryKey for APPXSvc,etc...!")
-				End Try
+                    Application.Log.AddException(ex, "Failed to set 'DDUSafeBootHandler' RegistryKey in 'SYSTEM\CurrentControlSet\Control\SafeBoot\Network' !")
+                End Try
 				Return
 			End If
 

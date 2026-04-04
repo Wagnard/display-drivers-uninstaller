@@ -6977,10 +6977,9 @@ child.ToLower.Contains("update core") AndAlso config.RemoveGFE Then
                     filePath = config.Paths.SystemDrive & "Temp"
                     If _fileIo.ExistsDir(filePath) Then
                         For Each child As String In _fileIo.GetDirectories(filePath)
-                            If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "NVIDIA") Then
-                                    Delete(child)
-                                End If
+                            If String.IsNullOrWhiteSpace(child) Then Continue For
+                            If child.Equals("NVIDIA", StringComparison.OrdinalIgnoreCase) Then
+                                Delete(child)
                             End If
                         Next
                     End If
