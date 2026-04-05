@@ -300,6 +300,10 @@
 		<lblRemNVCP>
 			<Text>(DCH driver) Verwijder NVIDIA Control Panel geïnstalleerd van de Microsoft Store</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>Verwijder NVIDIA Shader Cache (Vink uit als je ASC / NVIDIA App Auto Shader Compilation gebruikt)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblRemINTELCP>
 			<Text>(DCH driver) Verwijder Intel® Control Panel geïnstalleerd van de Microsoft Store</Text>
 		</lblRemINTELCP>

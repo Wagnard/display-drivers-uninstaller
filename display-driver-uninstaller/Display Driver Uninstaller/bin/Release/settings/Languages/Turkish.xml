@@ -300,6 +300,10 @@
 		<lblRemNVCP>
 			<Text>(DCH sürücü) Microsoft Mağazası'ndan yüklenen NVIDIA Denetim Masası'nı kaldır</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>NVIDIA Gölgelendirici Önbelleğini kaldır (ASC / NVIDIA App Otomatik Gölgelendirici Derlemesi kullanıyorsanız işareti kaldırın)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>NVIDIA Denetim Masası Global / Program Ayarlarını Koru.</Text>
 			<Tooltip>

@@ -299,6 +299,10 @@
 		<lblRemNVCP>
 			<Text>(Sterownik DCH) Usuń Panel Sterowania NVIDIA zainstalowany z Microsoft Store</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>Usuń pamięć podręczną shaderów NVIDIA (Odznacz przy użyciu ASC / automatycznej kompilacji shaderów NVIDIA App)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>Zachowaj globalne ustawienia oraz ustawienia programu Panel Sterowania NVIDIA</Text>
 			<Tooltip>

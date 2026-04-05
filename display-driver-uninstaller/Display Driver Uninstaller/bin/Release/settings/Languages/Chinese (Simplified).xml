@@ -288,6 +288,10 @@
 		<lblRemNVCP>
 			<Text>(仅适用于 DCH 驱动程序) 卸载从 Microsoft Store 安装的 NVIDIA 控制面板</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>卸载 NVIDIA 着色器缓存 (如使用 ASC / NVIDIA App 自动着色器编译，请取消勾选)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblRemINTELCP>
 			<Text>(DCH 驱动程序) 移除通过 Microsoft Store 安装的 Intel® 控制面板</Text>
 		</lblRemINTELCP>

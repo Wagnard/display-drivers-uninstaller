@@ -300,6 +300,10 @@
 		<lblRemNVCP>
 			<Text>(DCH ovladač) Odstranit NVIDIA Control Panel nainstalovaný z obchodu Microsoft Store</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>Odebrat mezipaměť shaderů NVIDIA (Odškrtněte při použití ASC / NVIDIA App Auto Shader Compilation)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>Zachovat globální / programová nastavení NVIDIA Control Panel.</Text>
 			<Tooltip>

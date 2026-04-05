@@ -304,6 +304,10 @@
 		<lblRemNVCP>
 			<Text>(DCH 驅動程式) 移除從 Microsoft Store 安裝的 NVIDIA 控制台</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>移除 NVIDIA 著色器快取 (若使用 ASC / NVIDIA App 自動著色器編譯，請取消勾選)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>保留 NVIDIA 控制台的全局/程式設定。</Text>
 			<Tooltip>

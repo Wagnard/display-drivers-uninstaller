@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="si" Text="Slovenian" >
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -290,6 +290,10 @@
 		<lblRemNVCP>
 			<Text>(DCH gonilnik) Odstrani nameščeno nadzorno ploščo NVIDIA iz Microsoft trgovine</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>Odstrani predpomnilnik senčilnikov NVIDIA (Odznači, če uporabljaš ASC / samodejno prevajanje senčilnikov v NVIDIA App)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>Obdrži nadzorno ploščo 'NVIDIA Globalno' / Nastavitve programa.</Text>
 			<Tooltip>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="uk-UA" Text="Ukrainian">
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -302,6 +302,10 @@
 		<lblRemNVCP>
 			<Text>Видалити панель керування NVIDIA, інстальовану з Microsoft Store (драйвер DCH)</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>Видалити кеш шейдерів NVIDIA (Зніміть позначку, якщо використовується ASC / автокомпіляція шейдерів NVIDIA App)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>Зберегти глобальні налаштування панелі керування NVIDIA та налаштування програми.</Text>
 			<Tooltip>

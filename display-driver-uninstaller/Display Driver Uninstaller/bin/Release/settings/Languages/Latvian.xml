@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="lv-LV" Text="Latvian" >
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -295,6 +295,10 @@
 		<lblRemNVCP>
 			<Text>(DCH draiveris) Noņemiet no Microsoft veikala instalēto NVIDIA vadības paneli</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>Noņemt NVIDIA Shader kēšatmiņu (Noņemiet atzīmi, ja izmantojat ASC / NVIDIA App Auto Shader Compilation)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>Saglabājiet NVIDIA vadības paneļa vispārējos / programmas iestatījumus.</Text>
 			<Tooltip>

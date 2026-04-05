@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="fa-IR" Text="Persian (فارسی)" >
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -278,6 +278,10 @@
 		<lblRemNVCP>
 			<Text>(DCH driver) Remove the NVIDIA Control Panel installed from the Microsoft Store</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>حذف کش شیدر NVIDIA (در صورت استفاده از ASC / کامپایل خودکار شیدر NVIDIA App، تیک را بردارید)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblRemINTELCP>
 			<Text>(DCH driver) Remove the Intel® Control Panel installed from the Microsoft Store</Text>
 		</lblRemINTELCP>

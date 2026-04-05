@@ -290,6 +290,10 @@
 		<lblRemNVCP>
 			<Text>(דרייבר DCH) הסר את לוח הבקרה של NVIDIA שהותקן מחנות Microsoft</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>הסר מטמון שיידר של NVIDIA (בטל סימון אם משתמש ב-ASC / NVIDIA App קומפילציה אוטומטית של שיידר)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>שמור את ההגדרות הגלובליות או הגדרות התוכנית של לוח הבקרה של NVIDIA.</Text>
 			<Tooltip>

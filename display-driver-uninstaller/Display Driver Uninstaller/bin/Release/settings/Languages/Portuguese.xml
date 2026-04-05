@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="pt-PT" Text="Portuguese">
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -299,6 +299,10 @@
 		<lblRemNVCP>
 			<Text>(controlador DCH) Remover o Painel de Controlo NVIDIA instalado da Microsoft Store</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>Remover Cache de Shader NVIDIA (Desmarque se usar ASC / Compilação Automática de Shader do NVIDIA App)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>Manter o Painel de Controlo Global NVIDIA / Definições do Programa.</Text>
 			<Tooltip>

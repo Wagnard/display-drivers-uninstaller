@@ -300,6 +300,10 @@
 		<lblRemNVCP>
 			<Text>(DCH ドライバー) Microsoft Store からインストールされた NVIDIA コントロールパネルを削除する</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>NVIDIA シェーダーキャッシュを削除する (ASC / NVIDIA App 自動シェーダーコンパイルを使用している場合はチェックを外してください)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>NVIDIA コントロールパネルのグローバル / プログラム設定を維持する</Text>
 			<Tooltip>

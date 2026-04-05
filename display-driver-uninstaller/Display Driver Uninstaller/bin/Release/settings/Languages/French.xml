@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="fr-FR" Text="French" >
 	<!--
 		Voir le fichier ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -299,6 +299,10 @@
 		<lblRemNVCP>
 			<Text>Supprimer NVIDIA (Pilote DCH) du Panneau de Configuration du Microsoft Store</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>Supprimer le cache de shaders NVIDIA (Décocher si vous utilisez ASC / NVIDIA App Compilation automatique de shaders)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>Conserver le Panneau de Contrôle Global NVIDIA / Paramètres du Programme.</Text>
 			<Tooltip>

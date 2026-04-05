@@ -266,6 +266,10 @@
 		<lblRemNVCP>
 			<Text>(DCH driver) Remover o NVIDIA Control Panel instalado da Microsoft Store</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>Remover Cache de Shader NVIDIA (Desmarque se usar ASC / Compilação Automática de Shader do NVIDIA App)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>Manter Painel de Controle / Configurações de Programa da NVIDIA.</Text>
 			<Tooltip>Se você encontrou problemas que levaram você a usar o DDU para limpeza, recomendamos evitar selecionar esta opção.

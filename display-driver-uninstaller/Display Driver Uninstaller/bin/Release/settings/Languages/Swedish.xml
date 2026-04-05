@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="sv-SE" Text="Swedish">
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -299,6 +299,10 @@
 		<lblRemNVCP>
 			<Text>(DCH-drivrutin) Ta bort NVIDIA Kontrollpanel installerad från Microsoft Store</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>Ta bort NVIDIA Shader-cache (Avmarkera om du använder ASC / NVIDIA App Auto Shader Compilation)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>Behåll Global NVIDIA Kontrollpanel / Programinställningar.</Text>
 			<Tooltip>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="ko-KR" Text="한국어" >
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -300,6 +300,10 @@
 		<lblRemNVCP>
 			<Text>(DCH 드라이버) Microsoft Store에서 설치된 NVIDIA 제어판 제거</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>NVIDIA 셰이더 캐시 제거 (ASC / NVIDIA App 자동 셰이더 컴파일 사용 시 체크 해제)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>NVIDIA 제어판 전역 / 프로그램 설정을 유지합니다.</Text>
 			<Tooltip>
