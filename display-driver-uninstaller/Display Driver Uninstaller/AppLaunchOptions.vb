@@ -37,8 +37,9 @@ Namespace Display_Driver_Uninstaller
 		Public Property RemoveGFE As Boolean = False
 		Public Property RemoveNVBROADCAST As Boolean = False
 		Public Property RemoveNVCP As Boolean = False
-		Public Property KeepNVCPopt As Boolean = False
-		Public Property RemoveINTELCP As Boolean = False
+        Public Property KeepNVCPopt As Boolean = False
+        Public Property RemoveNvidiaCache As Boolean = False
+        Public Property RemoveINTELCP As Boolean = False
 		Public Property RemoveINTELIGS As Boolean = False
 		Public Property RemoveEnduranceGaming As Boolean = False
 		Public Property RemoveIntelNpu As Boolean = False
@@ -132,8 +133,9 @@ Namespace Display_Driver_Uninstaller
 						Case StrContainsAny(Argument, True, "-RemoveGFE") : RemoveGFE = True
 						Case StrContainsAny(Argument, True, "-RemoveNVBROADCAST") : RemoveNVBROADCAST = True
 						Case StrContainsAny(Argument, True, "-RemoveNVCP") : RemoveNVCP = True
-						Case StrContainsAny(Argument, True, "-KeepNVCPopt") : KeepNVCPopt = True
-						Case StrContainsAny(Argument, True, "-RemoveINTELCP") : RemoveINTELCP = True
+                        Case StrContainsAny(Argument, True, "-KeepNVCPopt") : KeepNVCPopt = True
+                        Case StrContainsAny(Argument, True, "-RemoveNvidiaCache") : RemoveNvidiaCache = True
+                        Case StrContainsAny(Argument, True, "-RemoveINTELCP") : RemoveINTELCP = True
 						Case StrContainsAny(Argument, True, "-RemoveINTELIGS") : RemoveINTELIGS = True
 						Case StrContainsAny(Argument, True, "-RemoveEnduranceGaming") : RemoveEnduranceGaming = True
 						Case StrContainsAny(Argument, True, "-RemoveIntelNpu") : RemoveIntelNpu = True
@@ -160,8 +162,9 @@ Namespace Display_Driver_Uninstaller
 							RemoveNVCP = True
 							RemoveNVBROADCAST = True
 							RemoveGFE = True
-							RemovePhysX = True
-							CleanIntel = True
+                            RemovePhysX = True
+                            RemoveNvidiaCache = True
+                            CleanIntel = True
 							CleanAmd = True
 							CleanNvidia = True
 							RemoveNvidiaDirs = True

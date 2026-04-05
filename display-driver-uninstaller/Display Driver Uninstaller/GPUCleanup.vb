@@ -6009,11 +6009,19 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                 If filePath IsNot Nothing Then
                     For Each child As String In _fileIo.GetDirectories(filePath)
                         If String.IsNullOrWhiteSpace(child) = False Then
-                            If StrContainsAny(child, True, "DXCache", "GLCache", "OptixCache", "computecache") Then
+                            If StrContainsAny(child, True, "PerDriverVersion", "DXCache", "GLCache", "OptixCache", "computecache") Then
                                 Delete(child)
                             End If
                         End If
                     Next
+                    If _fileIo.CountDirectories(filePath) = 0 Then
+                        Delete(filePath)
+                    Else
+                        For Each data As String In _fileIo.GetDirectories(filePath)
+                            If String.IsNullOrWhiteSpace(data) Then Continue For
+                            Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+                        Next
+                    End If
                 End If
             End If
 
@@ -6041,6 +6049,14 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                                 End If
                             End If
                         Next
+                        If _fileIo.CountDirectories(filePath) = 0 Then
+                            Delete(filePath)
+                        Else
+                            For Each data As String In _fileIo.GetDirectories(filePath)
+                                If String.IsNullOrWhiteSpace(data) Then Continue For
+                                Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+                            Next
+                        End If
                     Catch ex As Exception
                         Application.Log.AddException(ex)
                     End Try
@@ -6053,11 +6069,19 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                     Try
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "DXCache", "GLCache", "OptixCache", "computecache") Then
+                                If StrContainsAny(child, True, "PerDriverVersion", "DXCache", "GLCache", "OptixCache", "computecache") Then
                                     Delete(child)
                                 End If
                             End If
                         Next
+                        If _fileIo.CountDirectories(filePath) = 0 Then
+                            Delete(filePath)
+                        Else
+                            For Each data As String In _fileIo.GetDirectories(filePath)
+                                If String.IsNullOrWhiteSpace(data) Then Continue For
+                                Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+                            Next
+                        End If
                     Catch ex As Exception
                         Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
                     End Try
@@ -6076,6 +6100,14 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                                 End If
                             End If
                         Next
+                        If _fileIo.CountDirectories(filePath) = 0 Then
+                            Delete(filePath)
+                        Else
+                            For Each data As String In _fileIo.GetDirectories(filePath)
+                                If String.IsNullOrWhiteSpace(data) Then Continue For
+                                Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+                            Next
+                        End If
                     Catch ex As Exception
                         Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
                     End Try
@@ -6086,11 +6118,19 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                     Try
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "DXCache", "GLCache", "OptixCache", "computecache") Then
+                                If StrContainsAny(child, True, "PerDriverVersion", "DXCache", "GLCache", "OptixCache", "computecache") Then
                                     Delete(child)
                                 End If
                             End If
                         Next
+                        If _fileIo.CountDirectories(filePath) = 0 Then
+                            Delete(filePath)
+                        Else
+                            For Each data As String In _fileIo.GetDirectories(filePath)
+                                If String.IsNullOrWhiteSpace(data) Then Continue For
+                                Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+                            Next
+                        End If
                     Catch ex As Exception
                         Application.Log.AddException(ex)
                     End Try
@@ -6101,11 +6141,19 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                     Try
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "DXCache", "GLCache", "OptixCache", "computecache") Then
+                                If StrContainsAny(child, True, "PerDriverVersion", "DXCache", "GLCache", "OptixCache", "computecache") Then
                                     Delete(child)
                                 End If
                             End If
                         Next
+                        If _fileIo.CountDirectories(filePath) = 0 Then
+                            Delete(filePath)
+                        Else
+                            For Each data As String In _fileIo.GetDirectories(filePath)
+                                If String.IsNullOrWhiteSpace(data) Then Continue For
+                                Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+                            Next
+                        End If
                     Catch ex As Exception
                         Application.Log.AddException(ex)
                     End Try
@@ -6119,6 +6167,14 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                                 Delete(child)
                             End If
                         Next
+                        If _fileIo.CountDirectories(filePath) = 0 Then
+                            Delete(filePath)
+                        Else
+                            For Each data As String In _fileIo.GetDirectories(filePath)
+                                If String.IsNullOrWhiteSpace(data) Then Continue For
+                                Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
+                            Next
+                        End If
                     Catch ex As Exception
                         Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
                     End Try
@@ -6215,7 +6271,9 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                 UpdateTextMethod(UpdateTextTranslated(4))
                 Application.Log.AddMessage("Cleaning Directory")
 
-                CleanNvidiaCache(config)
+                If config.RemoveNvidiaCache Then
+                    CleanNvidiaCache(config)
+                End If
 
                 If config.RemoveNvidiaDirs = True Then
                     filePath = _sysdrv + "NVIDIA"
@@ -6291,32 +6349,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                     If filePath IsNot Nothing Then
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "drs") Then
-                                    Delete(child)
-                                End If
-                            End If
-                        Next
-                        Try
-                            If _fileIo.CountDirectories(filePath) = 0 Then
-                                Delete(filePath)
-                            Else
-                                For Each data As String In _fileIo.GetDirectories(filePath)
-                                    If String.IsNullOrWhiteSpace(data) Then Continue For
-                                    Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
-                                Next
-                            End If
-                        Catch ex As Exception
-                            Application.Log.AddException(ex)
-                        End Try
-                    End If
-                End If
-
-                filePath = config.Paths.System32 + "config\systemprofile\AppData\Local\NVIDIA"
-                If _fileIo.ExistsDir(filePath) Then
-                    If filePath IsNot Nothing Then
-                        For Each child As String In _fileIo.GetDirectories(filePath)
-                            If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "DXCache", "GLCache", "OptixCache", "computecache") Then
+                                If (Not config.KeepNVCPopt) AndAlso StrContainsAny(child, True, "drs") Then
                                     Delete(child)
                                 End If
                             End If
@@ -6415,31 +6448,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                     Try
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "nvbackend", "gfexperience") AndAlso config.RemoveGFE Or StrContainsAny(child, True, "nvosc", "shareconnect", "nvgs", "glcache", "DXCache", "FrameViewSdk", "OptixCache", "computecache") Then
-                                    Delete(child)
-                                End If
-                            End If
-                        Next
-                        Try
-                            If _fileIo.CountDirectories(filePath) = 0 Then
-                                Delete(filePath)
-                            Else
-                                For Each data As String In _fileIo.GetDirectories(filePath)
-                                    If String.IsNullOrWhiteSpace(data) Then Continue For
-                                    Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
-                                Next
-                            End If
-                        Catch ex As Exception
-                        End Try
-                    Catch ex As Exception
-                        Application.Log.AddException(ex)
-                    End Try
-
-                    filePath = filepaths + "\AppData\Roaming\NVIDIA"
-                    Try
-                        For Each child As String In _fileIo.GetDirectories(filePath)
-                            If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "DXCache", "GLCache", "OptixCache", "computecache") Then
+                                If StrContainsAny(child, True, "nvbackend", "gfexperience") AndAlso config.RemoveGFE Or StrContainsAny(child, True, "nvosc", "shareconnect", "nvgs", "FrameViewSdk") Then
                                     Delete(child)
                                 End If
                             End If
@@ -7100,41 +7109,6 @@ child.Equals("displaydriver", StringComparison.OrdinalIgnoreCase) Then
                         End Try
                     End If
                     'windows 8+ only (store apps nv_cache cleanup)
-
-                    Try
-                        Dim paths() As String = {"\AC\Temp\NVIDIA Corporation", "\AC\NVIDIA", "\LocalCache\Local\NVIDIA"}
-                        If _isWindows8OrHigher Then
-                            Dim prefilePath As String = filepaths + "\AppData\Local\Packages"
-                            If _fileIo.ExistsDir(prefilePath) Then
-                                For Each childs As String In _fileIo.GetDirectories(prefilePath)
-                                    If Not String.IsNullOrWhiteSpace(childs) Then
-                                        For Each path As String In paths
-                                            filePath = childs + path
-                                            If _fileIo.ExistsDir(filePath) Then
-                                                For Each child As String In _fileIo.GetDirectories(filePath)
-                                                    If String.IsNullOrWhiteSpace(child) = False Then
-                                                        If StrContainsAny(child, True, "nv_cache", "DXCache", "GLCache", "OptixCache", "computecache") Then
-                                                            Delete(child)
-                                                        End If
-                                                    End If
-                                                Next
-                                                If _fileIo.CountDirectories(filePath) = 0 Then
-                                                    Delete(filePath)
-                                                Else
-                                                    For Each data As String In _fileIo.GetDirectories(filePath)
-                                                        If String.IsNullOrWhiteSpace(data) Then Continue For
-                                                        Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
-                                                    Next
-                                                End If
-                                            End If
-                                        Next
-                                    End If
-                                Next
-                            End If
-                        End If
-                    Catch ex As Exception
-                        Application.Log.AddException(ex)
-                    End Try
                 Next
 
                 'Cleaning the GFE 2.0.1 and earlier assemblies.

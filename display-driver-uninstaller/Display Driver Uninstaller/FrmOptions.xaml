@@ -94,13 +94,14 @@
                     <Separator DockPanel.Dock="Top" BorderBrush="{DynamicResource OptionsBorderBrush}" BorderThickness="1" />
                     <Label DockPanel.Dock="Top" x:Name="lblNvidiaspecific" Content="lblNvidiaspecific" FontWeight="Bold" FontSize="14" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
 
-                    <UniformGrid DockPanel.Dock="Top" Rows="7">
+                    <UniformGrid DockPanel.Dock="Top" Rows="8">
                         <CheckBox x:Name="lblRemNvidiaDirs" IsChecked="{Binding RemoveNvidiaDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemNvidiaDirs" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemPhysX" IsChecked="{Binding RemovePhysX, Converter={StaticResource NulBoolToBool}}" Content="lblRemPhysX" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRem3DtvPlay" IsChecked="{Binding Remove3DTVPlay, Converter={StaticResource NulBoolToBool}}" Content="lblRem3DtvPlay" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemGFE" IsChecked="{Binding RemoveGFE, Converter={StaticResource NulBoolToBool}}" Content="lblRemGFE" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemNVBROADCAST" IsChecked="{Binding RemoveNVBROADCAST, Converter={StaticResource NulBoolToBool}}" Content="lblRemNVBROADCAST" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemNVCP" IsChecked="{Binding RemoveNVCP, Converter={StaticResource NulBoolToBool}}" Content="lblRemNVCP" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
+                        <CheckBox x:Name="lblRemoveNvidiaCache" IsChecked="{Binding RemoveNvidiaCache, Converter={StaticResource NulBoolToBool}}" Content="lblRemoveNvidiaCache" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblKeepNVCPopt" IsChecked="{Binding KeepNVCPopt, Converter={StaticResource NulBoolToBool}}" Content="lblKeepNVCPopt" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                     </UniformGrid>
                 </DockPanel>

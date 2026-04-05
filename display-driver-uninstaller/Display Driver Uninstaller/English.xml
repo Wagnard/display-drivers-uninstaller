@@ -291,6 +291,10 @@
 		<lblRemNVCP>
 			<Text>(DCH driver) Remove the NVIDIA Control Panel installed from the Microsoft Store</Text>
 		</lblRemNVCP>
+        <lblRemoveNvidiaCache>
+            <Text>Remove NVIDIA Shader Cache (Untick if using ASC / NVIDIA App Auto Shader Compilation)
+            </Text>
+        </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
 			<Text>Keep NVIDIA Control Panel Global / Program Settings.</Text>
 			<Tooltip>

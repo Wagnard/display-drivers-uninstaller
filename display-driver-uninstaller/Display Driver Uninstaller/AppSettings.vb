@@ -110,8 +110,9 @@ Namespace Display_Driver_Uninstaller
 		Private ReadOnly m_rem3DtvPlay As DependencyProperty = RegDP("Remove3DTVPlay", GetType(Boolean), GetType(AppSettings), True)
 		Private ReadOnly m_remGFE As DependencyProperty = RegDP("RemoveGFE", GetType(Boolean), GetType(AppSettings), True)
 		Private ReadOnly m_remNVCP As DependencyProperty = RegDP("RemoveNVCP", GetType(Boolean), GetType(AppSettings), True)
-		Private ReadOnly m_keepNVCPopt As DependencyProperty = RegDP("KeepNVCPopt", GetType(Boolean), GetType(AppSettings), False)
-		Private ReadOnly m_remNVBROADCAST As DependencyProperty = RegDP("RemoveNVBROADCAST", GetType(Boolean), GetType(AppSettings), True)
+        Private ReadOnly m_keepNVCPopt As DependencyProperty = RegDP("KeepNVCPopt", GetType(Boolean), GetType(AppSettings), False)
+        Private ReadOnly m_removeNvidiaCache As DependencyProperty = RegDP("RemoveNvidiaCache", GetType(Boolean), GetType(AppSettings), True)
+        Private ReadOnly m_remNVBROADCAST As DependencyProperty = RegDP("RemoveNVBROADCAST", GetType(Boolean), GetType(AppSettings), True)
 		Private ReadOnly m_remINTELCP As DependencyProperty = RegDP("RemoveINTELCP", GetType(Boolean), GetType(AppSettings), True)
 		Private ReadOnly m_remINTELIGS As DependencyProperty = RegDP("RemoveINTELIGS", GetType(Boolean), GetType(AppSettings), True)
 		Private ReadOnly m_remOneAPI As DependencyProperty = RegDP("RemoveOneAPI", GetType(Boolean), GetType(AppSettings), True)
@@ -379,24 +380,34 @@ Namespace Display_Driver_Uninstaller
 			End Set
 		End Property
 
-		Public Property RemoveNVCP As Boolean
-			Get
-				Return CBool(GetValue(m_remNVCP))
-			End Get
-			Set(value As Boolean)
-				SetValue(m_remNVCP, value)
-			End Set
-		End Property
-		Public Property KeepNVCPopt As Boolean
-			Get
-				Return CBool(GetValue(m_keepNVCPopt))
-			End Get
-			Set(value As Boolean)
-				SetValue(m_keepNVCPopt, value)
-			End Set
-		End Property
+        Public Property RemoveNVCP As Boolean
+            Get
+                Return CBool(GetValue(m_remNVCP))
+            End Get
+            Set(value As Boolean)
+                SetValue(m_remNVCP, value)
+            End Set
+        End Property
 
-		Public Property RemoveINTELCP As Boolean
+        Public Property KeepNVCPopt As Boolean
+            Get
+                Return CBool(GetValue(m_keepNVCPopt))
+            End Get
+            Set(value As Boolean)
+                SetValue(m_keepNVCPopt, value)
+            End Set
+        End Property
+
+        Public Property RemoveNvidiaCache As Boolean
+            Get
+                Return CBool(GetValue(m_removeNvidiaCache))
+            End Get
+            Set(value As Boolean)
+                SetValue(m_removeNvidiaCache, value)
+            End Set
+        End Property
+
+        Public Property RemoveINTELCP As Boolean
 			Get
 				Return CBool(GetValue(m_remINTELCP))
 			End Get
@@ -739,8 +750,9 @@ Namespace Display_Driver_Uninstaller
 							.WriteElementString("Remove3DTVPlay", Remove3DTVPlay.ToString())
 							.WriteElementString("RemoveGFE", RemoveGFE.ToString())
 							.WriteElementString("RemoveNVBROADCAST", RemoveNVBROADCAST.ToString())
-							.WriteElementString("RemoveNVCP", RemoveNVCP.ToString())
-							.WriteElementString("RemoveINTELCP", RemoveINTELCP.ToString())
+                            .WriteElementString("RemoveNVCP", RemoveNVCP.ToString())
+                            .WriteElementString("RemoveNvidiaCache", RemoveNvidiaCache.ToString())
+                            .WriteElementString("RemoveINTELCP", RemoveINTELCP.ToString())
 							.WriteElementString("RemoveINTELIGS", RemoveINTELIGS.ToString())
 							.WriteElementString("RemoveOneAPI", RemoveOneAPI.ToString())
 							.WriteElementString("RemoveEnduranceGaming", RemoveEnduranceGaming.ToString())
@@ -899,7 +911,10 @@ Namespace Display_Driver_Uninstaller
 								Case "keepnvcpopt"
 									KeepNVCPopt = Boolean.Parse(KvP.Value)
 
-								Case "removeintelcp"
+                                Case "removenvidiacache"
+                                    RemoveNvidiaCache = Boolean.Parse(KvP.Value)
+
+                                Case "removeintelcp"
 									RemoveINTELCP = Boolean.Parse(KvP.Value)
 
 								Case "removeinteligs"
