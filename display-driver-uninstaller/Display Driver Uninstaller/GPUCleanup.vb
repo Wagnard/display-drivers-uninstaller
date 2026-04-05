@@ -2570,6 +2570,7 @@ child.Contains("HydraVision\") Then
 
                 'Saw on Win 10 cat 15.7
                 Application.Log.AddMessage("AudioEngine CleanUP")
+
                 Try
                     Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "AudioEngine\AudioProcessingObjects", True)
                         If regkey IsNot Nothing Then
@@ -2594,6 +2595,7 @@ child.Contains("HydraVision\") Then
                     Application.Log.AddException(ex)
                 End Try
 
+                Application.Log.AddMessage("End of AudioEngine CleanUP")
                 'SteadyVideo stuff
 
                 Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
@@ -2620,6 +2622,7 @@ child.Contains("HydraVision\") Then
                         Next
                     End If
                 End Using
+
                 Try
                     Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "PROTOCOLS\Filter", True)
                         If regkey IsNot Nothing Then
@@ -2647,6 +2650,7 @@ child.Contains("HydraVision\") Then
                 Catch ex As Exception
                     Application.Log.AddException(ex)
                 End Try
+
                 If IntPtr.Size = 8 Then
                     'SteadyVideo stuff
 
@@ -2674,6 +2678,7 @@ child.Contains("HydraVision\") Then
                             Next
                         End If
                     End Using
+
                     Try
                         Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\PROTOCOLS\Filter", True)
                             If regkey IsNot Nothing Then
@@ -3261,7 +3266,7 @@ child.ToLower.Contains("hydravision") Then
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If StrContainsAny(child, True, "cn", "fuel", "dvr", "wvr", "openvr", "radeonsoftware", "link") Or
+                                    If StrContainsAny(child, True, "cn", "fuel", "dvr", "wvr", "openvr", "radeonsoftware", "link", "AMDRSSrcExt") Or
 removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Then
                                         Delete(child)
                                     End If
@@ -3279,6 +3284,7 @@ removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache
                             Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
                         End Try
                     End If
+
                     filePath = filepaths + "\AppData\Local\RadeonInstaller"
                     If _winxp Then
                         filePath = filepaths + "\Local Settings\Application Data\RadeonInstaller"
@@ -3304,6 +3310,7 @@ removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache
                             Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
                         End Try
                     End If
+
                     filePath = filepaths + "\AppData\Local\AMDSoftwareInstaller"
                     If _winxp Then
                         filePath = filepaths + "\Local Settings\Application Data\AMDSoftwareInstaller"
@@ -3329,24 +3336,31 @@ removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache
                             Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
                         End Try
                     End If
+
                     filePath = filepaths + "\AppData\Local\AMD_Common"
                     If _winxp Then
                         filePath = filepaths + "\Local Settings\Application Data\AMD_Common"
                     End If
                     If _fileIo.ExistsDir(filePath) Then
                         Try
-                            If _fileIo.CountDirectories(filePath) = 0 Then
-                                Delete(filePath)
-                            Else
-                                For Each data As String In _fileIo.GetDirectories(filePath)
-                                    If String.IsNullOrWhiteSpace(data) Then Continue For
-                                    Application.Log.AddWarningMessage("Remaining folders found " + " : " + filePath + "\ --> " + data)
-                                Next
-                            End If
+                            Delete(filePath)
                         Catch ex As Exception
                             Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
                         End Try
                     End If
+
+                    filePath = filepaths + "\AppData\Local\AMDInstallManager"
+                    If _winxp Then
+                        filePath = filepaths + "\Local Settings\Application Data\AMDInstallManager"
+                    End If
+                    If _fileIo.ExistsDir(filePath) Then
+                        Try
+                            Delete(filePath)
+                        Catch ex As Exception
+                            Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+                        End Try
+                    End If
+
                     filePath = filepaths + "\AppData\Local\D3DSCache"
                     If _winxp Then
                         filePath = filepaths + "\Local Settings\Application Data\D3DSCache"
@@ -3370,6 +3384,7 @@ removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache
                             Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
                         End Try
                     End If
+
                     filePath = filepaths + "\AppData\LocalLow\AMD"
                     If _winxp Then
                         filePath = filepaths + "\Local Settings\Application Data\AMD"  'need check in the future.
@@ -5904,16 +5919,16 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                     End If
                 End Using
 
-                Registry.LocalMachine.DeleteSubKeyTree($"{baseRegPath}\Tree\{cleanPath}", False)
+                Deletesubregkey(Registry.LocalMachine, $"{baseRegPath}\Tree\{cleanPath}", False)
 
                 If Not String.IsNullOrEmpty(taskGuid) Then
-                    Registry.LocalMachine.DeleteSubKeyTree($"{baseRegPath}\Tasks\{taskGuid}", False)
+                    Deletesubregkey(Registry.LocalMachine, $"{baseRegPath}\Tasks\{taskGuid}", False)
 
                     Dim triggers() As String = {"Logon", "Boot", "Plain", "Maintenance"}
                     For Each trigger In triggers
                         Using triggerKey = MyRegistry.OpenSubKey(Registry.LocalMachine, $"{baseRegPath}\{trigger}", True)
                             If triggerKey IsNot Nothing Then
-                                triggerKey.DeleteSubKey(taskGuid, False)
+                                Deletesubregkey(triggerKey, taskGuid, False)
                             End If
                         End Using
                     Next
@@ -5923,7 +5938,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                 Dim fullTaskFilePath As String = Path.Combine(system32TasksPath, cleanPath)
 
                 If _fileIo.ExistsFile(fullTaskFilePath) Then
-                    _fileIo.Delete(fullTaskFilePath)
+                    Delete(fullTaskFilePath)
                 End If
 
                 CleanEmptyTaskDirectories(system32TasksPath, cleanPath)
