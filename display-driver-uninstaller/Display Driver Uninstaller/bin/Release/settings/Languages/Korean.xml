@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <DisplayDriverUninstaller ISO="ko-KR" Text="한국어" >
 	<!--
 		See file ' \Settings\Languages\_For translators - ReadMe.txt ' 	
@@ -123,16 +123,7 @@
 		<VisitSVNMenuItem>
 			<Text>SVN 웹사이트 방문</Text>
 		</VisitSVNMenuItem>
-		<VisitGuru3DNvidiaMenuItem>
-			<Text>Guru3d NVIDIA 스레드 방문</Text>
-		</VisitGuru3DNvidiaMenuItem>
-		<VisitGuru3DAMDMenuItem>
-			<Text>Guru3d AMD 스레드 방문</Text>
-		</VisitGuru3DAMDMenuItem>
-		<VisitGeforceMenuItem>
-			<Text>Geforce 스레드 방문</Text>
-		</VisitGeforceMenuItem>
-     <DownloadNvidiaMenuItem>
+        <DownloadNvidiaMenuItem>
 			<Text>NVIDIA 드라이버 다운로드</Text>
 		</DownloadNvidiaMenuItem>
         <DownloadAmdMenuItem>
@@ -301,7 +292,7 @@
 			<Text>(DCH 드라이버) Microsoft Store에서 설치된 NVIDIA 제어판 제거</Text>
 		</lblRemNVCP>
         <lblRemoveNvidiaCache>
-            <Text>NVIDIA 셰이더 캐시 제거 (ASC / NVIDIA App 자동 셰이더 컴파일 사용 시 체크 해제)
+            <Text>NVIDIA 셰이더 캐시 제거 (ASC / NVIDIA 앱 자동 셰이더 컴파일 사용 시 선택 취소)
             </Text>
         </lblRemoveNvidiaCache>
 		<lblKeepNVCPopt>
@@ -349,7 +340,7 @@
 		<lblRememberLastChoice>
 			<Text>마지막으로 선택한 GPU 기억</Text>	
 		</lblRememberLastChoice>
-				<lblUseDarkTheme>
+		<lblUseDarkTheme>
 			<Text>어두운 테마 사용</Text>
 		</lblUseDarkTheme>
   </frmOptions>
@@ -452,31 +443,32 @@
 		</lblTranslators>
 		<lblPatron>
 			<Text>
-				다음 후원자분들과 목록에 없는 후원자분들께도 큰 감사를 드립니다!
+                다음 후원자분들과 목록에 없는 후원자분들께도 큰 감사를 드립니다!
 
-				-Alberto Bursi
-				-honnmaguro
-				-ZaoDaDong
-				-Kaseb
-				-Frank Brown
-				-Sergey Bolshakow
-				-James Tiller
-				-Paulo Henrique
-				-Graeme Small
-				-SMiThaYe
-				-Chris Ross
-				-Fabio
-				-Matti Metsikko
-				-mikalonia - mika
-				-ChaosDMNS
-				-Eduardo Macias
-				-Peter Le
-				-Kater Willschie
-				-Duke Hanson
-				-Sam Gooding
-				-Zero Chung
-				-Remy Starshade
-			</Text>
+                -Alberto Bursi
+                -honnmaguro
+                -ZaoDaDong
+                -Kaseb
+                -Frank Brown
+                -Sergey Bolshakow
+                -James Tiller
+                -Paulo Henrique
+                -Graeme Small
+                -SMiThaYe
+                -Chris Ross
+                -Fabio
+                -Matti Metsikko
+                -mikalonia - mika
+                -ChaosDMNS
+                -Eduardo Macias
+                -Peter Le
+                -Kater Willschie
+                -Duke Hanson
+                -Sam Gooding
+                -Zero Chung
+                -Remy Starshade
+                -Lion-man
+            </Text>
 		</lblPatron>
 	</frmAbout>
 
@@ -559,11 +551,6 @@
 			<User>비너스걸❤️</User>
 			<LastUpdate>2016년 5월 31일</LastUpdate>
 		</Translator2>
-
-		<Translator3>
-			<User>Mats/Onyx</User>
-			<Details>Twitter:onyxwz1</Details>
-			<LastUpdate>17/02/2026</LastUpdate>
-		</Translator3>
 	</LanguageTranslators>
+
 </DisplayDriverUninstaller>
