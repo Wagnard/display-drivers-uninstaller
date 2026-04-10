@@ -5915,7 +5915,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
             Try
                 Using treeKey = MyRegistry.OpenSubKey(Registry.LocalMachine, $"{baseRegPath}\Tree\{cleanPath}")
                     If treeKey IsNot Nothing Then
-                        taskGuid = treeKey.GetValue("Id")?.ToString()
+                        taskGuid = treeKey.GetValue("Id")?.ToString()?.TrimEnd(ChrW(0))
                     End If
                 End Using
 
@@ -5964,7 +5964,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                         Using key = Registry.LocalMachine.OpenSubKey(treeRegPath)
                             If key IsNot Nothing AndAlso key.SubKeyCount = 0 AndAlso
                        key.GetValueNames().All(Function(v) v.Equals("SD", StringComparison.OrdinalIgnoreCase)) Then
-                                Registry.LocalMachine.DeleteSubKeyTree(treeRegPath, False)
+                                Deletesubregkey(Registry.LocalMachine, treeRegPath, False)
                             Else
                                 stopRegistry = True
                             End If
@@ -6003,7 +6003,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                             subKeyName.StartsWith(taskName, StringComparison.OrdinalIgnoreCase) Then
 
                             Dim fullRegPath As String = $"{currentRegPath}\{subKeyName}"
-                            Return fullRegPath.Substring("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree\".Length)
+                            Return fullRegPath.Substring("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree".Length).TrimStart("\"c)
                         End If
 
                         ' Descend récursivement

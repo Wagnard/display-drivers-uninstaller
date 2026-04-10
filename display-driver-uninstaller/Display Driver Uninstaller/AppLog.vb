@@ -125,10 +125,10 @@ Namespace Display_Driver_Uninstaller
 				Return
 			End If
 
-			Try
-				If File.Exists(fileName) Then
-					File.Delete(fileName)
-				End If
+            Try
+                If File.Exists(fileName) Then
+                    File.Delete(fileName)
+                End If
 
                 Using fs As Stream = File.Create(fileName, 4096, FileOptions.WriteThrough)
                     Using sw As New StreamWriter(fs, System.Text.Encoding.UTF8)
@@ -203,7 +203,9 @@ Namespace Display_Driver_Uninstaller
                 End Using          ' ← FileStream fermé ici
 
             Catch ex As Exception
-				AddException(ex, "Saving log failed!")
+                MessageBox.Show(ex.Message)
+                MessageBox.Show(ex.StackTrace)
+                AddException(ex, "Saving log failed!")
 			End Try
 		End Sub
 
