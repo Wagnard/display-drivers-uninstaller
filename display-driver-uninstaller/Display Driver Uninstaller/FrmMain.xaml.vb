@@ -1032,8 +1032,6 @@ Namespace Display_Driver_Uninstaller
                                     If subRegkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary Then
                                         regValue = HexToString(GetREG_BINARY(subRegkey, "DriverDesc").Replace("00", ""))
                                     End If
-                                Else
-                                    Continue For
                                 End If
 
                                 If Not String.IsNullOrWhiteSpace(regValue) Then

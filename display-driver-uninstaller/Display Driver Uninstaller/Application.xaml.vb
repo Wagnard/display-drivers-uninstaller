@@ -723,7 +723,7 @@ Namespace Display_Driver_Uninstaller
                         While (DateTime.Now - startTime).TotalSeconds < maxWaitSeconds
 
                             Dim processes = Process.GetProcessesByName(currentProcessName)
-
+                            MessageBox.Show("Nombre de processus trouvés : " & processes.Length.ToString())
                             Dim otherInstanceExists As Boolean = processes.Any(Function(p) p.Id <> Process.GetCurrentProcess().Id)
 
                             If Not otherInstanceExists Then
@@ -735,7 +735,7 @@ Namespace Display_Driver_Uninstaller
 
                         If LaunchOptions.Restart Then
                             RemoveRegOption()
-                            RestartComputer()
+                            '      RestartComputer()
                             AppClose(Me, EventArgs.Empty)
                             Exit Sub
                         End If
