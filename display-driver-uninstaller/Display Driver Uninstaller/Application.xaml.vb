@@ -715,27 +715,30 @@ Namespace Display_Driver_Uninstaller
                 ' DDU completed cleaning just close and dont do anything else.
                 Try
                     If LaunchOptions.CleanComplete Then
-                        ' --- Logique d'attente intelligente ---
-                        Dim maxWaitSeconds As Integer = 15 ' Timeout de sécurité
+
+                        Dim maxWaitSeconds As Integer = 15
                         Dim startTime As DateTime = DateTime.Now
                         Dim currentProcessName As String = Process.GetCurrentProcess().ProcessName
 
                         While (DateTime.Now - startTime).TotalSeconds < maxWaitSeconds
 
-                            Dim processes = Process.GetProcessesByName(currentProcessName)
-                            MessageBox.Show("Nombre de processus trouvés : " & processes.Length.ToString())
-                            Dim otherInstanceExists As Boolean = processes.Any(Function(p) p.Id <> Process.GetCurrentProcess().Id)
+                            Dim processes() As Process = Process.GetProcessesByName(currentProcessName)
 
-                            If Not otherInstanceExists Then
-                                Exit While
-                            End If
+                            Try
+                                Dim otherInstanceExists As Boolean = processes.Length > 1
+                                If Not otherInstanceExists Then Exit While
+                            Finally
+                                For Each p As Process In processes
+                                    p.Dispose()
+                                Next
+                            End Try
 
                             Thread.Sleep(500)
                         End While
 
                         If LaunchOptions.Restart Then
                             RemoveRegOption()
-                            '      RestartComputer()
+                            RestartComputer()
                             AppClose(Me, EventArgs.Empty)
                             Exit Sub
                         End If
