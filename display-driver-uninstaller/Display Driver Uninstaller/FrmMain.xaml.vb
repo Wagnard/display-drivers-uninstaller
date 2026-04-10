@@ -1001,119 +1001,125 @@ Namespace Display_Driver_Uninstaller
 				info.Add(KvP.Empty)
 			End If
 
-			Try
-				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
-					If regkey IsNot Nothing Then
-						For Each child As String In regkey.GetSubKeyNames
-							If String.IsNullOrWhiteSpace(child) Then Continue For
+            Try
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\Class\{4d36e968-e325-11ce-bfc1-08002be10318}")
+                    If regkey Is Nothing Then Return
 
-							If Not StrContainsAny(child, True, "properties") Then
+                    Dim subKeyNames() As String = regkey.GetSubKeyNames()
 
-								Using subRegkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-									If subRegkey IsNot Nothing Then
-										Dim regValue As String = subRegkey.GetValue("Device Description", String.Empty).ToString()
+                    ' Accumulate all text lines locally — zero UI calls in the loop
+                    Dim textLines As New List(Of String)(subKeyNames.Length * 6)
+                    Dim localInfo As New List(Of KvP)(subKeyNames.Length * 6)
 
-										If Not String.IsNullOrWhiteSpace(regValue) Then
-											UpdateTextMethod(String.Format("{0}{1} - {2}: {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
-											If firstLaunch Then info.Add(String.Format("GPU #{0}", child), regValue)
-										Else
+                    For Each child As String In subKeyNames
+                        If String.IsNullOrWhiteSpace(child) Then Continue For
+                        If child.Equals("properties", StringComparison.OrdinalIgnoreCase) Or
+                            child.Equals("configuration", StringComparison.OrdinalIgnoreCase) Then Continue For
 
-											regValue = subRegkey.GetValue("DriverDesc", String.Empty).ToString()
+                        Using subRegkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+                            If subRegkey Is Nothing Then Continue For
 
-											If Not String.IsNullOrWhiteSpace(regValue) Then
-												If subRegkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary Then
-													regValue = HexToString(GetREG_BINARY(subRegkey, "DriverDesc").Replace("00", ""))
+                            ' --- GPU Name ---
+                            Dim regValue As String = subRegkey.GetValue("Device Description", String.Empty).ToString()
 
-												Else
-													regValue = subRegkey.GetValue("DriverDesc", String.Empty).ToString()
-												End If
-											End If
+                            If Not String.IsNullOrWhiteSpace(regValue) Then
+                                textLines.Add($"{UpdateTextTranslated(11)}{child} - {UpdateTextTranslated(12)}: {regValue}")
+                                If firstLaunch Then localInfo.Add(New KvP(" : ", $"GPU #{child}", regValue))
+                            Else
+                                regValue = subRegkey.GetValue("DriverDesc", String.Empty).ToString()
 
-											If String.IsNullOrWhiteSpace(regValue) Then Continue For
+                                If Not String.IsNullOrWhiteSpace(regValue) Then
+                                    If subRegkey.GetValueKind("DriverDesc") = RegistryValueKind.Binary Then
+                                        regValue = HexToString(GetREG_BINARY(subRegkey, "DriverDesc").Replace("00", ""))
+                                    End If
+                                Else
+                                    Continue For
+                                End If
 
-											UpdateTextMethod(String.Format("{0}{1} - {2}: {3}", UpdateTextTranslated(11), child, UpdateTextTranslated(12), regValue))
-											If firstLaunch Then info.Add(String.Format("GPU #{0}", child), regValue)
+                                If Not String.IsNullOrWhiteSpace(regValue) Then
+                                    textLines.Add($"{UpdateTextTranslated(11)}{child} - {UpdateTextTranslated(12)}: {regValue}")
+                                    If firstLaunch Then localInfo.Add(New KvP(" : ", $"GPU #{child}", regValue))
+                                End If
+                            End If
 
-										End If
+                            ' --- DeviceID ---
+                            regValue = subRegkey.GetValue("MatchingDeviceId", String.Empty).ToString()
+                            If Not String.IsNullOrWhiteSpace(regValue) Then
+                                textLines.Add($"{UpdateTextTranslated(13)}: {regValue}")
+                                If firstLaunch Then localInfo.Add(New KvP(" : ", "GPU DeviceID", regValue))
+                            End If
 
-										regValue = subRegkey.GetValue("MatchingDeviceId", String.Empty).ToString()
+                            ' --- VBios ---
+                            Try
+                                regValue = subRegkey.GetValue("HardwareInformation.BiosString", String.Empty).ToString()
 
-										If Not String.IsNullOrWhiteSpace(regValue) Then
-											UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(13), regValue))
-											If firstLaunch Then info.Add("GPU DeviceID", regValue)
-										End If
+                                If Not String.IsNullOrWhiteSpace(regValue) Then
+                                    If subRegkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
+                                        regValue = HexToString(GetREG_BINARY(subRegkey, "HardwareInformation.BiosString").Replace("00", ""))
+                                    Else
+                                        Dim sb As New StringBuilder(30)
+                                        Dim values() As String = regValue.Split(New String() {" ", "."}, StringSplitOptions.None)
+                                        For i As Int32 = 0 To values.Length - 1
+                                            If i = values.Length - 1 Then
+                                                sb.Append(values(i).PadLeft(2, "0"c))
+                                            ElseIf i > 0 Then
+                                                sb.AppendFormat("{0}.", values(i).PadLeft(2, "0"c))
+                                            Else
+                                                sb.AppendFormat("{0} ", values(i))
+                                            End If
+                                        Next
+                                        regValue = sb.ToString()
+                                    End If
 
-										Try
-											regValue = subRegkey.GetValue("HardwareInformation.BiosString", String.Empty).ToString()
+                                    textLines.Add($"Vbios: {regValue}")
+                                    If firstLaunch Then localInfo.Add(New KvP(" : ", "Vbios", regValue))
+                                End If
+                            Catch ex As Exception
+                                Application.Log.AddException(ex)
+                            End Try
 
-											If Not String.IsNullOrWhiteSpace(regValue) Then
-												If subRegkey.GetValueKind("HardwareInformation.BiosString") = RegistryValueKind.Binary Then
-													regValue = HexToString(GetREG_BINARY(subRegkey, "HardwareInformation.BiosString").Replace("00", ""))
+                            ' --- Driver Version ---
+                            regValue = subRegkey.GetValue("DriverVersion", String.Empty).ToString()
+                            If Not String.IsNullOrWhiteSpace(regValue) Then
+                                textLines.Add($"{UpdateTextTranslated(14)}: {regValue}")
+                                If firstLaunch Then localInfo.Add(New KvP(" : ", "Detected Driver(s) Version(s)", regValue))
+                            End If
 
-													UpdateTextMethod(String.Format("Vbios: {0}", regValue))
-													If firstLaunch Then info.Add("Vbios", regValue)
-												Else
-													regValue = subRegkey.GetValue("HardwareInformation.BiosString", String.Empty).ToString()
+                            ' --- INF Path ---
+                            regValue = subRegkey.GetValue("InfPath", String.Empty).ToString()
+                            If Not String.IsNullOrWhiteSpace(regValue) Then
+                                textLines.Add($"{UpdateTextTranslated(15)}: {regValue}")
+                                If firstLaunch Then localInfo.Add(New KvP(" : ", "INF name", regValue))
+                            End If
 
-													Dim sb As New StringBuilder(30)
-													Dim values() As String = regValue.Split(New String() {" ", "."}, StringSplitOptions.None)
+                            ' --- INF Section ---
+                            regValue = subRegkey.GetValue("InfSection", String.Empty).ToString()
+                            If Not String.IsNullOrWhiteSpace(regValue) Then
+                                textLines.Add($"{UpdateTextTranslated(16)}: {regValue}")
+                                If firstLaunch Then localInfo.Add(New KvP(" : ", "INF section", regValue))
+                            End If
+                        End Using
 
-													For i As Int32 = 0 To values.Length - 1
-														If i = values.Length - 1 Then       'Last
-															sb.Append(values(i).PadLeft(2, "0"c))
-														ElseIf i > 0 Then
-															sb.AppendFormat("{0}.", values(i).PadLeft(2, "0"c))
-														Else
-															sb.AppendFormat("{0} ", values(i))
-														End If
-													Next
-													regValue = sb.ToString()
+                        textLines.Add("--------------")
+                        If firstLaunch Then localInfo.Add(KvP.Empty)
+                    Next
 
-													UpdateTextMethod(String.Format("Vbios: {0}", regValue))
-													If firstLaunch Then info.Add("Vbios", regValue)
-												End If
-											End If
-										Catch ex As Exception
-											Application.Log.AddException(ex)
-										End Try
+                    ' *** Single batched UI update instead of N*6 individual calls ***
+                    If textLines.Count > 0 Then
+                        UpdateTextMethod(String.Join(Environment.NewLine, textLines))
+                    End If
 
-										regValue = subRegkey.GetValue("DriverVersion", String.Empty).ToString()
+                    If firstLaunch Then
+                        info.Values.AddRange(localInfo)   ' AddRange — un seul OnPropertyChanged au lieu de N
+                        info.HasValues = True
+                        info.HasAnyData = True
+                    End If
+                End Using
 
-										If Not String.IsNullOrWhiteSpace(regValue) Then
-											UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(14), regValue))
-											If firstLaunch Then info.Add("Detected Driver(s) Version(s)", regValue)
-										End If
-
-										regValue = subRegkey.GetValue("InfPath", String.Empty).ToString()
-
-										If Not String.IsNullOrWhiteSpace(regValue) Then
-											UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(15), regValue))
-											If firstLaunch Then info.Add("INF name", regValue)
-										End If
-
-										regValue = subRegkey.GetValue("InfSection", String.Empty).ToString()
-
-										If Not String.IsNullOrWhiteSpace(regValue) Then
-											UpdateTextMethod(String.Format("{0}: {1}", UpdateTextTranslated(16), regValue))
-											If firstLaunch Then info.Add("INF section", regValue)
-										End If
-									End If
-
-									UpdateTextMethod("--------------")
-									If firstLaunch Then info.Add(KvP.Empty)
-								End Using
-							End If
-						Next
-					End If
-				End Using
-
-				If firstLaunch Then
-					Application.Log.Add(info)
-				End If
-			Catch ex As Exception
-				Application.Log.AddException(ex)
-			End Try
-		End Sub
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+            End Try
+        End Sub
 
 		Public Sub EnableControls(ByVal enabled As Boolean)
 			If Not Me.Dispatcher.CheckAccess() Then

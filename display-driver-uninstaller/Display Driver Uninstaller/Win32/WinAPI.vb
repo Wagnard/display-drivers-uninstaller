@@ -192,29 +192,54 @@ Namespace Display_Driver_Uninstaller.Win32
 			Return True
 		End Function
 
-		Public Shared Sub OpenVisitLink(ByVal arg As String)
-			Dim UserTokenHandle As IntPtr = IntPtr.Zero
+        Public Shared Sub OpenVisitLink(ByVal arg As String)
+            Dim UserTokenHandle As IntPtr = IntPtr.Zero
+            Dim hProcess As IntPtr = IntPtr.Zero
+            Dim hThread As IntPtr = IntPtr.Zero
 
-			Try
-				WTSQueryUserToken(WTSGetActiveConsoleSessionId, UserTokenHandle)
+            Try
+                ' 1. Obtenir le token
+                If Not WTSQueryUserToken(WTSGetActiveConsoleSessionId(), UserTokenHandle) Then
+                    Throw New Win32Exception()
+                End If
 
-				Using ptrProcessInfo As Win32.StructPtr = New StructPtr(New PROCESS_INFORMATION)
-					Using ptrStartInfo As Win32.StructPtr = New StructPtr(New STARTUPINFOW)
-						If Not CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, arg, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, ptrStartInfo.Ptr, ptrProcessInfo.Ptr) Then
-							Throw New Win32Exception()
-						End If
-					End Using
-				End Using
-			Catch ex As Exception
-				Application.Log.AddException(ex, "Opening visit link failed!")
-			Finally
-				If UserTokenHandle <> IntPtr.Zero Then
-					CloseHandle(UserTokenHandle)
-				End If
-			End Try
-		End Sub
+                Using ptrProcessInfo As Win32.StructPtr = New StructPtr(New PROCESS_INFORMATION)
+                    Using ptrStartInfo As Win32.StructPtr = New StructPtr(New STARTUPINFOW)
+
+                        Dim success As Boolean = CreateProcessAsUser(UserTokenHandle,
+                                                            Application.Paths.AppExeFile,
+                                                            arg,
+                                                            IntPtr.Zero,
+                                                            IntPtr.Zero,
+                                                            False,
+                                                            0,
+                                                            IntPtr.Zero,
+                                                            Nothing,
+                                                            ptrStartInfo.Ptr,
+                                                            ptrProcessInfo.Ptr)
+
+                        If Not success Then
+                            Throw New Win32Exception()
+                        Else
+                            ' EXTRACTION DES HANDLES POUR FERMETURE
+                            Dim pi As PROCESS_INFORMATION = Marshal.PtrToStructure(Of PROCESS_INFORMATION)(ptrProcessInfo.Ptr)
+                            hProcess = pi.hProcess
+                            hThread = pi.hThread
+                        End If
+                    End Using
+                End Using
+
+            Catch ex As Exception
+                Application.Log.AddException(ex, "Opening visit link failed!")
+            Finally
+                ' FERMETURE DE TOUS LES HANDLES
+                If hProcess <> IntPtr.Zero Then CloseHandle(hProcess)
+                If hThread <> IntPtr.Zero Then CloseHandle(hThread)
+                If UserTokenHandle <> IntPtr.Zero Then CloseHandle(UserTokenHandle)
+            End Try
+        End Sub
 
 #End Region
 
-	End Class
+    End Class
 End Namespace

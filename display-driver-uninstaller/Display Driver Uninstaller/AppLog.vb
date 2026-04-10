@@ -130,100 +130,79 @@ Namespace Display_Driver_Uninstaller
 					File.Delete(fileName)
 				End If
 
-				Using fs As Stream = File.Create(fileName, 4096, FileOptions.WriteThrough)
-					Using sw As New StreamWriter(fs, System.Text.Encoding.UTF8)
-						Dim settings As New XmlWriterSettings With
-					 {
-					   .Encoding = sw.Encoding,
-					   .Indent = True,
-					   .IndentChars = vbTab,
-					   .ConformanceLevel = ConformanceLevel.Document
-					 }
+                Using fs As Stream = File.Create(fileName, 4096, FileOptions.WriteThrough)
+                    Using sw As New StreamWriter(fs, System.Text.Encoding.UTF8)
+                        Dim settings As New XmlWriterSettings With
+         {
+           .Encoding = sw.Encoding,
+           .Indent = True,
+           .IndentChars = vbTab,
+           .ConformanceLevel = ConformanceLevel.Document
+         }
 
-						Dim writer As XmlWriter = XmlWriter.Create(sw, settings)
+                        ' *** Using garantit le Flush/Dispose même si exception ***
+                        Using writer As XmlWriter = XmlWriter.Create(sw, settings)
+                            With writer
+                                .WriteStartDocument()
+                                .WriteStartElement(Application.Settings.AppName.Replace(" ", ""))
+                                Dim v As Version = Application.Settings.AppVersion
+                                .WriteAttributeString("Version", String.Format("{0}.{1}.{2}.{3}", v.Major, v.Minor, v.Build, v.Revision))
+                                .WriteStartElement("LogEntries")
+                                m_logEntries.Add(New LogEntry() With {.Message = ">> Successfully saved log to file!"})
+                                For Each log As LogEntry In LogEntries
+                                    .WriteStartElement(log.Type.ToString())
+                                    .WriteStartElement("Time")
+                                    .WriteValue(log.Time.ToString())
+                                    .WriteEndElement()
+                                    .WriteStartElement("Message")
+                                    .WriteValue(If(log.Message, String.Empty))
+                                    .WriteEndElement()
+                                    If log.HasValues Then
+                                        .WriteStartElement("Values")
+                                        .WriteAttributeString("Separator", log.Separator)
+                                        For Each kvp As KvP In log.Values
+                                            If Not kvp.HasAnyValue Then
+                                                .WriteElementString("KvP", String.Empty)
+                                                Continue For
+                                            End If
+                                            .WriteStartElement("KvP")
+                                            If kvp.HasKey Then
+                                                .WriteStartElement("Key")
+                                                .WriteValue(kvp.Key)
+                                                .WriteEndElement()
+                                            End If
+                                            If kvp.HasValue Then
+                                                .WriteStartElement("Value")
+                                                .WriteValue(kvp.Value)
+                                                .WriteEndElement()
+                                            End If
+                                            .WriteEndElement()
+                                        Next
+                                        .WriteEndElement()
+                                    End If
+                                    If log.HasException Then
+                                        .WriteStartElement("ExceptionData")
+                                        For Each d As KeyValuePair(Of String, String) In log.ExceptionData
+                                            If Not String.IsNullOrEmpty(d.Key) Then
+                                                .WriteStartElement(d.Key)
+                                                .WriteValue(If(String.IsNullOrEmpty(d.Value), "Unknown", d.Value))
+                                                .WriteEndElement()
+                                            End If
+                                        Next
+                                        .WriteEndElement()
+                                    End If
+                                    .WriteEndElement()
+                                Next
+                                .WriteEndElement()
+                                .WriteEndElement()
+                                .WriteEndDocument()
+                                ' *** Pas besoin de .Close() explicite — Using s'en charge ***
+                            End With
+                        End Using  ' ← XmlWriter flushé et disposé ici, garanti
+                    End Using      ' ← StreamWriter fermé ici
+                End Using          ' ← FileStream fermé ici
 
-						With writer
-							.WriteStartDocument()
-							.WriteStartElement(Application.Settings.AppName.Replace(" ", ""))
-
-							Dim v As Version = Application.Settings.AppVersion
-
-							.WriteAttributeString("Version", String.Format("{0}.{1}.{2}.{3}", v.Major, v.Minor, v.Build, v.Revision))
-							.WriteStartElement("LogEntries")
-
-							m_logEntries.Add(New LogEntry() With {.Message = ">> Successfully saved log to file!"})
-
-							For Each log As LogEntry In LogEntries
-								.WriteStartElement(log.Type.ToString())
-
-								.WriteStartElement("Time")
-								.WriteValue(log.Time.ToString())
-								.WriteEndElement()
-
-								.WriteStartElement("Message")
-								.WriteValue(If(log.Message, String.Empty))
-								.WriteEndElement()
-
-								If log.HasValues Then
-									.WriteStartElement("Values")
-									.WriteAttributeString("Separator", log.Separator)
-
-									For Each kvp As KvP In log.Values
-										If Not kvp.HasAnyValue Then
-											.WriteElementString("KvP", String.Empty)
-											Continue For
-										End If
-
-										.WriteStartElement("KvP")
-
-										If kvp.HasKey Then
-											.WriteStartElement("Key")
-											.WriteValue(kvp.Key)
-											.WriteEndElement()
-										End If
-
-										If kvp.HasValue Then
-											.WriteStartElement("Value")
-											.WriteValue(kvp.Value)
-											.WriteEndElement()
-										End If
-
-										.WriteEndElement()
-									Next
-
-									.WriteEndElement()
-								End If
-
-								If log.HasException Then
-									.WriteStartElement("ExceptionData")
-
-									For Each d As KeyValuePair(Of String, String) In log.ExceptionData
-										If Not String.IsNullOrEmpty(d.Key) Then
-											.WriteStartElement(d.Key)
-											.WriteValue(If(String.IsNullOrEmpty(d.Value), "Unknown", d.Value))
-											.WriteEndElement()
-										End If
-									Next
-
-									.WriteEndElement()
-								End If
-
-								.WriteEndElement()
-							Next
-
-							.WriteEndElement()
-
-							.WriteEndElement()
-							.WriteEndDocument()
-							.Close()
-						End With
-
-						sw.Flush()
-						sw.Close()
-					End Using
-				End Using
-
-			Catch ex As Exception
+            Catch ex As Exception
 				AddException(ex, "Saving log failed!")
 			End Try
 		End Sub

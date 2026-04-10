@@ -712,33 +712,52 @@ Namespace Display_Driver_Uninstaller
 					Log.AddException(ex, "Parsing arguments failed!" & CRLF & ">> Application_Startup()")
 				End Try
 
+                ' DDU completed cleaning just close and dont do anything else.
+                Try
+                    If LaunchOptions.CleanComplete Then
+                        ' --- Logique d'attente intelligente ---
+                        Dim maxWaitSeconds As Integer = 15 ' Timeout de sécurité
+                        Dim startTime As DateTime = DateTime.Now
+                        Dim currentProcessName As String = Process.GetCurrentProcess().ProcessName
 
-				' DDU completed cleaning just close and dont do anything else.
-				Try
-					If LaunchOptions.CleanComplete Then
-						If LaunchOptions.Restart Then
-							Thread.Sleep(2000)
-							RemoveRegOption()
-							RestartComputer()
-							AppClose(Me, EventArgs.Empty)          ' Skip loading.
-							Exit Sub
-						End If
-						If LaunchOptions.Shutdown Then
-							Thread.Sleep(2000)
-							RemoveRegOption()
-							ShutdownComputer()
-							AppClose(Me, EventArgs.Empty)     ' Skip loading.
-							Exit Sub
-						End If
-						AppClose(Me, EventArgs.Empty)          ' Skip loading.
-						Exit Sub
-					End If
-				Catch ex As Exception
-					Log.AddException(ex, "Parsing arguments failed!" & CRLF & ">> Application_Startup()")
-				End Try
+                        While (DateTime.Now - startTime).TotalSeconds < maxWaitSeconds
 
-				' Load default language (English) + Find language files from folder
-				InitLanguages()
+                            Dim processes = Process.GetProcessesByName(currentProcessName)
+
+                            Dim otherInstanceExists As Boolean = processes.Any(Function(p) p.Id <> Process.GetCurrentProcess().Id)
+
+                            If Not otherInstanceExists Then
+                                Exit While
+                            End If
+
+                            Thread.Sleep(500)
+                        End While
+
+                        If LaunchOptions.Restart Then
+                            RemoveRegOption()
+                            RestartComputer()
+                            AppClose(Me, EventArgs.Empty)
+                            Exit Sub
+                        End If
+
+                        If LaunchOptions.Shutdown Then
+                            RemoveRegOption()
+                            ShutdownComputer()
+                            AppClose(Me, EventArgs.Empty)
+                            Exit Sub
+                        End If
+
+                        AppClose(Me, EventArgs.Empty)
+                        Exit Sub
+                    End If
+                Catch ex As Exception
+                    Log.AddException(ex, "Parsing arguments failed!" & CRLF & ">> Application_Startup()")
+                End Try
+
+
+
+                ' Load default language (English) + Find language files from folder
+                InitLanguages()
 
 
 				' Load AppSettings and select last used language (if settings exists)
