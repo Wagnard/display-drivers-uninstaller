@@ -198,41 +198,22 @@ Namespace Display_Driver_Uninstaller.Win32
             Dim hThread As IntPtr = IntPtr.Zero
 
             Try
-                ' 1. Obtenir le token
-                If Not WTSQueryUserToken(WTSGetActiveConsoleSessionId(), UserTokenHandle) Then
-                    Throw New Win32Exception()
-                End If
+                WTSQueryUserToken(WTSGetActiveConsoleSessionId, UserTokenHandle)
 
                 Using ptrProcessInfo As Win32.StructPtr = New StructPtr(New PROCESS_INFORMATION)
                     Using ptrStartInfo As Win32.StructPtr = New StructPtr(New STARTUPINFOW)
-
-                        Dim success As Boolean = CreateProcessAsUser(UserTokenHandle,
-                                                            Application.Paths.AppExeFile,
-                                                            arg,
-                                                            IntPtr.Zero,
-                                                            IntPtr.Zero,
-                                                            False,
-                                                            0,
-                                                            IntPtr.Zero,
-                                                            Nothing,
-                                                            ptrStartInfo.Ptr,
-                                                            ptrProcessInfo.Ptr)
-
-                        If Not success Then
+                        If Not CreateProcessAsUser(UserTokenHandle, Application.Paths.AppExeFile, arg, IntPtr.Zero, IntPtr.Zero, False, 0, IntPtr.Zero, Nothing, ptrStartInfo.Ptr, ptrProcessInfo.Ptr) Then
                             Throw New Win32Exception()
-                        Else
-                            ' EXTRACTION DES HANDLES POUR FERMETURE
-                            Dim pi As PROCESS_INFORMATION = Marshal.PtrToStructure(Of PROCESS_INFORMATION)(ptrProcessInfo.Ptr)
-                            hProcess = pi.hProcess
-                            hThread = pi.hThread
                         End If
+
+                        Dim pi As PROCESS_INFORMATION = Marshal.PtrToStructure(Of PROCESS_INFORMATION)(ptrProcessInfo.Ptr)
+                        hProcess = pi.hProcess
+                        hThread = pi.hThread
                     End Using
                 End Using
-
             Catch ex As Exception
                 Application.Log.AddException(ex, "Opening visit link failed!")
             Finally
-                ' FERMETURE DE TOUS LES HANDLES
                 If hProcess <> IntPtr.Zero Then CloseHandle(hProcess)
                 If hThread <> IntPtr.Zero Then CloseHandle(hThread)
                 If UserTokenHandle <> IntPtr.Zero Then CloseHandle(UserTokenHandle)
