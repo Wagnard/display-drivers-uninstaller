@@ -1010,6 +1010,7 @@ Namespace Display_Driver_Uninstaller
                     ' Accumulate all text lines locally — zero UI calls in the loop
                     Dim textLines As New List(Of String)(subKeyNames.Length * 6)
                     Dim localInfo As New List(Of KvP)(subKeyNames.Length * 6)
+                    Dim gpuIndex As Integer = 0
 
                     For Each child As String In subKeyNames
                         If String.IsNullOrWhiteSpace(child) Then Continue For
@@ -1019,12 +1020,19 @@ Namespace Display_Driver_Uninstaller
                         Using subRegkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
                             If subRegkey Is Nothing Then Continue For
 
+                            ' Skip virtual/software adapters (e.g. Microsoft Remote Display Adapter)
+                            ' that have no physical hardware info
+                            If subRegkey.GetValue("HardwareInformation.BiosString", Nothing) Is Nothing AndAlso
+                               subRegkey.GetValue("HardwareInformation.AdapterString", Nothing) Is Nothing Then Continue For
+
+                            gpuIndex += 1
+
                             ' --- GPU Name ---
                             Dim regValue As String = subRegkey.GetValue("Device Description", String.Empty).ToString()
 
                             If Not String.IsNullOrWhiteSpace(regValue) Then
-                                textLines.Add($"{UpdateTextTranslated(11)}{child} - {UpdateTextTranslated(12)}: {regValue}")
-                                If firstLaunch Then localInfo.Add(New KvP(" : ", $"GPU #{child}", regValue))
+                                textLines.Add($"{UpdateTextTranslated(11)}{gpuIndex} - {UpdateTextTranslated(12)}: {regValue}")
+                                If firstLaunch Then localInfo.Add(New KvP(" : ", $"GPU #{gpuIndex}", regValue))
                             Else
                                 regValue = subRegkey.GetValue("DriverDesc", String.Empty).ToString()
 
@@ -1035,8 +1043,8 @@ Namespace Display_Driver_Uninstaller
                                 End If
 
                                 If Not String.IsNullOrWhiteSpace(regValue) Then
-                                    textLines.Add($"{UpdateTextTranslated(11)}{child} - {UpdateTextTranslated(12)}: {regValue}")
-                                    If firstLaunch Then localInfo.Add(New KvP(" : ", $"GPU #{child}", regValue))
+                                    textLines.Add($"{UpdateTextTranslated(11)}{gpuIndex} - {UpdateTextTranslated(12)}: {regValue}")
+                                    If firstLaunch Then localInfo.Add(New KvP(" : ", $"GPU #{gpuIndex}", regValue))
                                 End If
                             End If
 
@@ -1102,9 +1110,8 @@ Namespace Display_Driver_Uninstaller
                         If firstLaunch Then localInfo.Add(KvP.Empty)
                     Next
 
-                    ' *** Single batched UI update instead of N*6 individual calls ***
                     If textLines.Count > 0 Then
-                        UpdateTextMethod(String.Join(Environment.NewLine, textLines))
+                        UpdateTextMethodBatch(textLines)
                     End If
 
                     If firstLaunch Then
@@ -1308,6 +1315,21 @@ Namespace Display_Driver_Uninstaller
 				SharedLogBox.Items.Add(DateTime.Now.ToString("HH:mm:ss") + " - " + strMessage)
 				SharedLogBox.SelectedIndex = SharedLogBox.Items.Count - 1
 				SharedLogBox.ScrollIntoView(SharedLogBox.SelectedItem)
+			End If
+		End Sub
+
+		Public Shared Sub UpdateTextMethodBatch(ByVal messages As IEnumerable(Of String))
+			If Not SharedLogBox.Dispatcher.CheckAccess() Then
+				SharedLogBox.Dispatcher.Invoke(Sub() UpdateTextMethodBatch(messages))
+			Else
+				Dim timestamp As String = DateTime.Now.ToString("HH:mm:ss") + " - "
+				For Each msg As String In messages
+					SharedLogBox.Items.Add(timestamp + msg)
+				Next
+				If SharedLogBox.Items.Count > 0 Then
+					SharedLogBox.SelectedIndex = SharedLogBox.Items.Count - 1
+					SharedLogBox.ScrollIntoView(SharedLogBox.SelectedItem)
+				End If
 			End If
 		End Sub
 
