@@ -87,7 +87,7 @@ Namespace Display_Driver_Uninstaller
 					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
 					If found.Count > 0 Then
 						For Each d As SetupAPI.Device In found
-							If StrContainsAny(d.HardwareIDs(0), True, VendidSC) Then
+							If d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 AndAlso StrContainsAny(d.HardwareIDs(0), True, VendidSC) Then
 								SetupAPI.UninstallDevice(d)
 							End If
 						Next

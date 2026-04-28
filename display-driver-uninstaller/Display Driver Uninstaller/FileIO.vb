@@ -472,7 +472,6 @@ Namespace Display_Driver_Uninstaller
 								Else
 									Exit While
 								End If
-								waits += 1
 							End While
 
 							If RemoveDirectory(uncFileName) Then
@@ -676,197 +675,199 @@ Namespace Display_Driver_Uninstaller
 						Return GetFilesToDeleteInternal
 					Case Else
 						If Not fixedAcl AndAlso errCode = Errors.ACCESS_DENIED Then
-							GetFilesToDeleteInternal(fileName, wildCard, searchSubDirs, searchFiles, True)
-						Else
-							Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, String.Format("Error! Couldn't find {0}!{1}{2}", If(searchFiles, "files", "directories"), CRLF, fileName))
-							logEntry.Type = LogType.Error
-							logEntry.Add("fileName", fileName)
-							logEntry.Add("wildCard", wildCard)
-							logEntry.Add("searchSubDirs", searchSubDirs.ToString())
-							logEntry.Add("searchFiles", searchFiles.ToString())
-							logEntry.Add("fixedAcl", fixedAcl.ToString())
+                            Return GetFilesToDeleteInternal(fileName, wildCard, searchSubDirs, searchFiles, True)
+                        Else
+                            Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, String.Format("Error! Couldn't find {0}!{1}{2}", If(searchFiles, "files", "directories"), CRLF, fileName))
+                            logEntry.Type = LogType.Error
+                            logEntry.Add("fileName", fileName)
+                            logEntry.Add("wildCard", wildCard)
+                            logEntry.Add("searchSubDirs", searchSubDirs.ToString())
+                            logEntry.Add("searchFiles", searchFiles.ToString())
+                            logEntry.Add("fixedAcl", fixedAcl.ToString())
 
-							Application.Log.Add(logEntry)
-						End If
-				End Select
-			Catch ex As Exception
-				Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, String.Format("Error! Couldn't find {0}!{1}{2}", If(searchFiles, "files", "directories"), CRLF, fileName))
-				logEntry.Type = LogType.Error
-				logEntry.Add("fileName", fileName)
-				logEntry.Add("wildCard", wildCard)
-				logEntry.Add("searchSubDirs", searchSubDirs.ToString())
-				logEntry.Add("searchFiles", searchFiles.ToString())
-				logEntry.Add("fixedAcl", fixedAcl.ToString())
+                            Application.Log.Add(logEntry)
+                        End If
+                End Select
+            Catch ex As Exception
+                Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, String.Format("Error! Couldn't find {0}!{1}{2}", If(searchFiles, "files", "directories"), CRLF, fileName))
+                logEntry.Type = LogType.Error
+                logEntry.Add("fileName", fileName)
+                logEntry.Add("wildCard", wildCard)
+                logEntry.Add("searchSubDirs", searchSubDirs.ToString())
+                logEntry.Add("searchFiles", searchFiles.ToString())
+                logEntry.Add("fixedAcl", fixedAcl.ToString())
 
-				Application.Log.Add(logEntry)
-			End Try
-		End Function
+                Application.Log.Add(logEntry)
+            End Try
+        End Function
 
-		Private Function GetFileCount(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean) As Int32
-			Return GetFileNames(directory, wildCard, searchSubDirs, True, False, False).Count
-		End Function
+        Private Function GetFileCount(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean) As Int32
+            Return GetFileNames(directory, wildCard, searchSubDirs, True, False, False).Count
+        End Function
 
-		Private Function GetDirCount(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean) As Int32
-			Return GetDirNames(directory, wildCard, searchSubDirs, True, False, False).Count
-		End Function
+        Private Function GetDirCount(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean) As Int32
+            Return GetDirNames(directory, wildCard, searchSubDirs, True, False, False).Count
+        End Function
 
 
 
-		Private Function GetFileNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean, ByVal writeAccess As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
-			Dim fileNames As New List(Of String)(100)
-			Dim findData As New WIN32_FIND_DATA
-			Dim findHandle As IntPtr
-			Dim uncDirectory As String
+        Private Function GetFileNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean, ByVal writeAccess As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
+            Dim fileNames As New List(Of String)(100)
+            Dim findData As New WIN32_FIND_DATA
+            Dim findHandle As IntPtr
+            Dim uncDirectory As String
 
-			Try
-				If Not directory.EndsWith(DIR_CHAR) Then directory &= DIR_CHAR
+            Try
+                If Not directory.EndsWith(DIR_CHAR) Then directory &= DIR_CHAR
 
-				If directory.StartsWith(UNC_PREFIX) Then
-					uncDirectory = directory
-					directory = directory.Substring(UNC_PREFIX.Length)
-				Else
-					uncDirectory = UNC_PREFIX & directory
-				End If
+                If directory.StartsWith(UNC_PREFIX) Then
+                    uncDirectory = directory
+                    directory = directory.Substring(UNC_PREFIX.Length)
+                Else
+                    uncDirectory = UNC_PREFIX & directory
+                End If
 
-				Dim findDir As String
-				Dim dirs As Queue(Of String)
+                Dim findDir As String
+                Dim dirs As Queue(Of String)
 
-				If searchSubDirs Then
-					dirs = New Queue(Of String)(GetDirNames(uncDirectory, "*", True, True, writeAccess, fixedAcl))
-					dirs.Enqueue(uncDirectory)
-				Else
-					dirs = New Queue(Of String)(New String() {uncDirectory})
-				End If
+                If searchSubDirs Then
+                    dirs = New Queue(Of String)(GetDirNames(uncDirectory, "*", True, True, writeAccess, fixedAcl))
+                    dirs.Enqueue(uncDirectory)
+                Else
+                    dirs = New Queue(Of String)(New String() {uncDirectory})
+                End If
 
-				While dirs.Count > 0
-					findDir = dirs.Dequeue()
+                While dirs.Count > 0
+                    findDir = dirs.Dequeue()
 
-					If (GetFileAttributes(findDir) And FILE_ATTRIBUTES.REPARSE_POINT) = FILE_ATTRIBUTES.REPARSE_POINT Then
-						Continue While
-					End If
+                    If (GetFileAttributes(findDir) And FILE_ATTRIBUTES.REPARSE_POINT) = FILE_ATTRIBUTES.REPARSE_POINT Then
+                        Continue While
+                    End If
 
-					If Not findDir.EndsWith(DIR_CHAR) Then findDir &= DIR_CHAR
+                    If Not findDir.EndsWith(DIR_CHAR) Then findDir &= DIR_CHAR
 
-					findHandle = FindFirstFile(findDir & wildCard, findData)
+                    findHandle = FindFirstFile(findDir & wildCard, findData)
 
-					If findHandle <> INVALID_HANDLE Then
-						Do
-							If findData.cFileName <> "." AndAlso findData.cFileName <> ".." AndAlso (findData.dwFileAttributes And FILE_ATTRIBUTES.DIRECTORY) <> FILE_ATTRIBUTES.DIRECTORY Then
-								If unicodePaths Then
-									fileNames.Add(String.Concat(findDir, findData.cFileName))
-								Else
-									fileNames.Add(String.Concat(findDir.Substring(UNC_PREFIX.Length), findData.cFileName))
-								End If
-							End If
-						Loop While FindNextFile(findHandle, findData)
+                    If findHandle <> INVALID_HANDLE Then
+                        Do
+                            If findData.cFileName <> "." AndAlso findData.cFileName <> ".." AndAlso (findData.dwFileAttributes And FILE_ATTRIBUTES.DIRECTORY) <> FILE_ATTRIBUTES.DIRECTORY Then
+                                If unicodePaths Then
+                                    fileNames.Add(String.Concat(findDir, findData.cFileName))
+                                Else
+                                    fileNames.Add(String.Concat(findDir.Substring(UNC_PREFIX.Length), findData.cFileName))
+                                End If
+                            End If
+                        Loop While FindNextFile(findHandle, findData)
 
-						FindClose(findHandle)
-					Else
-						Dim errCode As UInt32 = GetLastWin32ErrorU()
+                        FindClose(findHandle)
+                        findHandle = INVALID_HANDLE
+                    Else
+                        Dim errCode As UInt32 = GetLastWin32ErrorU()
 
-						If errCode = Errors.FILE_NOT_FOUND OrElse errCode = Errors.PATH_NOT_FOUND Then
-							Return fileNames
-						End If
+                        If errCode = Errors.FILE_NOT_FOUND OrElse errCode = Errors.PATH_NOT_FOUND Then
+                            Return fileNames
+                        End If
 
-						If Not fixedAcl AndAlso errCode = Errors.ACCESS_DENIED Then
-							If writeAccess Then
-								Dim logEntry As LogEntry = Application.Log.CreateEntry()
-								logEntry.Type = LogType.Warning
-								logEntry.Add("directory", directory)
+                        If Not fixedAcl AndAlso errCode = Errors.ACCESS_DENIED Then
+                            If writeAccess Then
+                                Dim logEntry As LogEntry = Application.Log.CreateEntry()
+                                logEntry.Type = LogType.Warning
+                                logEntry.Add("directory", directory)
 
-								logEntry.Message = String.Format("Couldn't find files, access denied! Attempting to fix path's permissions.{0}{1}", CRLF, directory)
+                                logEntry.Message = String.Format("Couldn't find files, access denied! Attempting to fix path's permissions.{0}{1}", CRLF, directory)
 
-								Dim success As Boolean
+                                Dim success As Boolean
 
-								Try
-									success = ACL.FixFileSecurity(uncDirectory, logEntry)
-								Catch ex As Exception When TypeOf (ex) Is Win32Exception
-									logEntry.AddException(ex, False)
-								Finally
-									logEntry.Add("Fixed", If(success, "Yes", "No"))
+                                Try
+                                    success = ACL.FixFileSecurity(uncDirectory, logEntry)
+                                Catch ex As Exception When TypeOf (ex) Is Win32Exception
+                                    logEntry.AddException(ex, False)
+                                Finally
+                                    logEntry.Add("Fixed", If(success, "Yes", "No"))
 
-									If Not success Then
-										logEntry.Type = LogType.Error
-									End If
+                                    If Not success Then
+                                        logEntry.Type = LogType.Error
+                                    End If
 
-									Application.Log.Add(logEntry)
-								End Try
+                                    Application.Log.Add(logEntry)
+                                End Try
 
-								Return GetFileNames(directory, wildCard, searchSubDirs, unicodePaths, writeAccess, True)
-							Else
-								Application.Log.AddWarningMessage("Couldn't find files, access denied!", CRLF, directory)
-							End If
-						Else
-							Throw New Win32Exception(GetInt32(errCode))
-						End If
-					End If
-				End While
-			Catch ex As Exception
-				Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, "Couldn't find files!")
-				logEntry.Type = LogType.Error
-				logEntry.Add("directory", directory)
-				logEntry.Add("wildCard", wildCard)
-				logEntry.Add("searchSubDirs", searchSubDirs.ToString())
-				logEntry.Add("unicodePaths", unicodePaths.ToString())
-				logEntry.Add("fixedAcl", fixedAcl.ToString())
+                                Return GetFileNames(directory, wildCard, searchSubDirs, unicodePaths, writeAccess, True)
+                            Else
+                                Application.Log.AddWarningMessage("Couldn't find files, access denied!", CRLF, directory)
+                            End If
+                        Else
+                            Throw New Win32Exception(GetInt32(errCode))
+                        End If
+                    End If
+                End While
+            Catch ex As Exception
+                Dim logEntry As LogEntry = Application.Log.CreateEntry(ex, "Couldn't find files!")
+                logEntry.Type = LogType.Error
+                logEntry.Add("directory", directory)
+                logEntry.Add("wildCard", wildCard)
+                logEntry.Add("searchSubDirs", searchSubDirs.ToString())
+                logEntry.Add("unicodePaths", unicodePaths.ToString())
+                logEntry.Add("fixedAcl", fixedAcl.ToString())
 
-				Application.Log.Add(logEntry)
-			Finally
-				If findHandle <> INVALID_HANDLE Then
-					FindClose(findHandle)
-				End If
-			End Try
+                Application.Log.Add(logEntry)
+            Finally
+                If findHandle <> INVALID_HANDLE Then
+                    FindClose(findHandle)
+                End If
+            End Try
 
-			Return fileNames
-		End Function
+            Return fileNames
+        End Function
 
-		Private Function GetDirNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean, ByVal writeAccess As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
-			Dim dirNames As New List(Of String)(100)
-			Dim findData As New WIN32_FIND_DATA
-			Dim findHandle As New IntPtr
-			Dim uncDirectory As String
+        Private Function GetDirNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean, ByVal writeAccess As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
+            Dim dirNames As New List(Of String)(100)
+            Dim findData As New WIN32_FIND_DATA
+            Dim findHandle As New IntPtr
+            Dim uncDirectory As String
 
-			Try
-				If Not directory.EndsWith(DIR_CHAR) Then directory &= DIR_CHAR
+            Try
+                If Not directory.EndsWith(DIR_CHAR) Then directory &= DIR_CHAR
 
-				If directory.StartsWith(UNC_PREFIX) Then
-					uncDirectory = directory
-					directory = directory.Substring(UNC_PREFIX.Length)
-				Else
-					uncDirectory = UNC_PREFIX & directory
-				End If
+                If directory.StartsWith(UNC_PREFIX) Then
+                    uncDirectory = directory
+                    directory = directory.Substring(UNC_PREFIX.Length)
+                Else
+                    uncDirectory = UNC_PREFIX & directory
+                End If
 
-				Dim findDir As String
-				Dim dirs As Queue(Of String) = New Queue(Of String)(1000)
-				dirs.Enqueue(uncDirectory)
+                Dim findDir As String
+                Dim dirs As Queue(Of String) = New Queue(Of String)(1000)
+                dirs.Enqueue(uncDirectory)
 
-				While dirs.Count > 0
-					findDir = dirs.Dequeue()
+                While dirs.Count > 0
+                    findDir = dirs.Dequeue()
 
-					If (GetFileAttributes(findDir) And FILE_ATTRIBUTES.REPARSE_POINT) = FILE_ATTRIBUTES.REPARSE_POINT Then
-						Continue While
-					End If
+                    If (GetFileAttributes(findDir) And FILE_ATTRIBUTES.REPARSE_POINT) = FILE_ATTRIBUTES.REPARSE_POINT Then
+                        Continue While
+                    End If
 
-					findHandle = FindFirstFile(findDir & wildCard, findData)
+                    findHandle = FindFirstFile(findDir & wildCard, findData)
 
-					If findHandle <> INVALID_HANDLE Then
-						Do
-							If findData.cFileName <> "." AndAlso findData.cFileName <> ".." AndAlso (findData.dwFileAttributes And FILE_ATTRIBUTES.DIRECTORY) = FILE_ATTRIBUTES.DIRECTORY Then
-								If unicodePaths Then
-									dirNames.Add(String.Concat(findDir, findData.cFileName))
-								Else
-									dirNames.Add(String.Concat(findDir.Substring(UNC_PREFIX.Length), findData.cFileName))
-								End If
+                    If findHandle <> INVALID_HANDLE Then
+                        Do
+                            If findData.cFileName <> "." AndAlso findData.cFileName <> ".." AndAlso (findData.dwFileAttributes And FILE_ATTRIBUTES.DIRECTORY) = FILE_ATTRIBUTES.DIRECTORY Then
+                                If unicodePaths Then
+                                    dirNames.Add(String.Concat(findDir, findData.cFileName))
+                                Else
+                                    dirNames.Add(String.Concat(findDir.Substring(UNC_PREFIX.Length), findData.cFileName))
+                                End If
 
-								If searchSubDirs Then
-									dirs.Enqueue(findDir & findData.cFileName & DIR_CHAR)
-								End If
-							End If
-						Loop While (FindNextFile(findHandle, findData))
+                                If searchSubDirs Then
+                                    dirs.Enqueue(findDir & findData.cFileName & DIR_CHAR)
+                                End If
+                            End If
+                        Loop While (FindNextFile(findHandle, findData))
 
-						FindClose(findHandle)
-					Else
-						Dim errCode As UInt32 = GetLastWin32ErrorU()
+                        FindClose(findHandle)
+                        findHandle = INVALID_HANDLE
+                    Else
+                        Dim errCode As UInt32 = GetLastWin32ErrorU()
 
 						If errCode = Errors.FILE_NOT_FOUND OrElse errCode = Errors.PATH_NOT_FOUND Then
 							Return dirNames
