@@ -109,7 +109,15 @@ Namespace Display_Driver_Uninstaller.Win32
         Public Shared Sub RunImpersonatedSystem(ByVal action As Action)
             Try
                 Using systemToken As SafeAccessTokenHandle = TakeTokenInternal()
-                    WindowsIdentity.RunImpersonated(systemToken, action)
+                    WindowsIdentity.RunImpersonated(systemToken,
+                    Sub()
+                        ' The duplicated SYSTEM token has key privileges present but NOT enabled.
+                        ' AdjustToken (via OpenThreadToken) targets the thread token while
+                        ' impersonating, so this activates them on the correct token for all
+                        ' code that runs within this impersonated context.
+                        ACL.AddPriviliges(ACL.SE.BACKUP_NAME, ACL.SE.RESTORE_NAME, ACL.SE.TAKE_OWNERSHIP_NAME, ACL.SE.SECURITY_NAME)
+                        action()
+                    End Sub)
                 End Using
                 Application.Log.AddMessage("Reverting the Impersonalisation is successful !")
             Catch ex As Exception

@@ -385,38 +385,60 @@ Namespace Display_Driver_Uninstaller.Win32
    <[Out]()> ByRef TokenHandle As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 			End Function
 
-			<DllImport("kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function GetCurrentProcess() As IntPtr
-			End Function
+            ''' <summary>Opens the impersonation token assigned to the current thread, if any.
+            ''' Returns False (ERROR_NO_TOKEN) when the thread is not impersonating.</summary>
+            <DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+            Private Function OpenThreadToken(
+   <[In]()> ByVal ThreadHandle As IntPtr,
+   <[In]()> ByVal DesiredAccess As TOKENS,
+   <[In](), MarshalAs(UnmanagedType.Bool)> ByVal OpenAsSelf As Boolean,
+   <[Out]()> ByRef TokenHandle As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+            End Function
 
-			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function LookupPrivilegeValue(
+            <DllImport("kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+            Private Function GetCurrentProcess() As IntPtr
+            End Function
+
+            ''' <summary>Returns a pseudo-handle for the calling thread (value -2). Not a real handle; do not close.</summary>
+            <DllImport("kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=False)>
+            Private Function GetCurrentThread() As IntPtr
+            End Function
+
+            <DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+            Private Function LookupPrivilegeValue(
    <[In](), [Optional](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpSystemName As String,
    <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpName As String,
    <[Out]()> ByRef lpLuid As LUID) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
+            End Function
 
 #End Region
 
 #Region "Functions"
 
-			Public Sub AddPriviliges(ByVal ParamArray priviliges() As String)
-				AdjustToken(True, GetCurrentProcess(), priviliges)
-			End Sub
+            Public Sub AddPriviliges(ByVal ParamArray priviliges() As String)
+                AdjustToken(True, GetCurrentProcess(), priviliges)
+            End Sub
 
-			Public Sub RemovePriviliges(ByVal ParamArray priviliges() As String)
-				AdjustToken(False, GetCurrentProcess(), priviliges)
-			End Sub
+            Public Sub RemovePriviliges(ByVal ParamArray priviliges() As String)
+                AdjustToken(False, GetCurrentProcess(), priviliges)
+            End Sub
 
-			Private Sub AdjustToken(ByVal enable As Boolean, ByVal ptrProcess As IntPtr, ByVal ParamArray priviliges() As String)
-				Dim ptrToken As IntPtr = IntPtr.Zero
+            Private Sub AdjustToken(ByVal enable As Boolean, ByVal ptrProcess As IntPtr, ByVal ParamArray priviliges() As String)
+                Dim ptrToken As IntPtr = IntPtr.Zero
 
-				Try
-					If Not OpenProcessToken(ptrProcess, TOKENS.ADJUST_PRIVILEGES Or TOKENS.QUERY, ptrToken) Then
-						Throw New Win32Exception()
-					End If
+                Try
+                    ' When the thread is impersonating (e.g. running as SYSTEM via RunImpersonatedSystem),
+                    ' Windows uses the THREAD token for all access checks — the process token is ignored.
+                    ' OpenAsSelf:=False opens using the impersonated identity, which can adjust its own token.
+                    ' If the thread is not impersonating, OpenThreadToken fails with ERROR_NO_TOKEN and we
+                    ' fall back to the process token as normal.
+                    If Not OpenThreadToken(GetCurrentThread(), TOKENS.ADJUST_PRIVILEGES Or TOKENS.QUERY, False, ptrToken) Then
+                        If Not OpenProcessToken(ptrProcess, TOKENS.ADJUST_PRIVILEGES Or TOKENS.QUERY, ptrToken) Then
+                            Throw New Win32Exception()
+                        End If
+                    End If
 
-					Dim luid As LUID
+                    Dim luid As LUID
 					Dim luidAndAttributes As New List(Of LUID_AND_ATTRIBUTES)
 					Dim requiredSize As UInt32
 
@@ -468,7 +490,6 @@ Namespace Display_Driver_Uninstaller.Win32
 
 			Private ReadOnly _sidSystem As SecurityIdentifier = New SecurityIdentifier(WellKnownSidType.LocalSystemSid, Nothing)
 			Private ReadOnly _sidAdmin As SecurityIdentifier = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
-			Private ReadOnly _sidAuthUser As SecurityIdentifier = New SecurityIdentifier(WellKnownSidType.AuthenticatedUserSid, Nothing)
 #End Region
 
 #Region "Enums"
@@ -535,308 +556,348 @@ Namespace Display_Driver_Uninstaller.Win32
 				SE_REGISTRY_WOW64_32KEY
 			End Enum
 
-			Friend Enum FILE_OPEN As UInt32
-				CREATE_NEW = 1
-				CREATE_ALWAYS = 2
-				OPEN_EXISTING = 3
-				OPEN_ALWAYS = 4
-				TRUNCATE_EXISTING = 5
-			End Enum
-
-			<Flags()>
-			Friend Enum ACCESS_RIGHTS As UInt32
-				FILE_READ_ATTRIBUTES = &H80UI
-
-				DELETE = &H10000UI
-				READ_CONTROL = &H20000UI
-				WRITE_DAC = &H40000UI
-				WRITE_OWNER = &H80000UI
-				SYNCHRONIZE = &H100000UI
-
-				STANDARD_RIGHTS_READ = READ_CONTROL
-				STANDARD_RIGHTS_WRITE = READ_CONTROL
-				STANDARD_RIGHTS_EXECUTE = READ_CONTROL
-				STANDARD_RIGHTS_REQUIRED = &HF0000UI
-				STANDARD_RIGHTS_ALL = &H1F0000UI
-
-				ACCESS_SYSTEM_SECURITY = &H1000000UI    ' + SE_SECURITY_NAME => SACL
-
-				GENERIC_ALL = &H10000000UI
-				GENERIC_EXECUTE = &H20000000UI
-				GENERIC_WRITE = &H40000000UI
-				GENERIC_READ = &H80000000UI
-			End Enum
-
-			Friend Enum FILE_SHARE As UInt32
-				NONE = &H0UI
-				READ = &H1UI
-				WRITE = &H2UI
-				DELETE = &H4UI
-			End Enum
-
 #End Region
 
 #Region "P/Invoke"
 
-			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function GetSecurityInfo(
-   <[In]()> ByVal handle As IntPtr,
-   <[In]()> ByVal ObjectType As SE_OBJECT_TYPE,
-   <[In]()> ByVal SecurityInformation As SECURITY_INFORMATION,
-   <[Out](), [Optional]()> ByRef psidOwner As IntPtr,
-   <[Out](), [Optional]()> ByRef psidGroup As IntPtr,
-   <[Out](), [Optional]()> ByRef pDacl As IntPtr,
-   <[Out](), [Optional]()> ByRef pSacl As IntPtr,
-   <[Out](), [Optional]()> ByRef ppSecurityDescriptor As IntPtr) As UInt32
-			End Function
+            ''' <summary>Opens or creates a file or directory. Returns INVALID_HANDLE_VALUE on failure.</summary>
+            <DllImport("Kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+            Private Function CreateFile(
+   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpFileName As String,
+   <[In]()> ByVal dwDesiredAccess As UInt32,
+   <[In]()> ByVal dwShareMode As UInt32,
+   <[In](), [Optional]()> ByVal lpSecurityAttribute As IntPtr,
+   <[In]()> ByVal dwCreationDisposition As UInt32,
+   <[In]()> ByVal dwFlagsAndAttributes As UInt32,
+   <[In](), [Optional]()> ByVal hTemplateFile As IntPtr) As IntPtr
+            End Function
 
-			<DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function SetSecurityInfo(
+            ''' <summary>Sets security info on an already-open object handle.
+            ''' Returns ERROR_SUCCESS (0) on success, or a Win32 error code on failure.</summary>
+            <DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=False)>
+            Private Function SetSecurityInfo(
    <[In]()> ByVal handle As IntPtr,
    <[In]()> ByVal ObjectType As SE_OBJECT_TYPE,
    <[In]()> ByVal SecurityInformation As SECURITY_INFORMATION,
    <[In](), [Optional]()> ByVal psidOwner As IntPtr,
    <[In](), [Optional]()> ByVal psidGroup As IntPtr,
    <[In](), [Optional]()> ByVal pDacl As IntPtr,
-   <[In](), [Optional]()> ByVal pSacl As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
+   <[In](), [Optional]()> ByVal pSacl As IntPtr) As UInt32
+            End Function
 
-			<DllImport("Kernel32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function CreateFile(
-   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal lpFileName As String,
-   <[In]()> ByVal dwDesiredAccess As ACCESS_RIGHTS,
-   <[In]()> ByVal dwShareMode As FILE_SHARE,
-   <[In](), [Optional]()> ByVal lpSecurityAttribute As IntPtr,
-   <[In]()> ByVal dwCreationDisposition As FILE_OPEN,
-   <[In]()> ByVal dwFlagsAndAttributes As UInt32,
-   <[In](), [Optional]()> ByVal hTemplateFile As IntPtr) As IntPtr
-			End Function
+            ''' <summary>Reads the security descriptor of a named object by path.
+            ''' The caller must free the returned ppSecurityDescriptor via LocalFree.</summary>
+            <DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=False)>
+            Private Function GetNamedSecurityInfo(
+   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pObjectName As String,
+   <[In]()> ByVal ObjectType As SE_OBJECT_TYPE,
+   <[In]()> ByVal SecurityInformation As SECURITY_INFORMATION,
+   <[Out](), [Optional]()> ByRef psidOwner As IntPtr,
+   <[Out](), [Optional]()> ByRef psidGroup As IntPtr,
+   <[Out](), [Optional]()> ByRef pDacl As IntPtr,
+   <[Out](), [Optional]()> ByRef pSacl As IntPtr,
+   <[Out]()> ByRef ppSecurityDescriptor As IntPtr) As UInt32
+            End Function
+
+            ''' <summary>Retrieves a pointer to the ACE at the given zero-based index inside an ACL.</summary>
+            <DllImport("Advapi32.dll", SetLastError:=True)>
+            Private Function GetAce(
+   <[In]()> ByVal pAcl As IntPtr,
+   <[In]()> ByVal dwAceIndex As UInt32,
+   <[Out]()> ByRef pAce As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+            End Function
+
+            ''' <summary>Returns True when both SID buffers describe the same security identifier.</summary>
+            <DllImport("Advapi32.dll", SetLastError:=True)>
+            Private Function EqualSid(
+   <[In]()> ByVal pSid1 As IntPtr,
+   <[In]()> ByVal pSid2 As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+            End Function
+
+            ''' <summary>Sets security info on a named object (file or directory) by path.
+            ''' Returns ERROR_SUCCESS (0) on success, or a Win32 error code on failure.
+            ''' SeRestorePrivilege bypasses DACL checks for both WRITE_OWNER and WRITE_DAC.</summary>
+            <DllImport("Advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=False)>
+            Private Function SetNamedSecurityInfo(
+   <[In](), MarshalAs(UnmanagedType.LPWStr)> ByVal pObjectName As String,
+   <[In]()> ByVal ObjectType As SE_OBJECT_TYPE,
+   <[In]()> ByVal SecurityInformation As SECURITY_INFORMATION,
+   <[In](), [Optional]()> ByVal psidOwner As IntPtr,
+   <[In](), [Optional]()> ByVal psidGroup As IntPtr,
+   <[In](), [Optional]()> ByVal pDacl As IntPtr,
+   <[In](), [Optional]()> ByVal pSacl As IntPtr) As UInt32
+            End Function
+
+            ''' <summary>Initialises an empty ACL in a caller-allocated buffer.</summary>
+            <DllImport("Advapi32.dll", SetLastError:=True)>
+            Private Function InitializeAcl(
+   <[In]()> ByVal pAcl As IntPtr,
+   <[In]()> ByVal nAclLength As UInt32,
+   <[In]()> ByVal dwAclRevision As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
+            End Function
+
+            ''' <summary>Appends one Allow ACE (with inheritance flags) to an existing ACL.</summary>
+            <DllImport("Advapi32.dll", SetLastError:=True)>
+            Private Function AddAccessAllowedAceEx(
+   <[In]()> ByVal pAcl As IntPtr,
+   <[In]()> ByVal dwAceRevision As UInt32,
+   <[In]()> ByVal AceFlags As UInt32,
+   <[In]()> ByVal AccessMask As UInt32,
+   <[In]()> ByVal pSid As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
+            End Function
+
+            ''' <summary>Returns the byte length of a SID. Always succeeds for a valid SID; no documented SetLastError behaviour.</summary>
+            <DllImport("Advapi32.dll", SetLastError:=False)>
+            Private Function GetLengthSid(
+   <[In]()> ByVal pSid As IntPtr) As UInt32
+            End Function
 
 #End Region
 
 #Region "Functions"
 
-			' Adds an ACL entry on the specified directory for the specified account.
-			Public Sub AddDirectorySecurity(ByVal path As String, ByVal Rights As FileSystemRights, ByVal ControlType As AccessControlType)
-				' Create a new DirectoryInfoobject.
-				Dim dInfo As New DirectoryInfo(path)
+            ' Adds an ACL entry on the specified directory for the specified account.
+            Public Sub AddDirectorySecurity(ByVal path As String, ByVal Rights As FileSystemRights, ByVal ControlType As AccessControlType)
+                ' Create a new DirectoryInfoobject.
+                Dim dInfo As New DirectoryInfo(path)
 
-				Dim sid = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
-				' Get a DirectorySecurity object that represents the 
-				' current security settings.
-				'Dim dSecurity As DirectorySecurity = dInfo.GetAccessControl()
-				'Activate necessary admin privileges to make changes without NTFS perms
+                Dim sid = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
+                ' Get a DirectorySecurity object that represents the 
+                ' current security settings.
+                'Dim dSecurity As DirectorySecurity = dInfo.GetAccessControl()
+                'Activate necessary admin privileges to make changes without NTFS perms
 
-				'Create a new acl from scratch.
-				'Dim newacl As New System.Security.AccessControl.DirectorySecurity()
-				Dim newacl As System.Security.AccessControl.DirectorySecurity = Directory.GetAccessControl(path, AccessControlSections.Owner)
-				'set owner only here (needed for WinXP)
-				newacl.SetOwner(sid)
-				dInfo.SetAccessControl(newacl)
-				'This remove inheritance.
-				newacl.SetAccessRuleProtection(False, True)
+                'Create a new acl from scratch.
+                'Dim newacl As New System.Security.AccessControl.DirectorySecurity()
+                Dim newacl As System.Security.AccessControl.DirectorySecurity = Directory.GetAccessControl(path, AccessControlSections.Owner)
+                'set owner only here (needed for WinXP)
+                newacl.SetOwner(sid)
+                dInfo.SetAccessControl(newacl)
+                'This remove inheritance.
+                newacl.SetAccessRuleProtection(False, True)
 
-				newacl = Directory.GetAccessControl(path)
-				' Add the FileSystemAccessRule to the security settings. 
-				newacl.AddAccessRule(New FileSystemAccessRule(sid, Rights, ControlType))
+                newacl = Directory.GetAccessControl(path)
+                ' Add the FileSystemAccessRule to the security settings. 
+                newacl.AddAccessRule(New FileSystemAccessRule(sid, Rights, ControlType))
 
-				sid = New SecurityIdentifier(WellKnownSidType.LocalSystemSid, Nothing)
-				newacl.AddAccessRule(New FileSystemAccessRule(sid, Rights, ControlType))
+                sid = New SecurityIdentifier(WellKnownSidType.LocalSystemSid, Nothing)
+                newacl.AddAccessRule(New FileSystemAccessRule(sid, Rights, ControlType))
 
-				sid = New SecurityIdentifier(WellKnownSidType.AuthenticatedUserSid, Nothing)
-				newacl.AddAccessRule(New FileSystemAccessRule(sid, Rights, ControlType))
+                sid = New SecurityIdentifier(WellKnownSidType.AuthenticatedUserSid, Nothing)
+                newacl.AddAccessRule(New FileSystemAccessRule(sid, Rights, ControlType))
 
-				' Set the new access settings.
-				dInfo.SetAccessControl(newacl)
-			End Sub
+                ' Set the new access settings.
+                dInfo.SetAccessControl(newacl)
+            End Sub
 
-			Public Sub Addregistrysecurity(ByVal regkey As RegistryKey, ByVal subkeyname As String, ByVal Rights As RegistryRights, ByVal ControlType As AccessControlType)
+            Public Sub Addregistrysecurity(ByVal regkey As RegistryKey, ByVal subkeyname As String, ByVal Rights As RegistryRights, ByVal ControlType As AccessControlType)
 
-				Dim rs As New RegistrySecurity()
-				Dim sid = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
-
-
-				'Dim originalsid = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions).GetAccessControl.GetOwner(GetType(System.Security.Principal.SecurityIdentifier))
-				'MsgBox(originalsid.ToString)
-				Using subkey As RegistryKey = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.TakeOwnership)
-					rs.SetOwner(sid)
-
-					' Set the new access settings.Owner
-					subkey.SetAccessControl(rs)
-					rs.SetAccessRuleProtection(False, True)
-
-					'rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
-					sid = New SecurityIdentifier(WellKnownSidType.LocalSystemSid, Nothing)
-					rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
-
-					'sid = New SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, Nothing)
-					'rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
-					' Set the new access settings.
-					subkey.SetAccessControl(rs)
-				End Using
-			End Sub
-
-			' Removes an ACL entry on the specified directory for the specified account.
-			Public Sub RemoveDirectorySecurity(ByVal FileName As String, ByVal Account As String, ByVal Rights As FileSystemRights, ByVal ControlType As AccessControlType)
-				' Create a new DirectoryInfo object.
-				Dim dInfo As New DirectoryInfo(FileName)
-
-				' Get a DirectorySecurity object that represents the 
-				' current security settings.
-				Dim dSecurity As DirectorySecurity = dInfo.GetAccessControl()
-
-				' Add the FileSystemAccessRule to the security settings. 
-				dSecurity.RemoveAccessRule(New FileSystemAccessRule(Account, Rights, ControlType))
-
-				' Set the new access settings.
-				dInfo.SetAccessControl(dSecurity)
-
-			End Sub
+                Dim rs As New RegistrySecurity()
+                Dim sid = New SecurityIdentifier(WellKnownSidType.BuiltinAdministratorsSid, Nothing)
 
 
-			' path = File or Dir
-			Friend Function FixFileSecurity(ByVal uncPath As String, ByRef logEntry As LogEntry) As Boolean
-				Dim errCode As UInt32 = 0UI
-				Dim ptrFile As IntPtr = IntPtr.Zero
+                'Dim originalsid = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions).GetAccessControl.GetOwner(GetType(System.Security.Principal.SecurityIdentifier))
+                'MsgBox(originalsid.ToString)
+                Using subkey As RegistryKey = regkey.OpenSubKey(subkeyname, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.TakeOwnership)
+                    rs.SetOwner(sid)
 
-				Dim ownerChanged As Boolean = False
-				Dim newOwner As SecurityIdentifier = _sidSystem
-				Dim previousOwner As String = Nothing
+                    ' Set the new access settings.Owner
+                    subkey.SetAccessControl(rs)
+                    rs.SetAccessRuleProtection(False, True)
 
-				Try
-					ptrFile = CreateFile(uncPath, ACCESS_RIGHTS.READ_CONTROL Or ACCESS_RIGHTS.FILE_READ_ATTRIBUTES Or ACCESS_RIGHTS.WRITE_OWNER, FILE_SHARE.NONE, IntPtr.Zero, FILE_OPEN.OPEN_EXISTING, FileIO.FILE_ATTRIBUTES.NORMAL Or FileIO.FILE_ATTRIBUTES.FLAG_BACKUP_SEMANTICS Or FileIO.FILE_ATTRIBUTES.FLAG_OPEN_REPARSE_POINT, IntPtr.Zero)
+                    'rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
+                    sid = New SecurityIdentifier(WellKnownSidType.LocalSystemSid, Nothing)
+                    rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
 
-					errCode = GetLastWin32ErrorU()
+                    'sid = New SecurityIdentifier(WellKnownSidType.BuiltinUsersSid, Nothing)
+                    'rs.AddAccessRule(New RegistryAccessRule(sid, Rights, ControlType))
+                    ' Set the new access settings.
+                    subkey.SetAccessControl(rs)
+                End Using
+            End Sub
 
-					If errCode = Errors.PATH_NOT_FOUND OrElse errCode = Errors.FILE_NOT_FOUND Then
-						Return False
-					End If
+            ' Removes an ACL entry on the specified directory for the specified account.
+            Public Sub RemoveDirectorySecurity(ByVal FileName As String, ByVal Account As String, ByVal Rights As FileSystemRights, ByVal ControlType As AccessControlType)
+                ' Create a new DirectoryInfo object.
+                Dim dInfo As New DirectoryInfo(FileName)
 
-					If errCode <> 0UI Then
-						Throw New Win32Exception(GetInt32(errCode))
-					End If
+                ' Get a DirectorySecurity object that represents the 
+                ' current security settings.
+                Dim dSecurity As DirectorySecurity = dInfo.GetAccessControl()
 
-					Try
-						ownerChanged = SetPathOwner(ptrFile, newOwner.Value, logEntry, previousOwner)
-					Catch ex As Exception
-						ownerChanged = False
-						Throw ex
-					Finally
-						If logEntry IsNot Nothing Then
-							If ownerChanged Then
-								logEntry.Add("> Owner is successfully set to System Account!")
-							Else
-								logEntry.Type = LogType.Error
-								logEntry.Add("> Failed to set owner to System account!")
-							End If
-						End If
-					End Try
+                ' Add the FileSystemAccessRule to the security settings. 
+                dSecurity.RemoveAccessRule(New FileSystemAccessRule(Account, Rights, ControlType))
 
-					Return True
-				Finally
-					If ptrFile <> IntPtr.Zero Then
-						CloseHandle(ptrFile)
-					End If
-				End Try
-			End Function
+                ' Set the new access settings.
+                dInfo.SetAccessControl(dSecurity)
 
-			Private Function SetPathOwner(ByVal ptrFile As IntPtr, ByVal newOwnerSID As String, ByRef logEntry As LogEntry, ByRef previousOwnerSID As String) As Boolean
-				Dim ptrOwner As IntPtr = IntPtr.Zero
-				Dim ptrGroup As IntPtr = IntPtr.Zero
-				Dim ptrDACL As IntPtr = IntPtr.Zero
-				Dim ptrSACL As IntPtr = IntPtr.Zero
-				Dim ptrSecurity As IntPtr = IntPtr.Zero
-				Dim ptrOwnerStr As IntPtr = IntPtr.Zero
-				Dim errCode As UInt32 = 0UI
-
-				Dim logEvents As Boolean = (logEntry IsNot Nothing)
-
-				Try
-					errCode = GetSecurityInfo(ptrFile,
-					  SE_OBJECT_TYPE.SE_FILE_OBJECT,
-					  SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION Or SECURITY_INFORMATION.BACKUP_SECURITY_INFORMATION,
-					  ptrOwner,
-					  ptrGroup,
-					  ptrDACL,
-					  ptrSACL,
-					  ptrSecurity)
-
-					If errCode <> 0UI Then
-						Throw New Win32Exception(GetInt32(errCode))
-					End If
+            End Sub
 
 
-					Try
-						If Not ConvertSidToStringSid(ptrOwner, ptrOwnerStr) Then
-							Throw New Win32Exception()
-						End If
+            ''' <summary>
+            ''' Returns True if <paramref name="path"/> already has an explicit Allow ACE
+            ''' granting SYSTEM Full Control (0x1F01FF) in its DACL, meaning FixFileSecurity
+            ''' can skip all modifications for this object.
+            ''' Accepts both normal paths and long paths with the \\?\ prefix.
+            ''' Returns False on any API failure so the caller always falls through to repair.
+            ''' </summary>
+            Private Function HasSystemFullControl(ByVal path As String, ByVal ptrSystemSid As IntPtr) As Boolean
+                Const FILE_ALL_ACCESS As UInt32 = &H1F01FFUI
+                Const ACCESS_ALLOWED_ACE_TYPE As Byte = 0
 
-						previousOwnerSID = Marshal.PtrToStringUni(ptrOwnerStr)
+                Dim ptrOwner As IntPtr = IntPtr.Zero
+                Dim ptrGroup As IntPtr = IntPtr.Zero
+                Dim ptrDacl As IntPtr = IntPtr.Zero
+                Dim ptrSacl As IntPtr = IntPtr.Zero
+                Dim ptrSD As IntPtr = IntPtr.Zero
 
-						If logEvents Then       ' Log current Owner
-							logEntry.Add(KvP.Empty)
-							logEntry.Add("Current Owner")
-							logEntry.Add("  SID", previousOwnerSID)
+                Try
+                    Dim errCode As UInt32 = GetNamedSecurityInfo(
+                        path, SE_OBJECT_TYPE.SE_FILE_OBJECT,
+                        SECURITY_INFORMATION.DACL_SECURITY_INFORMATION,
+                        ptrOwner, ptrGroup, ptrDacl, ptrSacl, ptrSD)
 
-							Dim sbName As New Text.StringBuilder(260)
-							Dim sbDomain As New Text.StringBuilder(260)
-							Dim sizeName As UInt32 = GetUInt32(sbName.Capacity)
-							Dim sizeDomain As UInt32 = GetUInt32(sbName.Capacity)
+                    If errCode <> 0UI Then Return False
+                    If ptrDacl = IntPtr.Zero Then Return False  ' NULL DACL — no explicit ACEs
 
-							If Not LookupAccountSid(Nothing, ptrOwner, sbName, sizeName, sbDomain, sizeDomain, 0UI) Then
-								Throw New Win32Exception()
-							End If
+                    ' AceCount is a WORD at offset 4 inside the ACL header
+                    Dim aceCount As UInt16 = CUShort(Marshal.ReadInt16(ptrDacl, 4))
+                    If aceCount = 0US Then Return False
 
-							logEntry.Add("  Domain", sbDomain.ToString())
-							logEntry.Add("  Name", sbName.ToString())
-							logEntry.Add(KvP.Empty)
-						End If
-					Catch ex As Win32Exception
-						logEntry.Add("> Couldn't find current path's Owner!")
-					Finally
-						If ptrOwnerStr <> IntPtr.Zero Then
-							LocalFree(ptrOwnerStr)
-						End If
-					End Try
+                    For i As UInt32 = 0UI To CUInt(aceCount) - 1UI
+                        Dim ptrAce As IntPtr = IntPtr.Zero
+                        If Not GetAce(ptrDacl, i, ptrAce) Then Continue For
 
-					If logEvents AndAlso Not String.IsNullOrWhiteSpace(previousOwnerSID) AndAlso previousOwnerSID = newOwnerSID Then
-						logEntry.Add("> Owner is already set to System Account!")
-						Return True
-					End If
+                        ' ACCESS_ALLOWED_ACE layout: AceType(1), AceFlags(1), AceSize(2), Mask(4), SidStart
+                        If Marshal.ReadByte(ptrAce, 0) <> ACCESS_ALLOWED_ACE_TYPE Then Continue For
 
-					Try
-						If Not ConvertStringSidToSid(newOwnerSID, ptrOwnerStr) Then
-							Throw New Win32Exception()
-						End If
+                        Dim mask As UInt32 = CUInt(Marshal.ReadInt32(ptrAce, 4))
+                        If (mask And FILE_ALL_ACCESS) <> FILE_ALL_ACCESS Then Continue For
 
-						If Not SetSecurityInfo(ptrFile,
-						  SE_OBJECT_TYPE.SE_FILE_OBJECT,
-						  SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION,
-						  ptrOwnerStr,
-						  IntPtr.Zero,
-						  IntPtr.Zero,
-						  IntPtr.Zero) Then
+                        ' SID begins immediately after the fixed ACE header (8 bytes)
+                        Dim ptrAceSid As IntPtr = New IntPtr(ptrAce.ToInt64() + 8L)
+                        If EqualSid(ptrAceSid, ptrSystemSid) Then Return True
+                    Next
 
-							errCode = GetLastWin32ErrorU()
+                    Return False
+                Finally
+                    If ptrSD <> IntPtr.Zero Then LocalFree(ptrSD)
+                End Try
+            End Function
 
-							If errCode <> 0UI Then
-								Throw New Win32Exception(GetInt32(errCode))
-							End If
-						End If
+            ' path = File or Dir
+            Friend Function FixFileSecurity(ByVal uncPath As String, ByRef logEntry As LogEntry) As Boolean
+                Const ACL_REVISION As UInt32 = 2UI
+                ' OBJECT_INHERIT_ACE | CONTAINER_INHERIT_ACE — propagates to all children
+                Const INHERIT_FLAGS As UInt32 = &H1UI Or &H2UI
+                Const FILE_ALL_ACCESS As UInt32 = &H1F01FFUI
 
-						Return True
-					Finally
-						If ptrOwnerStr <> IntPtr.Zero Then
-							LocalFree(ptrOwnerStr)
-						End If
-					End Try
+                ' CreateFile constants
+                Const WRITE_OWNER As UInt32 = &H80000UI
+                Const WRITE_DAC As UInt32 = &H40000UI
+                Const FILE_SHARE_READ As UInt32 = &H1UI
+                Const FILE_SHARE_WRITE As UInt32 = &H2UI
+                Const FILE_SHARE_DELETE As UInt32 = &H4UI
+                Const OPEN_EXISTING As UInt32 = 3UI
+                ' With SeBackupPrivilege + SeRestorePrivilege enabled, this flag causes
+                ' CreateFile to bypass the DACL entirely — including a completely empty one.
+                Const FILE_FLAG_BACKUP_SEMANTICS As UInt32 = &H2000000UI
 
-				Finally
-					If ptrSecurity <> IntPtr.Zero Then
-						LocalFree(ptrSecurity)
-					End If
-				End Try
-			End Function
+                Dim ptrSystemSid As IntPtr = IntPtr.Zero
+                Dim ptrAdminSid As IntPtr = IntPtr.Zero
+                Dim ptrAcl As IntPtr = IntPtr.Zero
+                Dim ptrFile As IntPtr = IntPtr.Zero
+                Dim errCode As UInt32 = 0UI
+
+                Try
+                    If String.IsNullOrWhiteSpace(uncPath) Then Return False
+
+                    ' --- Build SYSTEM SID first so HasSystemFullControl can use it ---
+                    If Not ConvertStringSidToSid(_sidSystem.Value, ptrSystemSid) Then Throw New Win32Exception()
+
+                    ' --- Early exit: SYSTEM already has Full Control — nothing to do ---
+                    ' GetNamedSecurityInfo supports the \\?\ prefix natively; falls through to
+                    ' repair on any API failure.
+                    If HasSystemFullControl(uncPath, ptrSystemSid) Then Return True
+
+                    ' --- Build remaining SID and ACL ---
+                    If Not ConvertStringSidToSid(_sidAdmin.Value, ptrAdminSid) Then Throw New Win32Exception()
+
+                    Dim aclSize As UInt32 = 8UI +
+                                           (8UI + GetLengthSid(ptrSystemSid)) +
+                                           (8UI + GetLengthSid(ptrAdminSid))
+
+                    ptrAcl = Marshal.AllocHGlobal(GetInt32(aclSize))
+
+                    If Not InitializeAcl(ptrAcl, aclSize, ACL_REVISION) Then Throw New Win32Exception()
+                    If Not AddAccessAllowedAceEx(ptrAcl, ACL_REVISION, INHERIT_FLAGS, FILE_ALL_ACCESS, ptrSystemSid) Then Throw New Win32Exception()
+                    If Not AddAccessAllowedAceEx(ptrAcl, ACL_REVISION, INHERIT_FLAGS, FILE_ALL_ACCESS, ptrAdminSid) Then Throw New Win32Exception()
+
+                    ' --- Step 1: Open the object with backup semantics ---
+                    ' FILE_FLAG_BACKUP_SEMANTICS with SeBackupPrivilege + SeRestorePrivilege causes
+                    ' the kernel to bypass the DACL entirely — succeeds even with an empty DACL.
+                    ptrFile = CreateFile(
+                        uncPath,
+                        WRITE_OWNER Or WRITE_DAC,
+                        FILE_SHARE_READ Or FILE_SHARE_WRITE Or FILE_SHARE_DELETE,
+                        IntPtr.Zero, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, IntPtr.Zero)
+
+                    If ptrFile = New IntPtr(-1) Then Throw New Win32Exception()
+
+                    ' --- Step 2: Set DACL and interim owner (Administrators) via the open handle ---
+                    errCode = SetSecurityInfo(
+                        ptrFile, SE_OBJECT_TYPE.SE_FILE_OBJECT,
+                        SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION Or SECURITY_INFORMATION.DACL_SECURITY_INFORMATION,
+                        ptrAdminSid, IntPtr.Zero, ptrAcl, IntPtr.Zero)
+
+                    If errCode <> 0UI Then Throw New Win32Exception(GetInt32(errCode))
+
+                    CloseHandle(ptrFile)
+                    ptrFile = IntPtr.Zero
+
+                    ' --- Step 3: Transfer ownership to SYSTEM ---
+                    ' Re-open the object — the DACL set in step 2 now grants Administrators
+                    ' Full Control (WRITE_OWNER), and SeRestorePrivilege allows assigning SYSTEM
+                    ' as owner even though SYSTEM is not in our own token's group list.
+                    ' All handle-based: no path-API limitations, \\?\ long paths work natively.
+                    ptrFile = CreateFile(
+                        uncPath,
+                        WRITE_OWNER,
+                        FILE_SHARE_READ Or FILE_SHARE_WRITE Or FILE_SHARE_DELETE,
+                        IntPtr.Zero, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, IntPtr.Zero)
+
+                    If ptrFile = New IntPtr(-1) Then
+                        Dim cfErr As Integer = Marshal.GetLastWin32Error()
+                        If cfErr = CInt(Errors.FILE_NOT_FOUND) OrElse cfErr = CInt(Errors.PATH_NOT_FOUND) Then Return False
+                        Throw New Win32Exception(cfErr)
+                    End If
+
+                    errCode = SetSecurityInfo(
+                        ptrFile, SE_OBJECT_TYPE.SE_FILE_OBJECT,
+                        SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION,
+                        ptrSystemSid, IntPtr.Zero, IntPtr.Zero, IntPtr.Zero)
+
+                    If errCode <> 0UI Then Throw New Win32Exception(GetInt32(errCode))
+
+                    If logEntry IsNot Nothing Then
+                        logEntry.Add("> Owner set to SYSTEM and Full Control granted to SYSTEM and Administrators!")
+                    End If
+
+                    Return True
+                Catch ex As Exception
+                    If logEntry IsNot Nothing Then
+                        logEntry.Type = LogType.Error
+                        logEntry.AddException(ex, False)
+                    End If
+                    Return False
+                Finally
+                    If ptrFile <> IntPtr.Zero Then CloseHandle(ptrFile)
+                    If ptrSystemSid <> IntPtr.Zero Then LocalFree(ptrSystemSid)
+                    If ptrAdminSid <> IntPtr.Zero Then LocalFree(ptrAdminSid)
+                    If ptrAcl <> IntPtr.Zero Then Marshal.FreeHGlobal(ptrAcl)
+                End Try
+            End Function
+
 
 #End Region
 
