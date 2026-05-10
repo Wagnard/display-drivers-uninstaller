@@ -349,41 +349,40 @@ Namespace Display_Driver_Uninstaller.Win32
 			<StructLayout(LayoutKind.Sequential)>
 			Private Structure TOKEN_PRIVILEGES
 				Public PrivilegeCount As UInt32
-				<MarshalAs(UnmanagedType.ByValArray, SizeConst:=1)>
-				Public Privileges() As LUID_AND_ATTRIBUTES
-			End Structure
+                Public Privilege As LUID_AND_ATTRIBUTES  ' single field — we always call AdjustTokenPrivileges one privilege at a time
+            End Structure
 
-			<StructLayout(LayoutKind.Sequential)>
-			Private Structure LUID_AND_ATTRIBUTES
-				Public Luid As LUID
-				Public Attributes As UInt32
-			End Structure
+            <StructLayout(LayoutKind.Sequential)>
+            Private Structure LUID_AND_ATTRIBUTES
+                Public Luid As LUID
+                Public Attributes As UInt32
+            End Structure
 
-			<StructLayout(LayoutKind.Sequential)>
-			Private Structure LUID
-				Public LowPart As UInt32
-				Public HighPart As UInt32
-			End Structure
+            <StructLayout(LayoutKind.Sequential)>
+            Private Structure LUID
+                Public LowPart As UInt32
+                Public HighPart As UInt32
+            End Structure
 #End Region
 
 #Region "P/Invoke"
 
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function AdjustTokenPrivileges(
+            <DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+            Private Function AdjustTokenPrivileges(
    <[In]()> ByVal TokenHandle As IntPtr,
    <[In]()> ByVal DisableAllPrivileges As Boolean,
    <[In](), [Optional]()> ByVal NewState As IntPtr,
    <[In](), [Optional]()> ByVal BufferLength As UInt32,
    <[Out](), [Optional]()> ByVal PreviousState As IntPtr,
    <[Out](), [Optional]()> ByRef ReturnLength As UInt32) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
+            End Function
 
-			<DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
-			Private Function OpenProcessToken(
+            <DllImport("advapi32.dll", CharSet:=CharSet.Unicode, SetLastError:=True)>
+            Private Function OpenProcessToken(
    <[In]()> ByVal ProcessHandle As IntPtr,
    <[In]()> ByVal DesiredAccess As TOKENS,
    <[Out]()> ByRef TokenHandle As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
-			End Function
+            End Function
 
             ''' <summary>Opens the impersonation token assigned to the current thread, if any.
             ''' Returns False (ERROR_NO_TOKEN) when the thread is not impersonating.</summary>
@@ -439,36 +438,37 @@ Namespace Display_Driver_Uninstaller.Win32
                     End If
 
                     Dim luid As LUID
-					Dim luidAndAttributes As New List(Of LUID_AND_ATTRIBUTES)
-					Dim requiredSize As UInt32
+                    Dim requiredSize As UInt32
 
-					For Each privilige In priviliges
-						If Not LookupPrivilegeValue(Nothing, privilige, luid) Then
-							Throw New Win32Exception()
-						End If
+                    For Each privilige In priviliges
+                        If Not LookupPrivilegeValue(Nothing, privilige, luid) Then
+                            Throw New Win32Exception()
+                        End If
 
-						Using newState = New StructPtr(New TOKEN_PRIVILEGES With
-						 {
-						  .PrivilegeCount = 1,
-						  .Privileges =
-						  {
-						   New LUID_AND_ATTRIBUTES() With
-						   {
-						 .Luid = luid,
-						 .Attributes = If(enable, SE_PRIVILEGE.ENABLED, Nothing)  'Nothing will disable the privilege instead of removing
-						   }
-						  }
-						 })
+                        Using newState = New StructPtr(New TOKEN_PRIVILEGES With
+                         {
+                          .PrivilegeCount = 1,
+                          .Privilege = New LUID_AND_ATTRIBUTES With
+                          {
+                           .Luid = luid,
+                           .Attributes = If(enable, SE_PRIVILEGE.ENABLED, 0UI)
+                          }
+                         })
 
-							If Not AdjustTokenPrivileges(ptrToken, False, newState.Ptr, 0UI, IntPtr.Zero, requiredSize) Then
-								Dim err As UInt32 = GetLastWin32ErrorU()
+                            ' AdjustTokenPrivileges returns True even when it could not enable all
+                            ' requested privileges — the only reliable check is GetLastError.
+                            ' ERROR_NOT_ALL_ASSIGNED (1300) means this specific privilege was not
+                            ' available in the token (e.g. not held at all). We tolerate that and
+                            ' let the subsequent API call fail with its own error if the privilege
+                            ' was truly required.
+                            AdjustTokenPrivileges(ptrToken, False, newState.Ptr, 0UI, IntPtr.Zero, requiredSize)
+                            Dim err As UInt32 = GetLastWin32ErrorU()
 
-								If err <> Errors.INSUFFICIENT_BUFFER AndAlso err <> Errors.NOT_ALL_ASSIGNED Then
-									Throw New Win32Exception(GetInt32(err))
-								End If
-							End If
+                            If err <> 0UI AndAlso err <> Errors.NOT_ALL_ASSIGNED Then
+                                Throw New Win32Exception(GetInt32(err))
+                            End If
 
-						End Using
+                        End Using
 
 					Next
 
