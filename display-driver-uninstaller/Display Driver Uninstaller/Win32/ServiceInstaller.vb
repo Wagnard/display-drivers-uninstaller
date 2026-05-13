@@ -53,25 +53,110 @@ Namespace Display_Driver_Uninstaller.Win32
 		End Sub
 
 		Public Sub StopService(ByVal service As String)
-			For Each svc As ServiceController In ServiceController.GetServices()
-				Using svc
-					If svc.ServiceName.Equals(service, StringComparison.OrdinalIgnoreCase) Then
-						If svc.Status <> ServiceControllerStatus.Stopped AndAlso svc.Status <> ServiceControllerStatus.StopPending Then
-							Try
-								svc.Stop()
-								svc.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(10))
-								Application.Log.AddMessage("Service : " & service & " stopped.")
-							Catch ex As Exception
-								Application.Log.AddException(ex)
-							End Try
+            ' New ServiceController(name) opens a direct handle to the named service —
+            ' no full SCM scan needed. The constructor itself never throws; property
+            ' access (Status, CanStop, …) is where failures surface.
+            Dim target As New ServiceController(service)
+            Dim deps As ServiceController() = Nothing
 
-						End If
-					End If
-				End Using
-			Next
-		End Sub
+            Try
+                Dim status As ServiceControllerStatus
+                Try
+                    status = target.Status
+                Catch ex As Exception
+                    Application.Log.AddException(ex, String.Format("StopService: cannot query status of '{0}'", service))
+                    Return
+                End Try
 
-		Public Function GetServiceStatus(ByVal serviceName As String, Optional getdevice As Boolean = True) As ServiceControllerStatus
+                Select Case status
+                    Case ServiceControllerStatus.Stopped
+                        Return
+                    Case ServiceControllerStatus.StopPending
+                        ' Already stopping — just wait it out.
+                        target.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(10))
+                        Return
+                    Case ServiceControllerStatus.StartPending, ServiceControllerStatus.ContinuePending
+                        ' Service hasn't finished initialising yet — it won't accept a stop command
+                        ' until it calls SetServiceStatus(ACCEPT_STOP). Wait for a stable state first.
+                        Application.Log.AddMessage(String.Format("StopService: '{0}' is {1}, waiting for stable state...", service, status))
+                        Try
+                            target.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(10))
+                        Catch ex As System.ServiceProcess.TimeoutException
+                            Application.Log.AddWarningMessage(String.Format("StopService: '{0}' did not reach Running after 10s (still {1}), attempting stop anyway.", service, target.Status))
+                        End Try
+                End Select
+
+                ' Refresh before reading CanStop — ServiceController caches its state and the
+                ' value can be stale. Services can also change their dwControlsAccepted flag
+                ' dynamically, so a cached False does not mean the service is truly unstoppable.
+                target.Refresh()
+                If Not target.CanStop Then
+                    Application.Log.AddMessage(String.Format("StopService: '{0}' reports CanStop = False (status = {1}), attempting anyway.", service, status))
+                End If
+
+                ' Log any running dependents — Windows refuses to stop a service while a
+                ' dependent is still running, and the resulting error message won't say why.
+                ' deps is kept alive (and Nothing on failure) until after Stop()/WaitForStatus();
+                ' disposing earlier can invalidate target's internal handles.
+                Try
+                    deps = target.DependentServices
+                    Dim runningDeps As New List(Of String)
+                    For Each dep As ServiceController In deps
+                        If dep.Status <> ServiceControllerStatus.Stopped AndAlso
+                           dep.Status <> ServiceControllerStatus.StopPending Then
+                            runningDeps.Add(dep.ServiceName)
+                        End If
+                    Next
+                    If runningDeps.Count > 0 Then
+                        Application.Log.AddWarningMessage(String.Format(
+                            "StopService: '{0}' has {1} running dependent(s): {2}",
+                            service, runningDeps.Count, String.Join(", ", runningDeps)))
+                    End If
+                Catch ex As Exception
+                    Application.Log.AddException(ex, String.Format("StopService: cannot enumerate dependents of '{0}'", service))
+                End Try
+
+                Try
+                    target.Stop()
+                    Try
+                        target.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(5))
+                    Catch ex As System.ServiceProcess.TimeoutException
+                        Application.Log.AddMessage(String.Format("StopService: '{0}' still stopping after 5s, retrying stop and waiting 10s more...", service))
+                        Try
+                            target.Stop()
+                        Catch
+                        End Try
+                        target.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(10))
+                    End Try
+                    Application.Log.AddMessage(String.Format("Service '{0}' stopped.", service))
+                Catch ex As Exception
+                    ' ServiceController wraps the real Win32 error inside InnerException.
+                    Dim win32ex As ComponentModel.Win32Exception = TryCast(ex.InnerException, ComponentModel.Win32Exception)
+                    If win32ex IsNot Nothing Then
+                        Application.Log.AddException(win32ex, String.Format("StopService: '{0}' failed — Win32 error {1}", service, win32ex.NativeErrorCode))
+                    Else
+                        Application.Log.AddException(ex, String.Format("StopService: '{0}' failed", service))
+                    End If
+                End Try
+
+            Finally
+                If deps IsNot Nothing Then
+                    For Each dep As ServiceController In deps
+                        Try
+                            dep.Dispose()
+                        Catch
+                        End Try
+                    Next
+                End If
+
+                Try
+                    target.Dispose()
+                Catch
+                End Try
+            End Try
+        End Sub
+
+        Public Function GetServiceStatus(ByVal serviceName As String, Optional getdevice As Boolean = True) As ServiceControllerStatus
 
 			If getdevice Then
 				For Each svc As ServiceController In ServiceController.GetDevices()
