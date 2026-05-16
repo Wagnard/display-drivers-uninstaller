@@ -510,8 +510,13 @@ Namespace Display_Driver_Uninstaller
                                                         If StrContainsAny(audiobus.Service, True, "HDAudBus") Then
                                                             If audiobus.ExtendedInfs IsNot Nothing AndAlso audiobus.ExtendedInfs.Length > 0 AndAlso
                                                             Not String.IsNullOrWhiteSpace(audiobus.ExtendedInfs(0)) Then
-                                                                Dim inf As Inf = GetOemInf(Application.Paths.WinDir & "inf\", audiobus.ExtendedInfs(0))
+                                                                ' UninstallDevice is called first — it may already remove the OEM INF
+                                                                ' via its own OemInfs loop. GetOemInf is called afterward so that
+                                                                ' if the file was already deleted, it returns Nothing and the
+                                                                ' redundant RemoveInf call is skipped entirely.
+                                                                Dim extendedInfName As String = audiobus.ExtendedInfs(0)
                                                                 SetupAPI.UninstallDevice(audiobus) 'Removing the Audio bus.
+                                                                Dim inf As Inf = GetOemInf(Application.Paths.WinDir & "inf\", extendedInfName)
                                                                 If inf IsNot Nothing Then
                                                                     SetupAPI.RemoveInf(inf, False, True)
                                                                 End If

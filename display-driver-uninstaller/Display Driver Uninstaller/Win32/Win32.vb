@@ -209,9 +209,8 @@ Namespace Display_Driver_Uninstaller.Win32
 			End If
 
 			Dim bit As UInt32 = 1UI
-			Dim size As Int32 = Marshal.SizeOf(flags)
 
-			For i As Int32 = (size * 8 - 1) To 0 Step -1
+			For i As Int32 = 31 To 0 Step -1  ' UInt32 is always 32 bits
 				If (flags And bit) = bit Then
 					If [Enum].IsDefined(type, bit) Then
 						eNames.Add(String.Format(ENUM_FORMAT, [Enum].GetName(type, bit), bit.ToString("X2").TrimStart("0"c)))
@@ -278,13 +277,9 @@ Namespace Display_Driver_Uninstaller.Win32
 		End Function
 
 		Friend Sub ShowException(ByVal ex As Exception)
-			If TypeOf (ex) Is Win32Exception Then
-				Dim e As UInt32 = GetUInt32(DirectCast(ex, Win32Exception).NativeErrorCode)
-
-				MessageBox.Show(String.Format("Error code: {0}{1}{2}{1}{1}{3}", e.ToString(), CRLF, ex.Message, ex.StackTrace), "Win32Exception!")
-			Else
-				MessageBox.Show(ex.Message & CRLF & CRLF & If(ex.TargetSite IsNot Nothing, ex.TargetSite.Name, "<null>") & CRLF & CRLF & ex.Source & CRLF & CRLF & ex.StackTrace, "Exception!")
-			End If
+			' MessageBox.Show must not be called from background threads (cleanup tasks).
+			' Route through the application log instead — it is thread-safe.
+			Application.Log.AddException(ex)
 		End Sub
 
 		Friend Function GetLastWin32Error() As Int32
@@ -321,18 +316,14 @@ Namespace Display_Driver_Uninstaller.Win32
 			End Property
 
 			Public Sub New(ByVal obj As Object, Optional ByVal size As UInt32 = 0UI)
-				If Ptr = Nothing Then
-					If (size <= 0UI) Then
-						_objSize.Int32 = Marshal.SizeOf(obj)
-					Else
-						_objSize.UInt32 = size
-					End If
-
-					_ptr = Marshal.AllocHGlobal(ObjSize)
-					Marshal.StructureToPtr(obj, _ptr, False)
+				If (size <= 0UI) Then
+					_objSize.Int32 = Marshal.SizeOf(obj)
 				Else
-					_ptr = IntPtr.Zero
+					_objSize.UInt32 = size
 				End If
+
+				_ptr = Marshal.AllocHGlobal(ObjSize)
+				Marshal.StructureToPtr(obj, _ptr, False)
 			End Sub
 
 			Protected Overridable Sub Dispose(ByVal disposing As Boolean)
@@ -362,7 +353,12 @@ Namespace Display_Driver_Uninstaller.Win32
 			End Sub
 		End Class
 
-		Friend Class SYSTEMTIME
+		' Must be a Structure with Sequential layout so the COM marshaller copies the 8 UInt16
+		' fields in the correct order when used with MarshalAs(UnmanagedType.Struct) in
+		' TaskScheduler COM interfaces (GetNextRunTime, GetMostRecentRunTime, GetRunTimes).
+		' A Class without StructLayout uses Auto layout and gives the CLR freedom to reorder fields.
+		<StructLayout(LayoutKind.Sequential)>
+		Friend Structure SYSTEMTIME
 			Public wYear As UInt16
 			Public wMonth As UInt16
 			Public wDayOfWeek As UInt16
@@ -375,7 +371,7 @@ Namespace Display_Driver_Uninstaller.Win32
 			Public Overrides Function ToString() As String
 				Return String.Format("{0}/{1}/{2}  {3}:{4}:{5}", wDay.ToString(), wMonth.ToString(), wYear.ToString(), wHour.ToString(), wMinute.ToString(), wSecond.ToString)
 			End Function
-		End Class
+		End Structure
 
 	End Module
 End Namespace

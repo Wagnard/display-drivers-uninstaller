@@ -1143,7 +1143,7 @@ Namespace Display_Driver_Uninstaller.Win32
 							logEntry.Add("> Couldn't find current registry key's owner!")
 						Finally
 							If ptrPreviousOwner <> IntPtr.Zero Then
-								Marshal.FreeHGlobal(ptrPreviousOwner)
+								LocalFree(ptrPreviousOwner)
 							End If
 						End Try
 					End If

@@ -714,7 +714,7 @@ Namespace Display_Driver_Uninstaller
         Private Function GetFileNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean, ByVal writeAccess As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
             Dim fileNames As New List(Of String)(100)
             Dim findData As New WIN32_FIND_DATA
-            Dim findHandle As IntPtr
+            Dim findHandle As IntPtr = INVALID_HANDLE
             Dim uncDirectory As String
 
             Try
@@ -823,7 +823,7 @@ Namespace Display_Driver_Uninstaller
         Private Function GetDirNames(ByVal directory As String, ByVal wildCard As String, ByVal searchSubDirs As Boolean, ByVal unicodePaths As Boolean, ByVal writeAccess As Boolean, ByVal fixedAcl As Boolean) As List(Of String)
             Dim dirNames As New List(Of String)(100)
             Dim findData As New WIN32_FIND_DATA
-            Dim findHandle As New IntPtr
+            Dim findHandle As IntPtr = INVALID_HANDLE
             Dim uncDirectory As String
 
             Try
