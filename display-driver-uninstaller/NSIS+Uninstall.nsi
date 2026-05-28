@@ -17,6 +17,7 @@
 
 ; MUI 1.67 compatible ------
 !include "MUI2.nsh"
+!include "x64.nsh"
 
 ; Define the welcome page title to support 3 lines
 !define MUI_WELCOMEPAGE_TITLE_3LINES
@@ -52,6 +53,8 @@ Var RemoveLogs
 Var RemoveLogsCheckbox
 Var RemoveSettings
 Var RemoveSettingsCheckbox
+Var OldUninstaller
+Var OldInstDir
 
 ; Language files
 !insertmacro MUI_LANGUAGE "English"
@@ -66,10 +69,60 @@ Var RemoveSettingsCheckbox
 
 ; Show the language selection dialog in .onInit
 Function .onInit
+  ; DDU is a 64-bit application — force 64-bit registry view and install into
+  ; the native Program Files folder, not Program Files (x86).
+  ${If} ${RunningX64}
+    SetRegView 64
+    StrCpy $INSTDIR "$PROGRAMFILES64\Display Driver Uninstaller"
+  ${EndIf}
+
+  ; -----------------------------------------------------------------------
+  ; Migration (64-bit only): detect an old installation in a different
+  ; directory (e.g. Program Files (x86)) before showing the language dialog
+  ; so the path is ready.  The actual prompt and removal happen AFTER
+  ; language selection so the message is shown in the correct language.
+  ;
+  ; Strategy: read InstallLocation from the 32-bit registry view.
+  ;   - New builds write InstallLocation directly (reliable, user-path-safe).
+  ;   - Old builds did not write it → fall back to GetParent(UninstallString).
+  ; -----------------------------------------------------------------------
+  ${If} ${RunningX64}
+    SetRegView 32
+    ReadRegStr $OldUninstaller HKLM "${PRODUCT_UNINST_KEY}" "UninstallString"
+    ReadRegStr $OldInstDir     HKLM "${PRODUCT_UNINST_KEY}" "InstallLocation"
+    SetRegView 64  ; restore 64-bit view
+
+    ${If} $OldUninstaller != ""
+      ; If InstallLocation is absent (old build), derive the directory from UninstallString
+      ${If} $OldInstDir == ""
+        ${GetParent} $OldUninstaller $OldInstDir
+      ${EndIf}
+    ${EndIf}
+  ${EndIf}
+
+  ; Language selection — $LANGUAGE is set from this point onward
   !insertmacro MUI_LANGDLL_DISPLAY
-  
-; Save the language choice in the registry
+
+  ; Save the language choice in the registry
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Installer Language" $LANGUAGE
+
+  ; -----------------------------------------------------------------------
+  ; Now that the language is known, prompt the user before migrating.
+  ; NSIS == comparisons are case-insensitive, so path-casing differences
+  ; are handled correctly.  Cancelling aborts the whole installation.
+  ; -----------------------------------------------------------------------
+  ${If} ${RunningX64}
+    ${If} $OldUninstaller != ""
+      ${If} $OldInstDir != $INSTDIR
+        MessageBox MB_ICONEXCLAMATION|MB_OKCANCEL \
+          "$(STR_MIGRATE_PRE)$\n$\n$OldInstDir$\n$\n$(STR_MIGRATE_POST)" \
+          IDOK +2
+        Abort
+        DetailPrint "Migrating previous installation from: $OldInstDir"
+        ExecWait '"$OldUninstaller" /S _?=$OldInstDir'
+      ${EndIf}
+    ${EndIf}
+  ${EndIf}
 FunctionEnd
 
 ; Custom uninstall page function
@@ -107,6 +160,8 @@ LangString STR_UNINST_SUBTITLE ${LANG_ENGLISH} "Choose additional cleanup option
 LangString STR_UNINST_TEXT ${LANG_ENGLISH} "You are about to uninstall ${PRODUCT_NAME}. Please choose any additional options below:"
 LangString STR_UNINST_REMOVELOGS ${LANG_ENGLISH} "Remove log files"
 LangString STR_UNINST_REMOVESETTINGS ${LANG_ENGLISH} "Remove settings file"
+LangString STR_MIGRATE_PRE ${LANG_ENGLISH} "A previous installation of ${PRODUCT_NAME} was found in:"
+LangString STR_MIGRATE_POST ${LANG_ENGLISH} "It will be removed before the new version is installed.$\nClick OK to continue, or Cancel to abort."
 
 ; Italian
 LangString STR_01 ${LANG_ITALIAN}  "Sito web ${PRODUCT_NAME}"
@@ -118,6 +173,8 @@ LangString STR_UNINST_SUBTITLE ${LANG_ITALIAN} "Scegli opzioni aggiuntive di pul
 LangString STR_UNINST_TEXT ${LANG_ITALIAN} "Stai per disinstallare ${PRODUCT_NAME}. Seleziona le opzioni aggiuntive qui sotto:"
 LangString STR_UNINST_REMOVELOGS ${LANG_ITALIAN} "Rimuovi i file di log"
 LangString STR_UNINST_REMOVESETTINGS ${LANG_ITALIAN} "Rimuovi file delle impostazioni"
+LangString STR_MIGRATE_PRE ${LANG_ITALIAN} "È stata trovata un'installazione precedente di ${PRODUCT_NAME} in:"
+LangString STR_MIGRATE_POST ${LANG_ITALIAN} "Verrà rimossa prima di installare la nuova versione.$\nFare clic su OK per continuare o su Annulla per interrompere."
 
 ; French
 LangString STR_01 ${LANG_FRENCH} "Site web ${PRODUCT_NAME}"
@@ -129,6 +186,8 @@ LangString STR_UNINST_SUBTITLE ${LANG_FRENCH} "Choisissez des options de nettoya
 LangString STR_UNINST_TEXT ${LANG_FRENCH} "Vous êtes sur le point de désinstaller ${PRODUCT_NAME}. Veuillez choisir les options supplémentaires ci-dessous:"
 LangString STR_UNINST_REMOVELOGS ${LANG_FRENCH} "Supprimer les fichiers journaux"
 LangString STR_UNINST_REMOVESETTINGS ${LANG_FRENCH} "Supprimer le fichier de paramètres"
+LangString STR_MIGRATE_PRE ${LANG_FRENCH} "Une installation précédente de ${PRODUCT_NAME} a été trouvée dans :"
+LangString STR_MIGRATE_POST ${LANG_FRENCH} "Elle sera supprimée avant d'installer la nouvelle version.$\nCliquez sur OK pour continuer, ou sur Annuler pour abandonner."
 
 ; Simplified Chinese
 LangString STR_01 ${LANG_SIMPCHINESE} "网站 ${PRODUCT_NAME}"
@@ -140,6 +199,8 @@ LangString STR_UNINST_SUBTITLE ${LANG_SIMPCHINESE} "选择额外的清理选项"
 LangString STR_UNINST_TEXT ${LANG_SIMPCHINESE} "您即将卸载 ${PRODUCT_NAME}。请在下方选择任何其他选项："
 LangString STR_UNINST_REMOVELOGS ${LANG_SIMPCHINESE} "删除日志文件"
 LangString STR_UNINST_REMOVESETTINGS ${LANG_SIMPCHINESE} "删除设置文件"
+LangString STR_MIGRATE_PRE ${LANG_SIMPCHINESE} "在以下位置发现了 ${PRODUCT_NAME} 的旧版本："
+LangString STR_MIGRATE_POST ${LANG_SIMPCHINESE} "安装新版本前将其删除。$\n点击确定继续，或点击取消中止。"
 
 ; Traditional Chinese
 LangString STR_01 ${LANG_TRADCHINESE} "網站 ${PRODUCT_NAME}"
@@ -151,6 +212,8 @@ LangString STR_UNINST_SUBTITLE ${LANG_TRADCHINESE} "選擇額外的清理選項"
 LangString STR_UNINST_TEXT ${LANG_TRADCHINESE} "您即將卸載 ${PRODUCT_NAME}。請在下方選擇任何其他選項："
 LangString STR_UNINST_REMOVELOGS ${LANG_TRADCHINESE} "刪除日誌文件"
 LangString STR_UNINST_REMOVESETTINGS ${LANG_TRADCHINESE} "刪除設置文件"
+LangString STR_MIGRATE_PRE ${LANG_TRADCHINESE} "在以下位置找到了 ${PRODUCT_NAME} 的舊版本："
+LangString STR_MIGRATE_POST ${LANG_TRADCHINESE} "安裝新版本前將其移除。$\n按「確定」繼續，或按「取消」中止。"
 
 ; German
 LangString STR_01 ${LANG_GERMAN}  "Webseite ${PRODUCT_NAME}"
@@ -162,6 +225,8 @@ LangString STR_UNINST_SUBTITLE ${LANG_GERMAN} "Wählen Sie zusätzliche Bereinig
 LangString STR_UNINST_TEXT ${LANG_GERMAN} "Sie sind dabei, ${PRODUCT_NAME} zu deinstallieren. Bitte wählen Sie unten zusätzliche Optionen:"
 LangString STR_UNINST_REMOVELOGS ${LANG_GERMAN} "Protokolldateien entfernen"
 LangString STR_UNINST_REMOVESETTINGS ${LANG_GERMAN} "Einstellungsdatei entfernen"
+LangString STR_MIGRATE_PRE ${LANG_GERMAN} "Eine frühere Installation von ${PRODUCT_NAME} wurde gefunden in:"
+LangString STR_MIGRATE_POST ${LANG_GERMAN} "Sie wird vor der Installation der neuen Version entfernt.$\nKlicken Sie auf OK, um fortzufahren, oder auf Abbrechen, um den Vorgang abzubrechen."
 
 ; Spanish
 LangString STR_01 ${LANG_SPANISH}  "Sitio web ${PRODUCT_NAME}"
@@ -173,6 +238,8 @@ LangString STR_UNINST_SUBTITLE ${LANG_SPANISH} "Elija opciones adicionales de li
 LangString STR_UNINST_TEXT ${LANG_SPANISH} "Está a punto de desinstalar ${PRODUCT_NAME}. Elija cualquier opción adicional a continuación:"
 LangString STR_UNINST_REMOVELOGS ${LANG_SPANISH} "Eliminar archivos de registro"
 LangString STR_UNINST_REMOVESETTINGS ${LANG_SPANISH} "Eliminar archivo de configuración"
+LangString STR_MIGRATE_PRE ${LANG_SPANISH} "Se encontró una instalación anterior de ${PRODUCT_NAME} en:"
+LangString STR_MIGRATE_POST ${LANG_SPANISH} "Se eliminará antes de instalar la nueva versión.$\nHaga clic en Aceptar para continuar o en Cancelar para cancelar."
 
 ; Japanese
 LangString STR_01 ${LANG_JAPANESE}  "ウェブサイト ${PRODUCT_NAME}"
@@ -184,6 +251,8 @@ LangString STR_UNINST_SUBTITLE ${LANG_JAPANESE} "追加のクリーンアップ�
 LangString STR_UNINST_TEXT ${LANG_JAPANESE} "${PRODUCT_NAME} をアンインストールしようとしています。以下の追加オプションを選択してください："
 LangString STR_UNINST_REMOVELOGS ${LANG_JAPANESE} "ログファイルを削除する"
 LangString STR_UNINST_REMOVESETTINGS ${LANG_JAPANESE} "設定ファイルを削除する"
+LangString STR_MIGRATE_PRE ${LANG_JAPANESE} "${PRODUCT_NAME} の以前のインストールが次の場所で見つかりました："
+LangString STR_MIGRATE_POST ${LANG_JAPANESE} "新しいバージョンをインストールする前に削除されます。$\nOK をクリックして続行するか、キャンセルをクリックして中止してください。"
 
 ; Polski
 LangString STR_01 ${LANG_POLISH}  "Strona ${PRODUCT_NAME}"
@@ -195,6 +264,8 @@ LangString STR_UNINST_SUBTITLE ${LANG_POLISH} "Wybierz dodatkowe opcje czyszczen
 LangString STR_UNINST_TEXT ${LANG_POLISH} "Zamierzasz odinstalować ${PRODUCT_NAME}. Wybierz dodatkowe opcje poniżej:"
 LangString STR_UNINST_REMOVELOGS ${LANG_POLISH} "Usuń pliki dziennika"
 LangString STR_UNINST_REMOVESETTINGS ${LANG_POLISH} "Usuń plik ustawień"
+LangString STR_MIGRATE_PRE ${LANG_POLISH} "Znaleziono poprzednią instalację ${PRODUCT_NAME} w:"
+LangString STR_MIGRATE_POST ${LANG_POLISH} "Zostanie ona usunięta przed zainstalowaniem nowej wersji.$\nKliknij OK, aby kontynuować, lub Anuluj, aby przerwać."
 
 ; MUI end ------
 
@@ -314,10 +385,6 @@ Section "MainSection" SEC01
   File "${SOURCE_PATH}\Settings\REALTEK\packages.cfg"
   File "${SOURCE_PATH}\Settings\REALTEK\services.cfg"
 
-  ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
-  IntFmt $0 "0x%08X" $0 #< conv to DWORD
-  ;WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\${PRODUCT_NAME}" "EstimatedSize" "$0"
-
 SectionEnd
 
 Section -AdditionalIcons
@@ -337,11 +404,15 @@ Section -Post
   WriteRegStr HKLM "${PRODUCT_DIR_REGKEY}" "" "$INSTDIR\Display Driver Uninstaller.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayName"     "${PRODUCT_NAME}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "UninstallString" "$INSTDIR\uninst.exe"
+  WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "InstallLocation" "$INSTDIR"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayIcon"     "$INSTDIR\Display Driver Uninstaller.exe"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "DisplayVersion"  "${PRODUCT_VERSION}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "URLInfoAbout"    "${PRODUCT_WEB_SITE}"
   WriteRegStr ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Publisher"       "${PRODUCT_PUBLISHER}"
-  WriteRegDWORD ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "EstimatedSize" "$0"
+  ; Calculate install size here, after all files are written, so $0 is not
+  ; clobbered by the AdditionalIcons section which reuses $0 for lang strings.
+  ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
+  WriteRegDWORD ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "EstimatedSize" $0
 SectionEnd
 
 Function un.onUninstSuccess
@@ -356,7 +427,12 @@ FunctionEnd
 ;FunctionEnd
 
 Function un.onInit
-; Retrieve the language choice from the registry
+  ; Match the registry view used during installation
+  ${If} ${RunningX64}
+    SetRegView 64
+  ${EndIf}
+
+  ; Retrieve the language choice from the registry
   ReadRegStr $0 ${PRODUCT_UNINST_ROOT_KEY} "${PRODUCT_UNINST_KEY}" "Installer Language"
   ${If} $0 != ""
     ; If found, set the language to match what was used during installation
@@ -440,6 +516,7 @@ Section Uninstall
   Delete "$INSTDIR\Settings\INTEL\packagesigs.cfg"
   Delete "$INSTDIR\Settings\INTEL\packagesoneapi.cfg"
   Delete "$INSTDIR\Settings\INTEL\packagesendurance.cfg"
+  Delete "$INSTDIR\Settings\INTEL\packagesnpu.cfg"
   Delete "$INSTDIR\Settings\INTEL\interface.cfg"
   Delete "$INSTDIR\Settings\INTEL\driverfiles.cfg"
   Delete "$INSTDIR\Settings\INTEL\clsidleftover.cfg"
