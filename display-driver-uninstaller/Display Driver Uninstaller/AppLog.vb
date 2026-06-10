@@ -148,7 +148,6 @@ Namespace Display_Driver_Uninstaller
                                 Dim v As Version = Application.Settings.AppVersion
                                 .WriteAttributeString("Version", String.Format("{0}.{1}.{2}.{3}", v.Major, v.Minor, v.Build, v.Revision))
                                 .WriteStartElement("LogEntries")
-                                m_logEntries.Add(New LogEntry() With {.Message = ">> Successfully saved log to file!"})
                                 For Each log As LogEntry In LogEntries
                                     .WriteStartElement(log.Type.ToString())
                                     .WriteStartElement("Time")
@@ -193,6 +192,19 @@ Namespace Display_Driver_Uninstaller
                                     End If
                                     .WriteEndElement()
                                 Next
+
+                                ' Write the trailing "saved" marker straight to the XML rather than
+                                ' adding it to m_logEntries — otherwise it accumulates one extra entry
+                                ' in memory on every SaveLog call within a session.
+                                .WriteStartElement(LogType.Event.ToString())
+                                .WriteStartElement("Time")
+                                .WriteValue(Date.Now.ToString())
+                                .WriteEndElement()
+                                .WriteStartElement("Message")
+                                .WriteValue(">> Successfully saved log to file!")
+                                .WriteEndElement()
+                                .WriteEndElement()
+
                                 .WriteEndElement()
                                 .WriteEndElement()
                                 .WriteEndDocument()
@@ -203,8 +215,8 @@ Namespace Display_Driver_Uninstaller
                 End Using          ' ← FileStream fermé ici
 
             Catch ex As Exception
-                MessageBox.Show(ex.Message)
-                MessageBox.Show(ex.StackTrace)
+                ' Do NOT call MessageBox.Show here — SaveLog runs on background threads
+                ' and during shutdown; a modal dialog would block the thread.
                 AddException(ex, "Saving log failed!")
 			End Try
 		End Sub

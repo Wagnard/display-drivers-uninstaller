@@ -624,13 +624,8 @@ Namespace Display_Driver_Uninstaller
 				End Try
 			End If
 
+			' IsNet48OrNewer already implies IsNet45OrNewer, so a single check is enough.
 			If Not IsNet48OrNewer() Then
-				ShowThemedNotice("Minimum requirement is Microsoft .NET Framework 4.8. Please update your current .NET Framework.")
-				Me.Shutdown()
-				Exit Sub
-			End If
-
-			If Not IsNet45OrNewer() Then
 				ShowThemedNotice("Minimum requirement is Microsoft .NET Framework 4.8. Please update your current .NET Framework.")
 				Me.Shutdown()
 				Exit Sub

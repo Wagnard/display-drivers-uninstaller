@@ -66,18 +66,18 @@ Namespace Display_Driver_Uninstaller
 					End Try
 				End Using
 
-				Dim newestVersion As Integer
-				Dim applicationVersion As Integer
+				' Component-wise comparison via Version — avoids the positional bug of
+				' stripping dots (e.g. "18.1.5.10" would otherwise compare as larger than "18.1.6.0").
+				Dim newestVersion As Version = Nothing
 
 				If String.IsNullOrWhiteSpace(newestVersionStr) OrElse
-		   Not Integer.TryParse(newestVersionStr.Replace(".", ""), newestVersion) OrElse
-		   Not Integer.TryParse(currentVersion.ToString().Replace(".", ""), applicationVersion) Then
+		   Not Version.TryParse(newestVersionStr.Trim(), newestVersion) Then
 
 					status = UpdateStatus.Error
 					Return
 				End If
 
-				If newestVersion <= applicationVersion Then
+				If newestVersion <= currentVersion Then
 					status = UpdateStatus.NoUpdates
 				Else
 					status = UpdateStatus.UpdateAvailable

@@ -1,21 +1,23 @@
 ﻿Imports System.IO
 Imports System.Reflection
 Imports Display_Driver_Uninstaller.Win32
+Imports Display_Driver_Uninstaller.Win32.ACL
+Imports Microsoft.Win32
 
 Namespace Display_Driver_Uninstaller
-	Public Class AppPaths
+    Public Class AppPaths
 
-		Private m_exefile As String
-		Private m_dirapp As String
-		Private m_dirapproaming As String
-		Private m_dirsettings As String
-		Private m_dirlanguage As String
-		Private m_dirlog As String
-		Private m_roaming As String
-		Private m_sysdrive As String
-		Private m_windir As String
-		Private m_programfiles As String
-		Private m_programfilesx86 As String
+        Private m_exefile As String
+        Private m_dirapp As String
+        Private m_dirapproaming As String
+        Private m_dirsettings As String
+        Private m_dirlanguage As String
+        Private m_dirlog As String
+        Private m_roaming As String
+        Private m_sysdrive As String
+        Private m_windir As String
+        Private m_programfiles As String
+        Private m_programfilesx86 As String
         Private m_userspath As String
         Private m_system32 As String
         Private m_syswow64 As String
@@ -171,9 +173,22 @@ Namespace Display_Driver_Uninstaller
                 WinAPI.GetFolderPath(WinAPI.CLSID.SYSTEMX86, m_syswow64)
 
 
-                Using regkey As Microsoft.Win32.RegistryKey = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("software\microsoft\windows nt\currentversion\profilelist")
-                    m_userspath = regkey.GetValue("ProfilesDirectory", String.Empty).ToString
-                End Using
+                ' NOTE: AppPaths is constructed before Application.Log exists (see Data.New),
+                ' so logging is NOT available here — fail silently and rely on the fallback below.
+                Try
+                    Using regkey As Microsoft.Win32.RegistryKey = MyRegistry.OpenSubKey(Microsoft.Win32.Registry.LocalMachine, "software\microsoft\windows nt\currentversion\profilelist")
+                        If regkey IsNot Nothing Then
+                            m_userspath = If(TryCast(regkey.GetValue("ProfilesDirectory", String.Empty), String), String.Empty)
+                        End If
+                    End Using
+                Catch
+                    ' swallow — handled by the fallback
+                End Try
+
+                ' Fall back to the expanded default if the registry value was missing/unreadable
+                If String.IsNullOrWhiteSpace(m_userspath) Then
+                    m_userspath = Environment.ExpandEnvironmentVariables("%SystemDrive%\Users")
+                End If
 
                 If Not m_userspath.EndsWith("\") Then m_userspath &= Path.DirectorySeparatorChar
                 If Not m_dirapp.EndsWith("\") Then m_dirapp &= Path.DirectorySeparatorChar
