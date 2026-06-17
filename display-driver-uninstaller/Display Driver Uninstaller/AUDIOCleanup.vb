@@ -38,29 +38,29 @@ Namespace Display_Driver_Uninstaller
 				UpdateTextMethod(UpdateTextTranslated(24))
 				Application.Log.AddMessage("Executing SetupAPI Remove Audio controler.")
 				Dim AudioDevices As List(Of SetupAPI.Device) = SetupAPI.GetDevices("media", vendidexpected, False, True, True)
-				If AudioDevices.Count > 0 Then
-					Dim removedDevices As New List(Of String)
-					For Each AudioDevice As SetupAPI.Device In AudioDevices
+                If AudioDevices IsNot Nothing AndAlso AudioDevices.Count > 0 Then
+                    Dim removedDevices As New List(Of String)
+                    For Each AudioDevice As SetupAPI.Device In AudioDevices
 
-						' Check if the device has already been removed
-						If removedDevices.Contains(AudioDevice.ToString()) Then
-							Continue For
-						End If
-						If AudioDevice.ChildDevices IsNot Nothing AndAlso AudioDevice.ChildDevices.Length > 0 Then
-							'Removing every children of the "Audio device"
-							Application.Log.AddMessage("SetupAPI: Removing childrens associated to the Audio device.")
-							RemoveChiendrensFromDevices(AudioDevice.ChildDevices, removedDevices)
-							Application.Log.AddMessage("SetupAPI: Removal of the childrens associated to the Audio device completed.")
-						End If
+                        ' Check if the device has already been removed
+                        If removedDevices.Contains(AudioDevice.ToString()) Then
+                            Continue For
+                        End If
+                        If AudioDevice.ChildDevices IsNot Nothing AndAlso AudioDevice.ChildDevices.Length > 0 Then
+                            'Removing every children of the "Audio device"
+                            Application.Log.AddMessage("SetupAPI: Removing childrens associated to the Audio device.")
+                            RemoveChiendrensFromDevices(AudioDevice.ChildDevices, removedDevices)
+                            Application.Log.AddMessage("SetupAPI: Removal of the childrens associated to the Audio device completed.")
+                        End If
 
-						SetupAPI.UninstallDevice(AudioDevice) 'Removing the audio card
+                        SetupAPI.UninstallDevice(AudioDevice) 'Removing the audio card
 
-						removedDevices.Add(AudioDevice.ToString)
-					Next
-					AudioDevices.Clear()
-					removedDevices.Clear()
-				End If
-				UpdateTextMethod(UpdateTextTranslated(25))
+                        removedDevices.Add(AudioDevice.ToString)
+                    Next
+                    AudioDevices.Clear()
+                    removedDevices.Clear()
+                End If
+                UpdateTextMethod(UpdateTextTranslated(25))
 				Application.Log.AddMessage("SetupAPI Remove Audio controler Complete.")
 			Catch ex As Exception
 				'MessageBox.Show(Languages.GetTranslation("frmMain", "Messages", "Text6"), config.AppName, MessageBoxButtons.OK, MessageBoxIcon.Error)
@@ -70,30 +70,30 @@ Namespace Display_Driver_Uninstaller
 			'Removing Audio endpoints
 			If config.SelectedAUDIO = AudioVendor.Realtek Then
 				Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("audioendpoint", Nothing, False)
-				If found.Count > 0 Then
-					For Each d As SetupAPI.Device In found
-						If StrContainsAny(d.FriendlyName, True, "realtek high definition audio", "Realtek(R) Audio") Then
-							SetupAPI.UninstallDevice(d)
-						End If
-					Next
-					found.Clear()
-				End If
-			End If
+                If found IsNot Nothing AndAlso found.Count > 0 Then
+                    For Each d As SetupAPI.Device In found
+                        If StrContainsAny(d.FriendlyName, True, "realtek high definition audio", "Realtek(R) Audio") Then
+                            SetupAPI.UninstallDevice(d)
+                        End If
+                    Next
+                    found.Clear()
+                End If
+            End If
 
 			'Removing Software components (DCH stuff, win10+) (no parents, because old device is removed. SafeMode behavior)
 			If win10 Then
 
 				If config.SelectedAUDIO = AudioVendor.Realtek Then
 					Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevices("SoftwareComponent", Nothing, False)
-					If found.Count > 0 Then
-						For Each d As SetupAPI.Device In found
-							If d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 AndAlso StrContainsAny(d.HardwareIDs(0), True, VendidSC) Then
-								SetupAPI.UninstallDevice(d)
-							End If
-						Next
-						found.Clear()
-					End If
-				End If
+                    If found IsNot Nothing AndAlso found.Count > 0 Then
+                        For Each d As SetupAPI.Device In found
+                            If d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 AndAlso StrContainsAny(d.HardwareIDs(0), True, VendidSC) Then
+                                SetupAPI.UninstallDevice(d)
+                            End If
+                        Next
+                        found.Clear()
+                    End If
+                End If
 			End If
 
 			System.Threading.Thread.Sleep(10)

@@ -270,7 +270,7 @@ Namespace Display_Driver_Uninstaller
 
                                     ' Check if the device has already been removed
                                     If removedDevices.Contains(npu.ToString) Then
-                                        Exit For
+                                        Continue For
                                     End If
 
                                     If npu.ChildDevices IsNot Nothing AndAlso npu.ChildDevices.Length > 0 Then

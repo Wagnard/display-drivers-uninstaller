@@ -1877,7 +1877,7 @@ Namespace Display_Driver_Uninstaller
                         If regkey IsNot Nothing Then
                             For Each child As String In regkey.GetSubKeyNames()
                                 Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\Video", True)
-                                    If regkey IsNot Nothing Then
+                                    If regkey2 IsNot Nothing Then
                                         If Not StrContainsAny(child, True, regkey2.GetSubKeyNames) Then
                                             Try
                                                 Deletesubregkey(regkey, child)
