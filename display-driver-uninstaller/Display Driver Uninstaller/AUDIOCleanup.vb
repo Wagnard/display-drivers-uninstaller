@@ -223,7 +223,7 @@ Namespace Display_Driver_Uninstaller
                                     If regkey2 IsNot Nothing Then
                                         For Each child2 As String In regkey2.GetSubKeyNames()
                                             If String.IsNullOrWhiteSpace(child2) Then Continue For
-                                            If StrContainsAny(child2, True, "aecbf", "audio", "realtekeffects", "realtekoptions", "smartampcmd", "spkprotection", "Realtek ASIO") Then
+                                            If StrContainsAny(child2, True, "aecbf", "audio", "realtekeffects", "realtekoptions", "smartampcmd", "spkprotection", "Realtek ASIO") Then ' Todo: more precise.
                                                 Try
                                                     Deletesubregkey(regkey2, child2)
                                                 Catch ex As Exception

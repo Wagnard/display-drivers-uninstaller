@@ -2449,7 +2449,9 @@ child.ToLower.Contains("mftvdecoder") Then
                                                 If Not String.IsNullOrWhiteSpace(packages(i)) Then
                                                     If StrContainsAny(wantedvalue, True, packages(i)) Then
                                                         Try
-                                                            Deletesubregkey(regkey, child)
+                                                            If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
+                                                                Deletesubregkey(regkey, child)
+                                                            End If
                                                         Catch ex As Exception
                                                             Application.Log.AddException(ex)
                                                         End Try
@@ -2990,14 +2992,12 @@ child.ToLower.Contains("hydravision") Then
                 End If
 
                 If IntPtr.Size = 8 Then
-                    filePath = Environment.GetFolderPath _
-(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD AVT"
+                    filePath = config.Paths.ProgramFilesx86 + "AMD AVT"
                     If _fileIo.ExistsDir(filePath) Then
                         Delete(filePath)
                     End If
 
-                    filePath = Environment.GetFolderPath _
-(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\ATI Technologies"
+                    filePath = config.Paths.ProgramFilesx86 + "ATI Technologies"
                     If _fileIo.ExistsDir(filePath) Then
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
@@ -3061,32 +3061,27 @@ child.ToLower.Contains("hydravision") Then
                         End Try
                     End If
 
-                    filePath = Environment.GetFolderPath _
-(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD APP"
+                    filePath = config.Paths.ProgramFilesx86 + "AMD APP"
                     If _fileIo.ExistsDir(filePath) Then
                         Delete(filePath)
                     End If
 
-                    filePath = Environment.GetFolderPath _
-(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideo"
+                    filePath = config.Paths.ProgramFilesx86 + "AMD\SteadyVideo"
                     If _fileIo.ExistsDir(filePath) Then
                         Delete(filePath)
                     End If
 
-                    filePath = Environment.GetFolderPath _
-(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoFirefox"
+                    filePath = config.Paths.ProgramFilesx86 + "AMD\SteadyVideoFirefox"
                     If _fileIo.ExistsDir(filePath) Then
                         Delete(filePath)
                     End If
 
-                    filePath = Environment.GetFolderPath _
-(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\AMD\SteadyVideoChrome"
+                    filePath = config.Paths.ProgramFilesx86 + "AMD\SteadyVideoChrome"
                     If _fileIo.ExistsDir(filePath) Then
                         Delete(filePath)
                     End If
 
-                    filePath = Environment.GetFolderPath _
-(Environment.SpecialFolder.ProgramFiles) + " (x86)" + "\Common Files" + "\ATI Technologies"
+                    filePath = config.Paths.ProgramFilesx86 + "Common Files" + "\ATI Technologies"
                     If _fileIo.ExistsDir(filePath) Then
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
@@ -6468,7 +6463,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                     Try
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "nvbackend", "gfexperience") AndAlso config.RemoveGFE Or StrContainsAny(child, True, "nvosc", "shareconnect", "nvgs", "FrameViewSdk") Then
+                                If StrContainsAny(child, True, "nvbackend", "gfexperience") AndAlso config.RemoveGFE Or StrContainsAny(child, True, "nvosc", "shareconnect", "nvgs", "FrameViewSdk") Then ' need further verifications
                                     Delete(child)
                                 End If
                             End If
@@ -6690,7 +6685,7 @@ StrContainsAny(child, True, "nv_cache", "umdlogs", "nvtopps", "GameSessionTeleme
                 Try
                     For Each child As String In _fileIo.GetFiles(filePath)
                         If String.IsNullOrWhiteSpace(child) = False Then
-                            If StrContainsAny(child, True, "DisplaySessionContainer", "", "nvcdispcoreplugin", "NVDisplay.Container") Then
+                            If StrContainsAny(child, True, "DisplaySessionContainer", "nvcdispcoreplugin", "NVDisplay.Container") Then
                                 Delete(child)
                             End If
                         End If
@@ -6842,26 +6837,24 @@ child2.ToLower.Contains("hdaudio.driver") AndAlso config.RemoveGFE Then
                                                         If String.IsNullOrWhiteSpace(childs) Then Continue For
                                                         Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, childs)
                                                             If regkey2 IsNot Nothing Then
-                                                                If removephysx Then
-                                                                    If String.IsNullOrWhiteSpace(regkey2.GetValue("NVI2_Package", String.Empty).ToString) = False Then
-                                                                        If StrContainsAny(regkey2.GetValue("NVI2_Package", String.Empty).ToString, True, child2) Then
-                                                                            hit = True
-                                                                        End If
+                                                                If String.IsNullOrWhiteSpace(regkey2.GetValue("NVI2_Package", String.Empty).ToString) = False Then
+                                                                    If StrContainsAny(regkey2.GetValue("NVI2_Package", String.Empty).ToString, True, child2) Then
+                                                                        hit = True
                                                                     End If
-                                                                    If String.IsNullOrWhiteSpace(regkey2.GetValue("UninstallString_Hidden", String.Empty).ToString) = False Then
-                                                                        If StrContainsAny(regkey2.GetValue("UninstallString_Hidden", String.Empty).ToString, True, child2) Then
-                                                                            hit = True
-                                                                        End If
+                                                                End If
+                                                                If String.IsNullOrWhiteSpace(regkey2.GetValue("UninstallString_Hidden", String.Empty).ToString) = False Then
+                                                                    If StrContainsAny(regkey2.GetValue("UninstallString_Hidden", String.Empty).ToString, True, child2) Then
+                                                                        hit = True
                                                                     End If
-                                                                    If String.IsNullOrWhiteSpace(regkey2.GetValue("UninstallString", String.Empty).ToString) = False Then
-                                                                        If StrContainsAny(regkey2.GetValue("UninstallString", String.Empty).ToString, True, child2) Then
-                                                                            hit = True
-                                                                        End If
+                                                                End If
+                                                                If String.IsNullOrWhiteSpace(regkey2.GetValue("UninstallString", String.Empty).ToString) = False Then
+                                                                    If StrContainsAny(regkey2.GetValue("UninstallString", String.Empty).ToString, True, child2) Then
+                                                                        hit = True
                                                                     End If
-                                                                    If String.IsNullOrWhiteSpace(regkey2.GetValue("NVI2_Setup", String.Empty).ToString) = False Then
-                                                                        If StrContainsAny(regkey2.GetValue("NVI2_Setup", String.Empty).ToString, True, child2) Then
-                                                                            hit = True
-                                                                        End If
+                                                                End If
+                                                                If String.IsNullOrWhiteSpace(regkey2.GetValue("NVI2_Setup", String.Empty).ToString) = False Then
+                                                                    If StrContainsAny(regkey2.GetValue("NVI2_Setup", String.Empty).ToString, True, child2) Then
+                                                                        hit = True
                                                                     End If
                                                                 End If
                                                             End If
