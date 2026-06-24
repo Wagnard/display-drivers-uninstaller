@@ -5900,17 +5900,25 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
         End Sub
 
         Private Sub InternalDeleteTask(taskPath As String, config As ThreadSettings)
-            Dim taskGuid As String = String.Empty
-            Dim baseRegPath As String = "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache"
-
             Dim cleanPath As String = taskPath.Trim("\"c)
 
             If Not cleanPath.Contains("\") Then
-                Dim resolvedPath As String = FindTaskPathInTree(cleanPath)
-                If resolvedPath IsNot Nothing Then
-                    cleanPath = resolvedPath
+                Dim resolvedPaths As List(Of String) = FindTaskPathInTree(cleanPath)
+                If resolvedPaths IsNot Nothing AndAlso resolvedPaths.Count > 0 Then
+                    For Each resolvedPath In resolvedPaths
+                        DeleteResolvedTask(resolvedPath, config)
+                    Next
+                    Return
                 End If
             End If
+
+            ' Either an explicit path (contains "\") or nothing was resolved: try as-is.
+            DeleteResolvedTask(cleanPath, config)
+        End Sub
+
+        Private Sub DeleteResolvedTask(cleanPath As String, config As ThreadSettings)
+            Dim taskGuid As String = String.Empty
+            Dim baseRegPath As String = "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache"
 
             Try
                 Using treeKey = MyRegistry.OpenSubKey(Registry.LocalMachine, $"{baseRegPath}\Tree\{cleanPath}")
@@ -5987,36 +5995,42 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
 
         End Sub
 
-        Private Function FindTaskPathInTree(taskName As String) As String
+        Private Function FindTaskPathInTree(taskName As String) As List(Of String)
             Dim baseTreePath As String = "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree"
 
-            Return SearchTaskRecursive(Registry.LocalMachine, baseTreePath, taskName)
+            Dim results As New List(Of String)
+            SearchTaskRecursive(Registry.LocalMachine, baseTreePath, taskName, results)
+            Return results
         End Function
 
-        Private Function SearchTaskRecursive(hive As RegistryKey, currentRegPath As String, taskName As String) As String
+        Private Sub SearchTaskRecursive(hive As RegistryKey, currentRegPath As String, taskName As String, results As List(Of String))
+            Const treeRoot As String = "SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree"
+
             Try
                 Using key = hive.OpenSubKey(currentRegPath)
-                    If key Is Nothing Then Return Nothing
+                    If key Is Nothing Then Return
 
                     For Each subKeyName In key.GetSubKeyNames()
+                        Dim fullRegPath As String = $"{currentRegPath}\{subKeyName}"
+
                         If subKeyName.Equals(taskName, StringComparison.OrdinalIgnoreCase) OrElse
                             subKeyName.StartsWith(taskName, StringComparison.OrdinalIgnoreCase) Then
 
-                            Dim fullRegPath As String = $"{currentRegPath}\{subKeyName}"
-                            Return fullRegPath.Substring("SOFTWARE\Microsoft\Windows NT\CurrentVersion\Schedule\TaskCache\Tree".Length).TrimStart("\"c)
+                            Dim relativePath As String = fullRegPath.Substring(treeRoot.Length).TrimStart("\"c)
+                            If Not results.Contains(relativePath) Then
+                                results.Add(relativePath)
+                            End If
+                        Else
+                            ' Descend récursivement seulement dans les dossiers qui ne matchent pas,
+                            ' pour collecter toutes les tâches correspondantes (pas seulement la première).
+                            SearchTaskRecursive(hive, fullRegPath, taskName, results)
                         End If
-
-                        ' Descend récursivement
-                        Dim result As String = SearchTaskRecursive(hive, $"{currentRegPath}\{subKeyName}", taskName)
-                        If result IsNot Nothing Then Return result
                     Next
                 End Using
             Catch ex As Exception
                 Application.Log.AddException(ex)
             End Try
-
-            Return Nothing
-        End Function
+        End Sub
 
         Private Sub CleanNvidiaCache(ByVal config As ThreadSettings)
             Dim filePath As String = config.Paths.System32 + "config\systemprofile\AppData\Local\NVIDIA"
