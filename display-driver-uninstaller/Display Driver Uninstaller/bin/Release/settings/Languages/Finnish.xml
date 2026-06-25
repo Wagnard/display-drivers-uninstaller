@@ -204,6 +204,13 @@
 	</frmMain>
 
 	<frmOptions Text="Asetukset">
+		<btnResetDefaults>
+			<Text>Palauta suositellut</Text>
+			<Tooltip>Palauta kaikki asetukset suositeltuihin oletusarvoihinsa.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>Palautetaanko kaikki asetukset suositeltuihin oletusarvoihinsa?</Text1>
+		</Messages>
 		<btnClose>
 			<Text>Sulje</Text>
 		</btnClose>

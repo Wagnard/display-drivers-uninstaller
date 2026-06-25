@@ -202,6 +202,13 @@
 	</frmMain>
 
 	<frmOptions Text="Options">
+		<btnResetDefaults>
+			<Text>Nulstil til anbefalede</Text>
+			<Tooltip>Nulstil alle indstillinger til deres anbefalede standardværdier.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>Nulstil alle indstillinger til deres anbefalede standardværdier?</Text1>
+		</Messages>
 		<btnClose>
 			<Text>Lukket</Text>
 		</btnClose>

@@ -224,6 +224,13 @@
 	</frmMain>
 
 	<frmOptions Text="옵션">
+		<btnResetDefaults>
+			<Text>권장값으로 초기화</Text>
+			<Tooltip>모든 옵션을 권장 기본값으로 초기화합니다.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>모든 옵션을 권장 기본값으로 초기화하시겠습니까?</Text1>
+		</Messages>
 		<btnClose>
 			<Text>닫기</Text>
 		</btnClose>

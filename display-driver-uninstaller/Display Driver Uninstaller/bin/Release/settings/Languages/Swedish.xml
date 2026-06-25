@@ -232,6 +232,13 @@
 	</frmMain>
 
 	<frmOptions Text="Inställningar">
+		<btnResetDefaults>
+			<Text>Återställ rekommenderade</Text>
+			<Tooltip>Återställ alla alternativ till deras rekommenderade standardvärden.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>Återställ alla alternativ till deras rekommenderade standardvärden?</Text1>
+		</Messages>
 		<btnClose>
 			<Text>Stäng</Text>
 		</btnClose>

@@ -232,6 +232,13 @@
 	</frmMain>
 
 	<frmOptions Text="Параметри">
+		<btnResetDefaults>
+			<Text>Скинути до рекомендованих</Text>
+			<Tooltip>Скинути всі параметри до рекомендованих значень за замовчуванням.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>Скинути всі параметри до рекомендованих значень за замовчуванням?</Text1>
+		</Messages>
 		<btnClose>
 			<Text>Закрити</Text>
 		</btnClose>

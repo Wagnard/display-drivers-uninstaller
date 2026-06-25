@@ -195,6 +195,13 @@
 	</frmMain>
 
 	<frmOptions Text="Options">
+		<btnResetDefaults>
+			<Text>Επαναφορά προτεινόμενων</Text>
+			<Tooltip>Επαναφορά όλων των επιλογών στις προτεινόμενες προεπιλεγμένες τιμές τους.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>Επαναφορά όλων των επιλογών στις προτεινόμενες προεπιλεγμένες τιμές τους;</Text1>
+		</Messages>
 		<btnClose>
 			<Text>Κλείσιμο</Text>
 		</btnClose>

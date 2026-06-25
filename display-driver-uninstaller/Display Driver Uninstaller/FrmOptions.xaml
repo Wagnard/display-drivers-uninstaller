@@ -146,6 +146,7 @@
 
         <Separator Grid.Row="1" DockPanel.Dock="Bottom" BorderBrush="{DynamicResource OptionsBorderBrush}" BorderThickness="1" />
 
+        <Button Grid.Row="2" Margin="10" Content="btnResetDefaults" Name="btnResetDefaults" HorizontalAlignment="Left" Height="30" MinWidth="80" VerticalAlignment="Bottom" FlowDirection="{Binding FlowControl}"/>
         <Button Grid.Row="2" Margin="10" Content="btnClose" Name="btnClose" HorizontalAlignment="Right" Height="30" MinWidth="80" VerticalAlignment="Bottom" IsCancel="True" FlowDirection="{Binding FlowControl}"/>
     </Grid>
 

@@ -235,6 +235,13 @@
 		<btnClose>
 			<Text>Fermer</Text>
 		</btnClose>
+		<btnResetDefaults>
+			<Text>Valeurs recommandées</Text>
+			<Tooltip>Réinitialiser toutes les options à leurs valeurs par défaut recommandées.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>Réinitialiser toutes les options à leurs valeurs par défaut recommandées ?</Text1>
+		</Messages>
 		<lblOffer>
 			<Text>Afficher les offres de nos partenaires</Text>
 		</lblOffer>

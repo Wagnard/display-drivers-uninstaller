@@ -233,6 +233,13 @@
 	</frmMain>
 
 	<frmOptions Text="Seçenekler">
+		<btnResetDefaults>
+			<Text>Önerilenlere sıfırla</Text>
+			<Tooltip>Tüm seçenekleri önerilen varsayılan değerlerine sıfırla.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>Tüm seçenekler önerilen varsayılan değerlerine sıfırlansın mı?</Text1>
+		</Messages>
 		<btnClose>
 			<Text>Kapat</Text>
 		</btnClose>

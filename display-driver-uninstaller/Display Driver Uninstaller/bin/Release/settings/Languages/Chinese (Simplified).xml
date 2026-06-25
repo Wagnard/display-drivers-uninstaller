@@ -224,6 +224,13 @@
 	</frmMain>
 
 	<frmOptions Text="选项">
+		<btnResetDefaults>
+			<Text>重置为推荐值</Text>
+			<Tooltip>将所有选项重置为推荐的默认值。</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>将所有选项重置为推荐的默认值吗？</Text1>
+		</Messages>
 		<btnclose>
 			<Text>关闭</Text>
 		</btnclose>

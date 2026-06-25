@@ -193,6 +193,13 @@
 	</frmMain>
 
 	<frmOptions Text="Options">
+		<btnResetDefaults>
+			<Text>Obnoviť odporúčané</Text>
+			<Tooltip>Obnoviť všetky možnosti na ich odporúčané predvolené hodnoty.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>Obnoviť všetky možnosti na ich odporúčané predvolené hodnoty?</Text1>
+		</Messages>
 		<btnClose>
 			<Text>Zatvoriť</Text>
 		</btnClose>

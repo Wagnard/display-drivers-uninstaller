@@ -232,6 +232,13 @@
 	</frmMain>
 
 	<frmOptions Text="Opções">
+		<btnResetDefaults>
+			<Text>Repor recomendados</Text>
+			<Tooltip>Repor todas as opções para os valores predefinidos recomendados.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>Repor todas as opções para os valores predefinidos recomendados?</Text1>
+		</Messages>
 		<btnClose>
 			<Text>Fechar</Text>
 		</btnClose>

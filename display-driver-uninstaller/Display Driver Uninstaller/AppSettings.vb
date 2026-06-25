@@ -701,6 +701,56 @@ Namespace Display_Driver_Uninstaller
 			End If
 		End Sub
 
+		''' <summary>
+		''' Resets every user-configurable option shown in the Options window back to its
+		''' registered default (recommended) value. ClearValue restores the default stored in
+		''' each DependencyProperty's metadata, so the recommended values live in one place
+		''' (the RegDP calls) and are never duplicated here.
+		''' Runtime/state properties (WinVersion, LastSelected*, etc.) are intentionally left untouched.
+		''' Note: PreventWinUpdate mirrors a real registry state - the caller must re-apply it
+		''' (FrmMain.EnableDriverSearch) after this returns.
+		''' </summary>
+		Public Sub ResetToDefaults()
+			' General
+			ClearValue(m_remMonitors)
+			ClearValue(m_saveLogs)
+			ClearValue(m_createRestorePoint)
+			ClearValue(m_UseRoamingCfg)
+			ClearValue(m_CheckUpdates)
+			ClearValue(m_removevulkan)
+			ClearValue(m_showoffer)
+			ClearValue(m_RememberLastChoice)
+			ClearValue(m_UseDarkTheme)
+
+			' NVIDIA
+			ClearValue(m_remNvidiaDirs)
+			ClearValue(m_remPhysX)
+			ClearValue(m_rem3DtvPlay)
+			ClearValue(m_remGFE)
+			ClearValue(m_remNVBROADCAST)
+			ClearValue(m_remNVCP)
+			ClearValue(m_removeNvidiaCache)
+			ClearValue(m_keepNVCPopt)
+
+			' AMD
+			ClearValue(m_remAMDDirs)
+			ClearValue(m_remAMDKMPFD)
+			ClearValue(m_remAudioBus)
+			ClearValue(m_remCrimsonCache)
+			ClearValue(m_remAMDCP)
+
+			' Intel
+			ClearValue(m_remINTELCP)
+			ClearValue(m_remINTELIGS)
+			ClearValue(m_remOneAPI)
+			ClearValue(m_remEnduranceGaming)
+			ClearValue(m_remIntelNpu)
+
+			' Advanced
+			ClearValue(m_enablesafemodedialog)
+			ClearValue(m_PreventWinUpdate)
+		End Sub
+
 		Private Sub Save(ByVal fileName As String)
 			If String.IsNullOrEmpty(fileName) Then
 				Return

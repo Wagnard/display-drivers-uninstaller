@@ -233,6 +233,13 @@
 	</frmMain>
 
 	<frmOptions Text="オプション">
+		<btnResetDefaults>
+			<Text>推奨設定に戻す</Text>
+			<Tooltip>すべてのオプションを推奨される既定値に戻します。</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>すべてのオプションを推奨される既定値に戻しますか？</Text1>
+		</Messages>
 		<btnClose>
 			<Text>閉じる</Text>
 		</btnClose>

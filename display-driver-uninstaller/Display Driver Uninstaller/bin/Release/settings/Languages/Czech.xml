@@ -233,6 +233,13 @@
 	</frmMain>
 
 	<frmOptions Text="Možnosti">
+		<btnResetDefaults>
+			<Text>Obnovit doporučené</Text>
+			<Tooltip>Obnovit všechny možnosti na jejich doporučené výchozí hodnoty.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>Obnovit všechny možnosti na jejich doporučené výchozí hodnoty?</Text1>
+		</Messages>
 		<btnClose>
 			<Text>Zavřít</Text>
 		</btnClose>

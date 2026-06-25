@@ -221,6 +221,13 @@
 		</UpdateLog>
 	</frmMain>
 	<frmOptions Text="Opciones">
+		<btnResetDefaults>
+			<Text>Restablecer recomendados</Text>
+			<Tooltip>Restablecer todas las opciones a sus valores predeterminados recomendados.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>¿Restablecer todas las opciones a sus valores predeterminados recomendados?</Text1>
+		</Messages>
 		<btnClose>
 			<Text>Cerrar</Text>
 		</btnClose>

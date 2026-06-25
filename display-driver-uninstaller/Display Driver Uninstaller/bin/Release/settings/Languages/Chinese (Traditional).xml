@@ -234,6 +234,13 @@
 	</frmMain>
 
 	<frmOptions Text="選項">
+		<btnResetDefaults>
+			<Text>重設為建議值</Text>
+			<Tooltip>將所有選項重設為建議的預設值。</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>將所有選項重設為建議的預設值嗎？</Text1>
+		</Messages>
 		<btnClose>
 			<Text>關閉</Text>
 		</btnClose>

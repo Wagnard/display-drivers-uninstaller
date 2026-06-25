@@ -227,6 +227,13 @@
 		<btnClose>
 			<Text>Close</Text>
 		</btnClose>
+		<btnResetDefaults>
+			<Text>Reset to recommended</Text>
+			<Tooltip>Reset all options to their recommended default values.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>Reset all options to their recommended default values?</Text1>
+		</Messages>
 		<lblOffer>
 			<Text>Show offers from our partners</Text>
 		</lblOffer>

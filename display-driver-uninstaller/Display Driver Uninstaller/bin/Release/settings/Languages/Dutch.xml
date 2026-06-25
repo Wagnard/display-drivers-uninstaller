@@ -233,6 +233,13 @@
 	</frmMain>
 
 	<frmOptions Text="Opties">
+		<btnResetDefaults>
+			<Text>Aanbevolen herstellen</Text>
+			<Tooltip>Alle opties terugzetten naar hun aanbevolen standaardwaarden.</Tooltip>
+		</btnResetDefaults>
+		<Messages>
+			<Text1>Alle opties terugzetten naar hun aanbevolen standaardwaarden?</Text1>
+		</Messages>
 		<btnClose>
 			<Text>Sluiten</Text>
 		</btnClose>

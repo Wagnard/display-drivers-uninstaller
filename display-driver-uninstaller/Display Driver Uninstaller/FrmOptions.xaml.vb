@@ -16,6 +16,27 @@
 			Me.Close()
 		End Sub
 
+		Private Sub BtnResetDefaults_Click(sender As Object, e As RoutedEventArgs) Handles btnResetDefaults.Click
+			Dim confirm As String = Languages.GetTranslation("frmOptions", "Messages", "Text1")
+			If String.IsNullOrWhiteSpace(confirm) Then
+				confirm = "Reset all options to their recommended default values?"
+			End If
+
+			If Application.ShowThemedNotice(confirm, Nothing, MessageBoxButton.YesNo, Me) <> MessageBoxResult.Yes Then
+				Return
+			End If
+
+			Application.Settings.ResetToDefaults()
+
+			' PreventWinUpdate mirrors the real registry state: re-enable Windows driver
+			' search to match the default (False), then reflect the actual state back.
+			FrmMain.EnableDriverSearch(True)
+			Application.Settings.PreventWinUpdate = FrmMain.InfoDriverSearch()
+
+			' Dark theme defaulted back to light: refresh every open window.
+			Application.ApplyThemeToAllWindows()
+		End Sub
+
         Private Sub lblUseDarkTheme_Click(sender As Object, e As RoutedEventArgs) Handles lblUseDarkTheme.Click
             Application.ApplyThemeToAllWindows()
         End Sub
