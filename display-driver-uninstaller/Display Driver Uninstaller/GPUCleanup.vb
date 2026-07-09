@@ -1395,6 +1395,13 @@ wantedvalue2.ToLower.Contains("ati video") Then
                 Return
             End If
 
+            'Remove AMD HDMI/DP audio endpoints (MMDevices) so Windows rebuilds them from
+            'scratch on driver reinstall (clears stale/corrupted endpoint state).
+            'Must run in the full-clean pass (after device removal): during preclean the audio
+            'device still exists, and restarting the audio services right after the sweep lets
+            'AudioEndpointBuilder instantly recreate the endpoints we just deleted.
+            CleanupEngine.RemoveVendorAudioEndpoints("ven_1002")
+
             ImpersonateUser.RunImpersonatedSystem(
             Sub()
 
@@ -2885,17 +2892,17 @@ child.Contains("HydraVision\") Then
             End Sub)
 
             Dim thread1 As Task = Task.Run(Sub() Threaddata1(driverfiles))
-                TaskList.Add(thread1)
+            TaskList.Add(thread1)
 
-                If config.RemoveAMDKMPFD AndAlso config.NotPresentAMDKMPFD Then
-                    Dim thread2 As Task = Task.Run(Sub() Threaddata1(driverfilesKMPFD))
-                    TaskList.Add(thread2)
-                End If
+            If config.RemoveAMDKMPFD AndAlso config.NotPresentAMDKMPFD Then
+                Dim thread2 As Task = Task.Run(Sub() Threaddata1(driverfilesKMPFD))
+                TaskList.Add(thread2)
+            End If
 
-                If config.RemoveAudioBus AndAlso FrmMain.DoNotRemoveAmdHdAudioBusFiles = False Then
-                    Dim thread3 As Task = Task.Run(Sub() Threaddata1(driverfilesKMAFD))
-                    TaskList.Add(thread3)
-                End If
+            If config.RemoveAudioBus AndAlso FrmMain.DoNotRemoveAmdHdAudioBusFiles = False Then
+                Dim thread3 As Task = Task.Run(Sub() Threaddata1(driverfilesKMAFD))
+                TaskList.Add(thread3)
+            End If
 
             Task.WaitAll(TaskList.ToArray())
 
@@ -3828,11 +3835,11 @@ child2.ToLower.Contains("hdaudio.driver") Then
 
                 'Removal of the (DCH) Nvidia control panel comming from the Window Store. (In progress...)
                 If _win10 AndAlso config.RemoveNVCP Then
-                        CleanupEngine.RemoveAppxAsync("NVIDIAControlPanel").Wait()
-                    End If
+                    CleanupEngine.RemoveAppxAsync("NVIDIAControlPanel").Wait()
+                End If
 
-                    'for GFE removal only
-                    If removegfe Then
+                'for GFE removal only
+                If removegfe Then
                     Dim thread1 As Task = Task.Run(Sub() CLSIDCleanThread(clsidleftoverGFE, config))
                         TaskList.Add(thread1)
                     Else
@@ -3897,6 +3904,13 @@ child2.ToLower.Contains("hdaudio.driver") Then
 
                 Return
             End If
+
+            'Remove NVIDIA HDMI/DP audio endpoints (MMDevices) so Windows rebuilds them from
+            'scratch on driver reinstall (clears stale/corrupted endpoint state).
+            'Must run in the full-clean pass (after device removal): during preclean the audio
+            'device still exists, and restarting the audio services right after the sweep lets
+            'AudioEndpointBuilder instantly recreate the endpoints we just deleted.
+            CleanupEngine.RemoveVendorAudioEndpoints("ven_10de")
 
             ImpersonateUser.RunImpersonatedSystem(
             Sub()

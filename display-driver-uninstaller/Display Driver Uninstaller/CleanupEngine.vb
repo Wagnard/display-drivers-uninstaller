@@ -563,6 +563,170 @@ Namespace Display_Driver_Uninstaller
             End Try
         End Sub
 
+        ''' <summary>
+        ''' Deletes the MMDevices audio endpoints (Render + Capture) whose underlying device
+        ''' belongs to the given audio codec vendor id(s) (eg. "ven_10de" NVIDIA, "ven_1002" AMD,
+        ''' "ven_10ec" Realtek). Windows (AudioEndpointBuilder) rebuilds endpoints from the device's
+        ''' KS filter when it comes back, so removing them guarantees a clean endpoint state on
+        ''' driver reinstall and gets rid of ghost endpoints carrying stale settings/FxProperties.
+        ''' Endpoints of other vendors' devices are never touched.
+        ''' </summary>
+        Public Sub RemoveVendorAudioEndpoints(ByVal ParamArray vendorCodecIds As String())
+            If vendorCodecIds Is Nothing OrElse vendorCodecIds.Length = 0 Then Return
+
+            ' Intel (ven_8086) is intentionally refused for now: on laptops using Intel SST,
+            ' onboard audio lives on the INTELAUDIO bus and a matching mistake there would
+            ' wipe the user's motherboard audio settings. Re-evaluate before enabling.
+            Dim codecIds As New List(Of String)
+            For Each id As String In vendorCodecIds
+                If String.IsNullOrWhiteSpace(id) Then Continue For
+                If StrContainsAny(id, True, "8086") Then
+                    Application.Log.AddWarningMessage("MMDevices endpoint cleanup is not enabled for Intel (ven_8086), skipping.")
+                    Continue For
+                End If
+                codecIds.Add(id)
+            Next
+
+            If codecIds.Count = 0 Then Return
+
+            Dim serviceInstaller As New ServiceInstaller
+            Dim removedCount As Integer = 0
+
+            Try
+                ' Audiosrv depends on AudioEndpointBuilder: stop the dependent first so the
+                ' services don't rewrite endpoint state from their cache while we delete.
+                serviceInstaller.StopService("Audiosrv")
+                serviceInstaller.StopService("AudioEndpointBuilder")
+
+                ImpersonateUser.RunImpersonatedSystem(
+                    Sub()
+                        ' MMDevices\Audio ACLs are legitimately restrictive: only the audio services
+                        ' (Audiosrv/AudioEndpointBuilder) and TrustedInstaller have write access - not
+                        ' even SYSTEM. FixRights adds a SYSTEM ACE on Render/Capture so we can work,
+                        ' so snapshot their DACLs first and restore them afterwards to preserve the
+                        ' original security. This restore is specific to this area: on most other keys
+                        ' SYSTEM access is expected by default, and FixRights' ACE is meant to stay.
+                        Dim baseAudioPath As String = "SOFTWARE\Microsoft\Windows\CurrentVersion\MMDevices\Audio"
+                        Dim flows As String() = New String() {"Render", "Capture"}
+                        Dim originalDacls As New Dictionary(Of String, Byte())
+
+                        For Each flow As String In flows
+                            originalDacls(flow) = SnapshotKeyDacl($"{baseAudioPath}\{flow}")
+                        Next
+
+                        Try
+                            For Each flow As String In flows
+                                Using flowKey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, $"{baseAudioPath}\{flow}", True)
+                                    If flowKey Is Nothing Then Continue For
+
+                                    For Each endpointGuid As String In flowKey.GetSubKeyNames()
+                                        If String.IsNullOrWhiteSpace(endpointGuid) Then Continue For
+                                        If Not EndpointBelongsToVendor(flowKey, endpointGuid, codecIds) Then Continue For
+
+                                        Try
+                                            Application.Log.AddMessage($"Removing audio endpoint '{flow}\{endpointGuid}' (vendor match: {String.Join(",", codecIds)}).")
+                                            Deletesubregkey(flowKey, endpointGuid, False)
+                                            removedCount += 1
+                                        Catch ex As Exception
+                                            Application.Log.AddException(ex, $"Failed to remove audio endpoint '{flow}\{endpointGuid}'")
+                                        End Try
+                                    Next
+                                End Using
+                            Next
+                        Finally
+                            ' Runs while still impersonating SYSTEM (key owner), even if a delete failed.
+                            For Each flow As String In flows
+                                RestoreKeyDacl($"{baseAudioPath}\{flow}", originalDacls(flow))
+                            Next
+                        End Try
+                    End Sub)
+
+                If removedCount > 0 Then
+                    Application.Log.AddMessage($"MMDevices cleanup: {removedCount} audio endpoint(s) removed. Windows will rebuild them on the next device arrival.")
+                End If
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+            Finally
+                ' Restart in dependency order. If the services were already stopped
+                ' (eg. Safe Mode), the start attempt is a logged no-op.
+                serviceInstaller.StartService("AudioEndpointBuilder")
+                serviceInstaller.StartService("Audiosrv")
+            End Try
+        End Sub
+
+        ''' <summary>
+        ''' True when one of the endpoint's Properties values (KS device path, descriptions...)
+        ''' contains one of the given codec vendor ids (eg. "hdaudio#func_01&amp;ven_10de&amp;...").
+        ''' </summary>
+        Private Function EndpointBelongsToVendor(ByVal flowKey As RegistryKey, ByVal endpointGuid As String, ByVal codecIds As List(Of String)) As Boolean
+            Try
+                Using propsKey As RegistryKey = MyRegistry.OpenSubKey(flowKey, endpointGuid & "\Properties", False)
+                    If propsKey Is Nothing Then Return False
+
+                    For Each valueName As String In propsKey.GetValueNames()
+                        Dim value As Object = propsKey.GetValue(valueName, Nothing)
+                        Dim text As String = Nothing
+
+                        If TypeOf value Is String Then
+                            text = DirectCast(value, String)
+                        ElseIf TypeOf value Is String() Then
+                            text = String.Join(vbNullChar, DirectCast(value, String()))
+                        ElseIf TypeOf value Is Byte() Then
+                            'REG_BINARY property-store values may embed UTF-16 strings (device paths).
+                            text = System.Text.Encoding.Unicode.GetString(DirectCast(value, Byte()))
+                        End If
+
+                        If Not String.IsNullOrEmpty(text) AndAlso StrContainsAny(text, True, codecIds.ToArray()) Then
+                            Return True
+                        End If
+                    Next
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex, endpointGuid)
+            End Try
+
+            Return False
+        End Function
+
+        ''' <summary>Returns the HKLM key's current DACL in binary form (Nothing if missing/unreadable).</summary>
+        Private Function SnapshotKeyDacl(ByVal keyPath As String) As Byte()
+            Try
+                Using key As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, keyPath, False)
+                    If key Is Nothing Then Return Nothing
+                    Return key.GetAccessControl(AccessControlSections.Access).GetSecurityDescriptorBinaryForm()
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex, "Couldn't snapshot permissions of " & keyPath)
+                Return Nothing
+            End Try
+        End Function
+
+        ''' <summary>Writes back a DACL previously captured with SnapshotKeyDacl. No-op when the
+        ''' snapshot is Nothing. Requires WRITE_DAC - call while impersonating SYSTEM (key owner).</summary>
+        Private Sub RestoreKeyDacl(ByVal keyPath As String, ByVal originalDacl As Byte())
+            If originalDacl Is Nothing Then Return
+
+            Try
+                ' ReadWriteSubTree is required even though we only touch the DACL:
+                ' SetAccessControl's EnsureWriteable() checks the .NET-side writable flag
+                ' (set by the permission-check mode), not the native rights of the handle.
+                ' With ReadSubTree it throws "Cannot write to the registry key" before
+                ' ever reaching Windows. The native handle still only asks for
+                ' ChangePermissions + ReadPermissions (WRITE_DAC + READ_CONTROL).
+                Using key As RegistryKey = Registry.LocalMachine.OpenSubKey(keyPath, RegistryKeyPermissionCheck.ReadWriteSubTree, RegistryRights.ChangePermissions Or RegistryRights.ReadPermissions)
+                    If key Is Nothing Then Return
+
+                    Dim rs As New RegistrySecurity()
+                    rs.SetSecurityDescriptorBinaryForm(originalDacl, AccessControlSections.Access)
+                    key.SetAccessControl(rs)
+
+                    Application.Log.AddMessage("Original permissions restored on HKLM\" & keyPath & ".")
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex, "Couldn't restore original permissions on " & keyPath)
+            End Try
+        End Sub
+
         Private Async Function RemoveAppxPre1809Async(ByVal AppxToRemove As String) As Task
             Dim ServiceInstaller As New ServiceInstaller
             Dim win10 As Boolean = FrmMain.IsWindows10

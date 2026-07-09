@@ -134,6 +134,10 @@ Namespace Display_Driver_Uninstaller
                 _cleanupEngine.RemoveAppxAsync("RealtekAudioControl").Wait()
             End If
 
+            'Remove Realtek audio endpoints (MMDevices) so Windows rebuilds them
+            'from scratch on driver reinstall (clears stale/corrupted endpoint state).
+            _cleanupEngine.RemoveVendorAudioEndpoints("ven_10ec")
+
             ImpersonateUser.RunImpersonatedSystem(
             Sub()
 

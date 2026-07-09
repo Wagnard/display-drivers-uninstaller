@@ -960,6 +960,12 @@ Namespace Display_Driver_Uninstaller.Win32
 
 				''' <summary>Combination of KEY_QUERY_VALUE, KEY_ENUMERATE_SUB_KEYS, KEY_NOTIFY, KEY_CREATE_SUB_KEY, KEY_CREATE_LINK, and KEY_SET_VALUE access.</summary>
 				KEY_ALL_ACCESS = &H2F003FUI
+
+				''' <summary>Standard right: permission to modify the key's DACL. Implicitly granted to the key's owner.</summary>
+				WRITE_DAC = &H40000UI
+
+				''' <summary>Standard right: permission to change the key's owner. Granted regardless of the DACL when SeTakeOwnershipPrivilege is enabled.</summary>
+				WRITE_OWNER = &H80000UI
 			End Enum
 
 			<Flags()>
@@ -1083,12 +1089,31 @@ Namespace Display_Driver_Uninstaller.Win32
 				Dim logEvents As Boolean = (logEntry IsNot Nothing)
 
 				Try
-					retVal = RegOpenKeyEx(rootKey, pathKey, 0UI, REGSAM.KEY_READ Or REGSAM.KEY_WOW64_64KEY, ptrRegKey)
+					' A KEY_READ-only handle can never change the owner (needs WRITE_OWNER) nor the
+					' DACL (needs WRITE_DAC), so ask for both up front. SeTakeOwnershipPrivilege
+					' (enabled at startup and inside RunImpersonatedSystem) grants WRITE_OWNER even
+					' when the DACL doesn't list us, and the key's owner always has implicit WRITE_DAC.
+					' Without this, keys that are readable but not writable (eg. MMDevices\Audio\*)
+					' always failed here: the BACKUP_RESTORE fallback was never reached, and the
+					' owner change below was rejected on the read-only handle.
+					Dim canWriteOwner As Boolean = True
+
+					retVal = RegOpenKeyEx(rootKey, pathKey, 0UI, REGSAM.KEY_READ Or REGSAM.WRITE_DAC Or REGSAM.WRITE_OWNER Or REGSAM.KEY_WOW64_64KEY, ptrRegKey)
+
+					If retVal = 5UI Then
+						' WRITE_OWNER unavailable - retry without it. Being the key's owner still
+						' grants implicit WRITE_DAC, which is all SetAccessRights below needs.
+						canWriteOwner = False
+						retVal = RegOpenKeyEx(rootKey, pathKey, 0UI, REGSAM.KEY_READ Or REGSAM.WRITE_DAC Or REGSAM.KEY_WOW64_64KEY, ptrRegKey)
+					End If
 
 					If retVal <> 0UI Then
 						If retVal = 5UI Then
 							Dim returnAction As UInt32 = 0UI
 
+							' Backup/restore semantics grant KEY_READ/KEY_WRITE/DELETE at most -
+							' never WRITE_OWNER - so the owner must be left untouched on this path.
+							canWriteOwner = False
 							retVal = RegCreateKeyEx(rootKey, pathKey, 0UI, Nothing, REG_OPTION.BACKUP_RESTORE, REGSAM.KEY_READ Or REGSAM.KEY_WOW64_64KEY, IntPtr.Zero, ptrRegKey, returnAction)
 
 							If returnAction = REG_RESULT.REG_CREATED_NEW_KEY Then
@@ -1149,13 +1174,17 @@ Namespace Display_Driver_Uninstaller.Win32
 					End If
 
 
-					rs.SetOwner(SYSTEM_ACCOUNT)
-					retVal = SetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
-					If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
+					If canWriteOwner Then
+						rs.SetOwner(SYSTEM_ACCOUNT)
+						retVal = SetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
+						If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
 
-					ownerModified = True
+						ownerModified = True
 
-					If logEvents Then logEntry.Add("> Owner is successfully set to System Account!")
+						If logEvents Then logEntry.Add("> Owner is successfully set to System Account!")
+					Else
+						If logEvents Then logEntry.Add("> WRITE_OWNER not available, owner left untouched (WRITE_DAC is enough to update the DACL).")
+					End If
 
 					SetAccessRights(ptrRegKey,
 					  New RegistryAccessRule(
@@ -1170,16 +1199,19 @@ Namespace Display_Driver_Uninstaller.Win32
 
 					If logEvents Then logEntry.Add("> Access rights for System is successfully added!")
 
-					retVal = GetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
-					If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
+					If canWriteOwner Then
+						retVal = GetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
+						If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
 
-					rs.SetOwner(previousOwner)
-					retVal = SetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
-					If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
+						rs.SetOwner(previousOwner)
+						retVal = SetSD(ptrRegKey, rs, SECURITY_INFORMATION.OWNER_SECURITY_INFORMATION)
+						If retVal <> 0 Then Throw New Win32Exception(GetInt32(retVal))
 
-					If logEvents Then logEntry.Add("> Owner is successfully restored to orginal!")
+						If logEvents Then logEntry.Add("> Owner is successfully restored to orginal!")
 
-					ownerModified = False
+						ownerModified = False
+					End If
+
 					FixRights = True
 				Catch ex As Exception
 					logEntry.AddException(ex, False)
