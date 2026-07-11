@@ -574,14 +574,16 @@ Namespace Display_Driver_Uninstaller
         Public Sub RemoveVendorAudioEndpoints(ByVal ParamArray vendorCodecIds As String())
             If vendorCodecIds Is Nothing OrElse vendorCodecIds.Length = 0 Then Return
 
-            ' Intel (ven_8086) is intentionally refused for now: on laptops using Intel SST,
-            ' onboard audio lives on the INTELAUDIO bus and a matching mistake there would
-            ' wipe the user's motherboard audio settings. Re-evaluate before enabling.
+            ' Intel requires a device-anchored pattern ("ven_8086&dev_28"): the Intel DSP also
+            ' hosts Bluetooth-offload and DMIC endpoints whose codec ids are VEN_8086 with
+            ' DEV_AExx (eg. VEN_8086&DEV_AE30 = the user's Bluetooth headset, verified on
+            ' Panther Lake), while Intel display-audio codecs are always DEV_28xx. A bare
+            ' "ven_8086" pattern would wipe the user's Bluetooth/mic endpoints - refuse it.
             Dim codecIds As New List(Of String)
             For Each id As String In vendorCodecIds
                 If String.IsNullOrWhiteSpace(id) Then Continue For
-                If StrContainsAny(id, True, "8086") Then
-                    Application.Log.AddWarningMessage("MMDevices endpoint cleanup is not enabled for Intel (ven_8086), skipping.")
+                If StrContainsAny(id, True, "8086") AndAlso Not StrContainsAny(id, True, "dev_28") Then
+                    Application.Log.AddWarningMessage($"MMDevices endpoint cleanup: unqualified Intel pattern '{id}' refused (would match Bluetooth/DMIC endpoints), use 'ven_8086&dev_28'.")
                     Continue For
                 End If
                 codecIds.Add(id)
@@ -662,6 +664,20 @@ Namespace Display_Driver_Uninstaller
             Try
                 Using propsKey As RegistryKey = MyRegistry.OpenSubKey(flowKey, endpointGuid & "\Properties", False)
                     If propsKey Is Nothing Then Return False
+
+                    ' {a45c254e-df1c-4efd-8020-67d146a850e0},24 = DEVPKEY_Device_EnumeratorName:
+                    ' the bus the endpoint's device lives on. Vendor display audio (NVIDIA/AMD/
+                    ' Intel HDMI-DP codecs) always enumerates on HDAUDIO, so when the property is
+                    ' present anything else is rejected: ROOT/SWD (Stereo Mix, NVIDIA Broadcast,
+                    ' streaming devices), USB, BTHENUM (Bluetooth), INTELAUDIO (Intel DSP-hosted
+                    ' BT-offload/DMIC) and SOUNDWIRE (laptop speakers/mics), whatever their other
+                    ' property strings contain. Older builds may not populate the property: fall
+                    ' back to the vendor-token match alone.
+                    Dim enumeratorName As String = TryCast(propsKey.GetValue("{a45c254e-df1c-4efd-8020-67d146a850e0},24", Nothing), String)
+                    If Not String.IsNullOrWhiteSpace(enumeratorName) AndAlso
+                       Not enumeratorName.Trim().Equals("HDAUDIO", StringComparison.OrdinalIgnoreCase) Then
+                        Return False
+                    End If
 
                     For Each valueName As String In propsKey.GetValueNames()
                         Dim value As Object = propsKey.GetValue(valueName, Nothing)

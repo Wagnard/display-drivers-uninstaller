@@ -7305,6 +7305,14 @@ child.Equals("nvidia.gfe", StringComparison.OrdinalIgnoreCase) Then
                 Return
             End If
 
+            'Remove Intel display-audio endpoints (MMDevices) so Windows rebuilds them from
+            'scratch on driver reinstall. The pattern is device-anchored (DEV_28xx = display
+            'audio codecs only): a bare "ven_8086" would also match the Intel DSP's
+            'Bluetooth-offload/DMIC endpoints (VEN_8086&DEV_AExx) and wipe the user's
+            'Bluetooth headset / internal mic settings (verified on Panther Lake).
+            'Must run in the full-clean pass (after device removal), like NVIDIA/AMD.
+            CleanupEngine.RemoveVendorAudioEndpoints("ven_8086&dev_28")
+
             ImpersonateUser.RunImpersonatedSystem(
             Sub()
 
