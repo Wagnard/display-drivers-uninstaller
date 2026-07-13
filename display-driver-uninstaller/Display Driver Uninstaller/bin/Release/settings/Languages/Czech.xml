@@ -179,7 +179,8 @@
 			<Options2>NVIDIA</Options2>
 			<Options3>AMD</Options3>
 			<Options4>INTEL</Options4>
-			<Options5>Všechny GPU</Options5>
+			<Options5>LISUAN</Options5>
+			<Options6>Všechny GPU</Options6>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---Vyberte zařízení---</Options1>

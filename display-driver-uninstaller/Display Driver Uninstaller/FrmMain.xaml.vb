@@ -176,7 +176,7 @@ Namespace Display_Driver_Uninstaller
 				Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\PCI")
 					If regkey IsNot Nothing Then
 						For Each child As String In regkey.GetSubKeyNames
-							If String.IsNullOrWhiteSpace(child) OrElse Not StrContainsAny(child, True, "ven_8086", "ven_1002", "ven_10de") Then Continue For
+							If String.IsNullOrWhiteSpace(child) OrElse Not StrContainsAny(child, True, "ven_8086", "ven_1002", "ven_10de", "ven_4c54") Then Continue For
 
 							Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
 								If regkey2 Is Nothing Then Continue For
@@ -209,6 +209,8 @@ Namespace Display_Driver_Uninstaller
 														Return GPUVendor.AMD
 													ElseIf StrContainsAny(id, True, "ven_10de") Then
 														Return GPUVendor.Nvidia
+													ElseIf StrContainsAny(id, True, "ven_4c54") Then
+														Return GPUVendor.Lisuan
 													End If
 												Next
 											End If
@@ -339,7 +341,8 @@ Namespace Display_Driver_Uninstaller
                     Languages.GetTranslation("frmMain", "Options_GPU", "Options2"),
                     Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
                     Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
-                    Languages.GetTranslation("frmMain", "Options_GPU", "Options5")
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options5"),
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options6")
                 }
                     Case Else ' None
                         cbSelectedGPU.ItemsSource = {
@@ -347,7 +350,8 @@ Namespace Display_Driver_Uninstaller
                     Languages.GetTranslation("frmMain", "Options_GPU", "Options2"),
                     Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
                     Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
-                    Languages.GetTranslation("frmMain", "Options_GPU", "Options5")
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options5"),
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options6")
                 }
                 End Select
 
@@ -501,6 +505,10 @@ Namespace Display_Driver_Uninstaller
                             Application.Settings.SelectedAUDIO = AudioVendor.None
                             ButtonsPanel.IsEnabled = True
                         Case 4
+                            Application.Settings.SelectedGPU = GPUVendor.Lisuan
+                            Application.Settings.SelectedAUDIO = AudioVendor.None
+                            ButtonsPanel.IsEnabled = True
+                        Case 5
                             Application.Settings.SelectedGPU = GPUVendor.All
                             Application.Settings.SelectedAUDIO = AudioVendor.None
                             ButtonsPanel.IsEnabled = True
@@ -874,6 +882,17 @@ Namespace Display_Driver_Uninstaller
 				config.SelectedType = CleanType.GPU
 				config.SelectedAUDIO = AudioVendor.None
 				config.SelectedGPU = GPUVendor.Intel
+
+				Await StartThreadAsync(config)
+
+				CleaningTask = Nothing
+			End If
+
+			If config.CleanLisuan OrElse cleanAllGpus Then
+				config.Success = False
+				config.SelectedType = CleanType.GPU
+				config.SelectedAUDIO = AudioVendor.None
+				config.SelectedGPU = GPUVendor.Lisuan
 
 				Await StartThreadAsync(config)
 
@@ -1458,7 +1477,8 @@ Namespace Display_Driver_Uninstaller
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options2"),
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
-                Languages.GetTranslation("frmMain", "Options_GPU", "Options5")
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options5"),
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options6")
             }
                     cbSelectedGPU.SelectedIndex = 0
                     cbSelectedGPU.IsEnabled = False
@@ -1481,7 +1501,8 @@ Namespace Display_Driver_Uninstaller
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options2"),
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
-                Languages.GetTranslation("frmMain", "Options_GPU", "Options5")
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options5"),
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options6")
             }
                     cbSelectedGPU.SelectedIndex = 0
                     cbSelectedGPU.SelectedIndex = GPUIdentify()
@@ -1540,6 +1561,11 @@ Namespace Display_Driver_Uninstaller
                             ButtonsPanel.IsEnabled = True
                             Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
                         Case 4
+                            Application.Settings.SelectedGPU = GPUVendor.Lisuan
+                            cbSelectedGPU.IsEnabled = True
+                            ButtonsPanel.IsEnabled = True
+                            Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
+                        Case 5
                             Application.Settings.SelectedGPU = GPUVendor.All
                             cbSelectedGPU.IsEnabled = True
                             ButtonsPanel.IsEnabled = True

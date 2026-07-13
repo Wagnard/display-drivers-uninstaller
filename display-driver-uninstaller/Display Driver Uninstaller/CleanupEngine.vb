@@ -2085,6 +2085,19 @@ Namespace Display_Driver_Uninstaller
                                                                                 Application.Log.AddException(ex)
                                                                             End Try
                                                                         End If
+                                                                    Case GPUVendor.Lisuan
+                                                                        If StrContainsAny(providerName, True, "Lisuan") Then
+                                                                            Try
+                                                                                Deletesubregkey(regkey, child)
+                                                                                Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child, False)
+                                                                                Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\UnitedVideo\CONTROL\VIDEO\" & child, False)
+                                                                                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\DirectX\" & child, False)
+                                                                            Catch ex As ArgumentException
+                                                                                'avoid an issue specific to this key
+                                                                            Catch ex As Exception
+                                                                                Application.Log.AddException(ex)
+                                                                            End Try
+                                                                        End If
                                                                 End Select
                                                             End If
                                                         End If
@@ -2221,8 +2234,12 @@ Namespace Display_Driver_Uninstaller
                                 For Each child As String In regkey.GetSubKeyNames()
                                     If String.IsNullOrWhiteSpace(child) Then Continue For
 
-                                    Dim normalizedPath As String = child.Replace("/", "\")
-                                    normalizedPath = Environment.ExpandEnvironmentVariables(normalizedPath)
+                                    'Resolved via GetSystemDirectory, never Environment.ExpandEnvironmentVariables:
+                                    'on systems where %SystemRoot% is broken, expansion fails and every entry would
+                                    'look orphaned - deleting lockdown entries for files that still exist.
+                                    Dim normalizedPath As String = ResolvePnpLockdownPath(child)
+                                    If normalizedPath Is Nothing Then Continue For
+
                                     If Not fileIO.ExistsFile(normalizedPath) Then
                                         If StrContainsAny(normalizedPath, True, driverfiles) Then
                                             Try
@@ -2262,6 +2279,115 @@ Namespace Display_Driver_Uninstaller
                 Application.Log.AddException(ex)
             End Try
 
+        End Sub
+
+        ''' <summary>
+        ''' Resolves a PnpLockdownFiles entry name (eg. "%SystemRoot%/System32/DriverStore/
+        ''' FileRepository/nv_dispi.inf_amd64_xxx/_nvngx.dll") to a real filesystem path.
+        ''' %SystemRoot% is resolved from GetSystemDirectory - never from the environment
+        ''' variable, which is broken on some user systems and would make every entry look
+        ''' orphaned. Returns Nothing for any format that cannot be resolved safely: the
+        ''' callers must skip those entries instead of guessing.
+        ''' </summary>
+        Private Function ResolvePnpLockdownPath(ByVal entryName As String) As String
+            If String.IsNullOrWhiteSpace(entryName) Then Return Nothing
+
+            Dim normalized As String = entryName.Replace("/"c, "\"c)
+
+            If normalized.StartsWith("%SystemRoot%\", StringComparison.OrdinalIgnoreCase) Then
+                Dim winDir As String = System.IO.Path.GetDirectoryName(Environment.SystemDirectory)
+                If String.IsNullOrWhiteSpace(winDir) Then Return Nothing
+
+                Return System.IO.Path.Combine(winDir, normalized.Substring("%SystemRoot%\".Length))
+            End If
+
+            'Pre-Win8 style entries are plain absolute paths.
+            If normalized.Length > 3 AndAlso Char.IsLetter(normalized(0)) AndAlso normalized(1) = ":"c AndAlso normalized(2) = "\"c Then
+                Return normalized
+            End If
+
+            'Unknown format (another environment variable, relative path...) - do not guess.
+            Return Nothing
+        End Function
+
+        ''' <summary>
+        ''' Removes PnpLockdownFiles entries whose target file no longer exists on disk -
+        ''' stale bookkeeping that accumulates when driver packages are removed - whatever
+        ''' the vendor. Call it after the driver store cleanup so entries orphaned by the
+        ''' current run are caught too. The sanity check on the resolved system directory
+        ''' guarantees a broken path resolution can never mass-delete valid entries.
+        ''' </summary>
+        Public Sub PnpLockdownFilesOrphans()
+            If FrmMain.IsWindowsXp Then Return 'the key does not exist on XP
+
+            Dim win8higher As Boolean = FrmMain.IsWindows8OrHigher
+            Dim fileIO As New FileIO
+
+            Try
+                'Prove that path resolution and file-existence checks work on this system
+                'before deleting anything: ntoskrnl.exe always exists on a healthy install.
+                Dim winDir As String = System.IO.Path.GetDirectoryName(Environment.SystemDirectory)
+                If String.IsNullOrWhiteSpace(winDir) OrElse
+                   Not fileIO.ExistsFile(System.IO.Path.Combine(Environment.SystemDirectory, "ntoskrnl.exe")) Then
+                    Application.Log.AddWarningMessage("PnpLockdownFiles orphan cleanup skipped: Windows directory sanity check failed.")
+                    Return
+                End If
+
+                Dim removedCount As Integer = 0
+                Dim skippedCount As Integer = 0
+
+                ImpersonateUser.RunImpersonatedSystem(
+                    Sub()
+                        Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SOFTWARE\Microsoft\Windows\CurrentVersion\Setup\PnpLockdownFiles", True)
+                            If regkey Is Nothing Then Return
+
+                            If win8higher Then
+                                For Each child As String In regkey.GetSubKeyNames()
+                                    If String.IsNullOrWhiteSpace(child) Then Continue For
+
+                                    Dim resolved As String = ResolvePnpLockdownPath(child)
+                                    If resolved Is Nothing Then
+                                        skippedCount += 1
+                                        Continue For
+                                    End If
+
+                                    If fileIO.ExistsFile(resolved) OrElse fileIO.ExistsDir(resolved) Then Continue For
+
+                                    Try
+                                        Deletesubregkey(regkey, child, False)
+                                        removedCount += 1
+                                    Catch ex As Exception
+                                        Application.Log.AddException(ex)
+                                    End Try
+                                Next
+                            Else
+                                'Older windows (vista and 7): entries are value names holding absolute paths.
+                                For Each valueName As String In regkey.GetValueNames()
+                                    If String.IsNullOrWhiteSpace(valueName) Then Continue For
+
+                                    Dim resolved As String = ResolvePnpLockdownPath(valueName)
+                                    If resolved Is Nothing Then
+                                        skippedCount += 1
+                                        Continue For
+                                    End If
+
+                                    If fileIO.ExistsFile(resolved) OrElse fileIO.ExistsDir(resolved) Then Continue For
+
+                                    Try
+                                        Deletevalue(regkey, valueName, False)
+                                        removedCount += 1
+                                    Catch ex As Exception
+                                        Application.Log.AddException(ex)
+                                    End Try
+                                Next
+                            End If
+                        End Using
+                    End Sub)
+
+                Application.Log.AddMessage($"PnpLockdownFiles orphan cleanup: {removedCount} stale entry(ies) removed, {skippedCount} unresolved entry(ies) left untouched.")
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+            End Try
         End Sub
 
         Private Sub OnCLSIDLeftoverRemoval(ByVal child As String)
@@ -3356,6 +3482,9 @@ Namespace Display_Driver_Uninstaller
                         Case GPUVendor.Intel
                             CurrentProvider = {"Intel"}
                             driverfiles = {"igdkmd64.sys", "IntcDAud.sys", "intelaud.sys", "iwdbus.sys", "GSCAuxDriverx64.sys", "TeeDriverGSCW8x64.sys", "MiniCtaDriver.sys", "IntcDAudD.sys", "IntelGraphicsAGS.exe", "CtaChildDriver.sys", "Intel_NF_I2C.sys", "PmtChildDriver.sys"}
+                        Case GPUVendor.Lisuan
+                            CurrentProvider = {"Lisuan"}    'INF Provider = "Shanghai Lisuan Semiconductor Co.,Ltd."
+                            driverfiles = {"LSGKMD.sys", "LSGDDM.sys"}
                         Case GPUVendor.None
                             CurrentProvider = {"None"}
                             driverfiles = Nothing
@@ -3564,6 +3693,22 @@ Namespace Display_Driver_Uninstaller
 
                     'Cleaning of possible left-overs %windir%\system32\driverstore\filerepository
                     Select Case config.SelectedGPU
+                        Case GPUVendor.Lisuan
+                            FilePath = System.Environment.SystemDirectory & "\DriverStore\FileRepository"
+                            If String.IsNullOrWhiteSpace(FilePath) = False Then
+                                For Each child As String In FileIO.GetDirectories(FilePath)
+                                    If String.IsNullOrWhiteSpace(child) = False Then
+                                        Dim dirinfo As New System.IO.DirectoryInfo(child)
+                                        If StrContainsAny(dirinfo.Name, True, "ls_universial64.inf") Then
+                                            Try
+                                                Delete(child)
+                                            Catch ex As Exception
+                                                Application.Log.AddException(ex)
+                                            End Try
+                                        End If
+                                    End If
+                                Next
+                            End If
                         Case GPUVendor.AMD
                             FilePath = System.Environment.SystemDirectory & "\DriverStore\FileRepository"
                             If String.IsNullOrWhiteSpace(FilePath) = False Then

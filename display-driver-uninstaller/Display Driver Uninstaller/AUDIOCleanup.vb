@@ -100,6 +100,9 @@ Namespace Display_Driver_Uninstaller
 
 			_cleanupEngine.Cleandriverstore(config)
 
+			'After the driver store cleanup, so entries orphaned by this very run are caught.
+			_cleanupEngine.PnpLockdownFilesOrphans()
+
 			Select Case config.SelectedAUDIO
 				Case AudioVendor.Realtek
 					CleanRealtekserviceprocess(config)

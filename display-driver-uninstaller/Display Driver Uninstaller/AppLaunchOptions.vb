@@ -17,6 +17,7 @@ Namespace Display_Driver_Uninstaller
 		Public Property CleanNvidia As Boolean = False
 		Public Property CleanAmd As Boolean = False
 		Public Property CleanIntel As Boolean = False
+		Public Property CleanLisuan As Boolean = False
 		Public Property CleanRealtek As Boolean = False
 		Public Property CleanSoundBlaster As Boolean = False
 		Public Property CleanCache As Boolean = False
@@ -52,7 +53,7 @@ Namespace Display_Driver_Uninstaller
 
 		Public ReadOnly Property HasCleanArg As Boolean
 			Get
-				Return (CleanNvidia OrElse CleanAmd OrElse CleanIntel OrElse CleanRealtek OrElse CleanSoundBlaster)
+				Return (CleanNvidia OrElse CleanAmd OrElse CleanIntel OrElse CleanLisuan OrElse CleanRealtek OrElse CleanSoundBlaster)
 			End Get
 		End Property
 
@@ -124,6 +125,7 @@ Namespace Display_Driver_Uninstaller
 						Case StrContainsAny(Argument, True, "-CleanNvidia") : CleanNvidia = True
 						Case StrContainsAny(Argument, True, "-CleanAmd") : CleanAmd = True
 						Case StrContainsAny(Argument, True, "-CleanIntel") : CleanIntel = True
+						Case StrContainsAny(Argument, True, "-CleanLisuan") : CleanLisuan = True
 						Case StrContainsAny(Argument, True, "-CleanRealtek") : CleanRealtek = True
 						Case StrContainsAny(Argument, True, "-CleanSoundBlaster") : CleanSoundBlaster = True
 
@@ -167,6 +169,7 @@ Namespace Display_Driver_Uninstaller
                             CleanIntel = True
 							CleanAmd = True
 							CleanNvidia = True
+							CleanLisuan = True
 							RemoveNvidiaDirs = True
 							RemoveAMDDirs = True
 							RemoveMonitors = True

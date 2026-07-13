@@ -6,11 +6,14 @@ Imports Microsoft.Win32
 
 Namespace Display_Driver_Uninstaller
 
+	'Values double as the GPU combobox indices in FrmMain (Options_GPU/Options1..n
+	'in the language files must follow the same order). Keep "All" last.
 	Public Enum GPUVendor As Int32
 		None
 		Nvidia
 		AMD
 		Intel
+		Lisuan
 		All
 	End Enum
 

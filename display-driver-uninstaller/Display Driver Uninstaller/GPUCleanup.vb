@@ -42,6 +42,11 @@ Namespace Display_Driver_Uninstaller
                     vendCompatibleID = "VEN_8086&CC_03"
                     vendidSC = {"VEN8086_MSDK", "VEN8086_GFXUI"}
                     audioServices = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\servicesaudio.cfg")
+                Case GPUVendor.Lisuan
+                    vendIdExpected = "VEN_4C54"
+                    vendCompatibleID = "VEN_4C54&CC_03"
+                    vendidSC = {"VEN_4C54"}
+                    audioServices = IO.File.ReadAllLines(config.Paths.AppBase & "settings\LISUAN\servicesaudio.cfg")
                 Case GPUVendor.None : vendIdExpected = "NONE"
                 Case GPUVendor.All : vendIdExpected = "ALL"
             End Select
@@ -202,6 +207,10 @@ Namespace Display_Driver_Uninstaller
 
             If config.SelectedGPU = GPUVendor.Intel Then
                 CleanIntel(config, True) 'needed since 24h2 it seems
+            End If
+
+            If config.SelectedGPU = GPUVendor.Lisuan Then
+                CleanLisuan(config, True) 'needed since 24h2 it seems
             End If
 
             If (Not Application.LaunchOptions.NoSetupAPI) Then
@@ -1063,8 +1072,17 @@ Namespace Display_Driver_Uninstaller
                 CleanIntelFolders(config)
             End If
 
+            If config.SelectedGPU = GPUVendor.Lisuan Then
+                CleanLisuanServiceProcess(config)
+                CleanLisuan(config)
+            End If
+
             cleanupEngine.Cleandriverstore(config)
             cleanupEngine.Fixregistrydriverstore(config)
+
+            'After the driver store cleanup, so entries orphaned by this very run are caught.
+            cleanupEngine.PnpLockdownFilesOrphans()
+
             config.Success = True
         End Sub
 
@@ -1306,87 +1324,87 @@ wantedvalue2.ToLower.Contains("ati video") Then
                             Application.Log.AddException(ex)
                         End Try
                     End If
-                    Application.Log.AddMessage("MediaFoundation cleanUP")
-                    Try
-                        Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms", True)
-                            If regkey IsNot Nothing Then
-                                For Each child As String In regkey.GetSubKeyNames()
-                                    If String.IsNullOrWhiteSpace(child) Then Continue For
-                                    Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-                                        If regkey2 IsNot Nothing Then
-                                            If String.IsNullOrWhiteSpace(regkey2.GetValue("", String.Empty).ToString) Then Continue For
-                                            If StrContainsAny(regkey2.GetValue("").ToString, True, "amd d3d11 hardware mft", "amd fast (dnd) decoder", "amd h.264 hardware mft encoder", "amd playback decoder mft") Then
-                                                Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories")
-                                                    If regkey3 IsNot Nothing Then
-                                                        For Each child2 As String In regkey3.GetSubKeyNames
-                                                            If String.IsNullOrWhiteSpace(child2) Then Continue For
-                                                            Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories\" & child2, True)
-                                                                If regkey4 IsNot Nothing Then
-                                                                    Try
-                                                                        Deletesubregkey(regkey4, child, False)
-                                                                    Catch ex As Exception
-                                                                        Application.Log.AddException(ex)
-                                                                    End Try
-                                                                End If
-                                                            End Using
-                                                        Next
-                                                    End If
-                                                End Using
-                                                Try
-                                                    Deletesubregkey(regkey, child)
-                                                Catch ex As Exception
-                                                    Application.Log.AddException(ex)
-                                                End Try
-                                            End If
-                                        End If
-                                    End Using
-                                Next
-                            End If
-                        End Using
-                    Catch ex As Exception
-                        Application.Log.AddException(ex)
-                    End Try
-                    If IntPtr.Size = 8 Then
-                        Try
-                            Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms", True)
-                                If regkey IsNot Nothing Then
-                                    For Each child As String In regkey.GetSubKeyNames()
-                                        If String.IsNullOrWhiteSpace(child) Then Continue For
-                                        Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-                                            If regkey2 IsNot Nothing Then
-                                                If String.IsNullOrWhiteSpace(regkey2.GetValue("", String.Empty).ToString) Then Continue For
-                                                If StrContainsAny(regkey2.GetValue("").ToString, True, "amd d3d11 hardware mft", "amd fast (dnd) decoder", "amd h.264 hardware mft encoder", "amd playback decoder mft") Then
-                                                    Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories")
-                                                        If regkey3 IsNot Nothing Then
-                                                            For Each child2 As String In regkey3.GetSubKeyNames
-                                                                If String.IsNullOrWhiteSpace(child2) Then Continue For
-                                                                Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories\" & child2, True)
-                                                                    If regkey4 IsNot Nothing Then
-                                                                        Try
-                                                                            Deletesubregkey(regkey4, child, False)
-                                                                        Catch ex As Exception
-                                                                            Application.Log.AddException(ex)
-                                                                        End Try
-                                                                    End If
-                                                                End Using
-                                                            Next
-                                                        End If
-                                                    End Using
-                                                    Try
-                                                        Deletesubregkey(regkey, child)
-                                                    Catch ex As Exception
-                                                        Application.Log.AddException(ex)
-                                                    End Try
-                                                End If
-                                            End If
-                                        End Using
-                                    Next
-                                End If
-                            End Using
-                        Catch ex As Exception
-                            Application.Log.AddException(ex)
-                        End Try
-                    End If
+                    'Application.Log.AddMessage("MediaFoundation cleanUP")
+                    'Try
+                    '    Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms", True)
+                    '        If regkey IsNot Nothing Then
+                    '            For Each child As String In regkey.GetSubKeyNames()
+                    '                If String.IsNullOrWhiteSpace(child) Then Continue For
+                    '                Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+                    '                    If regkey2 IsNot Nothing Then
+                    '                        If String.IsNullOrWhiteSpace(regkey2.GetValue("", String.Empty).ToString) Then Continue For
+                    '                        If StrContainsAny(regkey2.GetValue("").ToString, True, "amd d3d11 hardware mft", "amd fast (dnd) decoder", "amd h.264 hardware mft encoder", "amd playback decoder mft") Then
+                    '                            Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories")
+                    '                                If regkey3 IsNot Nothing Then
+                    '                                    For Each child2 As String In regkey3.GetSubKeyNames
+                    '                                        If String.IsNullOrWhiteSpace(child2) Then Continue For
+                    '                                        Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories\" & child2, True)
+                    '                                            If regkey4 IsNot Nothing Then
+                    '                                                Try
+                    '                                                    Deletesubregkey(regkey4, child, False)
+                    '                                                Catch ex As Exception
+                    '                                                    Application.Log.AddException(ex)
+                    '                                                End Try
+                    '                                            End If
+                    '                                        End Using
+                    '                                    Next
+                    '                                End If
+                    '                            End Using
+                    '                            Try
+                    '                                Deletesubregkey(regkey, child)
+                    '                            Catch ex As Exception
+                    '                                Application.Log.AddException(ex)
+                    '                            End Try
+                    '                        End If
+                    '                    End If
+                    '                End Using
+                    '            Next
+                    '        End If
+                    '    End Using
+                    'Catch ex As Exception
+                    '    Application.Log.AddException(ex)
+                    'End Try
+                    'If IntPtr.Size = 8 Then
+                    '    Try
+                    '        Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Wow6432Node\MediaFoundation\Transforms", True)
+                    '            If regkey IsNot Nothing Then
+                    '                For Each child As String In regkey.GetSubKeyNames()
+                    '                    If String.IsNullOrWhiteSpace(child) Then Continue For
+                    '                    Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
+                    '                        If regkey2 IsNot Nothing Then
+                    '                            If String.IsNullOrWhiteSpace(regkey2.GetValue("", String.Empty).ToString) Then Continue For
+                    '                            If StrContainsAny(regkey2.GetValue("").ToString, True, "amd d3d11 hardware mft", "amd fast (dnd) decoder", "amd h.264 hardware mft encoder", "amd playback decoder mft") Then
+                    '                                Using regkey3 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories")
+                    '                                    If regkey3 IsNot Nothing Then
+                    '                                        For Each child2 As String In regkey3.GetSubKeyNames
+                    '                                            If String.IsNullOrWhiteSpace(child2) Then Continue For
+                    '                                            Using regkey4 As RegistryKey = MyRegistry.OpenSubKey(regkey, "Categories\" & child2, True)
+                    '                                                If regkey4 IsNot Nothing Then
+                    '                                                    Try
+                    '                                                        Deletesubregkey(regkey4, child, False)
+                    '                                                    Catch ex As Exception
+                    '                                                        Application.Log.AddException(ex)
+                    '                                                    End Try
+                    '                                                End If
+                    '                                            End Using
+                    '                                        Next
+                    '                                    End If
+                    '                                End Using
+                    '                                Try
+                    '                                    Deletesubregkey(regkey, child)
+                    '                                Catch ex As Exception
+                    '                                    Application.Log.AddException(ex)
+                    '                                End Try
+                    '                            End If
+                    '                        End If
+                    '                    End Using
+                    '                Next
+                    '            End If
+                    '        End Using
+                    '    Catch ex As Exception
+                    '        Application.Log.AddException(ex)
+                    '    End Try
+                    'End If
                     Application.Log.AddMessage("AppID and clsidleftover cleanUP")
                     'old dcom 
 
@@ -3841,18 +3859,18 @@ child2.ToLower.Contains("hdaudio.driver") Then
                 'for GFE removal only
                 If removegfe Then
                     Dim thread1 As Task = Task.Run(Sub() CLSIDCleanThread(clsidleftoverGFE, config))
-                        TaskList.Add(thread1)
-                    Else
+                    TaskList.Add(thread1)
+                Else
                     Dim thread1 As Task = Task.Run(Sub() CLSIDCleanThread(clsidleftover, config))
-                        TaskList.Add(thread1)
-                    End If
+                    TaskList.Add(thread1)
+                End If
 
-                    If removenvbroadcast Then
+                If removenvbroadcast Then
                     Dim thread2 As Task = Task.Run(Sub() CLSIDCleanThread(clsidleftoverNVB, config))
-                        TaskList.Add(thread2)
-                    End If
+                    TaskList.Add(thread2)
+                End If
 
-                    Dim thread3 As Task = Task.Run(Sub() InstallerCleanThread(packages, config))
+                Dim thread3 As Task = Task.Run(Sub() InstallerCleanThread(packages, config))
                     TaskList.Add(thread3)
 
                     If removenvbroadcast Then
@@ -8103,6 +8121,69 @@ child.ToLower.Equals("oneapp_igcc") Then
                 End If
                 KillProcess("IGFXEM")
                 Application.Log.AddMessage("Process/Services CleanUP Complete")
+            End Sub)
+        End Sub
+
+        Private Sub CleanLisuanServiceProcess(ByVal config As ThreadSettings)
+            Dim CleanupEngine As New CleanupEngine
+            Dim services As String() = IO.File.ReadAllLines(Application.Paths.AppBase & "settings\LISUAN\services.cfg")
+
+            ImpersonateUser.RunImpersonatedSystem(
+            Sub()
+                Application.Log.AddMessage("Cleaning Process/Services...")
+                CleanupEngine.Cleanserviceprocess(services, config) '// add each line as String Array.
+                Application.Log.AddMessage("Process/Services CleanUP Complete")
+            End Sub)
+        End Sub
+
+        Private Sub CleanLisuan(ByVal config As ThreadSettings, ByVal Optional preclean As Boolean = False)
+            Dim CleanupEngine As New CleanupEngine
+            Dim classroot As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\LISUAN\classroot.cfg")
+            Dim clsidleftover As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\LISUAN\clsidleftover.cfg")
+            Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\LISUAN\driverfiles.cfg")
+
+            If preclean Then
+
+                ImpersonateUser.RunImpersonatedSystem(
+                Sub()
+
+                    '-----------------
+                    'Registry Cleaning
+                    '-----------------
+                    UpdateTextMethod(UpdateTextTranslated(5))
+                    Application.Log.AddMessage("Cleaning registry Part 1/2")
+
+                    'The pilot driver registers no COM classes (its MFT encoders are disabled in
+                    'the INF), so these cfg files are empty for now. They are wired so a future
+                    'Lisuan control panel / MFT release only needs cfg edits, like other vendors.
+                    Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
+                    CleanupEngine.ClassRoot(classroot, config)
+
+                End Sub)
+
+                Return
+            End If
+
+            'Remove LISUAN HDMI/DP audio endpoints (MMDevices) so Windows rebuilds them from
+            'scratch on driver reinstall. Same rule as the other vendors: full-clean pass only
+            '(after device removal), never in preclean.
+            CleanupEngine.RemoveVendorAudioEndpoints("ven_4c54")
+
+            ImpersonateUser.RunImpersonatedSystem(
+            Sub()
+
+                Application.Log.AddMessage("Cleaning registry Part 2/2")
+
+                Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
+                CleanupEngine.PnpLockdownFiles(driverfiles)  '// add each line as String Array.
+
+                CLSIDCleanThread(clsidleftover, config)
+
+                'Vendor software keys (defensive - the pilot driver doesn't create them, but a
+                'future installer/control panel likely will).
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\LISUAN", False)
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\LISUAN", False)
+
             End Sub)
         End Sub
 
