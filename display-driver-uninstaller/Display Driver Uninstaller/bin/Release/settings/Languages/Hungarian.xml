@@ -234,11 +234,11 @@
 
 	<frmOptions Text="Beállítások">
 		<btnResetDefaults>
-			<Text>Ajánlott visszaállítása</Text>
-			<Tooltip>Minden beállítás visszaállítása az ajánlott alapértelmezett értékekre.</Tooltip>
+			<Text>Visszaállítás ajánlott értékekre</Text>
+			<Tooltip>Minden beállítás visszaállítása az ajánlott (alapértelmezett) értékekre.</Tooltip>
 		</btnResetDefaults>
 		<Messages>
-			<Text1>Visszaállítja az összes beállítást az ajánlott alapértelmezett értékekre?</Text1>
+			<Text1>Visszaállítod az összes beállítást az ajánlott (alapértelmezett) értékekre?</Text1>
 		</Messages>
 		<btnClose>
 			<Text>Bezár</Text>
