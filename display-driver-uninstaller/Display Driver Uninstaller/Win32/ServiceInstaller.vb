@@ -81,12 +81,28 @@ Namespace Display_Driver_Uninstaller.Win32
                         End Try
                 End Select
 
-                ' Refresh before reading CanStop — ServiceController caches its state and the
-                ' value can be stale. Services can also change their dwControlsAccepted flag
-                ' dynamically, so a cached False does not mean the service is truly unstoppable.
-                target.Refresh()
-                If Not target.CanStop Then
-                    Application.Log.AddMessage(String.Format("StopService: '{0}' reports CanStop = False (status = {1}), attempting anyway.", service, status))
+                ' Refresh first: the CanStop decision below must be based on the service's
+                ' current state, not on a cached one.
+                '
+                ' When a service does not accept SERVICE_CONTROL_STOP, the SCM rejects the
+                ' request outright (ERROR_INVALID_SERVICE_CONTROL) and the service never sees
+                ' it — trying anyway can only add a misleading error to the log. This is the
+                ' permanent state of kernel drivers with no unload routine, which DDU meets
+                ' constantly, so skip instead of failing loudly.
+                ' Nothing stoppable is lost: a service held by running dependents still
+                ' reports CanStop = True and fails later with ERROR_DEPENDENT_SERVICES_RUNNING.
+                Dim canStop As Boolean = True
+                Try
+                    target.Refresh()
+                    canStop = target.CanStop
+                Catch ex As Exception
+                    ' State unreadable — fail open and let the stop attempt report the real error.
+                    Application.Log.AddException(ex, String.Format("StopService: cannot read CanStop for '{0}', attempting stop anyway", service))
+                End Try
+
+                If Not canStop Then
+                    Application.Log.AddWarningMessage(String.Format("StopService: '{0}' does not accept stop requests (status = {1}), skipping.", service, status))
+                    Return
                 End If
 
                 ' Log any running dependents — Windows refuses to stop a service while a
