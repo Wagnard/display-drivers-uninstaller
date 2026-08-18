@@ -3481,7 +3481,7 @@ Namespace Display_Driver_Uninstaller
                             driverfiles = {"amdkmdag.sys", "amdxe.sys", "amdfendrmgr", "AtihdWT6.sys", "amdsafd.sys", "amdkmpfd", "amdocl32", "amdocl64", "AMDNoiseSuppression", "amdsdws.sys"}
                         Case GPUVendor.Intel
                             CurrentProvider = {"Intel"}
-                            driverfiles = {"igdkmd64.sys", "IntcDAud.sys", "intelaud.sys", "iwdbus.sys", "GSCAuxDriverx64.sys", "TeeDriverGSCW8x64.sys", "MiniCtaDriver.sys", "IntcDAudD.sys", "IntelGraphicsAGS.exe", "CtaChildDriver.sys", "Intel_NF_I2C.sys", "PmtChildDriver.sys"}
+                            driverfiles = {"igdkmd64.sys", "igdkmdn64.sys", "igdkmdnd64.sys", "IntcDAud.sys", "intelaud.sys", "iwdbus.sys", "GSCAuxDriverx64.sys", "TeeDriverGSCW8x64.sys", "MiniCtaDriver.sys", "IntcDAudD.sys", "IntelGraphicsAGS.exe", "CtaChildDriver.sys", "Intel_NF_I2C.sys", "PmtChildDriver.sys"}
                         Case GPUVendor.Lisuan
                             CurrentProvider = {"Lisuan"}    'INF Provider = "Shanghai Lisuan Semiconductor Co.,Ltd."
                             driverfiles = {"LSGKMD.sys", "LSGDDM.sys"}
