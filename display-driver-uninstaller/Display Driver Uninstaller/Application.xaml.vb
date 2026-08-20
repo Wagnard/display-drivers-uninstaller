@@ -785,18 +785,25 @@ Namespace Display_Driver_Uninstaller
                     Log.AddException(ex, "AddPriviliges failed!" & CRLF & ">> Application_Startup()")
                 End Try
 
+                ' Catches the leftovers of every failed Safe Mode round-trip.
+                '
+                ' MUST run before HandleBootModeStartup: that is where the Safe Mode dialog is shown
+                ' and where the handler service gets installed. A leftover service from an older DDU
+                ' build makes 'sc create' fail with ERROR_SERVICE_EXISTS (1073) and cancels the
+                ' reboot; cleaning up only afterwards meant the first Safe Mode attempt always
+                ' failed and only a second one worked.
+                '
+                ' Safe this early: the guards inside postpone the cleanup while a round trip is still
+                ' pending (RunOnce *UndoSM) or while the service is running, and HandleBootModeStartup
+                ' deals with the safeboot value right after.
+                CleanupSafeBootServiceLeftovers()
+
                 If HandleBootModeStartup() Then
                     ' True = this instance must close: a Safe Mode reboot has just been armed, or
                     ' the user closed the launch dialog.
                     AppClose(Me, EventArgs.Empty)
                     Exit Sub
                 End If
-
-                ' Catches the leftovers of every failed Safe Mode round-trip. The Exit Sub above
-                ' keeps it out of reach when a reboot was just armed: Me.Shutdown() alone does not
-                ' stop this method, and cleaning up here would delete the service that was just
-                ' installed (still Stopped - it only starts on the next boot).
-                CleanupSafeBootServiceLeftovers()
 
             Catch ex As Exception
                 Log.AddException(ex, "Some part of application startup failed!" & CRLF & ">> Application_Startup()")
@@ -1233,44 +1240,74 @@ Namespace Display_Driver_Uninstaller
                     Return False
                 End If
 
-                ' UseShellExecute = False: keeps CreateNoWindow effective (it is ignored when
-                ' ShellExecute is used, which made an sc.exe console window flash) and lets us
-                ' read the exit code. DDU already runs elevated, so "runas" was never needed.
-                Dim processInfo As New ProcessStartInfo(Paths.System32 & "sc.exe",
-            $"create DDUSafeBootHandler binPath= ""{serviceExePath} /service"" start= auto") With {
-            .UseShellExecute = False,
-            .CreateNoWindow = True,
-            .RedirectStandardOutput = False
-        }
+                Dim exitCode As Integer = CreateSafeBootService(serviceExePath)
 
-                Using process As New Process With {
-                .StartInfo = processInfo
-            }
-                    process.Start()
+                ' 1073 = ERROR_SERVICE_EXISTS: a leftover service from an older DDU build, or one
+                ' the startup cleanup had to postpone (pending round trip / service still running).
+                ' Remove it and try once more rather than cancelling the whole Safe Mode reboot.
+                If exitCode = 1073 Then
+                    Log.AddWarningMessage("SafeBoot Handler Service already exists - removing it and retrying.")
 
-                    If Not process.WaitForExit(30000) Then
-                        Try
-                            process.Kill()
-                        Catch
-                        End Try
+                    Dim installer As New Win32.ServiceInstaller
+                    installer.StopService("DDUSafeBootHandler")
+                    installer.Uninstall("DDUSafeBootHandler")
 
-                        Log.AddWarningMessage("SafeBoot Handler Service: 'sc create' timed out.")
+                    exitCode = CreateSafeBootService(serviceExePath)
+                End If
+
+                Select Case exitCode
+                    Case 0
+                        Log.AddMessage("SafeBoot Handler Service installed successfully")
+                        Return True
+
+                    Case 1072
+                        ' ERROR_SERVICE_MARKED_FOR_DELETE: nothing can recreate it before a reboot.
+                        Log.AddWarningMessage("SafeBoot Handler Service is marked for deletion; the computer must be rebooted before Safe Mode can be used.")
                         Return False
-                    End If
 
-                    If process.ExitCode <> 0 Then
-                        Log.AddWarningMessage($"SafeBoot Handler Service: 'sc create' failed (exit code {process.ExitCode}).")
+                    Case Else
+                        Log.AddWarningMessage($"SafeBoot Handler Service: 'sc create' failed (exit code {exitCode}).")
                         Return False
-                    End If
-                End Using
-
-                Log.AddMessage("SafeBoot Handler Service installed successfully")
-                Return True
+                End Select
 
             Catch ex As Exception
                 Log.AddException(ex, "Failed to install SafeBoot Handler Service")
                 Return False
             End Try
+        End Function
+
+        ''' <summary>
+        ''' Runs "sc create" for the SafeBoot handler service and returns sc.exe's exit code:
+        ''' 0 = created, 1073 = already exists, 1072 = marked for deletion, -1 = timed out.
+        ''' </summary>
+        Private Function CreateSafeBootService(ByVal serviceExePath As String) As Integer
+            ' UseShellExecute = False: keeps CreateNoWindow effective (it is ignored when
+            ' ShellExecute is used, which made an sc.exe console window flash) and lets us
+            ' read the exit code. DDU already runs elevated, so "runas" was never needed.
+            Dim processInfo As New ProcessStartInfo(Paths.System32 & "sc.exe",
+        $"create DDUSafeBootHandler binPath= ""{serviceExePath} /service"" start= auto") With {
+        .UseShellExecute = False,
+        .CreateNoWindow = True,
+        .RedirectStandardOutput = False
+    }
+
+            Using process As New Process With {
+            .StartInfo = processInfo
+        }
+                process.Start()
+
+                If Not process.WaitForExit(30000) Then
+                    Try
+                        process.Kill()
+                    Catch
+                    End Try
+
+                    Log.AddWarningMessage("SafeBoot Handler Service: 'sc create' timed out.")
+                    Return -1
+                End If
+
+                Return process.ExitCode
+            End Using
         End Function
 
         Public Shared Sub RemoveRegOption()
