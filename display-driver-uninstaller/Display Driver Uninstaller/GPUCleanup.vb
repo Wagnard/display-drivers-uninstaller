@@ -75,6 +75,12 @@ Namespace Display_Driver_Uninstaller
             Application.Log.AddMessage("Uninstalling " + config.SelectedGPU.ToString() + " driver ...")
             UpdateTextMethod(UpdateTextTranslated(22))
 
+            ' Before anything is removed: make sure Windows still has a display driver to fall
+            ' back on. A user who disabled the basic display adapter beforehand would otherwise
+            ' be left with no WDDM driver at all once the vendor one is gone - black screen,
+            ' Safe Mode included. Silent, everything is reported in the log.
+            cleanupEngine.EnsureBasicDisplayFallback()
+
             'Removing the services except for the "device driver services"
             'Theses service(s) need to be disabled. Ex: if we remove the AMD driver in normal mode, the device removal will be counter immediately by the device reinstallation.
 

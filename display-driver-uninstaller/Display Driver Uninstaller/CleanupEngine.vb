@@ -2390,6 +2390,105 @@ Namespace Display_Driver_Uninstaller
             End Try
         End Sub
 
+        ''' <summary>
+        ''' Makes sure Windows still has a display driver to fall back on once the vendor driver
+        ''' is gone. Some users disable "Microsoft Basic Display Adapter" in Device Manager; with
+        ''' the vendor driver then removed the machine is left with no WDDM driver at all, which
+        ''' means a black screen - Safe Mode included, so there is nothing left to boot into.
+        ''' Registry only: clears CONFIGFLAG_DISABLED on the device node and puts a disabled
+        ''' service Start back to System. Silent - everything lands in the log, as a warning
+        ''' whenever something was actually wrong.
+        ''' </summary>
+        Public Sub EnsureBasicDisplayFallback()
+            Application.Log.AddMessage("Checking Windows fallback display drivers (BasicDisplay / BasicRender)...")
+
+            ImpersonateUser.RunImpersonatedSystem(
+                Sub()
+                    CheckFallbackDevice("BASICDISPLAY")
+                    CheckFallbackService("BasicDisplay")
+                    CheckFallbackDevice("BASICRENDER")
+                    CheckFallbackService("BasicRender")
+                End Sub)
+
+            Application.Log.AddMessage("Fallback display drivers check completed.")
+        End Sub
+
+        ''' <summary>Clears CONFIGFLAG_DISABLED (bit 0) on the fallback device node when set.</summary>
+        Private Sub CheckFallbackDevice(ByVal name As String)
+            Const CONFIGFLAG_DISABLED As Integer = 1
+            Dim path As String = "SYSTEM\CurrentControlSet\Enum\ROOT\" & name & "\0000"
+
+            Try
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, path, True)
+                    If regkey Is Nothing Then
+                        Application.Log.AddWarningMessage($"Fallback display: device 'ROOT\{name}\0000' is missing - DDU cannot recreate it.")
+                        Return
+                    End If
+
+                    Dim raw As Object = regkey.GetValue("ConfigFlags", Nothing)
+
+                    If raw Is Nothing Then
+                        Application.Log.AddMessage($"Fallback display: device 'ROOT\{name}\0000' has no ConfigFlags value (enabled).")
+                        Return
+                    End If
+
+                    Dim flags As Integer = CInt(raw)
+
+                    If (flags And CONFIGFLAG_DISABLED) = 0 Then
+                        Application.Log.AddMessage($"Fallback display: device 'ROOT\{name}\0000' ConfigFlags = 0x{flags:X} (enabled).")
+                        Return
+                    End If
+
+                    Dim fixedFlags As Integer = flags And Not CONFIGFLAG_DISABLED
+
+                    Application.Log.AddWarningMessage($"Fallback display: device 'ROOT\{name}\0000' is DISABLED (ConfigFlags = 0x{flags:X}). Removing the display driver while this is disabled leads to a black screen, Safe Mode included - re-enabling it.")
+
+                    regkey.SetValue("ConfigFlags", fixedFlags, RegistryValueKind.DWord)
+
+                    Application.Log.AddWarningMessage($"Fallback display: device 'ROOT\{name}\0000' has been re-enabled (ConfigFlags = 0x{fixedFlags:X}).")
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex, $"Fallback display: could not check device 'ROOT\{name}\0000'")
+            End Try
+        End Sub
+
+        ''' <summary>Puts a disabled fallback service back to Start = 1 (System), its inbox value.</summary>
+        Private Sub CheckFallbackService(ByVal name As String)
+            Const SERVICE_SYSTEM_START As Integer = 1
+            Const SERVICE_DISABLED As Integer = 4
+            Dim path As String = "SYSTEM\CurrentControlSet\Services\" & name
+
+            Try
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, path, True)
+                    If regkey Is Nothing Then
+                        Application.Log.AddWarningMessage($"Fallback display: service '{name}' is missing - DDU cannot recreate it.")
+                        Return
+                    End If
+
+                    Dim raw As Object = regkey.GetValue("Start", Nothing)
+
+                    If raw Is Nothing Then
+                        Application.Log.AddWarningMessage($"Fallback display: service '{name}' has no Start value - setting it to {SERVICE_SYSTEM_START} (System).")
+                        regkey.SetValue("Start", SERVICE_SYSTEM_START, RegistryValueKind.DWord)
+                        Return
+                    End If
+
+                    Dim startValue As Integer = CInt(raw)
+
+                    If startValue <> SERVICE_DISABLED Then
+                        Application.Log.AddMessage($"Fallback display: service '{name}' Start = {startValue} (enabled).")
+                        Return
+                    End If
+
+                    Application.Log.AddWarningMessage($"Fallback display: service '{name}' is DISABLED (Start = {startValue}). Re-enabling it (Start = {SERVICE_SYSTEM_START}, System).")
+
+                    regkey.SetValue("Start", SERVICE_SYSTEM_START, RegistryValueKind.DWord)
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex, $"Fallback display: could not check service '{name}'")
+            End Try
+        End Sub
+
         Private Sub OnCLSIDLeftoverRemoval(ByVal child As String)
             Try
                 Deletesubregkey(MyRegistry.OpenSubKey(Registry.ClassesRoot, "MediaFoundation\Transforms", True), child.Substring(0, child.Length - 1).Substring(1), False)
