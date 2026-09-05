@@ -2824,7 +2824,7 @@ child.Contains("HydraVision\") Then
                     Try
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Then
+                                If StrContainsAny(DirLeaf(child), True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Then
                                     Delete(child)
                                 End If
                             End If
@@ -2852,7 +2852,7 @@ child.Contains("HydraVision\") Then
                     Try
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Then
+                                If StrContainsAny(DirLeaf(child), True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Then
                                     Delete(child)
                                 End If
                             End If
@@ -3245,7 +3245,7 @@ child.ToLower.Contains("hydravision") Then
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If StrContainsAny(child, True, "ace", "Usersettings") Then
+                                    If StrContainsAny(DirLeaf(child), True, "ace", "Usersettings") Then
                                         Delete(child)
                                     End If
                                 End If
@@ -3271,7 +3271,7 @@ child.ToLower.Contains("hydravision") Then
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If child.ToLower.Contains("ace") Then
+                                    If DirLeaf(child).ToLower.Contains("ace") Then
                                         Delete(child)
                                     End If
                                 End If
@@ -3297,8 +3297,8 @@ child.ToLower.Contains("hydravision") Then
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If StrContainsAny(child, True, "cn", "fuel", "dvr", "wvr", "openvr", "radeonsoftware", "link", "AMDRSSrcExt") Or
-removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Then
+                                    If StrContainsAny(DirLeaf(child), True, "cn", "fuel", "dvr", "wvr", "openvr", "radeonsoftware", "link", "AMDRSSrcExt") Or
+removedxcache AndAlso StrContainsAny(DirLeaf(child), True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Then
                                         Delete(child)
                                     End If
                                 End If
@@ -3324,7 +3324,7 @@ removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If StrContainsAny(child, True, "cache", "QtWeb Engine") Then
+                                    If StrContainsAny(DirLeaf(child), True, "cache", "QtWeb Engine") Then
                                         Delete(child)
                                     End If
                                 End If
@@ -3350,7 +3350,7 @@ removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If StrContainsAny(child, True, "cache") Then
+                                    If StrContainsAny(DirLeaf(child), True, "cache") Then
                                         Delete(child)
                                     End If
                                 End If
@@ -3424,11 +3424,11 @@ removedxcache AndAlso StrContainsAny(child, True, "dxcache", "vkcache", "glcache
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If child.ToLower.Contains("cn") Or
-child.ToLower.Contains("fuel") Or
-removedxcache AndAlso child.ToLower.Contains("dxcache") Or
-removedxcache AndAlso child.ToLower.Contains("vkcache") Or
-removedxcache AndAlso child.ToLower.Contains("glcache") Then
+                                    If DirLeaf(child).ToLower.Contains("cn") Or
+DirLeaf(child).ToLower.Contains("fuel") Or
+removedxcache AndAlso DirLeaf(child).ToLower.Contains("dxcache") Or
+removedxcache AndAlso DirLeaf(child).ToLower.Contains("vkcache") Or
+removedxcache AndAlso DirLeaf(child).ToLower.Contains("glcache") Then
                                         Delete(child)
                                     End If
                                 End If
@@ -6162,7 +6162,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                     Try
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "PerDriverVersion", "DXCache", "GLCache", "OptixCache", "computecache") Then
+                                If StrContainsAny(DirLeaf(child), True, "PerDriverVersion", "DXCache", "GLCache", "OptixCache", "computecache") Then
                                     Delete(child)
                                 End If
                             End If
@@ -6185,7 +6185,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                     Try
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "PerDriverVersion", "DXCache", "GLCache", "OptixCache", "computecache") Then
+                                If StrContainsAny(DirLeaf(child), True, "PerDriverVersion", "DXCache", "GLCache", "OptixCache", "computecache") Then
                                     Delete(child)
                                 End If
                             End If
@@ -6208,7 +6208,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                     Try
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "PerDriverVersion", "DXCache", "GLCache", "OptixCache", "computecache") Then
+                                If StrContainsAny(DirLeaf(child), True, "PerDriverVersion", "DXCache", "GLCache", "OptixCache", "computecache") Then
                                     Delete(child)
                                 End If
                             End If
@@ -6259,7 +6259,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                                         If _fileIo.ExistsDir(filePath) Then
                                             For Each child As String In _fileIo.GetDirectories(filePath)
                                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                                    If StrContainsAny(child, True, "nv_cache", "DXCache", "GLCache", "OptixCache", "computecache") Then
+                                                    If StrContainsAny(DirLeaf(child), True, "nv_cache", "DXCache", "GLCache", "OptixCache", "computecache") Then
                                                         Delete(child)
                                                     End If
                                                 End If
@@ -6351,7 +6351,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                 filePath = config.Paths.UsersPath
                 For Each child As String In _fileIo.GetDirectories(filePath)
                     If String.IsNullOrWhiteSpace(child) = False Then
-                        If StrContainsAny(child, True, "updatususer") Then
+                        If StrContainsAny(DirLeaf(child), True, "updatususer") Then
                             Delete(child)
                             Delete(child)
 
@@ -6391,7 +6391,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                     If filePath IsNot Nothing Then
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "3d vision experience") Then
+                                If StrContainsAny(DirLeaf(child), True, "3d vision experience") Then
                                     Delete(child)
                                 End If
                             End If
@@ -6493,7 +6493,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If StrContainsAny(child, True, "PerDriverVersion", "DXCache", "GLCache", "OptixCache", "computecache") Then
+                                    If StrContainsAny(DirLeaf(child), True, "PerDriverVersion", "DXCache", "GLCache", "OptixCache", "computecache") Then
                                         Delete(child)
                                     End If
                                 End If
@@ -6515,7 +6515,7 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                     Try
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "nvbackend", "gfexperience") AndAlso config.RemoveGFE Or StrContainsAny(child, True, "nvosc", "shareconnect", "nvgs", "FrameViewSdk") Then ' need further verifications
+                                If StrContainsAny(DirLeaf(child), True, "nvbackend", "gfexperience") AndAlso config.RemoveGFE Or StrContainsAny(DirLeaf(child), True, "nvosc", "shareconnect", "nvgs", "FrameViewSdk") Then ' need further verifications
                                     Delete(child)
                                 End If
                             End If
@@ -6540,35 +6540,35 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If (child.ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvab") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvnode") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvtmmon") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvprofileupdater") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE) Or
-(child.ToLower.EndsWith("\osc") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvidia share") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvidia notification") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvfbc") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvtmrep") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("gfesdk") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("ansel") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvdriverupdatecheck") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvbatteryboostcheck") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("scanner") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvetwlog")) Or
-(child.ToLower.Contains("nv_cache") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("gfnruntimesdk") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("frameviewsdk") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvidia app") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("shared store") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("nvidia overlay") AndAlso config.RemoveGFE) Or
-(child.ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
+                                    If (DirLeaf(child).ToLower.Contains("ledvisualizer") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("shadowplay") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvab") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("gfexperience") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("geforce experience") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvnode") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvtmmon") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvprofileupdater") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvstreamsrv") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.EndsWith("\osc") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvvad") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvidia share") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvidia notification") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvfbc") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvtmrep") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvtelemetry") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("gfesdk") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("ansel") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvdriverupdatecheck") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvbatteryboostcheck") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("scanner") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvetwlog")) Or
+(DirLeaf(child).ToLower.Contains("nv_cache") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("gfnruntimesdk") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("frameviewsdk") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvidia app") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("shared store") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("nvidia overlay") AndAlso config.RemoveGFE) Or
+(DirLeaf(child).ToLower.Contains("shield apps") AndAlso config.RemoveGFE) Then
                                         Delete(child)
                                     End If
                                 End If
@@ -8202,7 +8202,7 @@ child.ToLower.Equals("oneapp_igcc") Then
                     Try
                         For Each child As String In _fileIo.GetDirectories(filePath)
                             If String.IsNullOrWhiteSpace(child) = False Then
-                                If StrContainsAny(child, True, "shadercache") Then
+                                If StrContainsAny(DirLeaf(child), True, "shadercache") Then
                                     Delete(child)
                                 End If
                             End If
@@ -8394,7 +8394,7 @@ StrContainsAny(child, True, "npuinstaller") AndAlso (config.RemoveIntelNpu AndAl
                     If String.IsNullOrWhiteSpace(filepaths) Then Continue For
                     For Each child As String In _fileIo.GetDirectories(filepaths)
                         If String.IsNullOrWhiteSpace(child) Then Continue For
-                        If StrContainsAny(child, True, "intelgraphicsprofiles") Then
+                        If StrContainsAny(DirLeaf(child), True, "intelgraphicsprofiles") Then
                             Delete(child)
                         End If
                     Next
@@ -8407,7 +8407,7 @@ StrContainsAny(child, True, "npuinstaller") AndAlso (config.RemoveIntelNpu AndAl
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If StrContainsAny(child, True, "shadercache") Then
+                                    If StrContainsAny(DirLeaf(child), True, "shadercache") Then
                                         Delete(child)
                                     End If
                                 End If
@@ -8430,9 +8430,9 @@ StrContainsAny(child, True, "npuinstaller") AndAlso (config.RemoveIntelNpu AndAl
                         Try
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
-                                    If config.RemoveINTELCP AndAlso StrContainsAny(child, True, "gcc", "games", "cuipromotions", "ags", "ign") OrElse
-(config.RemoveINTELIGS AndAlso StrContainsAny(child, True, "intelgraphicssoftware")) OrElse
-StrContainsAny(child, True, "NPU") AndAlso (config.RemoveIntelNpu AndAlso Not Tools.IsIntelNpuPresent) Then
+                                    If config.RemoveINTELCP AndAlso StrContainsAny(DirLeaf(child), True, "gcc", "games", "cuipromotions", "ags", "ign") OrElse
+(config.RemoveINTELIGS AndAlso StrContainsAny(DirLeaf(child), True, "intelgraphicssoftware")) OrElse
+StrContainsAny(DirLeaf(child), True, "NPU") AndAlso (config.RemoveIntelNpu AndAlso Not Tools.IsIntelNpuPresent) Then
                                         Delete(child)
                                     End If
                                 End If
