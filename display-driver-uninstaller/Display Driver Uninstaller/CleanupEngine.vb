@@ -2396,98 +2396,122 @@ Namespace Display_Driver_Uninstaller
         ''' the vendor driver then removed the machine is left with no WDDM driver at all, which
         ''' means a black screen - Safe Mode included, so there is nothing left to boot into.
         ''' Registry only: clears CONFIGFLAG_DISABLED on the device node and puts a disabled
-        ''' service Start back to System. Silent - everything lands in the log, as a warning
-        ''' whenever something was actually wrong.
+        ''' service Start back to System.
+        ''' Silent for the user: the whole check is ONE log entry carrying the state of each item,
+        ''' promoted from Event to Warning only when something actually had to be corrected.
         ''' </summary>
         Public Sub EnsureBasicDisplayFallback()
-            Application.Log.AddMessage("Checking Windows fallback display drivers (BasicDisplay / BasicRender)...")
+            Dim logEntry As LogEntry = Application.Log.CreateEntry(Nothing, "Windows fallback display drivers verified (BasicDisplay / BasicRender)")
+            logEntry.Type = LogType.Event
+            logEntry.Separator = " : "
+
+            Dim corrected As Boolean = False
 
             ImpersonateUser.RunImpersonatedSystem(
                 Sub()
-                    CheckFallbackDevice("BASICDISPLAY")
-                    CheckFallbackService("BasicDisplay")
-                    CheckFallbackDevice("BASICRENDER")
-                    CheckFallbackService("BasicRender")
+                    ' Plain If/Then rather than Or-ing the calls: every check must run, and this
+                    ' reads the same whether or not the reader knows VB's Or is non-short-circuit.
+                    If CheckFallbackDevice("BASICDISPLAY", logEntry) Then corrected = True
+                    If CheckFallbackService("BasicDisplay", logEntry) Then corrected = True
+                    If CheckFallbackDevice("BASICRENDER", logEntry) Then corrected = True
+                    If CheckFallbackService("BasicRender", logEntry) Then corrected = True
                 End Sub)
 
-            Application.Log.AddMessage("Fallback display drivers check completed.")
+            If corrected Then
+                logEntry.Type = LogType.Warning
+                logEntry.Message = "Windows fallback display drivers needed attention - with them disabled, removing the display driver leaves no display at all, Safe Mode included."
+            End If
+
+            Application.Log.Add(logEntry)
         End Sub
 
-        ''' <summary>Clears CONFIGFLAG_DISABLED (bit 0) on the fallback device node when set.</summary>
-        Private Sub CheckFallbackDevice(ByVal name As String)
+        ''' <summary>
+        ''' Records the fallback device's state into logEntry and clears CONFIGFLAG_DISABLED when
+        ''' it is set. Returns True when the entry deserves a warning (corrected, missing, or
+        ''' could not be read).
+        ''' </summary>
+        Private Function CheckFallbackDevice(ByVal name As String, ByVal logEntry As LogEntry) As Boolean
             Const CONFIGFLAG_DISABLED As Integer = 1
-            Dim path As String = "SYSTEM\CurrentControlSet\Enum\ROOT\" & name & "\0000"
+            Dim label As String = "device ROOT\" & name & "\0000"
 
             Try
-                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, path, True)
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\ROOT\" & name & "\0000", True)
                     If regkey Is Nothing Then
-                        Application.Log.AddWarningMessage($"Fallback display: device 'ROOT\{name}\0000' is missing - DDU cannot recreate it.")
-                        Return
+                        logEntry.Add(label, "MISSING - DDU cannot recreate it")
+                        Return True
                     End If
 
                     Dim raw As Object = regkey.GetValue("ConfigFlags", Nothing)
 
                     If raw Is Nothing Then
-                        Application.Log.AddMessage($"Fallback display: device 'ROOT\{name}\0000' has no ConfigFlags value (enabled).")
-                        Return
+                        logEntry.Add(label, "enabled (no ConfigFlags value)")
+                        Return False
                     End If
 
                     Dim flags As Integer = CInt(raw)
 
                     If (flags And CONFIGFLAG_DISABLED) = 0 Then
-                        Application.Log.AddMessage($"Fallback display: device 'ROOT\{name}\0000' ConfigFlags = 0x{flags:X} (enabled).")
-                        Return
+                        logEntry.Add(label, String.Format("enabled (ConfigFlags = 0x{0:X})", flags))
+                        Return False
                     End If
 
                     Dim fixedFlags As Integer = flags And Not CONFIGFLAG_DISABLED
-
-                    Application.Log.AddWarningMessage($"Fallback display: device 'ROOT\{name}\0000' is DISABLED (ConfigFlags = 0x{flags:X}). Removing the display driver while this is disabled leads to a black screen, Safe Mode included - re-enabling it.")
-
                     regkey.SetValue("ConfigFlags", fixedFlags, RegistryValueKind.DWord)
 
-                    Application.Log.AddWarningMessage($"Fallback display: device 'ROOT\{name}\0000' has been re-enabled (ConfigFlags = 0x{fixedFlags:X}).")
+                    logEntry.Add(label, String.Format("DISABLED (ConfigFlags = 0x{0:X}) -> RE-ENABLED (0x{1:X})", flags, fixedFlags))
+                    Return True
                 End Using
             Catch ex As Exception
-                Application.Log.AddException(ex, $"Fallback display: could not check device 'ROOT\{name}\0000'")
+                ' Kept out of logEntry on purpose: LogEntry.AddException would force the whole
+                ' entry to Error and clear its exception data. The stack gets its own entry.
+                Application.Log.AddException(ex, "Fallback display: could not check " & label)
+                logEntry.Add(label, "check FAILED : " & ex.Message)
+                Return True
             End Try
-        End Sub
+        End Function
 
-        ''' <summary>Puts a disabled fallback service back to Start = 1 (System), its inbox value.</summary>
-        Private Sub CheckFallbackService(ByVal name As String)
+        ''' <summary>
+        ''' Records the fallback service's state into logEntry and puts a disabled one back to
+        ''' Start = 1 (System), its inbox value. Returns True when the entry deserves a warning.
+        ''' </summary>
+        Private Function CheckFallbackService(ByVal name As String, ByVal logEntry As LogEntry) As Boolean
             Const SERVICE_SYSTEM_START As Integer = 1
             Const SERVICE_DISABLED As Integer = 4
-            Dim path As String = "SYSTEM\CurrentControlSet\Services\" & name
+            Dim label As String = "service " & name
 
             Try
-                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, path, True)
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services\" & name, True)
                     If regkey Is Nothing Then
-                        Application.Log.AddWarningMessage($"Fallback display: service '{name}' is missing - DDU cannot recreate it.")
-                        Return
+                        logEntry.Add(label, "MISSING - DDU cannot recreate it")
+                        Return True
                     End If
 
                     Dim raw As Object = regkey.GetValue("Start", Nothing)
 
                     If raw Is Nothing Then
-                        Application.Log.AddWarningMessage($"Fallback display: service '{name}' has no Start value - setting it to {SERVICE_SYSTEM_START} (System).")
                         regkey.SetValue("Start", SERVICE_SYSTEM_START, RegistryValueKind.DWord)
-                        Return
+                        logEntry.Add(label, String.Format("no Start value -> SET to {0} (System)", SERVICE_SYSTEM_START))
+                        Return True
                     End If
 
                     Dim startValue As Integer = CInt(raw)
 
                     If startValue <> SERVICE_DISABLED Then
-                        Application.Log.AddMessage($"Fallback display: service '{name}' Start = {startValue} (enabled).")
-                        Return
+                        logEntry.Add(label, String.Format("enabled (Start = {0})", startValue))
+                        Return False
                     End If
 
-                    Application.Log.AddWarningMessage($"Fallback display: service '{name}' is DISABLED (Start = {startValue}). Re-enabling it (Start = {SERVICE_SYSTEM_START}, System).")
-
                     regkey.SetValue("Start", SERVICE_SYSTEM_START, RegistryValueKind.DWord)
+
+                    logEntry.Add(label, String.Format("DISABLED (Start = {0}) -> RE-ENABLED (Start = {1}, System)", startValue, SERVICE_SYSTEM_START))
+                    Return True
                 End Using
             Catch ex As Exception
-                Application.Log.AddException(ex, $"Fallback display: could not check service '{name}'")
+                Application.Log.AddException(ex, "Fallback display: could not check " & label)
+                logEntry.Add(label, "check FAILED : " & ex.Message)
+                Return True
             End Try
-        End Sub
+        End Function
 
         Private Sub OnCLSIDLeftoverRemoval(ByVal child As String)
             Try
