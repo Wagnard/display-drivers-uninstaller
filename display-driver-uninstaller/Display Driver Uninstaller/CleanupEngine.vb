@@ -2437,7 +2437,7 @@ Namespace Display_Driver_Uninstaller
             Try
                 Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\ROOT\" & name & "\0000", True)
                     If regkey Is Nothing Then
-                        logEntry.Add(label, "MISSING - DDU cannot recreate it")
+                        logEntry.Add(label, "MISSING or unreadable - DDU cannot recreate it")
                         Return True
                     End If
 
@@ -2482,7 +2482,7 @@ Namespace Display_Driver_Uninstaller
             Try
                 Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Services\" & name, True)
                     If regkey Is Nothing Then
-                        logEntry.Add(label, "MISSING - DDU cannot recreate it")
+                        logEntry.Add(label, "MISSING or unreadable - DDU cannot recreate it")
                         Return True
                     End If
 
