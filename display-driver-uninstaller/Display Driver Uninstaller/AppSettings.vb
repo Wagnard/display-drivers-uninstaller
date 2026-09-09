@@ -14,6 +14,7 @@ Namespace Display_Driver_Uninstaller
 		AMD
 		Intel
 		Lisuan
+		Qualcomm
 		All
 	End Enum
 

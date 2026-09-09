@@ -171,7 +171,8 @@
 			<Options3>AMD</Options3>
 			<Options4>Intel</Options4>
 			<Options5>LISUAN</Options5>
-			<Options6>所有 GPU</Options6>
+			<Options6>QUALCOMM</Options6>
+			<Options7>所有 GPU</Options7>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>--- 设备供应商 ---</Options1>

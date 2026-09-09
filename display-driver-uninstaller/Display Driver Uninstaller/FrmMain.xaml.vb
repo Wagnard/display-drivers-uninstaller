@@ -222,6 +222,35 @@ Namespace Display_Driver_Uninstaller
 					End If
 				End Using
 
+				'Snapdragon GPUs sit on ACPI, not PCI. CLS_0003 is the ACPI equivalent of PCI's CC_03.
+				Using acpikey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Enum\ACPI")
+					If acpikey IsNot Nothing Then
+						For Each child As String In acpikey.GetSubKeyNames
+							If String.IsNullOrWhiteSpace(child) OrElse Not StrContainsAny(child, True, "ven_qcom") Then Continue For
+
+							Using acpikey2 As RegistryKey = MyRegistry.OpenSubKey(acpikey, child)
+								If acpikey2 Is Nothing Then Continue For
+
+								For Each child2 As String In acpikey2.GetSubKeyNames
+									If String.IsNullOrWhiteSpace(child2) Then Continue For
+
+									Using acpikey3 As RegistryKey = MyRegistry.OpenSubKey(acpikey2, child2)
+										If acpikey3 Is Nothing Then Continue For
+
+										compatibleIDs = TryCast(acpikey3.GetValue("CompatibleIDs", String.Empty), String())
+										If compatibleIDs Is Nothing Then Continue For
+
+										For Each id As String In compatibleIDs
+											If String.IsNullOrWhiteSpace(id) Then Continue For
+											If StrContainsAny(id, True, "ven_qcom&cls_0003") Then Return GPUVendor.Qualcomm
+										Next
+									End Using
+								Next
+							End Using
+						Next
+					End If
+				End Using
+
 				Return GPUVendor.None
 			Catch ex As Exception
 				Application.Log.AddException(ex)
@@ -342,7 +371,8 @@ Namespace Display_Driver_Uninstaller
                     Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
                     Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
                     Languages.GetTranslation("frmMain", "Options_GPU", "Options5"),
-                    Languages.GetTranslation("frmMain", "Options_GPU", "Options6")
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options6"),
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options7")
                 }
                     Case Else ' None
                         cbSelectedGPU.ItemsSource = {
@@ -351,7 +381,8 @@ Namespace Display_Driver_Uninstaller
                     Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
                     Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
                     Languages.GetTranslation("frmMain", "Options_GPU", "Options5"),
-                    Languages.GetTranslation("frmMain", "Options_GPU", "Options6")
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options6"),
+                    Languages.GetTranslation("frmMain", "Options_GPU", "Options7")
                 }
                 End Select
 
@@ -509,6 +540,10 @@ Namespace Display_Driver_Uninstaller
                             Application.Settings.SelectedAUDIO = AudioVendor.None
                             ButtonsPanel.IsEnabled = True
                         Case 5
+                            Application.Settings.SelectedGPU = GPUVendor.Qualcomm
+                            Application.Settings.SelectedAUDIO = AudioVendor.None
+                            ButtonsPanel.IsEnabled = True
+                        Case 6
                             Application.Settings.SelectedGPU = GPUVendor.All
                             Application.Settings.SelectedAUDIO = AudioVendor.None
                             ButtonsPanel.IsEnabled = True
@@ -893,6 +928,17 @@ Namespace Display_Driver_Uninstaller
 				config.SelectedType = CleanType.GPU
 				config.SelectedAUDIO = AudioVendor.None
 				config.SelectedGPU = GPUVendor.Lisuan
+
+				Await StartThreadAsync(config)
+
+				CleaningTask = Nothing
+			End If
+
+			If config.CleanQualcomm OrElse cleanAllGpus Then
+				config.Success = False
+				config.SelectedType = CleanType.GPU
+				config.SelectedAUDIO = AudioVendor.None
+				config.SelectedGPU = GPUVendor.Qualcomm
 
 				Await StartThreadAsync(config)
 
@@ -1478,7 +1524,8 @@ Namespace Display_Driver_Uninstaller
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options5"),
-                Languages.GetTranslation("frmMain", "Options_GPU", "Options6")
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options6"),
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options7")
             }
                     cbSelectedGPU.SelectedIndex = 0
                     cbSelectedGPU.IsEnabled = False
@@ -1502,7 +1549,8 @@ Namespace Display_Driver_Uninstaller
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options3"),
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options4"),
                 Languages.GetTranslation("frmMain", "Options_GPU", "Options5"),
-                Languages.GetTranslation("frmMain", "Options_GPU", "Options6")
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options6"),
+                Languages.GetTranslation("frmMain", "Options_GPU", "Options7")
             }
                     cbSelectedGPU.SelectedIndex = 0
                     cbSelectedGPU.SelectedIndex = GPUIdentify()
@@ -1566,6 +1614,11 @@ Namespace Display_Driver_Uninstaller
                             ButtonsPanel.IsEnabled = True
                             Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
                         Case 5
+                            Application.Settings.SelectedGPU = GPUVendor.Qualcomm
+                            cbSelectedGPU.IsEnabled = True
+                            ButtonsPanel.IsEnabled = True
+                            Application.Settings.LastSelectedGPUIndex = cbSelectedGPU.SelectedIndex
+                        Case 6
                             Application.Settings.SelectedGPU = GPUVendor.All
                             cbSelectedGPU.IsEnabled = True
                             ButtonsPanel.IsEnabled = True

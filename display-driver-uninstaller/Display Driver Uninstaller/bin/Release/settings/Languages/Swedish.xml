@@ -179,7 +179,8 @@
 			<Options3>AMD</Options3>
 			<Options4>INTEL</Options4>
 			<Options5>LISUAN</Options5>
-			<Options6>Alla GPU:er</Options6>
+			<Options6>QUALCOMM</Options6>
+			<Options7>Alla GPU:er</Options7>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---Välj enhet---</Options1>

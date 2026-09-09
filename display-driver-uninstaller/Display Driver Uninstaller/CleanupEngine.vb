@@ -2098,6 +2098,19 @@ Namespace Display_Driver_Uninstaller
                                                                                 Application.Log.AddException(ex)
                                                                             End Try
                                                                         End If
+                                                                    Case GPUVendor.Qualcomm
+                                                                        If StrContainsAny(providerName, True, "Qualcomm") Then
+                                                                            Try
+                                                                                Deletesubregkey(regkey, child)
+                                                                                Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Hardware Profiles\UnitedVideo\CONTROL\VIDEO\" & child, False)
+                                                                                Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\UnitedVideo\CONTROL\VIDEO\" & child, False)
+                                                                                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Microsoft\DirectX\" & child, False)
+                                                                            Catch ex As ArgumentException
+                                                                                'avoid an issue specific to this key
+                                                                            Catch ex As Exception
+                                                                                Application.Log.AddException(ex)
+                                                                            End Try
+                                                                        End If
                                                                 End Select
                                                             End If
                                                         End If
@@ -3591,6 +3604,9 @@ Namespace Display_Driver_Uninstaller
                         Case GPUVendor.Lisuan
                             CurrentProvider = {"Lisuan"}    'INF Provider = "Shanghai Lisuan Semiconductor Co.,Ltd."
                             driverfiles = {"LSGKMD.sys", "LSGDDM.sys"}
+                        Case GPUVendor.Qualcomm
+                            CurrentProvider = {"Qualcomm"}  'INF Provider = "Qualcomm Incorporated"
+                            driverfiles = {"qcdxkm"}        'qcdxkm8380.sys, and whatever the next SoC is called
                         Case GPUVendor.None
                             CurrentProvider = {"None"}
                             driverfiles = Nothing

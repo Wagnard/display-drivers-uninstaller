@@ -47,6 +47,12 @@ Namespace Display_Driver_Uninstaller
                     vendCompatibleID = "VEN_4C54&CC_03"
                     vendidSC = {"VEN_4C54"}
                     audioServices = IO.File.ReadAllLines(config.Paths.AppBase & "settings\LISUAN\servicesaudio.cfg")
+                Case GPUVendor.Qualcomm
+                    'Adreno is enumerated on ACPI, so CLS_0003 replaces the usual PCI CC_03.
+                    vendIdExpected = "VEN_QCOM"
+                    vendCompatibleID = "VEN_QCOM&CLS_0003"
+                    vendidSC = {"VEN_QCOM"}
+                    audioServices = IO.File.ReadAllLines(config.Paths.AppBase & "settings\QUALCOMM\servicesaudio.cfg")
                 Case GPUVendor.None : vendIdExpected = "NONE"
                 Case GPUVendor.All : vendIdExpected = "ALL"
             End Select
@@ -213,6 +219,10 @@ Namespace Display_Driver_Uninstaller
 
             If config.SelectedGPU = GPUVendor.Intel Then
                 CleanIntel(config, True) 'needed since 24h2 it seems
+            End If
+
+            If config.SelectedGPU = GPUVendor.Qualcomm Then
+                CleanQualcomm(config, True) 'needed since 24h2 it seems
             End If
 
             If config.SelectedGPU = GPUVendor.Lisuan Then
@@ -1076,6 +1086,11 @@ Namespace Display_Driver_Uninstaller
                 CleanIntelServiceProcess(config)
                 CleanIntel(config)
                 CleanIntelFolders(config)
+            End If
+
+            If config.SelectedGPU = GPUVendor.Qualcomm Then
+                CleanQualcommServiceProcess(config)
+                CleanQualcomm(config)
             End If
 
             If config.SelectedGPU = GPUVendor.Lisuan Then
@@ -8127,6 +8142,62 @@ child.ToLower.Equals("oneapp_igcc") Then
                 End If
                 KillProcess("IGFXEM")
                 Application.Log.AddMessage("Process/Services CleanUP Complete")
+            End Sub)
+        End Sub
+
+        Private Sub CleanQualcommServiceProcess(ByVal config As ThreadSettings)
+            Dim CleanupEngine As New CleanupEngine
+            Dim services As String() = IO.File.ReadAllLines(Application.Paths.AppBase & "settings\QUALCOMM\services.cfg")
+
+            ImpersonateUser.RunImpersonatedSystem(
+            Sub()
+                Application.Log.AddMessage("Cleaning Process/Services...")
+                CleanupEngine.Cleanserviceprocess(services, config) '// add each line as String Array.
+                Application.Log.AddMessage("Process/Services CleanUP Complete")
+            End Sub)
+        End Sub
+
+        Private Sub CleanQualcomm(ByVal config As ThreadSettings, ByVal Optional preclean As Boolean = False)
+            Dim CleanupEngine As New CleanupEngine
+            Dim classroot As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\QUALCOMM\classroot.cfg")
+            Dim clsidleftover As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\QUALCOMM\clsidleftover.cfg")
+            Dim driverfiles As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\QUALCOMM\driverfiles.cfg")
+
+            If preclean Then
+
+                ImpersonateUser.RunImpersonatedSystem(
+                Sub()
+
+                    '-----------------
+                    'Registry Cleaning
+                    '-----------------
+                    UpdateTextMethod(UpdateTextTranslated(5))
+                    Application.Log.AddMessage("Cleaning registry Part 1/2")
+
+                    'The INF registers three MFT video encoders (H264/HEVC/AV1) under HKCR\CLSID,
+                    'so clsidleftover.cfg carries the qcvidenc token. classroot.cfg is empty : the
+                    'driver declares no ProgID.
+                    Application.Log.AddMessage("Starting dcom/clsid/appid/typelib cleanup")
+                    CleanupEngine.ClassRoot(classroot, config)
+
+                End Sub)
+
+                Return
+            End If
+
+            ImpersonateUser.RunImpersonatedSystem(
+            Sub()
+
+                Application.Log.AddMessage("Cleaning registry Part 2/2")
+
+                Application.Log.AddMessage("Pnplockdownfiles region cleanUP")
+                CleanupEngine.PnpLockdownFiles(driverfiles)  '// add each line as String Array.
+
+                CLSIDCleanThread(clsidleftover, config)
+
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Qualcomm", False)
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Qualcomm", False)
+
             End Sub)
         End Sub
 
