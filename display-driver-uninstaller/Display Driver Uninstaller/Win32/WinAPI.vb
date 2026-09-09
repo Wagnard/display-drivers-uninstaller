@@ -150,9 +150,53 @@ Namespace Display_Driver_Uninstaller.Win32
   <Out()> ByVal lpProcessInformation As IntPtr) As <MarshalAs(UnmanagedType.Bool)> Boolean
 		End Function
 
+		''' <summary>Windows 10 1511 and up only - resolved dynamically, see GetNativeArchitecture.</summary>
+		<DllImport("Kernel32.dll", SetLastError:=True)>
+		Private Shared Function IsWow64Process2(
+  <[In]()> ByVal hProcess As IntPtr,
+  <[Out]()> ByRef pProcessMachine As UShort,
+  <[Out]()> ByRef pNativeMachine As UShort) As <MarshalAs(UnmanagedType.Bool)> Boolean
+		End Function
+
 #End Region
 
 #Region "Functions"
+
+		''' <summary>
+		''' Architecture of the MACHINE, not of this process. On Windows on Arm, DDU runs under x64
+		''' emulation : IntPtr.Size is 8 and every usual check (PROCESSOR_ARCHITECTURE,
+		''' RuntimeInformation.OSArchitecture) is spoofed to say x64, so a log from an ARM64 laptop
+		''' is indistinguishable from a log from a desktop PC. IsWow64Process2 is the one API that
+		''' reports the real host through the emulation.
+		''' Returns "ARM64" / "x64" / "x86", falling back to plain bitness when the API is missing
+		''' (Windows 10 pre-1511, Windows 7/8) or fails.
+		''' </summary>
+		Friend Shared Function GetNativeArchitecture() As String
+			Const IMAGE_FILE_MACHINE_I386 As UShort = &H14C
+			Const IMAGE_FILE_MACHINE_AMD64 As UShort = &H8664
+			Const IMAGE_FILE_MACHINE_ARM64 As UShort = &HAA64
+			Const IMAGE_FILE_MACHINE_ARMNT As UShort = &H1C4
+
+			Try
+				Dim processMachine As UShort = 0US
+				Dim nativeMachine As UShort = 0US
+
+				If IsWow64Process2(Process.GetCurrentProcess().Handle, processMachine, nativeMachine) Then
+					Select Case nativeMachine
+						Case IMAGE_FILE_MACHINE_ARM64 : Return "ARM64"
+						Case IMAGE_FILE_MACHINE_AMD64 : Return "x64"
+						Case IMAGE_FILE_MACHINE_I386 : Return "x86"
+						Case IMAGE_FILE_MACHINE_ARMNT : Return "ARM32"
+					End Select
+				End If
+			Catch ex As EntryPointNotFoundException
+				' Older Windows : no IsWow64Process2. Nothing to log, the fallback is correct there.
+			Catch ex As Exception
+				Application.Log.AddException(ex, "Could not read the native machine architecture.")
+			End Try
+
+			Return If(Is64, "x64", "x86")
+		End Function
 
 		Private Shared Function GetIs64() As Boolean
 			Return (IntPtr.Size = 8)

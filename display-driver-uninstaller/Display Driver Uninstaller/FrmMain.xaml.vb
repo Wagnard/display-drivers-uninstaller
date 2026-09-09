@@ -994,7 +994,7 @@ Namespace Display_Driver_Uninstaller
 				info.Add("NVIDIA App installed ?", Application.Settings.NVIDIA_App_Installed.ToString())
 				info.Add("NVIDIA Broadcast ?", Application.Settings.NVIDIA_Broadcast_Installed.ToString())
 				info.Add("Intel NPU Present ?", IntelNpuPresent.ToString())
-				info.Add("Architecture", If(Application.Settings.WinIs64, "x64", "x86"))
+				info.Add("Architecture", Application.Settings.WinArchText)
 
 				Try
 					Dim windowsPrincipal As WindowsPrincipal = New WindowsPrincipal(WindowsIdentity.GetCurrent())

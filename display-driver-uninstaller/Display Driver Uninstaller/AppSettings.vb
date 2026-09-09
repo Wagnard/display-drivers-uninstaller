@@ -94,6 +94,7 @@ Namespace Display_Driver_Uninstaller
 		Private ReadOnly m_winVersionText As DependencyProperty = RegDP("WinVersionText", GetType(String), GetType(AppSettings), "Unknown")
 		Private ReadOnly m_winBuildText As DependencyProperty = RegDP("WinBuildText", GetType(String), GetType(AppSettings), "Unknown")
 		Private ReadOnly m_winIs64 As DependencyProperty = RegDP("WinIs64", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_winArchText As DependencyProperty = RegDP("WinArchText", GetType(String), GetType(AppSettings), "x86")
 		Private ReadOnly m_processKilled As DependencyProperty = RegDP("ProcessKilled", GetType(Boolean), GetType(AppSettings), False)
 		Private ReadOnly m_win10_1809 As DependencyProperty = RegDP("Win10_1809", GetType(Boolean), GetType(AppSettings), False)
 		Private ReadOnly m_win11 As DependencyProperty = RegDP("Win11", GetType(Boolean), GetType(AppSettings), False)
@@ -193,6 +194,20 @@ Namespace Display_Driver_Uninstaller
 			End Get
 			Set(value As Boolean)
 				SetValue(m_winIs64, value)
+			End Set
+		End Property
+
+		''' <summary>
+		''' Machine architecture for display and logging only : "ARM64" / "x64" / "x86".
+		''' Kept apart from WinIs64, which is a bitness flag driving real decisions (WOW6432Node
+		''' access) and is correctly True on ARM64 as well.
+		''' </summary>
+		Public Property WinArchText As String
+			Get
+				Return CStr(GetValue(m_winArchText))
+			End Get
+			Set(value As String)
+				SetValue(m_winArchText, value)
 			End Set
 		End Property
 

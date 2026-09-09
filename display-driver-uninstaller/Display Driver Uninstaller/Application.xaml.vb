@@ -745,6 +745,7 @@ Namespace Display_Driver_Uninstaller
                 ' Useful on next steps
                 GetOSVersion()
                 Settings.WinIs64 = (IntPtr.Size = 8)
+                Settings.WinArchText = Win32.WinAPI.GetNativeArchitecture()
 
                 Try
 

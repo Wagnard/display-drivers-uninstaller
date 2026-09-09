@@ -358,7 +358,7 @@
                 <TextBlock.Text>
                     <MultiBinding StringFormat="{}{0} ({1})">
                         <Binding Path="Settings.WinVersionText" />
-                        <Binding Path="Settings.WinIs64" Converter="{StaticResource BoolToStr}" />
+                        <Binding Path="Settings.WinArchText" />
                     </MultiBinding>
                 </TextBlock.Text>
             </TextBlock>
