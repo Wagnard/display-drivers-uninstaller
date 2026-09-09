@@ -2390,16 +2390,8 @@ Namespace Display_Driver_Uninstaller
             End Try
         End Sub
 
-        ''' <summary>
-        ''' Makes sure Windows still has a display driver to fall back on once the vendor driver
-        ''' is gone. Some users disable "Microsoft Basic Display Adapter" in Device Manager; with
-        ''' the vendor driver then removed the machine is left with no WDDM driver at all, which
-        ''' means a black screen - Safe Mode included, so there is nothing left to boot into.
-        ''' Registry only: clears CONFIGFLAG_DISABLED on the device node and puts a disabled
-        ''' service Start back to System.
-        ''' Silent for the user: the whole check is ONE log entry carrying the state of each item,
-        ''' promoted from Event to Warning only when something actually had to be corrected.
-        ''' </summary>
+        ''' <summary>Re-enables the Windows fallback display drivers if the user had disabled them.
+        ''' Without them, removing the vendor driver leaves no WDDM driver at all : black screen, Safe Mode included.</summary>
         Public Sub EnsureBasicDisplayFallback()
             Dim logEntry As LogEntry = Application.Log.CreateEntry(Nothing, "Windows fallback display drivers verified (BasicDisplay / BasicRender)")
             logEntry.Type = LogType.Event
@@ -2409,8 +2401,7 @@ Namespace Display_Driver_Uninstaller
 
             ImpersonateUser.RunImpersonatedSystem(
                 Sub()
-                    ' Plain If/Then rather than Or-ing the calls: every check must run, and this
-                    ' reads the same whether or not the reader knows VB's Or is non-short-circuit.
+                    'Separate If/Then : all four must run.
                     If CheckFallbackDevice("BASICDISPLAY", logEntry) Then corrected = True
                     If CheckFallbackService("BasicDisplay", logEntry) Then corrected = True
                     If CheckFallbackDevice("BASICRENDER", logEntry) Then corrected = True
@@ -2425,11 +2416,7 @@ Namespace Display_Driver_Uninstaller
             Application.Log.Add(logEntry)
         End Sub
 
-        ''' <summary>
-        ''' Records the fallback device's state into logEntry and clears CONFIGFLAG_DISABLED when
-        ''' it is set. Returns True when the entry deserves a warning (corrected, missing, or
-        ''' could not be read).
-        ''' </summary>
+        ''' <summary>Logs the device state and clears CONFIGFLAG_DISABLED. True = worth a warning.</summary>
         Private Function CheckFallbackDevice(ByVal name As String, ByVal logEntry As LogEntry) As Boolean
             Const CONFIGFLAG_DISABLED As Integer = 1
             Dim label As String = "device ROOT\" & name & "\0000"
@@ -2462,18 +2449,14 @@ Namespace Display_Driver_Uninstaller
                     Return True
                 End Using
             Catch ex As Exception
-                ' Kept out of logEntry on purpose: LogEntry.AddException would force the whole
-                ' entry to Error and clear its exception data. The stack gets its own entry.
+                'AddException would turn the whole entry into an Error, so the stack goes to its own entry.
                 Application.Log.AddException(ex, "Fallback display: could not check " & label)
                 logEntry.Add(label, "check FAILED : " & ex.Message)
                 Return True
             End Try
         End Function
 
-        ''' <summary>
-        ''' Records the fallback service's state into logEntry and puts a disabled one back to
-        ''' Start = 1 (System), its inbox value. Returns True when the entry deserves a warning.
-        ''' </summary>
+        ''' <summary>Logs the service state and puts a disabled one back to Start = 1. True = worth a warning.</summary>
         Private Function CheckFallbackService(ByVal name As String, ByVal logEntry As LogEntry) As Boolean
             Const SERVICE_SYSTEM_START As Integer = 1
             Const SERVICE_DISABLED As Integer = 4
@@ -3679,27 +3662,31 @@ Namespace Display_Driver_Uninstaller
                                     Dim audiobusList As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCompatibleID("PCI\VEN_8086&CC_040", False, False, False, True)
                                     If audiobusList IsNot Nothing AndAlso audiobusList.Count > 0 Then
                                         Dim disabledAudiobusList As New List(Of SetupAPI.Device)
-                                        For Each audiobus As SetupAPI.Device In audiobusList
-                                            If audiobus IsNot Nothing AndAlso audiobus.ExtendedInfs IsNot Nothing AndAlso
-                                                audiobus.ExtendedInfs.Length > 0 AndAlso Not String.IsNullOrWhiteSpace(audiobus.Service) Then
-                                                If StrContainsAny(audiobus.Service, True, "HDAudBus", "IntcAudioBus") Then
-                                                    If audiobus.IsPresent Then
-                                                        SetupAPI.EnableDevice(audiobus, False) 'Removing the Audio bus.
-                                                        disabledAudiobusList.Add(audiobus)
+                                        Try
+                                            For Each audiobus As SetupAPI.Device In audiobusList
+                                                If audiobus IsNot Nothing AndAlso audiobus.ExtendedInfs IsNot Nothing AndAlso
+                                                    audiobus.ExtendedInfs.Length > 0 AndAlso Not String.IsNullOrWhiteSpace(audiobus.Service) Then
+                                                    If StrContainsAny(audiobus.Service, True, "HDAudBus", "IntcAudioBus") Then
+                                                        If audiobus.IsPresent Then
+                                                            SetupAPI.EnableDevice(audiobus, False) 'Removing the Audio bus.
+                                                            disabledAudiobusList.Add(audiobus)
+                                                        End If
                                                     End If
                                                 End If
-                                            End If
-                                        Next
-
-                                        SetupAPI.RemoveInf(oem, True)
-                                        oemRemoved = True
-                                        If disabledAudiobusList IsNot Nothing AndAlso disabledAudiobusList.Count > 0 Then
-                                            For Each disabledAudiobus As SetupAPI.Device In disabledAudiobusList
-                                                If disabledAudiobus IsNot Nothing Then
-                                                    SetupAPI.EnableDevice(disabledAudiobus, True)
-                                                End If
                                             Next
-                                        End If
+
+                                            SetupAPI.RemoveInf(oem, True)
+                                            oemRemoved = True
+                                        Finally
+                                            'The disable is global (written in the registry), so it must always be undone or there is no sound left at all.
+                                            If disabledAudiobusList IsNot Nothing AndAlso disabledAudiobusList.Count > 0 Then
+                                                For Each disabledAudiobus As SetupAPI.Device In disabledAudiobusList
+                                                    If disabledAudiobus IsNot Nothing Then
+                                                        SetupAPI.EnableDevice(disabledAudiobus, True)
+                                                    End If
+                                                Next
+                                            End If
+                                        End Try
                                     End If
 
                                     If Not oemRemoved Then

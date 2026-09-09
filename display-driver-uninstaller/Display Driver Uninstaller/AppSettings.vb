@@ -197,11 +197,7 @@ Namespace Display_Driver_Uninstaller
 			End Set
 		End Property
 
-		''' <summary>
-		''' Machine architecture for display and logging only : "ARM64" / "x64" / "x86".
-		''' Kept apart from WinIs64, which is a bitness flag driving real decisions (WOW6432Node
-		''' access) and is correctly True on ARM64 as well.
-		''' </summary>
+		''' <summary>"ARM64" / "x64" / "x86", display and logs only. WinIs64 stays the bitness flag used for WOW6432Node.</summary>
 		Public Property WinArchText As String
 			Get
 				Return CStr(GetValue(m_winArchText))

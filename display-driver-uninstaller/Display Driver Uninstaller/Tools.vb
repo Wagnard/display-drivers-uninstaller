@@ -236,13 +236,8 @@ Namespace Display_Driver_Uninstaller
             Return False
         End Function
 
-        ''' <summary>
-        ''' Returns the last segment of a path, keeping its leading separator ("C:\Users\Bob\nvosc"
-        ''' -> "\nvosc"). Folder matching must look at the folder name only: the full path
-        ''' contains the user name, so short tokens like "ace" or "cn" would match every subfolder
-        ''' of a profile belonging to Grace or Ignacio and wipe the whole folder.
-        ''' The separator is kept so tokens already anchored on it ("\mom", "\px") keep working.
-        ''' </summary>
+        ''' <summary>Folder name only, separator kept ("C:\Users\Bob\nvosc" -> "\nvosc").
+        ''' Matching on the full path would catch the user name : "ace" hits every folder of a user named Grace.</summary>
         Public Function DirLeaf(ByVal path As String) As String
             If String.IsNullOrWhiteSpace(path) Then Return String.Empty
 

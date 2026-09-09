@@ -162,15 +162,8 @@ Namespace Display_Driver_Uninstaller.Win32
 
 #Region "Functions"
 
-		''' <summary>
-		''' Architecture of the MACHINE, not of this process. On Windows on Arm, DDU runs under x64
-		''' emulation : IntPtr.Size is 8 and every usual check (PROCESSOR_ARCHITECTURE,
-		''' RuntimeInformation.OSArchitecture) is spoofed to say x64, so a log from an ARM64 laptop
-		''' is indistinguishable from a log from a desktop PC. IsWow64Process2 is the one API that
-		''' reports the real host through the emulation.
-		''' Returns "ARM64" / "x64" / "x86", falling back to plain bitness when the API is missing
-		''' (Windows 10 pre-1511, Windows 7/8) or fails.
-		''' </summary>
+		''' <summary>Architecture of the machine, not of the process. Under ARM64 emulation IntPtr.Size
+		''' and PROCESSOR_ARCHITECTURE both say x64 ; only IsWow64Process2 sees through it.</summary>
 		Friend Shared Function GetNativeArchitecture() As String
 			Const IMAGE_FILE_MACHINE_I386 As UShort = &H14C
 			Const IMAGE_FILE_MACHINE_AMD64 As UShort = &H8664
