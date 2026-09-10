@@ -910,23 +910,40 @@ Namespace Display_Driver_Uninstaller
                         Application.Log.AddMessage("SetupAPI: Remove NVIDIA SHIELD Wireless Controller Trackpad Complete.")
 
                         'NVIDIA Platform Controllers and Framework
+                        'By hardware ID across all classes : also found when it sits in "Other devices" without a driver.
                         Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA Platform Controllers and Framework")
-                        found = SetupAPI.GetDevices("SoftwareDevice", Nothing, False)
+                        found = SetupAPI.GetDevicesByHID("ACPI\NVDA0820", False, False, True)
                         If found IsNot Nothing AndAlso found.Count > 0 Then
+                            Dim removedDevices As New List(Of String)
                             For Each d As SetupAPI.Device In found
-                                If d IsNot Nothing AndAlso d.HardwareIDs IsNot Nothing AndAlso d.HardwareIDs.Length > 0 Then
-                                    For Each HwID As String In d.HardwareIDs
-                                        If String.IsNullOrWhiteSpace(HwID) Then Continue For
-                                        If StrContainsAny(HwID, True, "ACPI\NVDA0820") Then
-                                            SetupAPI.UninstallDevice(d)
-                                            Exit For
-                                        End If
-                                    Next
+                                If d Is Nothing OrElse removedDevices.Contains(d.ToString()) Then Continue For
+                                If d.ChildDevices IsNot Nothing AndAlso d.ChildDevices.Length > 0 Then
+                                    RemoveChiendrensFromDevices(d.ChildDevices, removedDevices)
                                 End If
+                                SetupAPI.UninstallDevice(d)
+                                removedDevices.Add(d.ToString())
                             Next
                             found.Clear()
                         End If
                         Application.Log.AddMessage("SetupAPI: Remove NVIDIA Platform Controllers and Framework Complete.")
+
+                        'NVIDIA Graphics Device - Windows on Arm, an ACPI node next to the PCI GPU. VEN_NVDA, so the usual VEN_10DE pass never sees it.
+                        'By hardware ID across all classes : also found when it sits in "Other devices" without a driver.
+                        Application.Log.AddMessage("Executing SetupAPI: Remove NVIDIA Graphics Device (ACPI)")
+                        found = SetupAPI.GetDevicesByHID("ACPI\NVDA1081", False, False, True)
+                        If found IsNot Nothing AndAlso found.Count > 0 Then
+                            Dim removedDevices As New List(Of String)
+                            For Each d As SetupAPI.Device In found
+                                If d Is Nothing OrElse removedDevices.Contains(d.ToString()) Then Continue For
+                                If d.ChildDevices IsNot Nothing AndAlso d.ChildDevices.Length > 0 Then
+                                    RemoveChiendrensFromDevices(d.ChildDevices, removedDevices)
+                                End If
+                                SetupAPI.UninstallDevice(d)
+                                removedDevices.Add(d.ToString())
+                            Next
+                            found.Clear()
+                        End If
+                        Application.Log.AddMessage("SetupAPI: Remove NVIDIA Graphics Device (ACPI) Complete.")
 
                         If config.RemoveNVBROADCAST Then
                             ' NVIDIA Broadcast(Wave Extensible) (WDM) Removal
