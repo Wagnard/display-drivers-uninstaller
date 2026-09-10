@@ -71,6 +71,8 @@ Namespace Display_Driver_Uninstaller
                         CleanAmdCache(config)
                     Case GPUVendor.Intel
                         CleanIntelCache(config)
+                    Case GPUVendor.Qualcomm
+                        CleanQualcommCache(config)
                 End Select
 
                 config.Success = True
@@ -3909,14 +3911,14 @@ child2.ToLower.Contains("hdaudio.driver") Then
                 End If
 
                 Dim thread3 As Task = Task.Run(Sub() InstallerCleanThread(packages, config))
-                    TaskList.Add(thread3)
+                TaskList.Add(thread3)
 
-                    If removenvbroadcast Then
-                        Dim thread4 As Task = Task.Run(Sub() InstallerCleanThread(clsidleftoverNVB, config))
-                        TaskList.Add(thread4)
-                    End If
+                If removenvbroadcast Then
+                    Dim thread4 As Task = Task.Run(Sub() InstallerCleanThread(clsidleftoverNVB, config))
+                    TaskList.Add(thread4)
+                End If
 
-                    Task.WaitAll(TaskList.ToArray())
+                Task.WaitAll(TaskList.ToArray())
 
                 ImpersonateUser.RunImpersonatedSystem(
                 Sub()
@@ -8212,10 +8214,70 @@ child.ToLower.Equals("oneapp_igcc") Then
 
                 CLSIDCleanThread(clsidleftover, config)
 
-                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\Qualcomm", False)
-                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\Qualcomm", False)
+                CleanQualcommCache(config)
+
+                'The driver's own keys live under SOFTWARE\QCOM, the short tag every Qualcomm driver on the SoC uses.
+                'Only the graphics leaves, never the root : the other 60+ platform drivers write there too.
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\QCOM\Drivers\Dx11UMD", False)
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\QCOM\Drivers\Dx12UMD", False)
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\QCOM\Drivers\VKUMD", False)
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\QCOM\MFTs\VideoEncoder", False)
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\QCOM\AdrenoControlPanel", False)
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\QCOM\Drivers\Dx11UMD", False)
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\QCOM\Drivers\Dx12UMD", False)
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\QCOM\Drivers\VKUMD", False)
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\QCOM\MFTs\VideoEncoder", False)
+                Deletesubregkey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\QCOM\AdrenoControlPanel", False)
 
             End Sub)
+        End Sub
+
+        Private Sub CleanQualcommCache(config As ThreadSettings)
+            For Each filepaths As String In _fileIo.GetDirectories(config.Paths.UsersPath)
+                If String.IsNullOrWhiteSpace(filepaths) Then Continue For
+
+                'D3D12 shader cache. D3D11 uses the Microsoft D3DSCache below.
+                Dim filePath As String = filepaths + "\AppData\Local\QCOM"
+                If _fileIo.ExistsDir(filePath) Then
+                    Try
+                        For Each child As String In _fileIo.GetDirectories(filePath)
+                            If String.IsNullOrWhiteSpace(child) = False Then
+                                If StrContainsAny(DirLeaf(child), True, "dxscache") Then
+                                    Delete(child)
+                                End If
+                            End If
+                        Next
+                    Catch ex As Exception
+                        Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+                    End Try
+                End If
+
+                filePath = config.Paths.System32 + "config\systemprofile\AppData\Local\D3DSCache"
+                If _fileIo.ExistsDir(filePath) Then
+                    Try
+                        For Each child As String In _fileIo.GetDirectories(filePath)
+                            If String.IsNullOrWhiteSpace(child) = False Then
+                                Delete(child)
+                            End If
+                        Next
+                    Catch ex As Exception
+                        Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+                    End Try
+                End If
+
+                filePath = filepaths + "\AppData\Local\D3DSCache"
+                If _fileIo.ExistsDir(filePath) Then
+                    Try
+                        For Each child As String In _fileIo.GetDirectories(filePath)
+                            If String.IsNullOrWhiteSpace(child) = False Then
+                                Delete(child)
+                            End If
+                        Next
+                    Catch ex As Exception
+                        Application.Log.AddMessage("Possible permission issue detected on : " + filePath)
+                    End Try
+                End If
+            Next
         End Sub
 
         Private Sub CleanLisuanServiceProcess(ByVal config As ThreadSettings)
