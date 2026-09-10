@@ -3712,6 +3712,51 @@ Namespace Display_Driver_Uninstaller
                                 End If
                             End If
 
+                            If config.SelectedType = CleanType.GPU AndAlso config.SelectedGPU = GPUVendor.Nvidia Then
+                                If StrContainsAny(oem.Class, True, "Extension") AndAlso StrContainsAny(oem.Catalog, True, "nvhdaudbus.cat") Then
+                                    Dim oemRemoved = False
+                                    'Windows on Arm : the HD Audio controller is an ACPI node with an NVIDIA extension INF on top, same case as Intel's HdBusExt.
+                                    Dim audiobusList As New List(Of SetupAPI.Device)
+                                    For Each acpiId As String In {"ACPI\VEN_NVDA&DEV_2014", "ACPI\VEN_NVDA&DEV_2015"}
+                                        Dim found As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCompatibleID(acpiId, False, False, False, True)
+                                        If found IsNot Nothing Then audiobusList.AddRange(found)
+                                    Next
+                                    If audiobusList IsNot Nothing AndAlso audiobusList.Count > 0 Then
+                                        Dim disabledAudiobusList As New List(Of SetupAPI.Device)
+                                        Try
+                                            For Each audiobus As SetupAPI.Device In audiobusList
+                                                If audiobus IsNot Nothing AndAlso audiobus.ExtendedInfs IsNot Nothing AndAlso
+                                                    audiobus.ExtendedInfs.Length > 0 AndAlso Not String.IsNullOrWhiteSpace(audiobus.Service) Then
+                                                    If StrContainsAny(audiobus.Service, True, "HDAudBus") Then
+                                                        If audiobus.IsPresent Then
+                                                            SetupAPI.EnableDevice(audiobus, False) 'Removing the Audio bus.
+                                                            disabledAudiobusList.Add(audiobus)
+                                                        End If
+                                                    End If
+                                                End If
+                                            Next
+
+                                            SetupAPI.RemoveInf(oem, True)
+                                            oemRemoved = True
+                                        Finally
+                                            'The disable is global (written in the registry), so it must always be undone or there is no sound left at all.
+                                            If disabledAudiobusList IsNot Nothing AndAlso disabledAudiobusList.Count > 0 Then
+                                                For Each disabledAudiobus As SetupAPI.Device In disabledAudiobusList
+                                                    If disabledAudiobus IsNot Nothing Then
+                                                        SetupAPI.EnableDevice(disabledAudiobus, True)
+                                                    End If
+                                                Next
+                                            End If
+                                        End Try
+                                    End If
+
+                                    If Not oemRemoved Then
+                                        SetupAPI.RemoveInf(oem, False)
+                                    End If
+                                    Continue For
+                                End If
+                            End If
+
                             If config.SelectedType = CleanType.GPU AndAlso config.SelectedGPU = GPUVendor.Intel Then
                                 If StrContainsAny(oem.Class, True, "media") AndAlso StrContainsAny(oem.Catalog, True, "AcxDAC.cat") Then
                                     SetupAPI.RemoveInf(oem, False)
