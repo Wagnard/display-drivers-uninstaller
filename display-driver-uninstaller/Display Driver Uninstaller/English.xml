@@ -251,6 +251,24 @@
 		<lblQualcommspecific>
 			<Text>Qualcomm Specific Options</Text>
 		</lblQualcommspecific>
+		<tabGeneral>
+			<Text>General</Text>
+		</tabGeneral>
+		<tabNvidia>
+			<Text>NVIDIA</Text>
+		</tabNvidia>
+		<tabAmd>
+			<Text>AMD</Text>
+		</tabAmd>
+		<tabIntel>
+			<Text>Intel®</Text>
+		</tabIntel>
+		<tabQualcomm>
+			<Text>Qualcomm</Text>
+		</tabQualcomm>
+		<tabAdvanced>
+			<Text>Advanced</Text>
+		</tabAdvanced>
 		<lblAdvancedO>
 			<Text>Advanced Options (Change at your own risks)</Text>
 		</lblAdvancedO>

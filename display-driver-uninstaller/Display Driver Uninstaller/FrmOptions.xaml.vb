@@ -10,6 +10,21 @@
 			Languages.TranslateForm(Me)
 			Application.Settings.PreventWinUpdate = FrmMain.InfoDriverSearch
 			'AdjustWindow(Me)
+
+			'Open on the tab of the GPU selected in the main window.
+			Select Case Application.Settings.SelectedGPU
+				Case GPUVendor.Nvidia : tabOptions.SelectedIndex = 1
+				Case GPUVendor.AMD : tabOptions.SelectedIndex = 2
+				Case GPUVendor.Intel : tabOptions.SelectedIndex = 3
+				Case GPUVendor.Qualcomm : tabOptions.SelectedIndex = 4
+			End Select
+		End Sub
+
+		'Only the selected tab is in the visual tree, so TranslateForm misses the others : translate again
+		'once the new tab's content is laid out.
+		Private Sub TabOptions_SelectionChanged(sender As Object, e As SelectionChangedEventArgs) Handles tabOptions.SelectionChanged
+			If Not Me.IsLoaded Then Return
+			Dispatcher.BeginInvoke(Sub() Languages.TranslateForm(Me, False), Threading.DispatcherPriority.Loaded)
 		End Sub
 
 		Private Sub BtnClose_Click(sender As Object, e As RoutedEventArgs) Handles btnClose.Click
