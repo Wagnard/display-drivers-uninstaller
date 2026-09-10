@@ -8229,7 +8229,26 @@ child.ToLower.Equals("oneapp_igcc") Then
                 Deletesubregkey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\QCOM\MFTs\VideoEncoder", False)
                 Deletesubregkey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\QCOM\AdrenoControlPanel", False)
 
+                If config.RemoveQualcommCP Then
+                    'Snapdragon Control Panel (MSIX identity "AdrenoControlPanel"). It runs unvirtualized, so its
+                    'settings and data sit in the real HKCU and AppData of each user, outside the package.
+                    For Each users As String In Registry.Users.GetSubKeyNames()
+                        If String.IsNullOrWhiteSpace(users) Then Continue For
+                        Deletesubregkey(Registry.Users, users & "\Software\QCOM\AdrenoControlPanel", False)
+                    Next
+
+                    For Each filepaths As String In _fileIo.GetDirectories(config.Paths.UsersPath)
+                        If String.IsNullOrWhiteSpace(filepaths) Then Continue For
+                        Delete(filepaths + "\AppData\Local\AdrenoControlPanel")
+                        Delete(filepaths + "\AppData\Local\SnapdragonControlPanel")
+                    Next
+                End If
+
             End Sub)
+
+            If _win10 AndAlso config.RemoveQualcommCP Then
+                CleanupEngine.RemoveAppxAsync("AdrenoControlPanel").Wait()
+            End If
         End Sub
 
         Private Sub CleanQualcommCache(config As ThreadSettings)

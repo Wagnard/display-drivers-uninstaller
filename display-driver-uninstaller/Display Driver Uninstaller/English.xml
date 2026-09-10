@@ -248,6 +248,9 @@
 		<lblINTELspecific>
 			<Text>Intel® Specific Options</Text>
 		</lblINTELspecific>
+		<lblQualcommspecific>
+			<Text>Qualcomm Specific Options</Text>
+		</lblQualcommspecific>
 		<lblAdvancedO>
 			<Text>Advanced Options (Change at your own risks)</Text>
 		</lblAdvancedO>
@@ -326,6 +329,9 @@
 		<lblRemIntelNpu>
 			<Text>Remove Intel® NPU</Text>
 		</lblRemIntelNpu>
+		<lblRemQualcommCP>
+			<Text>Remove the Snapdragon Control Panel installed from the Microsoft Store</Text>
+		</lblRemQualcommCP>
 		<lblRemAMDCP>
 			<Text>(DCH driver) Remove the AMD Control Panel installed from the Microsoft Store</Text>
 		</lblRemAMDCP>
