@@ -165,8 +165,9 @@
                     <Label x:Name="tabQualcomm" Content="tabQualcomm" Padding="6,2" FlowDirection="{Binding FlowControl}"/>
                 </TabItem.Header>
                 <DockPanel Margin="12,10,12,6">
-                    <UniformGrid DockPanel.Dock="Top" Rows="1">
+                    <UniformGrid DockPanel.Dock="Top" Rows="2">
                         <CheckBox x:Name="lblRemQualcommCP" IsChecked="{Binding RemoveQualcommCP, Converter={StaticResource NulBoolToBool}}" Content="lblRemQualcommCP" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
+                        <CheckBox x:Name="lblRemQualcommExt" IsChecked="{Binding RemoveQualcommExt, Converter={StaticResource NulBoolToBool}}" Content="lblRemQualcommExt" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                     </UniformGrid>
                 </DockPanel>
             </TabItem>

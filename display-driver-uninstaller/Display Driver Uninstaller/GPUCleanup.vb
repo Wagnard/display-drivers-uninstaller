@@ -25,6 +25,7 @@ Namespace Display_Driver_Uninstaller
             Dim vendIdExpected As String = ""
             Dim vendidSC As String()
             Dim audioServices As String() = Nothing
+            Dim removeExtensions As Boolean = True
 
             Select Case config.SelectedGPU
                 Case GPUVendor.Nvidia
@@ -53,6 +54,9 @@ Namespace Display_Driver_Uninstaller
                     vendCompatibleID = "VEN_QCOM&CLS_0003"
                     vendidSC = {"VEN_QCOM"}
                     audioServices = IO.File.ReadAllLines(config.Paths.AppBase & "settings\QUALCOMM\servicesaudio.cfg")
+                    'The OEM extensions carry the platform files the base driver needs to start (Code 31 without them),
+                    'and the generic Qualcomm driver does not ship them.
+                    removeExtensions = config.RemoveQualcommExt
                 Case GPUVendor.None : vendIdExpected = "NONE"
                 Case GPUVendor.All : vendIdExpected = "ALL"
             End Select
@@ -626,10 +630,10 @@ Namespace Display_Driver_Uninstaller
 
                                 If GPU.ChildDevices IsNot Nothing AndAlso GPU.ChildDevices.Length > 0 Then
                                     Application.Log.AddMessage("SetupAPI: Removing childrens associated to the GPU(s)")
-                                    RemoveChiendrensFromDevices(GPU.ChildDevices, removedDevices)
+                                    RemoveChiendrensFromDevices(GPU.ChildDevices, removedDevices, removeExtensions)
                                     Application.Log.AddMessage("SetupAPI: Removal of the childrens associated to the GPU(s) completed.")
                                 End If
-                                SetupAPI.UninstallDevice(GPU) 'Then we remove the GPU itself.
+                                SetupAPI.UninstallDevice(GPU, removeExtensions) 'Then we remove the GPU itself.
 
                                 removedDevices.Add(GPU.ToString())
 
@@ -1160,7 +1164,7 @@ Namespace Display_Driver_Uninstaller
 "nvidiaInspector")
         End Sub
 
-        Private Sub RemoveChiendrensFromDevices(devices As SetupAPI.Device(), removedDevices As List(Of String))
+        Private Sub RemoveChiendrensFromDevices(devices As SetupAPI.Device(), removedDevices As List(Of String), Optional removeExtensions As Boolean = True)
             For Each device As SetupAPI.Device In devices
                 If device IsNot Nothing Then
                     If removedDevices.Contains(device.ToString()) Then
@@ -1169,10 +1173,10 @@ Namespace Display_Driver_Uninstaller
                     ' Check if the device has child devices
                     If device.ChildDevices IsNot Nothing AndAlso device.ChildDevices.Length > 0 Then
                         ' Recursively remove child devices
-                        RemoveChiendrensFromDevices(device.ChildDevices, removedDevices)
+                        RemoveChiendrensFromDevices(device.ChildDevices, removedDevices, removeExtensions)
                     End If
                     ' Uninstall the current device
-                    SetupAPI.UninstallDevice(device)
+                    SetupAPI.UninstallDevice(device, removeExtensions)
                     removedDevices.Add(device.ToString)
                 End If
             Next

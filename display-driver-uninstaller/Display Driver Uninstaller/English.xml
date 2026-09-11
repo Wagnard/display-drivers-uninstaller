@@ -350,6 +350,9 @@
 		<lblRemQualcommCP>
 			<Text>Remove the Snapdragon Control Panel installed from the Microsoft Store</Text>
 		</lblRemQualcommCP>
+		<lblRemQualcommExt>
+			<Text>Also remove the OEM driver extensions (only Windows Update or your PC maker's driver package can bring them back)</Text>
+		</lblRemQualcommExt>
 		<lblRemAMDCP>
 			<Text>(DCH driver) Remove the AMD Control Panel installed from the Microsoft Store</Text>
 		</lblRemAMDCP>
