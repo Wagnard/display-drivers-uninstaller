@@ -989,6 +989,9 @@ Namespace Display_Driver_Uninstaller
 					logEntry.Add(p.Name, If(p.GetValue(config, Nothing) IsNot Nothing, p.GetValue(config, Nothing).ToString(), "-"))
 				Next
 
+				'The real registry state, not the option : it decides whether Windows fetches a driver back at the next boot.
+				logEntry.Add("SearchOrderConfig (registry)", If(InfoDriverSearch(), "0 - Windows will not fetch drivers when a device is installed", "1 - Windows fetches drivers when a device is installed"))
+
 				Application.Log.Add(logEntry)
 				'End If
 
