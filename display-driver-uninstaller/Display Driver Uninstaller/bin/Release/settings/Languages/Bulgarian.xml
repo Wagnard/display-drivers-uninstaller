@@ -250,6 +250,27 @@
 		<lblINTELspecific>
 			<Text>Специфични опции за Intel®</Text>
 		</lblINTELspecific>
+		<lblQualcommspecific>
+			<Text>Специфични опции за Qualcomm</Text>
+		</lblQualcommspecific>
+		<tabGeneral>
+			<Text>Общи</Text>
+		</tabGeneral>
+		<tabNvidia>
+			<Text>NVIDIA</Text>
+		</tabNvidia>
+		<tabAmd>
+			<Text>AMD</Text>
+		</tabAmd>
+		<tabIntel>
+			<Text>Intel®</Text>
+		</tabIntel>
+		<tabQualcomm>
+			<Text>Qualcomm</Text>
+		</tabQualcomm>
+		<tabAdvanced>
+			<Text>Разширени</Text>
+		</tabAdvanced>
 		<lblAdvancedO>
 			<Text>Опции за напреднали потребители (променяте ги на свой риск)</Text>
 		</lblAdvancedO>
@@ -328,6 +349,12 @@
 		<lblRemIntelNpu>
 			<Text>Премахни Intel® NPU</Text>
 		</lblRemIntelNpu>
+		<lblRemQualcommCP>
+			<Text>Премахни контролния панел Snapdragon, който се инсталира от Microsoft Store</Text>
+		</lblRemQualcommCP>
+		<lblRemQualcommExt>
+			<Text>Премахни и OEM разширенията на драйвера (само Windows Update или пакетът с драйвери на производителя на компютъра могат да ги върнат)</Text>
+		</lblRemQualcommExt>
 		<lblRemAMDCP>
 			<Text>(DCH драйвър) Премахни контролния панел на AMD, който се инсталира от Microsoft Store</Text>
 		</lblRemAMDCP>

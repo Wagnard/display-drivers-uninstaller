@@ -256,6 +256,27 @@
 		<lblINTELspecific>
 			<Text>Intel® specifikus beállítások</Text>
 		</lblINTELspecific>
+		<lblQualcommspecific>
+			<Text>Qualcomm specifikus beállítások</Text>
+		</lblQualcommspecific>
+		<tabGeneral>
+			<Text>Általános</Text>
+		</tabGeneral>
+		<tabNvidia>
+			<Text>NVIDIA</Text>
+		</tabNvidia>
+		<tabAmd>
+			<Text>AMD</Text>
+		</tabAmd>
+		<tabIntel>
+			<Text>Intel®</Text>
+		</tabIntel>
+		<tabQualcomm>
+			<Text>Qualcomm</Text>
+		</tabQualcomm>
+		<tabAdvanced>
+			<Text>Haladó</Text>
+		</tabAdvanced>
 		<lblAdvancedO>
 			<Text>További beállítások (csak saját felelősségre változtasd meg)</Text>
 		</lblAdvancedO>
@@ -334,6 +355,12 @@
 		<lblRemIntelNpu>
 			<Text>Intel® NPU eltávolítása</Text>
 		</lblRemIntelNpu>
+		<lblRemQualcommCP>
+			<Text>A Microsoft Store-ból telepített Snapdragon Vezérlőpult eltávolítása</Text>
+		</lblRemQualcommCP>
+		<lblRemQualcommExt>
+			<Text>Az OEM illesztőprogram-kiterjesztések eltávolítása is (csak a Windows Update vagy a gép gyártójának illesztőprogram-csomagja tudja visszaállítani őket)</Text>
+		</lblRemQualcommExt>
 		<lblRemAMDCP>
 			<Text>(DCH illesztőprogram) A Microsoft Store-ból telepített AMD Vezérlőpult eltávolítása</Text>
 		</lblRemAMDCP>

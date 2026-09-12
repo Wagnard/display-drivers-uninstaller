@@ -219,6 +219,27 @@
     <lblINTELspecific>
       <Text>Opções especificas da Intel®</Text>
     </lblINTELspecific>
+		<lblQualcommspecific>
+			<Text>Opções especificas da Qualcomm</Text>
+		</lblQualcommspecific>
+		<tabGeneral>
+			<Text>Geral</Text>
+		</tabGeneral>
+		<tabNvidia>
+			<Text>NVIDIA</Text>
+		</tabNvidia>
+		<tabAmd>
+			<Text>AMD</Text>
+		</tabAmd>
+		<tabIntel>
+			<Text>Intel®</Text>
+		</tabIntel>
+		<tabQualcomm>
+			<Text>Qualcomm</Text>
+		</tabQualcomm>
+		<tabAdvanced>
+			<Text>Avançado</Text>
+		</tabAdvanced>
     <lblAdvancedO>
       <Text>Opções avançadas (Alterações por sua conta e risco)</Text>
     </lblAdvancedO>
@@ -295,6 +316,12 @@ Esta opção não foi desenvolvida para corrigir problemas e pode não corrigir 
     <lblRemIntelNpu>
       <Text>Remover Intel® NPU</Text>
     </lblRemIntelNpu>
+		<lblRemQualcommCP>
+			<Text>Remover o Snapdragon Control Panel instalado da Microsoft Store</Text>
+		</lblRemQualcommCP>
+		<lblRemQualcommExt>
+			<Text>Remover também as extensões OEM do driver (somente o Windows Update ou o pacote de drivers do fabricante do PC podem restaurá-las)</Text>
+		</lblRemQualcommExt>
     <lblRemAMDCP>
       <Text>(DCH driver) Remover o AMD Control Panel instalado da Microsoft Store</Text>
     </lblRemAMDCP>

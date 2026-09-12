@@ -248,6 +248,27 @@
 		<lblINTELspecific>
 			<Text>Intel 特定设置</Text>
 		</lblINTELspecific>
+		<lblQualcommspecific>
+			<Text>Qualcomm 特定设置</Text>
+		</lblQualcommspecific>
+		<tabGeneral>
+			<Text>常规</Text>
+		</tabGeneral>
+		<tabNvidia>
+			<Text>NVIDIA</Text>
+		</tabNvidia>
+		<tabAmd>
+			<Text>AMD</Text>
+		</tabAmd>
+		<tabIntel>
+			<Text>Intel®</Text>
+		</tabIntel>
+		<tabQualcomm>
+			<Text>Qualcomm</Text>
+		</tabQualcomm>
+		<tabAdvanced>
+			<Text>高级</Text>
+		</tabAdvanced>
 		<lblAdvancedO>
 			<Text>高级设置 (更改后果自负)</Text>
 		</lblAdvancedO>
@@ -316,6 +337,12 @@
 		<lblRemIntelNpu>
 			<Text>移除 Intel® NPU</Text>
 		</lblRemIntelNpu>
+		<lblRemQualcommCP>
+			<Text>移除通过 Microsoft Store 安装的 Snapdragon 控制面板</Text>
+		</lblRemQualcommCP>
+		<lblRemQualcommExt>
+			<Text>同时移除 OEM 驱动程序扩展 (只有 Windows Update 或电脑制造商的驱动程序包才能将其恢复)</Text>
+		</lblRemQualcommExt>
 		<lblRemAMDCP>
 			<Text>(仅适用于 DCH 驱动程序) 卸载从 Microsoft Store 安装的 AMD Radeon Settings</Text>
 		</lblRemAMDCP>

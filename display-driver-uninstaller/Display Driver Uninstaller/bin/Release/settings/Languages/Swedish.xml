@@ -256,6 +256,27 @@
 		<lblINTELspecific>
 			<Text>INTEL Specifika alternativ</Text>
 		</lblINTELspecific>
+		<lblQualcommspecific>
+			<Text>Qualcomm Specifika alternativ</Text>
+		</lblQualcommspecific>
+		<tabGeneral>
+			<Text>Allmänt</Text>
+		</tabGeneral>
+		<tabNvidia>
+			<Text>NVIDIA</Text>
+		</tabNvidia>
+		<tabAmd>
+			<Text>AMD</Text>
+		</tabAmd>
+		<tabIntel>
+			<Text>Intel®</Text>
+		</tabIntel>
+		<tabQualcomm>
+			<Text>Qualcomm</Text>
+		</tabQualcomm>
+		<tabAdvanced>
+			<Text>Avancerat</Text>
+		</tabAdvanced>
 		<lblAdvancedO>
 			<Text>Avancerade alternativ (Ändra på egen risk)</Text>
 		</lblAdvancedO>
@@ -334,6 +355,12 @@
 		<lblRemIntelNpu>
 			<Text>Ta bort Intel® NPU</Text>
 		</lblRemIntelNpu>
+		<lblRemQualcommCP>
+			<Text>Ta bort Snapdragon Kontrollpanel installerad från Microsoft Store</Text>
+		</lblRemQualcommCP>
+		<lblRemQualcommExt>
+			<Text>Ta även bort OEM-drivrutinstilläggen (endast Windows Update eller datortillverkarens drivrutinspaket kan återställa dem)</Text>
+		</lblRemQualcommExt>
 		<lblRemAMDCP>
 			<Text>(DCH-drivrutin) Ta bort AMD Kontrollpanel installerad från Microsoft Store</Text>
 		</lblRemAMDCP>

@@ -257,6 +257,27 @@
 		<lblINTELspecific>
 			<Text>Intel® 固有のオプション</Text>
 		</lblINTELspecific>
+		<lblQualcommspecific>
+			<Text>Qualcomm 固有のオプション</Text>
+		</lblQualcommspecific>
+		<tabGeneral>
+			<Text>全般</Text>
+		</tabGeneral>
+		<tabNvidia>
+			<Text>NVIDIA</Text>
+		</tabNvidia>
+		<tabAmd>
+			<Text>AMD</Text>
+		</tabAmd>
+		<tabIntel>
+			<Text>Intel®</Text>
+		</tabIntel>
+		<tabQualcomm>
+			<Text>Qualcomm</Text>
+		</tabQualcomm>
+		<tabAdvanced>
+			<Text>詳細</Text>
+		</tabAdvanced>
 		<lblAdvancedO>
 			<Text>高度なオプション (変更は自己責任です)</Text>
 		</lblAdvancedO>
@@ -335,6 +356,12 @@
 		<lblRemIntelNpu>
 			<Text>Intel® NPU を削除する</Text>
 		</lblRemIntelNpu>
+		<lblRemQualcommCP>
+			<Text>Microsoft Store からインストールされた Snapdragon コントロールパネルを削除する</Text>
+		</lblRemQualcommCP>
+		<lblRemQualcommExt>
+			<Text>OEM ドライバー拡張機能も削除する (Windows Update または PC メーカーのドライバーパッケージでしか元に戻せません)</Text>
+		</lblRemQualcommExt>
 		<lblRemAMDCP>
 			<Text>(DCH ドライバー) Microsoft Store からインストールされた AMD コントロールパネルを削除する</Text>
 		</lblRemAMDCP>

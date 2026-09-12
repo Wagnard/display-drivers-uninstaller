@@ -258,6 +258,27 @@
 		<lblINTELspecific>
 			<Text>INTEL 專用選項</Text>
 		</lblINTELspecific>
+		<lblQualcommspecific>
+			<Text>Qualcomm 專用選項</Text>
+		</lblQualcommspecific>
+		<tabGeneral>
+			<Text>一般</Text>
+		</tabGeneral>
+		<tabNvidia>
+			<Text>NVIDIA</Text>
+		</tabNvidia>
+		<tabAmd>
+			<Text>AMD</Text>
+		</tabAmd>
+		<tabIntel>
+			<Text>Intel®</Text>
+		</tabIntel>
+		<tabQualcomm>
+			<Text>Qualcomm</Text>
+		</tabQualcomm>
+		<tabAdvanced>
+			<Text>進階</Text>
+		</tabAdvanced>
 		<lblAdvancedO>
 			<Text>進階選項（請自行承擔修改所帶來的後果）</Text>
 		</lblAdvancedO>
@@ -339,6 +360,12 @@
 		<lblRemIntelNpu>
 			<Text>移除 Intel® NPU</Text>
 		</lblRemIntelNpu>
+		<lblRemQualcommCP>
+			<Text>移除透過 Microsoft Store 安裝的 Snapdragon 控制台</Text>
+		</lblRemQualcommCP>
+		<lblRemQualcommExt>
+			<Text>同時移除 OEM 驅動程式延伸模組 (只有 Windows Update 或電腦製造商的驅動程式套件才能將其還原)</Text>
+		</lblRemQualcommExt>
 		<lblRemAMDCP>
 			<Text>(DCH 驅動程式) 移除從 Microsoft Store 安裝的 AMD 控制台</Text>
 		</lblRemAMDCP>

@@ -257,6 +257,27 @@
 		<lblINTELspecific>
 			<Text>Intel®'e Özel Seçenekler</Text>
 		</lblINTELspecific>
+		<lblQualcommspecific>
+			<Text>Qualcomm'a Özel Seçenekler</Text>
+		</lblQualcommspecific>
+		<tabGeneral>
+			<Text>Genel</Text>
+		</tabGeneral>
+		<tabNvidia>
+			<Text>NVIDIA</Text>
+		</tabNvidia>
+		<tabAmd>
+			<Text>AMD</Text>
+		</tabAmd>
+		<tabIntel>
+			<Text>Intel®</Text>
+		</tabIntel>
+		<tabQualcomm>
+			<Text>Qualcomm</Text>
+		</tabQualcomm>
+		<tabAdvanced>
+			<Text>Gelişmiş</Text>
+		</tabAdvanced>
 		<lblAdvancedO>
 			<Text>Gelişmiş Seçenekler (Kendi sorumluluğunuzda değiştirin)</Text>
 		</lblAdvancedO>
@@ -335,6 +356,12 @@
 		<lblRemIntelNpu>
 			<Text>Intel® NPU'yu kaldır</Text>
 		</lblRemIntelNpu>
+		<lblRemQualcommCP>
+			<Text>Microsoft Mağazası'ndan yüklenen Snapdragon Denetim Masası'nı kaldır</Text>
+		</lblRemQualcommCP>
+		<lblRemQualcommExt>
+			<Text>OEM sürücü uzantılarını da kaldır (bunları yalnızca Windows Update veya bilgisayar üreticisinin sürücü paketi geri getirebilir)</Text>
+		</lblRemQualcommExt>
 		<lblRemAMDCP>
 			<Text>(DCH sürücü) Microsoft Mağazası'ndan yüklenen AMD Denetim Masası'nı kaldır</Text>
 		</lblRemAMDCP>

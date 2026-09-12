@@ -248,6 +248,27 @@
 		<lblINTELspecific>
 			<Text>INTEL 관련 옵션</Text>
 		</lblINTELspecific>
+		<lblQualcommspecific>
+			<Text>Qualcomm 관련 옵션</Text>
+		</lblQualcommspecific>
+		<tabGeneral>
+			<Text>일반</Text>
+		</tabGeneral>
+		<tabNvidia>
+			<Text>NVIDIA</Text>
+		</tabNvidia>
+		<tabAmd>
+			<Text>AMD</Text>
+		</tabAmd>
+		<tabIntel>
+			<Text>Intel®</Text>
+		</tabIntel>
+		<tabQualcomm>
+			<Text>Qualcomm</Text>
+		</tabQualcomm>
+		<tabAdvanced>
+			<Text>고급</Text>
+		</tabAdvanced>
 		<lblAdvancedO>
 			<Text>고급 옵션 (사용자 부담으로 변경)</Text>
 		</lblAdvancedO>
@@ -326,6 +347,12 @@
 		<lblRemIntelNpu>
 			<Text>Intel® NPU 제거</Text>
 		</lblRemIntelNpu>
+		<lblRemQualcommCP>
+			<Text>Microsoft Store에서 설치된 Snapdragon 제어판 제거</Text>
+		</lblRemQualcommCP>
+		<lblRemQualcommExt>
+			<Text>OEM 드라이버 확장도 제거 (Windows Update 또는 PC 제조사의 드라이버 패키지로만 복원할 수 있습니다)</Text>
+		</lblRemQualcommExt>
 		<lblRemAMDCP>
 			<Text>(DCH 드라이버) Microsoft Store에서 설치된 AMD 제어판 제거</Text>
 		</lblRemAMDCP>

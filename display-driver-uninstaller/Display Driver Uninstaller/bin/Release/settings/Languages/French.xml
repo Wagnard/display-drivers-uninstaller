@@ -256,6 +256,27 @@
 		<lblINTELspecific>
 			<Text>Options spécifiques à Intel®</Text>
 		</lblINTELspecific>
+		<lblQualcommspecific>
+			<Text>Options spécifiques à Qualcomm</Text>
+		</lblQualcommspecific>
+		<tabGeneral>
+			<Text>Général</Text>
+		</tabGeneral>
+		<tabNvidia>
+			<Text>NVIDIA</Text>
+		</tabNvidia>
+		<tabAmd>
+			<Text>AMD</Text>
+		</tabAmd>
+		<tabIntel>
+			<Text>Intel®</Text>
+		</tabIntel>
+		<tabQualcomm>
+			<Text>Qualcomm</Text>
+		</tabQualcomm>
+		<tabAdvanced>
+			<Text>Avancé</Text>
+		</tabAdvanced>
 		<lblAdvancedO>
 			<Text>Options avancées (changez à vos propres risques)</Text>
 		</lblAdvancedO>
@@ -334,6 +355,12 @@
 				<lblRemIntelNpu>
 			<Text>Supprimer Intel® NPU</Text>
 		</lblRemIntelNpu>
+		<lblRemQualcommCP>
+			<Text>Supprimer le Snapdragon Control Panel installé depuis le Microsoft Store</Text>
+		</lblRemQualcommCP>
+		<lblRemQualcommExt>
+			<Text>Supprimer aussi les extensions OEM du pilote (seuls Windows Update ou le pilote du fabricant du PC peuvent les remettre)</Text>
+		</lblRemQualcommExt>
 		<lblRemAMDCP>
 			<Text>Supprimer AMD (Pilote DCH) du Panneau de Configuration du Microsoft Store</Text>
 		</lblRemAMDCP>

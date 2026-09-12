@@ -256,6 +256,27 @@
 		<lblINTELspecific>
 			<Text>Параметры драйверов Intel®</Text>
 		</lblINTELspecific>
+		<lblQualcommspecific>
+			<Text>Параметры драйверов Qualcomm</Text>
+		</lblQualcommspecific>
+		<tabGeneral>
+			<Text>Общие</Text>
+		</tabGeneral>
+		<tabNvidia>
+			<Text>NVIDIA</Text>
+		</tabNvidia>
+		<tabAmd>
+			<Text>AMD</Text>
+		</tabAmd>
+		<tabIntel>
+			<Text>Intel®</Text>
+		</tabIntel>
+		<tabQualcomm>
+			<Text>Qualcomm</Text>
+		</tabQualcomm>
+		<tabAdvanced>
+			<Text>Дополнительно</Text>
+		</tabAdvanced>
 		<lblAdvancedO>
 			<Text>Дополнительные параметры (изменение - на ваш страх и риск)</Text>
 		</lblAdvancedO>
@@ -334,6 +355,12 @@
 		<lblRemIntelNpu>
 			<Text>Удалить Intel® NPU</Text>
 		</lblRemIntelNpu>
+		<lblRemQualcommCP>
+			<Text>Удалить Панель управления Snapdragon, установленную из Microsoft Store</Text>
+		</lblRemQualcommCP>
+		<lblRemQualcommExt>
+			<Text>Также удалить OEM-расширения драйвера (вернуть их могут только Windows Update или пакет драйверов производителя ПК)</Text>
+		</lblRemQualcommExt>
 		<lblRemAMDCP>
 			<Text>(DCH-драйвер) Удалить Панель управления AMD, установленную из Microsoft Store</Text>
 		</lblRemAMDCP>
