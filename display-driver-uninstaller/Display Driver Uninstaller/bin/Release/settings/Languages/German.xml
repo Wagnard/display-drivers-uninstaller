@@ -347,12 +347,21 @@
 		<lblRemIntelNpu>
 			<Text>Intel® NPU entfernen</Text>
 		</lblRemIntelNpu>
+		<lblRemIntelExt>
+			<Text>Die Treibererweiterungen des PC-Herstellers auf der GPU entfernen (gründlichere Bereinigung) *</Text>
+		</lblRemIntelExt>
+		<lblRemIntelExtNote>
+			<Text>* Bei Laptops riskanter. Nur wenn Sie wissen, wie man sie wiederherstellt: ohne sie können Funktionen fehlen oder die GPU startet nicht (Code 31)</Text>
+		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
 			<Text>Entfernen des aus dem Microsoft Store installierten Snapdragon Control Panel</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
-			<Text>Auch die OEM-Treibererweiterungen entfernen (nur Windows Update oder das Treiberpaket des PC-Herstellers können sie wiederherstellen)</Text>
+			<Text>Die OEM-Treibererweiterungen auf der GPU entfernen (gründlichere Bereinigung) *</Text>
 		</lblRemQualcommExt>
+		<lblRemQualcommExtNote>
+			<Text>* Nur wenn Sie wissen, wie man sie wiederherstellt: ohne sie können Funktionen fehlen oder die GPU startet nicht (Code 31)</Text>
+		</lblRemQualcommExtNote>
 		<lblRemAMDCP>
 			<Text>(DCH Driver) Entfernen des aus dem Microsoft Store installierten AMD Control Panel</Text>
 		</lblRemAMDCP>

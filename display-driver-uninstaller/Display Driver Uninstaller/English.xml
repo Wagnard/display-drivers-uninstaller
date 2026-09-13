@@ -347,12 +347,21 @@
 		<lblRemIntelNpu>
 			<Text>Remove Intel® NPU</Text>
 		</lblRemIntelNpu>
+		<lblRemIntelExt>
+			<Text>Remove the PC maker's driver extensions installed on the GPU (more thorough cleanup) *</Text>
+		</lblRemIntelExt>
+		<lblRemIntelExtNote>
+			<Text>* Riskier on laptops. Only if you know how to put them back: without them, features can be missing or the GPU may not start (Code 31)</Text>
+		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
 			<Text>Remove the Snapdragon Control Panel installed from the Microsoft Store</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
-			<Text>Also remove the OEM driver extensions (only Windows Update or your PC maker's driver package can bring them back)</Text>
+			<Text>Remove the OEM driver extensions installed on the GPU (more thorough cleanup) *</Text>
 		</lblRemQualcommExt>
+		<lblRemQualcommExtNote>
+			<Text>* Only if you know how to put them back: without them, features can be missing or the GPU may not start (Code 31)</Text>
+		</lblRemQualcommExtNote>
 		<lblRemAMDCP>
 			<Text>(DCH driver) Remove the AMD Control Panel installed from the Microsoft Store</Text>
 		</lblRemAMDCP>

@@ -124,6 +124,7 @@ Namespace Display_Driver_Uninstaller
 		Private ReadOnly m_remEnduranceGaming As DependencyProperty = RegDP("RemoveEnduranceGaming", GetType(Boolean), GetType(AppSettings), True)
 		Private ReadOnly m_remQualcommCP As DependencyProperty = RegDP("RemoveQualcommCP", GetType(Boolean), GetType(AppSettings), True)
 		Private ReadOnly m_remQualcommExt As DependencyProperty = RegDP("RemoveQualcommExt", GetType(Boolean), GetType(AppSettings), False)
+		Private ReadOnly m_remIntelExt As DependencyProperty = RegDP("RemoveIntelExt", GetType(Boolean), GetType(AppSettings), False)
 		Private ReadOnly m_remIntelNpu As DependencyProperty = RegDP("RemoveIntelNpu", GetType(Boolean), GetType(AppSettings), False)
 		Private ReadOnly m_remAMDCP As DependencyProperty = RegDP("RemoveAMDCP", GetType(Boolean), GetType(AppSettings), True)
 		Private ReadOnly m_removevulkan As DependencyProperty = RegDP("RemoveVulkan", GetType(Boolean), GetType(AppSettings), True)
@@ -487,6 +488,15 @@ Namespace Display_Driver_Uninstaller
 			End Set
 		End Property
 
+		Public Property RemoveIntelExt As Boolean
+			Get
+				Return CBool(GetValue(m_remIntelExt))
+			End Get
+			Set(value As Boolean)
+				SetValue(m_remIntelExt, value)
+			End Set
+		End Property
+
 		Public Property RemoveAMDCP As Boolean
 			Get
 				Return CBool(GetValue(m_remAMDCP))
@@ -780,6 +790,7 @@ Namespace Display_Driver_Uninstaller
 			ClearValue(m_remOneAPI)
 			ClearValue(m_remEnduranceGaming)
 			ClearValue(m_remIntelNpu)
+			ClearValue(m_remIntelExt)
 
 			' Qualcomm
 			ClearValue(m_remQualcommCP)
@@ -848,6 +859,7 @@ Namespace Display_Driver_Uninstaller
 							.WriteElementString("RemoveOneAPI", RemoveOneAPI.ToString())
 							.WriteElementString("RemoveEnduranceGaming", RemoveEnduranceGaming.ToString())
 							.WriteElementString("RemoveIntelNpu", RemoveIntelNpu.ToString())
+							.WriteElementString("RemoveIntelExt", RemoveIntelExt.ToString())
 							.WriteElementString("RemoveAMDCP", RemoveAMDCP.ToString())
 							.WriteElementString("UseRoamingConfig", UseRoamingConfig.ToString())
 							.WriteElementString("CheckUpdates", CheckUpdates.ToString())
@@ -1022,6 +1034,9 @@ Namespace Display_Driver_Uninstaller
 
 								Case "removeintelnpu"
 									RemoveIntelNpu = Boolean.Parse(KvP.Value)
+
+								Case "removeintelext"
+									RemoveIntelExt = Boolean.Parse(KvP.Value)
 
 								Case "removeoneapi"
 									RemoveOneAPI = Boolean.Parse(KvP.Value)

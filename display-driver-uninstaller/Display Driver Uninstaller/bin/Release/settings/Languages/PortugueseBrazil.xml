@@ -316,12 +316,21 @@ Esta opção não foi desenvolvida para corrigir problemas e pode não corrigir 
     <lblRemIntelNpu>
       <Text>Remover Intel® NPU</Text>
     </lblRemIntelNpu>
+		<lblRemIntelExt>
+			<Text>Remover as extensões do driver do fabricante do PC instaladas na GPU (limpeza mais completa) *</Text>
+		</lblRemIntelExt>
+		<lblRemIntelExtNote>
+			<Text>* Mais arriscado em notebooks. Somente se souber reinstalá-las: sem elas podem faltar recursos ou a GPU pode não iniciar (Código 31)</Text>
+		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
 			<Text>Remover o Snapdragon Control Panel instalado da Microsoft Store</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
-			<Text>Remover também as extensões OEM do driver (somente o Windows Update ou o pacote de drivers do fabricante do PC podem restaurá-las)</Text>
+			<Text>Remover as extensões OEM do driver instaladas na GPU (limpeza mais completa) *</Text>
 		</lblRemQualcommExt>
+		<lblRemQualcommExtNote>
+			<Text>* Somente se souber reinstalá-las: sem elas podem faltar recursos ou a GPU pode não iniciar (Código 31)</Text>
+		</lblRemQualcommExtNote>
     <lblRemAMDCP>
       <Text>(DCH driver) Remover o AMD Control Panel instalado da Microsoft Store</Text>
     </lblRemAMDCP>

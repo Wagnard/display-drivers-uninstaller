@@ -360,12 +360,21 @@
 		<lblRemIntelNpu>
 			<Text>移除 Intel® NPU</Text>
 		</lblRemIntelNpu>
+		<lblRemIntelExt>
+			<Text>移除安裝在 GPU 上的電腦製造商驅動程式延伸模組 (更徹底的清理) *</Text>
+		</lblRemIntelExt>
+		<lblRemIntelExtNote>
+			<Text>* 筆記型電腦上風險較高。僅限知道如何重新安裝的使用者: 缺少延伸模組可能導致功能缺失或 GPU 無法啟動 (代碼 31)</Text>
+		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
 			<Text>移除透過 Microsoft Store 安裝的 Snapdragon 控制台</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
-			<Text>同時移除 OEM 驅動程式延伸模組 (只有 Windows Update 或電腦製造商的驅動程式套件才能將其還原)</Text>
+			<Text>移除安裝在 GPU 上的 OEM 驅動程式延伸模組 (更徹底的清理) *</Text>
 		</lblRemQualcommExt>
+		<lblRemQualcommExtNote>
+			<Text>* 僅限知道如何重新安裝的使用者: 缺少延伸模組可能導致功能缺失或 GPU 無法啟動 (代碼 31)</Text>
+		</lblRemQualcommExtNote>
 		<lblRemAMDCP>
 			<Text>(DCH 驅動程式) 移除從 Microsoft Store 安裝的 AMD 控制台</Text>
 		</lblRemAMDCP>

@@ -43,6 +43,8 @@ Namespace Display_Driver_Uninstaller
                     vendCompatibleID = "VEN_8086&CC_03"
                     vendidSC = {"VEN8086_MSDK", "VEN8086_GFXUI"}
                     audioServices = IO.File.ReadAllLines(config.Paths.AppBase & "settings\INTEL\servicesaudio.cfg")
+                    'The OEM extensions (panel, power tuning) only come back through Windows Update or the OEM package.
+                    removeExtensions = config.RemoveIntelExt
                 Case GPUVendor.Lisuan
                     vendIdExpected = "VEN_4C54"
                     vendCompatibleID = "VEN_4C54&CC_03"

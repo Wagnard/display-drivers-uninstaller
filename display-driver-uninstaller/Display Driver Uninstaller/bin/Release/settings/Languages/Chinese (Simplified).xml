@@ -337,12 +337,21 @@
 		<lblRemIntelNpu>
 			<Text>移除 Intel® NPU</Text>
 		</lblRemIntelNpu>
+		<lblRemIntelExt>
+			<Text>移除安装在 GPU 上的电脑制造商驱动程序扩展 (更彻底的清理) *</Text>
+		</lblRemIntelExt>
+		<lblRemIntelExtNote>
+			<Text>* 笔记本电脑上风险更高。仅当您知道如何重新安装它们时: 缺少扩展可能导致功能缺失或 GPU 无法启动 (代码 31)</Text>
+		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
 			<Text>移除通过 Microsoft Store 安装的 Snapdragon 控制面板</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
-			<Text>同时移除 OEM 驱动程序扩展 (只有 Windows Update 或电脑制造商的驱动程序包才能将其恢复)</Text>
+			<Text>移除安装在 GPU 上的 OEM 驱动程序扩展 (更彻底的清理) *</Text>
 		</lblRemQualcommExt>
+		<lblRemQualcommExtNote>
+			<Text>* 仅当您知道如何重新安装它们时: 缺少扩展可能导致功能缺失或 GPU 无法启动 (代码 31)</Text>
+		</lblRemQualcommExtNote>
 		<lblRemAMDCP>
 			<Text>(仅适用于 DCH 驱动程序) 卸载从 Microsoft Store 安装的 AMD Radeon Settings</Text>
 		</lblRemAMDCP>

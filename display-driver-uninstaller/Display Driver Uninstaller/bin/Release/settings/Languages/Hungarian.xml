@@ -355,12 +355,21 @@
 		<lblRemIntelNpu>
 			<Text>Intel® NPU eltávolítása</Text>
 		</lblRemIntelNpu>
+		<lblRemIntelExt>
+			<Text>A gép gyártójának a GPU-ra telepített illesztőprogram-kiterjesztéseinek eltávolítása (alaposabb tisztítás) *</Text>
+		</lblRemIntelExt>
+		<lblRemIntelExtNote>
+			<Text>* Laptopon kockázatosabb. Csak ha tudja, hogyan kell visszatenni őket: nélkülük funkciók hiányozhatnak, vagy a GPU nem indul el (31-es kód)</Text>
+		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
 			<Text>A Microsoft Store-ból telepített Snapdragon Vezérlőpult eltávolítása</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
-			<Text>Az OEM illesztőprogram-kiterjesztések eltávolítása is (csak a Windows Update vagy a gép gyártójának illesztőprogram-csomagja tudja visszaállítani őket)</Text>
+			<Text>A GPU-ra telepített OEM illesztőprogram-kiterjesztések eltávolítása (alaposabb tisztítás) *</Text>
 		</lblRemQualcommExt>
+		<lblRemQualcommExtNote>
+			<Text>* Csak ha tudja, hogyan kell visszatenni őket: nélkülük funkciók hiányozhatnak, vagy a GPU nem indul el (31-es kód)</Text>
+		</lblRemQualcommExtNote>
 		<lblRemAMDCP>
 			<Text>(DCH illesztőprogram) A Microsoft Store-ból telepített AMD Vezérlőpult eltávolítása</Text>
 		</lblRemAMDCP>

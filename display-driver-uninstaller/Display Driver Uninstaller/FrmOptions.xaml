@@ -102,7 +102,7 @@
                     <Label x:Name="tabGeneral" Content="tabGeneral" Padding="6,2" FlowDirection="{Binding FlowControl}"/>
                 </TabItem.Header>
                 <DockPanel Margin="12,10,12,6">
-                    <UniformGrid DockPanel.Dock="Top" Rows="9">
+                    <StackPanel DockPanel.Dock="Top">
                         <CheckBox x:Name="lblRemMonitors" IsChecked="{Binding RemoveMonitors, Converter={StaticResource NulBoolToBool}}" Content="lblRemMonitors" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblSaveLogs" IsChecked="{Binding SaveLogs, Converter={StaticResource NulBoolToBool}}" Content="lblSaveLogs" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblCreateRestorePoint" IsChecked="{Binding CreateRestorePoint, Converter={StaticResource NulBoolToBool}}" Content="lblCreateRestorePoint" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
@@ -112,7 +112,7 @@
                         <CheckBox x:Name="lblOffer" IsChecked="{Binding ShowOffer, Converter={StaticResource NulBoolToBool}}" Content="lblOffer" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRememberLastChoice" IsChecked="{Binding RememberLastChoice, Converter={StaticResource NulBoolToBool}}" Content="lblRememberLastChoice" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblUseDarkTheme" IsChecked="{Binding UseDarkTheme, Converter={StaticResource NulBoolToBool}}" Content="lblUseDarkTheme" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
-                    </UniformGrid>
+                    </StackPanel>
                 </DockPanel>
             </TabItem>
             <TabItem>
@@ -120,7 +120,7 @@
                     <Label x:Name="tabNvidia" Content="tabNvidia" Padding="6,2" FlowDirection="{Binding FlowControl}"/>
                 </TabItem.Header>
                 <DockPanel Margin="12,10,12,6">
-                    <UniformGrid DockPanel.Dock="Top" Rows="8">
+                    <StackPanel DockPanel.Dock="Top">
                         <CheckBox x:Name="lblRemNvidiaDirs" IsChecked="{Binding RemoveNvidiaDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemNvidiaDirs" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemPhysX" IsChecked="{Binding RemovePhysX, Converter={StaticResource NulBoolToBool}}" Content="lblRemPhysX" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRem3DtvPlay" IsChecked="{Binding Remove3DTVPlay, Converter={StaticResource NulBoolToBool}}" Content="lblRem3DtvPlay" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
@@ -129,7 +129,7 @@
                         <CheckBox x:Name="lblRemNVCP" IsChecked="{Binding RemoveNVCP, Converter={StaticResource NulBoolToBool}}" Content="lblRemNVCP" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemoveNvidiaCache" IsChecked="{Binding RemoveNvidiaCache, Converter={StaticResource NulBoolToBool}}" Content="lblRemoveNvidiaCache" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblKeepNVCPopt" IsChecked="{Binding KeepNVCPopt, Converter={StaticResource NulBoolToBool}}" Content="lblKeepNVCPopt" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
-                    </UniformGrid>
+                    </StackPanel>
                 </DockPanel>
             </TabItem>
             <TabItem>
@@ -137,13 +137,13 @@
                     <Label x:Name="tabAmd" Content="tabAmd" Padding="6,2" FlowDirection="{Binding FlowControl}"/>
                 </TabItem.Header>
                 <DockPanel Margin="12,10,12,6">
-                    <UniformGrid DockPanel.Dock="Top" Rows="5">
+                    <StackPanel DockPanel.Dock="Top">
                         <CheckBox x:Name="lblRemAMDDirs" IsChecked="{Binding RemoveAMDDirs, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDDirs" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemAMDKMPFD" IsChecked="{Binding RemoveAMDKMPFD, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDKMPFD" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemAMDAudioBus" IsChecked="{Binding RemoveAudioBus, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDAudioBus" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemCrimsonCache" IsChecked="{Binding RemoveCrimsonCache, Converter={StaticResource NulBoolToBool}}" Content="lblRemCrimsonCache" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemAMDCP" IsChecked="{Binding RemoveAMDCP, Converter={StaticResource NulBoolToBool}}" Content="lblRemAMDCP" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
-                    </UniformGrid>
+                    </StackPanel>
                 </DockPanel>
             </TabItem>
             <TabItem>
@@ -151,13 +151,15 @@
                     <Label x:Name="tabIntel" Content="tabIntel" Padding="6,2" FlowDirection="{Binding FlowControl}"/>
                 </TabItem.Header>
                 <DockPanel Margin="12,10,12,6">
-                    <UniformGrid DockPanel.Dock="Top" Rows="5">
+                    <StackPanel DockPanel.Dock="Top">
                         <CheckBox x:Name="lblRemINTELCP" IsChecked="{Binding RemoveINTELCP, Converter={StaticResource NulBoolToBool}}" Content="lblRemINTELCP" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemINTELIGS" IsChecked="{Binding RemoveINTELIGS, Converter={StaticResource NulBoolToBool}}" Content="lblRemINTELIGS" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemOneAPI" IsChecked="{Binding RemoveOneAPI, Converter={StaticResource NulBoolToBool}}" Content="lblRemOneAPI" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemEnduranceGaming" IsChecked="{Binding RemoveEnduranceGaming, Converter={StaticResource NulBoolToBool}}" Content="lblRemEnduranceGaming" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemIntelNpu" IsChecked="{Binding RemoveIntelNpu, Converter={StaticResource NulBoolToBool}}" Content="lblRemIntelNpu" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
-                    </UniformGrid>
+                        <CheckBox x:Name="lblRemIntelExt" IsChecked="{Binding RemoveIntelExt, Converter={StaticResource NulBoolToBool}}" Content="lblRemIntelExt" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
+                        <TextBlock x:Name="lblRemIntelExtNote" Text="lblRemIntelExtNote" FontStyle="Italic" Opacity="0.85" Margin="20,-3,0,8" TextWrapping="Wrap" FlowDirection="{Binding FlowControl}"/>
+                    </StackPanel>
                 </DockPanel>
             </TabItem>
             <TabItem>
@@ -165,10 +167,11 @@
                     <Label x:Name="tabQualcomm" Content="tabQualcomm" Padding="6,2" FlowDirection="{Binding FlowControl}"/>
                 </TabItem.Header>
                 <DockPanel Margin="12,10,12,6">
-                    <UniformGrid DockPanel.Dock="Top" Rows="2">
+                    <StackPanel DockPanel.Dock="Top">
                         <CheckBox x:Name="lblRemQualcommCP" IsChecked="{Binding RemoveQualcommCP, Converter={StaticResource NulBoolToBool}}" Content="lblRemQualcommCP" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemQualcommExt" IsChecked="{Binding RemoveQualcommExt, Converter={StaticResource NulBoolToBool}}" Content="lblRemQualcommExt" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
-                    </UniformGrid>
+                        <TextBlock x:Name="lblRemQualcommExtNote" Text="lblRemQualcommExtNote" FontStyle="Italic" Opacity="0.85" Margin="20,-3,0,8" TextWrapping="Wrap" FlowDirection="{Binding FlowControl}"/>
+                    </StackPanel>
                 </DockPanel>
             </TabItem>
             <TabItem>
@@ -177,10 +180,10 @@
                 </TabItem.Header>
                 <DockPanel Margin="12,10,12,6">
                     <Label DockPanel.Dock="Top" x:Name="lblAdvancedO" Content="lblAdvancedO" FontWeight="Bold" Margin="0,0,0,6" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
-                    <UniformGrid DockPanel.Dock="Top" Rows="2">
+                    <StackPanel DockPanel.Dock="Top">
                         <CheckBox x:Name="lblShowSafeModeMsg" IsChecked="{Binding EnableSafeModeDialog, Converter={StaticResource NulBoolToBool}}" Content="lblShowSafeModeMsg" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblPreventWinUpdate" IsChecked="{Binding PreventWinUpdate, Converter={StaticResource NulBoolToBool}}" Content="lblPreventWinUpdate" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
-                    </UniformGrid>
+                    </StackPanel>
                 </DockPanel>
             </TabItem>
         </TabControl>

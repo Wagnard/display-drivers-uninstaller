@@ -355,12 +355,21 @@
 		<lblRemIntelNpu>
 			<Text>Ta bort Intel® NPU</Text>
 		</lblRemIntelNpu>
+		<lblRemIntelExt>
+			<Text>Ta bort datortillverkarens drivrutinstillägg som är installerade på GPU:n (grundligare rensning) *</Text>
+		</lblRemIntelExt>
+		<lblRemIntelExtNote>
+			<Text>* Mer riskabelt på bärbara datorer. Endast om du vet hur du återställer dem: utan dem kan funktioner saknas eller GPU:n inte starta (kod 31)</Text>
+		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
 			<Text>Ta bort Snapdragon Kontrollpanel installerad från Microsoft Store</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
-			<Text>Ta även bort OEM-drivrutinstilläggen (endast Windows Update eller datortillverkarens drivrutinspaket kan återställa dem)</Text>
+			<Text>Ta bort OEM-drivrutinstilläggen som är installerade på GPU:n (grundligare rensning) *</Text>
 		</lblRemQualcommExt>
+		<lblRemQualcommExtNote>
+			<Text>* Endast om du vet hur du återställer dem: utan dem kan funktioner saknas eller GPU:n inte starta (kod 31)</Text>
+		</lblRemQualcommExtNote>
 		<lblRemAMDCP>
 			<Text>(DCH-drivrutin) Ta bort AMD Kontrollpanel installerad från Microsoft Store</Text>
 		</lblRemAMDCP>

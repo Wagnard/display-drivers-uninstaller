@@ -355,12 +355,21 @@
 		<lblRemIntelNpu>
 			<Text>Удалить Intel® NPU</Text>
 		</lblRemIntelNpu>
+		<lblRemIntelExt>
+			<Text>Удалить расширения драйвера от производителя ПК, установленные на ГП (более полная очистка) *</Text>
+		</lblRemIntelExt>
+		<lblRemIntelExtNote>
+			<Text>* Рискованнее на ноутбуках. Только если вы знаете, как их вернуть: без них могут отсутствовать функции или ГП не запустится (код 31)</Text>
+		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
 			<Text>Удалить Панель управления Snapdragon, установленную из Microsoft Store</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
-			<Text>Также удалить OEM-расширения драйвера (вернуть их могут только Windows Update или пакет драйверов производителя ПК)</Text>
+			<Text>Удалить OEM-расширения драйвера, установленные на ГП (более полная очистка) *</Text>
 		</lblRemQualcommExt>
+		<lblRemQualcommExtNote>
+			<Text>* Только если вы знаете, как их вернуть: без них могут отсутствовать функции или ГП не запустится (код 31)</Text>
+		</lblRemQualcommExtNote>
 		<lblRemAMDCP>
 			<Text>(DCH-драйвер) Удалить Панель управления AMD, установленную из Microsoft Store</Text>
 		</lblRemAMDCP>
