@@ -362,7 +362,7 @@
 			<Text>* Laptopon kockázatosabb. Csak ha tudja, hogyan kell visszatenni őket: nélkülük funkciók hiányozhatnak, vagy a GPU nem indul el (31-es kód)</Text>
 		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
-			<Text>A Microsoft Store-ból telepített Snapdragon Vezérlőpult eltávolítása</Text>
+			<Text>A Snapdragon Vezérlőpult eltávolítása</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
 			<Text>A GPU-ra telepített OEM illesztőprogram-kiterjesztések eltávolítása (alaposabb tisztítás) *</Text>

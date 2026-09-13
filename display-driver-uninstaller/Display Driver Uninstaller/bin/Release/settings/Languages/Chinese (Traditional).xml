@@ -367,7 +367,7 @@
 			<Text>* 筆記型電腦上風險較高。僅限知道如何重新安裝的使用者: 缺少延伸模組可能導致功能缺失或 GPU 無法啟動 (代碼 31)</Text>
 		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
-			<Text>移除透過 Microsoft Store 安裝的 Snapdragon 控制台</Text>
+			<Text>移除 Snapdragon 控制台</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
 			<Text>移除安裝在 GPU 上的 OEM 驅動程式延伸模組 (更徹底的清理) *</Text>

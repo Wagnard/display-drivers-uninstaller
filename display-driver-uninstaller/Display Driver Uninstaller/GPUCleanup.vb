@@ -306,14 +306,16 @@ Namespace Display_Driver_Uninstaller
                                         Continue For
                                     End If
 
+                                    ' The NPU extension and the Windows Studio Effects components (Microsoft) are not in the Intel NPU package,
+                                    ' so they follow the same choice as the graphics extensions.
                                     If npu.ChildDevices IsNot Nothing AndAlso npu.ChildDevices.Length > 0 Then
                                         Application.Log.AddMessage("SetupAPI: Removing childrens associated to the Intel NPU")
-                                        RemoveChiendrensFromDevices(npu.ChildDevices, removedDevices)
+                                        RemoveChiendrensFromDevices(npu.ChildDevices, removedDevices, removeExtensions, removeExtensions)
                                         Application.Log.AddMessage("SetupAPI: Removal of the childrens associated to the Intel NPU completed.")
                                     End If
 
                                     ' Uninstall the current device
-                                    SetupAPI.UninstallDevice(npu)
+                                    SetupAPI.UninstallDevice(npu, removeExtensions)
                                     removedDevices.Add(npu.ToString)
 
                                 End If
@@ -8266,6 +8268,7 @@ child.ToLower.Equals("oneapp_igcc") Then
 
             If _win10 AndAlso config.RemoveQualcommCP Then
                 CleanupEngine.RemoveAppxAsync("AdrenoControlPanel").Wait()
+                CleanupEngine.RemoveAppxAsync("SnapdragonControlPanel").Wait()
             End If
         End Sub
 

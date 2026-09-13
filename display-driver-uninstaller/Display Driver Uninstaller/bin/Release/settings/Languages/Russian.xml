@@ -74,6 +74,12 @@
 		<lblLanguage>
 			<Text>Выбранный язык</Text>
 		</lblLanguage>
+		<lblUpdate>
+			<Text>Проверка обновлений...</Text>
+			<Text2>У вас новейшая версия программы. Обновление не требуется.</Text2>
+			<Text3>Найдена новая версия! Рекомендуется её установить.</Text3>
+			<Text4>Не удалось проверить наличие обновлений!</Text4>
+		</lblUpdate>
 
                 <lblUpdate>
 			<Text>Проверка обновлений...</Text>
@@ -183,7 +189,8 @@
 			<Options3>AMD</Options3>
 			<Options4>Intel®</Options4>
 			<Options5>LISUAN</Options5>
-			<Options6>Все графические процессоры</Options6>
+			<Options6>QUALCOMM</Options6>
+			<Options7>Все графические процессоры</Options7>
 		</Options_GPU>
 		<Options_AUDIO>
 			<Options1>---Выберите устройство---</Options1>
@@ -259,6 +266,27 @@
 		<lblINTELspecific>
 			<Text>Параметры драйверов Intel®</Text>
 		</lblINTELspecific>
+		<lblQualcommspecific>
+			<Text>Параметры драйверов Qualcomm</Text>
+		</lblQualcommspecific>
+		<tabGeneral>
+			<Text>Общие</Text>
+		</tabGeneral>
+		<tabNvidia>
+			<Text>NVIDIA</Text>
+		</tabNvidia>
+		<tabAmd>
+			<Text>AMD</Text>
+		</tabAmd>
+		<tabIntel>
+			<Text>Intel®</Text>
+		</tabIntel>
+		<tabQualcomm>
+			<Text>Qualcomm</Text>
+		</tabQualcomm>
+		<tabAdvanced>
+			<Text>Дополнительно</Text>
+		</tabAdvanced>
 		<lblAdvancedO>
 			<Text>Дополнительные параметры (изменение - на ваш страх и риск)</Text>
 		</lblAdvancedO>
@@ -305,6 +333,9 @@
 		<lblRemGFE>
 			<Text>Удалить GeForce Experience (GFE) / NVIDIA App</Text>
 		</lblRemGFE>
+		<lblRemNVBROADCAST>
+			<Text>Удалить NVIDIA Broadcast</Text>
+		</lblRemNVBROADCAST>
 				<lblRemNVBROADCAST>
 			<Text>Удалить NVIDIA Broadcast</Text>
 		</lblRemNVBROADCAST>
@@ -336,6 +367,21 @@
 		<lblRemIntelNpu>
 			<Text>Удалить Intel® NPU</Text>
 		</lblRemIntelNpu>
+		<lblRemIntelExt>
+			<Text>Удалить расширения драйвера от производителя ПК, установленные на ГП (более полная очистка) *</Text>
+		</lblRemIntelExt>
+		<lblRemIntelExtNote>
+			<Text>* Рискованнее на ноутбуках. Только если вы знаете, как их вернуть: без них могут отсутствовать функции или ГП не запустится (код 31)</Text>
+		</lblRemIntelExtNote>
+		<lblRemQualcommCP>
+			<Text>Удалить Панель управления Snapdragon</Text>
+		</lblRemQualcommCP>
+		<lblRemQualcommExt>
+			<Text>Удалить OEM-расширения драйвера, установленные на ГП (более полная очистка) *</Text>
+		</lblRemQualcommExt>
+		<lblRemQualcommExtNote>
+			<Text>* Только если вы знаете, как их вернуть: без них могут отсутствовать функции или ГП не запустится (код 31)</Text>
+		</lblRemQualcommExtNote>
 		<lblRemAMDCP>
 			<Text>(DCH-драйвер) Удалить Панель управления AMD, установленную из Microsoft Store</Text>
 		</lblRemAMDCP>
@@ -350,6 +396,15 @@
 			<Text>Удалить runtime-библиотеки Vulkan</Text>
 			<Tooltip>Не рекомендуется, если установлены две разные видеокарты с поддержкой Vulkan API.</Tooltip>
 		</lblVulkan>
+		<lblPreventWinUpdate>
+      <Text>Не загружать драйверы из Центра обновления Windows, когда Windows ищет драйвер для устройства</Text>
+      <Tooltip>Эта настройка запрещает Windows/Диспетчеру устройств проверять наличие обновления драйверов в Windows Update.
+               Примечание 1: Это не мешает Центру обновления Windows загружать/устанавливать новые драйверы.
+               Примечание 2: *Настоятельно* рекомендуется вернуть прежнее состояние этой настройки после завершения использования DDU и переустановки драйвера видеокарты, иначе возможны проблемы с установкой других устройств.</Tooltip>
+     </lblPreventWinUpdate>
+		<lblRememberLastChoice>
+         <Text>Запомнить последний выбранный графический процессор</Text>
+     </lblRememberLastChoice>
     <lblPreventWinUpdate>
       <Text>Не загружать драйверы из Центра обновления Windows, когда Windows ищет драйвер для устройства</Text>
       <Tooltip>Эта настройка запрещает Windows/Диспетчеру устройств проверять наличие обновления драйверов в Windows Update.

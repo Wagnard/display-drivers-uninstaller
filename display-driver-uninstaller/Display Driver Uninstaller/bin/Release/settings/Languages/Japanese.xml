@@ -363,7 +363,7 @@
 			<Text>* ノート PC ではリスクが高くなります。元に戻す方法を知っている場合のみ: 拡張機能がないと機能が欠けたり GPU が起動しない (コード 31) ことがあります</Text>
 		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
-			<Text>Microsoft Store からインストールされた Snapdragon コントロールパネルを削除する</Text>
+			<Text>Snapdragon コントロールパネルを削除する</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
 			<Text>GPU にインストールされた OEM ドライバー拡張機能を削除する (より徹底したクリーンアップ) *</Text>

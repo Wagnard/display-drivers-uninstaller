@@ -362,7 +362,7 @@
 			<Text>* Plus risqué sur un portable. Seulement si vous savez les remettre : sans elles, des fonctions peuvent manquer ou le GPU ne pas démarrer (Code 31)</Text>
 		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
-			<Text>Supprimer le Snapdragon Control Panel installé depuis le Microsoft Store</Text>
+			<Text>Supprimer le Snapdragon Control Panel</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
 			<Text>Supprimer les extensions OEM du pilote installées sur le GPU (nettoyage plus complet) *</Text>

@@ -363,7 +363,7 @@
 			<Text>* Dizüstü bilgisayarlarda daha riskli. Yalnızca geri yüklemeyi biliyorsanız: bunlar olmadan özellikler eksik kalabilir veya GPU başlamayabilir (Kod 31)</Text>
 		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
-			<Text>Microsoft Mağazası'ndan yüklenen Snapdragon Denetim Masası'nı kaldır</Text>
+			<Text>Snapdragon Denetim Masası'nı kaldır</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
 			<Text>GPU'ya yüklü OEM sürücü uzantılarını kaldır (daha kapsamlı temizlik) *</Text>

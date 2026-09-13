@@ -362,7 +362,7 @@
 			<Text>* Mer riskabelt på bärbara datorer. Endast om du vet hur du återställer dem: utan dem kan funktioner saknas eller GPU:n inte starta (kod 31)</Text>
 		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
-			<Text>Ta bort Snapdragon Kontrollpanel installerad från Microsoft Store</Text>
+			<Text>Ta bort Snapdragon Kontrollpanel</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
 			<Text>Ta bort OEM-drivrutinstilläggen som är installerade på GPU:n (grundligare rensning) *</Text>

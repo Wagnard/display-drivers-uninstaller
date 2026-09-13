@@ -354,7 +354,7 @@
 			<Text>* Bei Laptops riskanter. Nur wenn Sie wissen, wie man sie wiederherstellt: ohne sie können Funktionen fehlen oder die GPU startet nicht (Code 31)</Text>
 		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
-			<Text>Entfernen des aus dem Microsoft Store installierten Snapdragon Control Panel</Text>
+			<Text>Snapdragon Control Panel entfernen</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
 			<Text>Die OEM-Treibererweiterungen auf der GPU entfernen (gründlichere Bereinigung) *</Text>

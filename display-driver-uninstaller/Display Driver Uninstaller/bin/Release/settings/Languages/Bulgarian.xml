@@ -356,7 +356,7 @@
 			<Text>* По-рисковано при лаптопи. Само ако знаете как да ги върнете: без тях може да липсват функции или GPU да не стартира (код 31)</Text>
 		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
-			<Text>Премахни контролния панел Snapdragon, който се инсталира от Microsoft Store</Text>
+			<Text>Премахни контролния панел Snapdragon</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
 			<Text>Премахни OEM разширенията на драйвера, инсталирани на GPU (по-пълно почистване) *</Text>

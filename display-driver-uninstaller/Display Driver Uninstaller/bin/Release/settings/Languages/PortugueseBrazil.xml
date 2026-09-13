@@ -323,7 +323,7 @@ Esta opção não foi desenvolvida para corrigir problemas e pode não corrigir 
 			<Text>* Mais arriscado em notebooks. Somente se souber reinstalá-las: sem elas podem faltar recursos ou a GPU pode não iniciar (Código 31)</Text>
 		</lblRemIntelExtNote>
 		<lblRemQualcommCP>
-			<Text>Remover o Snapdragon Control Panel instalado da Microsoft Store</Text>
+			<Text>Remover o Snapdragon Control Panel</Text>
 		</lblRemQualcommCP>
 		<lblRemQualcommExt>
 			<Text>Remover as extensões OEM do driver instaladas na GPU (limpeza mais completa) *</Text>
