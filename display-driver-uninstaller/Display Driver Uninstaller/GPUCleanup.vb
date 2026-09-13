@@ -8255,6 +8255,21 @@ child.ToLower.Equals("oneapp_igcc") Then
                     For Each users As String In Registry.Users.GetSubKeyNames()
                         If String.IsNullOrWhiteSpace(users) Then Continue For
                         Deletesubregkey(Registry.Users, users & "\Software\QCOM\AdrenoControlPanel", False)
+
+                        Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, users & "\SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store", True)
+                            If regkey IsNot Nothing Then
+                                For Each child As String In regkey.GetValueNames()
+                                    If String.IsNullOrWhiteSpace(child) Then Continue For
+                                    If StrContainsAny(child, True, "SnapdragonControlPanel.exe", "\AdrenoControlPanel_") Then
+                                        Try
+                                            Deletevalue(regkey, child)
+                                        Catch ex As Exception
+                                            Application.Log.AddException(ex)
+                                        End Try
+                                    End If
+                                Next
+                            End If
+                        End Using
                     Next
 
                     For Each filepaths As String In _fileIo.GetDirectories(config.Paths.UsersPath)
