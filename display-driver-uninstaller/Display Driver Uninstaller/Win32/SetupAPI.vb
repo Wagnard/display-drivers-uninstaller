@@ -2734,7 +2734,7 @@ Namespace Display_Driver_Uninstaller.Win32
         End Sub
 
         ' RESERVED FOR CLEANING FROM CODE
-        Public Shared Sub UninstallDevice(ByVal device As Device, Optional ByVal removeExtensions As Boolean = True)
+        Public Shared Sub UninstallDevice(ByVal device As Device, Optional ByVal removeExtensions As Boolean = True, Optional ByVal removeInfs As Boolean = True)
 
             Try
                 If device Is Nothing Then
@@ -2847,6 +2847,11 @@ Namespace Display_Driver_Uninstaller.Win32
                                     Continue For
                                 End If
 
+                                If Not removeInfs Then
+                                    Application.Log.AddMessage("Driver package kept: " & inf.FileName)
+                                    Continue For
+                                End If
+
                                 ptrDevInfo?.Dispose()
 
                                 RemoveInf(inf, False, True)
@@ -2859,7 +2864,7 @@ Namespace Display_Driver_Uninstaller.Win32
                                     Continue For
                                 End If
 
-                                If Not removeExtensions Then
+                                If Not removeExtensions OrElse Not removeInfs Then
                                     Application.Log.AddMessage("Extension INF kept: " & extendedInf)
                                     Continue For
                                 End If

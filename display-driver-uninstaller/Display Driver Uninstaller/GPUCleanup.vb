@@ -1164,23 +1164,35 @@ Namespace Display_Driver_Uninstaller
 "nvidiaInspector")
         End Sub
 
-        Private Sub RemoveChiendrensFromDevices(devices As SetupAPI.Device(), removedDevices As List(Of String), Optional removeExtensions As Boolean = True)
+        Private Sub RemoveChiendrensFromDevices(devices As SetupAPI.Device(), removedDevices As List(Of String), Optional removeExtensions As Boolean = True, Optional removeInfs As Boolean = True)
             For Each device As SetupAPI.Device In devices
                 If device IsNot Nothing Then
                     If removedDevices.Contains(device.ToString()) Then
                         Continue For
                     End If
+                    ' The camera (Intel IPU, Qualcomm Spectra) hangs under the GPU but ships as its own package,
+                    ' which the GPU driver does not bring back. The device goes, its package stays in the store.
+                    Dim childRemoveInfs As Boolean = removeInfs
+                    If childRemoveInfs AndAlso IsCameraDevice(device) Then
+                        childRemoveInfs = False
+                    End If
                     ' Check if the device has child devices
                     If device.ChildDevices IsNot Nothing AndAlso device.ChildDevices.Length > 0 Then
                         ' Recursively remove child devices
-                        RemoveChiendrensFromDevices(device.ChildDevices, removedDevices, removeExtensions)
+                        RemoveChiendrensFromDevices(device.ChildDevices, removedDevices, removeExtensions, childRemoveInfs)
                     End If
                     ' Uninstall the current device
-                    SetupAPI.UninstallDevice(device, removeExtensions)
+                    SetupAPI.UninstallDevice(device, removeExtensions, childRemoveInfs)
                     removedDevices.Add(device.ToString)
                 End If
             Next
         End Sub
+
+        Private Function IsCameraDevice(device As SetupAPI.Device) As Boolean
+            If String.IsNullOrWhiteSpace(device.ClassGuid) Then Return False
+            'Camera and Image classes.
+            Return StrContainsAny(device.ClassGuid, True, "ca3e7ab9-b4c3-4ae6-8251-579ef933890f", "6bdd1fc6-810f-11d0-bec7-08002be2092f")
+        End Function
 
         Private Sub CleanAmdServiceProcess(ByVal config As ThreadSettings)
             Dim cleanupEngine As New CleanupEngine
