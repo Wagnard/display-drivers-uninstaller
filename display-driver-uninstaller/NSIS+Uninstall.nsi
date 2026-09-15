@@ -298,7 +298,7 @@ Section "MainSection" SEC01
   File "${SOURCE_PATH}\Issues and solutions.txt"
   File "${SOURCE_PATH}\License.txt"
   File "${SOURCE_PATH}\Readme.txt"
-  ; Settings tree (AMD, INTEL, Languages, LISUAN, NVIDIA, REALTEK...) added
+  ; Settings tree (AMD, INTEL, Languages, LISUAN, NVIDIA, QUALCOMM, REALTEK...) added
   ; recursively: new vendor folders and new cfg files are picked up automatically,
   ; no need to list them one by one anymore.
   ; Settings.xml is a runtime-generated user file - it must never ship from the
@@ -382,6 +382,7 @@ Section Uninstall
   RMDir /r "$INSTDIR\Settings\Languages"
   RMDir /r "$INSTDIR\Settings\LISUAN"
   RMDir /r "$INSTDIR\Settings\NVIDIA"
+  RMDir /r "$INSTDIR\Settings\QUALCOMM"
   RMDir /r "$INSTDIR\Settings\REALTEK"
 
   Delete "$INSTDIR\Readme.txt"
