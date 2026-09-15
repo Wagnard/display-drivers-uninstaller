@@ -2,7 +2,7 @@
 
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME            "Display Driver Uninstaller"
-!define PRODUCT_VERSION         "18.1.5.8"
+!define PRODUCT_VERSION         "18.1.6.0"
 
 !define PRODUCT_PUBLISHER       "Wagnardsoft"
 !define PRODUCT_WEB_SITE        "https://www.wagnardsoft.com"
@@ -12,7 +12,7 @@
 
 !define /date CURRENT_YEAR      "%Y"
 !define PRODUCT_COPYRIGHT       "${PRODUCT_PUBLISHER} 2021-${CURRENT_YEAR}"
-!define PRODUCT_DESCRIPTION     "${PRODUCT_NAME} setup"
+!define PRODUCT_DESCRIPTION     "${PRODUCT_NAME} installer"
 !define SOURCE_PATH             "C:\Users\ghisl\Desktop\DDU\DDU v${PRODUCT_VERSION}"
 
 ; MUI 1.67 compatible ------
