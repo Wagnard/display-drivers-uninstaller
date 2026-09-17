@@ -352,6 +352,9 @@
 		<lblRemQualcommExtNote>
 			<Text>* 仅当您知道如何重新安装它们时: 缺少扩展可能导致功能缺失或 GPU 无法启动 (代码 31)</Text>
 		</lblRemQualcommExtNote>
+		<lblRemQualcommNpu>
+			<Text>移除 Qualcomm Hexagon NPU</Text>
+		</lblRemQualcommNpu>
 		<lblRemAMDCP>
 			<Text>(仅适用于 DCH 驱动程序) 卸载从 Microsoft Store 安装的 AMD Radeon Settings</Text>
 		</lblRemAMDCP>

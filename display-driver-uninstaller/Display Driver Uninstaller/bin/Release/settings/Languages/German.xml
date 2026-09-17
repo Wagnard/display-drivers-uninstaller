@@ -362,6 +362,9 @@
 		<lblRemQualcommExtNote>
 			<Text>* Nur wenn Sie wissen, wie man sie wiederherstellt: ohne sie können Funktionen fehlen oder die GPU startet nicht (Code 31)</Text>
 		</lblRemQualcommExtNote>
+		<lblRemQualcommNpu>
+			<Text>Qualcomm Hexagon NPU entfernen</Text>
+		</lblRemQualcommNpu>
 		<lblRemAMDCP>
 			<Text>(DCH Driver) Entfernen des aus dem Microsoft Store installierten AMD Control Panel</Text>
 		</lblRemAMDCP>

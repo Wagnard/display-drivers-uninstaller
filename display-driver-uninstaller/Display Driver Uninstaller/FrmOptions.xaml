@@ -171,6 +171,7 @@
                         <CheckBox x:Name="lblRemQualcommCP" IsChecked="{Binding RemoveQualcommCP, Converter={StaticResource NulBoolToBool}}" Content="lblRemQualcommCP" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemQualcommExt" IsChecked="{Binding RemoveQualcommExt, Converter={StaticResource NulBoolToBool}}" Content="lblRemQualcommExt" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <TextBlock x:Name="lblRemQualcommExtNote" Text="lblRemQualcommExtNote" FontStyle="Italic" Opacity="0.85" Margin="20,-3,0,8" TextWrapping="Wrap" FlowDirection="{Binding FlowControl}"/>
+                        <CheckBox x:Name="lblRemQualcommNpu" IsChecked="{Binding RemoveQualcommNpu, Converter={StaticResource NulBoolToBool}}" Content="lblRemQualcommNpu" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                     </StackPanel>
                 </DockPanel>
             </TabItem>

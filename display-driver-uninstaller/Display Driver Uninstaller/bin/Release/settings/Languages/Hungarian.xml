@@ -370,6 +370,9 @@
 		<lblRemQualcommExtNote>
 			<Text>* Csak ha tudja, hogyan kell visszatenni őket: nélkülük funkciók hiányozhatnak, vagy a GPU nem indul el (31-es kód)</Text>
 		</lblRemQualcommExtNote>
+		<lblRemQualcommNpu>
+			<Text>Qualcomm Hexagon NPU eltávolítása</Text>
+		</lblRemQualcommNpu>
 		<lblRemAMDCP>
 			<Text>(DCH illesztőprogram) A Microsoft Store-ból telepített AMD Vezérlőpult eltávolítása</Text>
 		</lblRemAMDCP>

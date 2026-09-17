@@ -370,6 +370,9 @@
 		<lblRemQualcommExtNote>
 			<Text>* Seulement si vous savez les remettre : sans elles, des fonctions peuvent manquer ou le GPU ne pas démarrer (Code 31)</Text>
 		</lblRemQualcommExtNote>
+		<lblRemQualcommNpu>
+			<Text>Supprimer le NPU Qualcomm Hexagon</Text>
+		</lblRemQualcommNpu>
 		<lblRemAMDCP>
 			<Text>Supprimer AMD (Pilote DCH) du Panneau de Configuration du Microsoft Store</Text>
 		</lblRemAMDCP>

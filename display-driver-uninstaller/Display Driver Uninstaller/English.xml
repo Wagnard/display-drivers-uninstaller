@@ -362,6 +362,9 @@
 		<lblRemQualcommExtNote>
 			<Text>* Only if you know how to put them back: without them, features can be missing or the GPU may not start (Code 31)</Text>
 		</lblRemQualcommExtNote>
+		<lblRemQualcommNpu>
+			<Text>Remove the Qualcomm Hexagon NPU</Text>
+		</lblRemQualcommNpu>
 		<lblRemAMDCP>
 			<Text>(DCH driver) Remove the AMD Control Panel installed from the Microsoft Store</Text>
 		</lblRemAMDCP>

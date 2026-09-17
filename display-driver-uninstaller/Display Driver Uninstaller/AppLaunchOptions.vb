@@ -44,6 +44,7 @@ Namespace Display_Driver_Uninstaller
         Public Property RemoveINTELCP As Boolean = False
         Public Property RemoveQualcommCP As Boolean = False
         Public Property RemoveQualcommExt As Boolean = False
+        Public Property RemoveQualcommNpu As Boolean = False
 		Public Property RemoveINTELIGS As Boolean = False
 		Public Property RemoveEnduranceGaming As Boolean = False
 		Public Property RemoveIntelNpu As Boolean = False
@@ -145,6 +146,7 @@ Namespace Display_Driver_Uninstaller
                         Case StrContainsAny(Argument, True, "-RemoveINTELCP") : RemoveINTELCP = True
                         Case StrContainsAny(Argument, True, "-RemoveQualcommCP") : RemoveQualcommCP = True
                         Case StrContainsAny(Argument, True, "-RemoveQualcommExt") : RemoveQualcommExt = True
+                        Case StrContainsAny(Argument, True, "-RemoveQualcommNpu") : RemoveQualcommNpu = True
 						Case StrContainsAny(Argument, True, "-RemoveINTELIGS") : RemoveINTELIGS = True
 						Case StrContainsAny(Argument, True, "-RemoveEnduranceGaming") : RemoveEnduranceGaming = True
 						Case StrContainsAny(Argument, True, "-RemoveIntelNpu") : RemoveIntelNpu = True

@@ -331,6 +331,9 @@ Esta opção não foi desenvolvida para corrigir problemas e pode não corrigir 
 		<lblRemQualcommExtNote>
 			<Text>* Somente se souber reinstalá-las: sem elas podem faltar recursos ou a GPU pode não iniciar (Código 31)</Text>
 		</lblRemQualcommExtNote>
+		<lblRemQualcommNpu>
+			<Text>Remover Qualcomm Hexagon NPU</Text>
+		</lblRemQualcommNpu>
     <lblRemAMDCP>
       <Text>(DCH driver) Remover o AMD Control Panel instalado da Microsoft Store</Text>
     </lblRemAMDCP>

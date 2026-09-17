@@ -375,6 +375,9 @@
 		<lblRemQualcommExtNote>
 			<Text>* 僅限知道如何重新安裝的使用者: 缺少延伸模組可能導致功能缺失或 GPU 無法啟動 (代碼 31)</Text>
 		</lblRemQualcommExtNote>
+		<lblRemQualcommNpu>
+			<Text>移除 Qualcomm Hexagon NPU</Text>
+		</lblRemQualcommNpu>
 		<lblRemAMDCP>
 			<Text>(DCH 驅動程式) 移除從 Microsoft Store 安裝的 AMD 控制台</Text>
 		</lblRemAMDCP>

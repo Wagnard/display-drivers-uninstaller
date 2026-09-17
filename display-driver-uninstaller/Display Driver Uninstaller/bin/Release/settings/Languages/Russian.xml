@@ -371,6 +371,9 @@
 		<lblRemQualcommExtNote>
 			<Text>* Только если вы знаете, как их вернуть: без них могут отсутствовать функции или ГП не запустится (код 31)</Text>
 		</lblRemQualcommExtNote>
+		<lblRemQualcommNpu>
+			<Text>Удалить Qualcomm Hexagon NPU</Text>
+		</lblRemQualcommNpu>
 		<lblRemAMDCP>
 			<Text>(DCH-драйвер) Удалить Панель управления AMD, установленную из Microsoft Store</Text>
 		</lblRemAMDCP>

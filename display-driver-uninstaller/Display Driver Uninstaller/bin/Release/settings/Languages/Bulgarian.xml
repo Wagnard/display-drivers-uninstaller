@@ -364,6 +364,9 @@
 		<lblRemQualcommExtNote>
 			<Text>* Само ако знаете как да ги върнете: без тях може да липсват функции или GPU да не стартира (код 31)</Text>
 		</lblRemQualcommExtNote>
+		<lblRemQualcommNpu>
+			<Text>Премахни Qualcomm Hexagon NPU</Text>
+		</lblRemQualcommNpu>
 		<lblRemAMDCP>
 			<Text>(DCH драйвър) Премахни контролния панел на AMD, който се инсталира от Microsoft Store</Text>
 		</lblRemAMDCP>

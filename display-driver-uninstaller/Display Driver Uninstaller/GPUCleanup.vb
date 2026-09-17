@@ -289,6 +289,37 @@ Namespace Display_Driver_Uninstaller
                     End If
                 End If
 
+                If config.SelectedGPU = GPUVendor.Qualcomm AndAlso config.RemoveQualcommNpu Then
+                    Application.Log.AddMessage("Executing SetupAPI: Qualcomm NPU")
+                    Dim npus As List(Of SetupAPI.Device) = SetupAPI.GetDevices("ComputeAccelerator", vendIdExpected, False, includeChilds:=True)
+                    If npus Is Nothing Then npus = New List(Of SetupAPI.Device)
+
+                    'Without a driver the NPU sits in "Other devices" and has no class to search by.
+                    Dim orphans As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByHID("ACPI\VEN_QCOM&DEV_0D0A", False, False, True)
+                    If orphans IsNot Nothing Then npus.AddRange(orphans)
+
+                    If npus.Count > 0 Then
+                        Dim removedDevices As New List(Of String)
+                        For Each npu As SetupAPI.Device In npus
+                            If npu Is Nothing OrElse String.IsNullOrWhiteSpace(npu.DeviceID) OrElse removedDevices.Contains(npu.ToString) Then
+                                Continue For
+                            End If
+
+                            'The CDSP extension is bound to the NPU but also to the Compute DSP, PIL and PDSR platform
+                            'devices, and carries the DSP firmware. It stays, whatever the extension option says.
+                            If npu.ChildDevices IsNot Nothing AndAlso npu.ChildDevices.Length > 0 Then
+                                RemoveChiendrensFromDevices(npu.ChildDevices, removedDevices, False)
+                            End If
+
+                            SetupAPI.UninstallDevice(npu, False)
+                            removedDevices.Add(npu.ToString)
+                        Next
+                        npus.Clear()
+                        removedDevices.Clear()
+                    End If
+                    Application.Log.AddMessage("SetupAPI: Removal of the Qualcomm NPU completed")
+                End If
+
                 If config.SelectedGPU = GPUVendor.Intel Then
 
                     If config.RemoveIntelNpu Then
@@ -8188,6 +8219,10 @@ child.ToLower.Equals("oneapp_igcc") Then
             Dim CleanupEngine As New CleanupEngine
             Dim services As String() = IO.File.ReadAllLines(Application.Paths.AppBase & "settings\QUALCOMM\services.cfg")
 
+            If config.RemoveQualcommNpu Then
+                services = services.Concat(IO.File.ReadAllLines(Application.Paths.AppBase & "settings\QUALCOMM\servicesnpu.cfg")).ToArray()
+            End If
+
             ImpersonateUser.RunImpersonatedSystem(
             Sub()
                 Application.Log.AddMessage("Cleaning Process/Services...")
@@ -8248,6 +8283,11 @@ child.ToLower.Equals("oneapp_igcc") Then
                 Deletesubregkey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\QCOM\Drivers\VKUMD", False)
                 Deletesubregkey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\QCOM\MFTs\VideoEncoder", False)
                 Deletesubregkey(Registry.LocalMachine, "SOFTWARE\WOW6432Node\QCOM\AdrenoControlPanel", False)
+
+                If config.RemoveQualcommNpu Then
+                    'ETW session registered by the NPU driver's service install.
+                    Deletesubregkey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\WMI\Autologger\nspmcdm", False)
+                End If
 
                 If config.RemoveQualcommCP Then
                     'Snapdragon Control Panel (MSIX identity "AdrenoControlPanel"). It runs unvirtualized, so its
