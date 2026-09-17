@@ -296,6 +296,7 @@
   <ItemGroup>
     <Content Include="DDU.ico" />
     <Resource Include="Resources\intel_logo.jpg" />
+    <Resource Include="Resources\Lisuan.jpg" />
     <Resource Include="Resources\discord%402x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
