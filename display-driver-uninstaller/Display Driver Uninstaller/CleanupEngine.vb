@@ -3652,7 +3652,7 @@ Namespace Display_Driver_Uninstaller
                         'OEM extensions are kept unless asked otherwise. Intel's own extensions (audio bus, firmware update...) still go.
                         Dim keepOemExtension As Boolean = config.SelectedType = CleanType.GPU AndAlso StrContainsAny(oem.Class, True, "Extension") AndAlso
                             ((config.SelectedGPU = GPUVendor.Intel AndAlso Not config.RemoveIntelExt AndAlso Not StrContainsAny(oem.Catalog, True, "igdlh.cat", "HdBusExt.cat", "IntelGFXFwUpdate.cat", "Intel_NF_I2C.cat")) OrElse
-                             (config.SelectedGPU = GPUVendor.Qualcomm AndAlso Not config.RemoveQualcommExt))
+                             (config.SelectedGPU = GPUVendor.Qualcomm AndAlso (Not config.RemoveQualcommExt OrElse oem.CarriesFirmware)))
 
                         If Not ((Not config.RemoveNVBROADCAST AndAlso StrContainsAny(oem.Catalog, True, "nvrtxvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvvad")) Or (Not config.RemoveGFE AndAlso StrContainsAny(oem.Catalog, True, "nvswcfilter")) Or ((Not config.RemoveAMDKMPFD Or Not config.NotPresentAMDKMPFD) AndAlso StrContainsAny(oem.Catalog, True, "amdkmpfd"))) Then
                             If StrContainsAny(oem.Class, True, "Extension") AndAlso StrContainsAny(oem.Catalog, True, "extinf.cat", "amdpcibridgeextension.cat", "igdlh.cat") Then

@@ -306,12 +306,12 @@ Namespace Display_Driver_Uninstaller
                             End If
 
                             'The CDSP extension is bound to the NPU but also to the Compute DSP, PIL and PDSR platform
-                            'devices, and carries the DSP firmware. It stays, whatever the extension option says.
+                            'devices, and carries the DSP firmware (.mbn/.elf). It stays, whatever the extension option says.
                             If npu.ChildDevices IsNot Nothing AndAlso npu.ChildDevices.Length > 0 Then
-                                RemoveChiendrensFromDevices(npu.ChildDevices, removedDevices, False)
+                                RemoveChiendrensFromDevices(npu.ChildDevices, removedDevices, removeExtensions)
                             End If
 
-                            SetupAPI.UninstallDevice(npu, False)
+                            SetupAPI.UninstallDevice(npu, removeExtensions, True, keepFirmwareExtensions:=True)
                             removedDevices.Add(npu.ToString)
                         Next
                         npus.Clear()
