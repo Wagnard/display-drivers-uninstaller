@@ -47,18 +47,6 @@ Namespace Display_Driver_Uninstaller
 				Return _isValid
 			End Get
 		End Property
-		'Qualcomm subsystem firmware images (.mbn) and device trees (.elf), loaded by the PIL at boot.
-		Public ReadOnly Property CarriesFirmware As Boolean
-			Get
-				If _sourcedisksfiles Is Nothing Then Return False
-				For Each f As String In _sourcedisksfiles
-					If Not String.IsNullOrWhiteSpace(f) AndAlso (f.EndsWith(".mbn", StringComparison.OrdinalIgnoreCase) OrElse f.EndsWith(".elf", StringComparison.OrdinalIgnoreCase)) Then
-						Return True
-					End If
-				Next
-				Return False
-			End Get
-		End Property
 		Public Property InstallDate As DateTime
 			Get
 				Return _installDate

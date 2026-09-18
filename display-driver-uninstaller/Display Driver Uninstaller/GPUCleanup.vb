@@ -305,13 +305,14 @@ Namespace Display_Driver_Uninstaller
                                 Continue For
                             End If
 
-                            'The CDSP extension is bound to the NPU but also to the Compute DSP, PIL and PDSR platform
-                            'devices, and carries the DSP firmware (.mbn/.elf). It stays, whatever the extension option says.
+                            'The CDSP extension carries the DSP firmware and is also bound to the Compute DSP, PIL and PDSR
+                            'platform devices. It follows the extension option like the rest : the generic Qualcomm NPU
+                            'package ships it, so a reinstall puts it back.
                             If npu.ChildDevices IsNot Nothing AndAlso npu.ChildDevices.Length > 0 Then
                                 RemoveChiendrensFromDevices(npu.ChildDevices, removedDevices, removeExtensions)
                             End If
 
-                            SetupAPI.UninstallDevice(npu, removeExtensions, True, keepFirmwareExtensions:=True)
+                            SetupAPI.UninstallDevice(npu, removeExtensions)
                             removedDevices.Add(npu.ToString)
                         Next
                         npus.Clear()
