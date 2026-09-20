@@ -93,6 +93,36 @@ Windows should now return to normal mode.
 
 ---
 
+## **5. Laptop: Camera Missing, Features Gone or GPU "Code 31" After Reinstalling the Driver**
+
+On laptops, your PC maker ships part of the graphics driver as separate **extension** packages: panel and power settings on Intel, files the GPU needs to start on Qualcomm (Snapdragon), colour profiles for the screen (e.g. MyASUS Splendid). The generic driver from Intel or Qualcomm does **not** include them.
+
+DDU keeps these extensions by default. If you ticked the **"Expert options"** extension removal, or removed the driver another way, the symptoms are:
+
+* Qualcomm: the GPU shows **Code 31** in Device Manager, or the Snapdragon Control Panel cannot install the NPU driver.
+* Intel: power or panel settings from your PC maker are gone.
+* The screen shows as **"Generic PnP Monitor"** and the maker's display modes lost their profiles.
+
+To put them back, pick one:
+
+1. Reinstall the **complete** driver package from your PC maker's support page (not the generic one).
+2. Let **Windows Update** bring them back (driver updates must be enabled; they may show under *Optional updates*).
+3. From the folder of the extracted package, install the extension `.inf` files: right-click → **Install**, or run:
+
+```
+pnputil /add-driver *.inf /subdirs /install
+```
+
+Do not use Device Manager's "Update driver" for extensions: it applies them to one device only.
+
+To check what is installed:
+
+```
+pnputil /enum-drivers | findstr /i /c:"Original Name"
+```
+
+---
+
 ## **Need Additional Help?**
 
 If issues continue, feel free to provide DDU logs or system details so the problem can be diagnosed more accurately.
