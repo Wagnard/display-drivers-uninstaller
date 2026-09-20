@@ -157,6 +157,7 @@
                         <CheckBox x:Name="lblRemOneAPI" IsChecked="{Binding RemoveOneAPI, Converter={StaticResource NulBoolToBool}}" Content="lblRemOneAPI" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemEnduranceGaming" IsChecked="{Binding RemoveEnduranceGaming, Converter={StaticResource NulBoolToBool}}" Content="lblRemEnduranceGaming" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemIntelNpu" IsChecked="{Binding RemoveIntelNpu, Converter={StaticResource NulBoolToBool}}" Content="lblRemIntelNpu" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
+                        <Label x:Name="lblIntelExpert" Content="lblIntelExpert" FontWeight="Bold" Margin="0,8,0,4" Padding="0" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemIntelExt" IsChecked="{Binding RemoveIntelExt, Converter={StaticResource NulBoolToBool}}" Content="lblRemIntelExt" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <TextBlock x:Name="lblRemIntelExtNote" Text="lblRemIntelExtNote" FontStyle="Italic" Opacity="0.85" Margin="20,-3,0,8" TextWrapping="Wrap" FlowDirection="{Binding FlowControl}"/>
                     </StackPanel>
@@ -169,9 +170,10 @@
                 <DockPanel Margin="12,10,12,6">
                     <StackPanel DockPanel.Dock="Top">
                         <CheckBox x:Name="lblRemQualcommCP" IsChecked="{Binding RemoveQualcommCP, Converter={StaticResource NulBoolToBool}}" Content="lblRemQualcommCP" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
+                        <CheckBox x:Name="lblRemQualcommNpu" IsChecked="{Binding RemoveQualcommNpu, Converter={StaticResource NulBoolToBool}}" Content="lblRemQualcommNpu" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
+                        <Label x:Name="lblQualcommExpert" Content="lblQualcommExpert" FontWeight="Bold" Margin="0,8,0,4" Padding="0" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemQualcommExt" IsChecked="{Binding RemoveQualcommExt, Converter={StaticResource NulBoolToBool}}" Content="lblRemQualcommExt" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <TextBlock x:Name="lblRemQualcommExtNote" Text="lblRemQualcommExtNote" FontStyle="Italic" Opacity="0.85" Margin="20,-3,0,8" TextWrapping="Wrap" FlowDirection="{Binding FlowControl}"/>
-                        <CheckBox x:Name="lblRemQualcommNpu" IsChecked="{Binding RemoveQualcommNpu, Converter={StaticResource NulBoolToBool}}" Content="lblRemQualcommNpu" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                     </StackPanel>
                 </DockPanel>
             </TabItem>

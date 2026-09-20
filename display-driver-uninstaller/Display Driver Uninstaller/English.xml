@@ -351,8 +351,11 @@
 			<Text>Remove the PC maker's driver extensions installed on the GPU (more thorough cleanup) *</Text>
 		</lblRemIntelExt>
 		<lblRemIntelExtNote>
-			<Text>* Riskier on laptops. Only if you know how to put them back: without them, features can be missing or the GPU may not start (Code 31)</Text>
+			<Text>* Riskier on laptops. Without them, features can be missing or the GPU may not start (Code 31). To put them back: reinstall your PC maker's driver package, or run pnputil /add-driver &lt;extension .inf&gt; /install</Text>
 		</lblRemIntelExtNote>
+		<lblIntelExpert>
+			<Text>Expert options</Text>
+		</lblIntelExpert>
 		<lblRemQualcommCP>
 			<Text>Remove the Snapdragon Control Panel</Text>
 		</lblRemQualcommCP>
@@ -360,8 +363,11 @@
 			<Text>Remove the OEM driver extensions installed on the GPU (more thorough cleanup) *</Text>
 		</lblRemQualcommExt>
 		<lblRemQualcommExtNote>
-			<Text>* Only if you know how to put them back: without them, features can be missing or the GPU may not start (Code 31)</Text>
+			<Text>* Without them, features can be missing or the GPU may not start (Code 31). To put them back: reinstall the Qualcomm or PC maker's driver package, or run pnputil /add-driver &lt;extension .inf&gt; /install</Text>
 		</lblRemQualcommExtNote>
+		<lblQualcommExpert>
+			<Text>Expert options</Text>
+		</lblQualcommExpert>
 		<lblRemQualcommNpu>
 			<Text>Remove the Qualcomm Hexagon NPU</Text>
 		</lblRemQualcommNpu>

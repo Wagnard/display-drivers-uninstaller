@@ -360,8 +360,11 @@
 			<Text>GPU'ya yüklü bilgisayar üreticisinin sürücü uzantılarını kaldır (daha kapsamlı temizlik) *</Text>
 		</lblRemIntelExt>
 		<lblRemIntelExtNote>
-			<Text>* Dizüstü bilgisayarlarda daha riskli. Yalnızca geri yüklemeyi biliyorsanız: bunlar olmadan özellikler eksik kalabilir veya GPU başlamayabilir (Kod 31)</Text>
+			<Text>* Dizüstü bilgisayarlarda daha riskli. Bunlar olmadan özellikler eksik kalabilir veya GPU başlamayabilir (Kod 31). Geri yüklemek için: bilgisayar üreticisinin sürücü paketini yeniden kurun veya pnputil /add-driver &lt;uzantı .inf&gt; /install çalıştırın</Text>
 		</lblRemIntelExtNote>
+		<lblIntelExpert>
+			<Text>Uzman seçenekleri</Text>
+		</lblIntelExpert>
 		<lblRemQualcommCP>
 			<Text>Snapdragon Denetim Masası'nı kaldır</Text>
 		</lblRemQualcommCP>
@@ -369,8 +372,11 @@
 			<Text>GPU'ya yüklü OEM sürücü uzantılarını kaldır (daha kapsamlı temizlik) *</Text>
 		</lblRemQualcommExt>
 		<lblRemQualcommExtNote>
-			<Text>* Yalnızca geri yüklemeyi biliyorsanız: bunlar olmadan özellikler eksik kalabilir veya GPU başlamayabilir (Kod 31)</Text>
+			<Text>* Bunlar olmadan özellikler eksik kalabilir veya GPU başlamayabilir (Kod 31). Geri yüklemek için: Qualcomm'un veya bilgisayar üreticisinin sürücü paketini yeniden kurun veya pnputil /add-driver &lt;uzantı .inf&gt; /install çalıştırın</Text>
 		</lblRemQualcommExtNote>
+		<lblQualcommExpert>
+			<Text>Uzman seçenekleri</Text>
+		</lblQualcommExpert>
 		<lblRemQualcommNpu>
 			<Text>Qualcomm Hexagon NPU'yu kaldır</Text>
 		</lblRemQualcommNpu>

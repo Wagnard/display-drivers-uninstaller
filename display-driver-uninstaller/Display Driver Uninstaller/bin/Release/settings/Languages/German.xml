@@ -351,8 +351,11 @@
 			<Text>Die Treibererweiterungen des PC-Herstellers auf der GPU entfernen (gründlichere Bereinigung) *</Text>
 		</lblRemIntelExt>
 		<lblRemIntelExtNote>
-			<Text>* Bei Laptops riskanter. Nur wenn Sie wissen, wie man sie wiederherstellt: ohne sie können Funktionen fehlen oder die GPU startet nicht (Code 31)</Text>
+			<Text>* Bei Laptops riskanter. Ohne sie können Funktionen fehlen oder die GPU startet nicht (Code 31). Wiederherstellen: das Treiberpaket des PC-Herstellers erneut installieren oder pnputil /add-driver &lt;Erweiterungs-.inf&gt; /install ausführen</Text>
 		</lblRemIntelExtNote>
+		<lblIntelExpert>
+			<Text>Expertenoptionen</Text>
+		</lblIntelExpert>
 		<lblRemQualcommCP>
 			<Text>Snapdragon Control Panel entfernen</Text>
 		</lblRemQualcommCP>
@@ -360,8 +363,11 @@
 			<Text>Die OEM-Treibererweiterungen auf der GPU entfernen (gründlichere Bereinigung) *</Text>
 		</lblRemQualcommExt>
 		<lblRemQualcommExtNote>
-			<Text>* Nur wenn Sie wissen, wie man sie wiederherstellt: ohne sie können Funktionen fehlen oder die GPU startet nicht (Code 31)</Text>
+			<Text>* Ohne sie können Funktionen fehlen oder die GPU startet nicht (Code 31). Wiederherstellen: das Treiberpaket von Qualcomm oder des PC-Herstellers erneut installieren oder pnputil /add-driver &lt;Erweiterungs-.inf&gt; /install ausführen</Text>
 		</lblRemQualcommExtNote>
+		<lblQualcommExpert>
+			<Text>Expertenoptionen</Text>
+		</lblQualcommExpert>
 		<lblRemQualcommNpu>
 			<Text>Qualcomm Hexagon NPU entfernen</Text>
 		</lblRemQualcommNpu>

@@ -359,8 +359,11 @@
 			<Text>Supprimer les extensions du pilote du fabricant du PC installées sur le GPU (nettoyage plus complet) *</Text>
 		</lblRemIntelExt>
 		<lblRemIntelExtNote>
-			<Text>* Plus risqué sur un portable. Seulement si vous savez les remettre : sans elles, des fonctions peuvent manquer ou le GPU ne pas démarrer (Code 31)</Text>
+			<Text>* Plus risqué sur un portable. Sans elles, des fonctions peuvent manquer ou le GPU ne pas démarrer (Code 31). Pour les remettre : réinstallez le pilote du fabricant du PC, ou lancez pnputil /add-driver &lt;extension .inf&gt; /install</Text>
 		</lblRemIntelExtNote>
+		<lblIntelExpert>
+			<Text>Options expert</Text>
+		</lblIntelExpert>
 		<lblRemQualcommCP>
 			<Text>Supprimer le Snapdragon Control Panel</Text>
 		</lblRemQualcommCP>
@@ -368,8 +371,11 @@
 			<Text>Supprimer les extensions OEM du pilote installées sur le GPU (nettoyage plus complet) *</Text>
 		</lblRemQualcommExt>
 		<lblRemQualcommExtNote>
-			<Text>* Seulement si vous savez les remettre : sans elles, des fonctions peuvent manquer ou le GPU ne pas démarrer (Code 31)</Text>
+			<Text>* Sans elles, des fonctions peuvent manquer ou le GPU ne pas démarrer (Code 31). Pour les remettre : réinstallez le pilote Qualcomm ou celui du fabricant du PC, ou lancez pnputil /add-driver &lt;extension .inf&gt; /install</Text>
 		</lblRemQualcommExtNote>
+		<lblQualcommExpert>
+			<Text>Options expert</Text>
+		</lblQualcommExpert>
 		<lblRemQualcommNpu>
 			<Text>Supprimer le NPU Qualcomm Hexagon</Text>
 		</lblRemQualcommNpu>

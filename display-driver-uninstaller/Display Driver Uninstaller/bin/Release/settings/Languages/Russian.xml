@@ -360,8 +360,11 @@
 			<Text>Удалить расширения драйвера от производителя ПК, установленные на ГП (более полная очистка) *</Text>
 		</lblRemIntelExt>
 		<lblRemIntelExtNote>
-			<Text>* Рискованнее на ноутбуках. Только если вы знаете, как их вернуть: без них могут отсутствовать функции или ГП не запустится (код 31)</Text>
+			<Text>* Рискованнее на ноутбуках. Без них могут отсутствовать функции или ГП не запустится (код 31). Чтобы вернуть: переустановите пакет драйверов производителя ПК или выполните pnputil /add-driver &lt;расширение .inf&gt; /install</Text>
 		</lblRemIntelExtNote>
+		<lblIntelExpert>
+			<Text>Параметры для экспертов</Text>
+		</lblIntelExpert>
 		<lblRemQualcommCP>
 			<Text>Удалить Панель управления Snapdragon</Text>
 		</lblRemQualcommCP>
@@ -369,8 +372,11 @@
 			<Text>Удалить OEM-расширения драйвера, установленные на ГП (более полная очистка) *</Text>
 		</lblRemQualcommExt>
 		<lblRemQualcommExtNote>
-			<Text>* Только если вы знаете, как их вернуть: без них могут отсутствовать функции или ГП не запустится (код 31)</Text>
+			<Text>* Без них могут отсутствовать функции или ГП не запустится (код 31). Чтобы вернуть: переустановите пакет драйверов Qualcomm или производителя ПК, либо выполните pnputil /add-driver &lt;расширение .inf&gt; /install</Text>
 		</lblRemQualcommExtNote>
+		<lblQualcommExpert>
+			<Text>Параметры для экспертов</Text>
+		</lblQualcommExpert>
 		<lblRemQualcommNpu>
 			<Text>Удалить Qualcomm Hexagon NPU</Text>
 		</lblRemQualcommNpu>

@@ -359,8 +359,11 @@
 			<Text>A gép gyártójának a GPU-ra telepített illesztőprogram-kiterjesztéseinek eltávolítása (alaposabb tisztítás) *</Text>
 		</lblRemIntelExt>
 		<lblRemIntelExtNote>
-			<Text>* Laptopon kockázatosabb. Csak ha tudja, hogyan kell visszatenni őket: nélkülük funkciók hiányozhatnak, vagy a GPU nem indul el (31-es kód)</Text>
+			<Text>* Laptopon kockázatosabb. Nélkülük funkciók hiányozhatnak, vagy a GPU nem indul el (31-es kód). Visszatétel: telepítse újra a gép gyártójának illesztőprogram-csomagját, vagy futtassa: pnputil /add-driver &lt;kiterjesztés .inf&gt; /install</Text>
 		</lblRemIntelExtNote>
+		<lblIntelExpert>
+			<Text>Szakértői beállítások</Text>
+		</lblIntelExpert>
 		<lblRemQualcommCP>
 			<Text>A Snapdragon Vezérlőpult eltávolítása</Text>
 		</lblRemQualcommCP>
@@ -368,8 +371,11 @@
 			<Text>A GPU-ra telepített OEM illesztőprogram-kiterjesztések eltávolítása (alaposabb tisztítás) *</Text>
 		</lblRemQualcommExt>
 		<lblRemQualcommExtNote>
-			<Text>* Csak ha tudja, hogyan kell visszatenni őket: nélkülük funkciók hiányozhatnak, vagy a GPU nem indul el (31-es kód)</Text>
+			<Text>* Nélkülük funkciók hiányozhatnak, vagy a GPU nem indul el (31-es kód). Visszatétel: telepítse újra a Qualcomm vagy a gép gyártójának illesztőprogram-csomagját, vagy futtassa: pnputil /add-driver &lt;kiterjesztés .inf&gt; /install</Text>
 		</lblRemQualcommExtNote>
+		<lblQualcommExpert>
+			<Text>Szakértői beállítások</Text>
+		</lblQualcommExpert>
 		<lblRemQualcommNpu>
 			<Text>Qualcomm Hexagon NPU eltávolítása</Text>
 		</lblRemQualcommNpu>

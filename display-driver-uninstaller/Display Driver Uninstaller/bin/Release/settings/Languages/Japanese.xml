@@ -360,8 +360,11 @@
 			<Text>GPU にインストールされた PC メーカーのドライバー拡張機能を削除する (より徹底したクリーンアップ) *</Text>
 		</lblRemIntelExt>
 		<lblRemIntelExtNote>
-			<Text>* ノート PC ではリスクが高くなります。元に戻す方法を知っている場合のみ: 拡張機能がないと機能が欠けたり GPU が起動しない (コード 31) ことがあります</Text>
+			<Text>* ノート PC ではリスクが高くなります。拡張機能がないと機能が欠けたり GPU が起動しない (コード 31) ことがあります。元に戻すには: PC メーカーのドライバー パッケージを再インストールするか、pnputil /add-driver &lt;拡張機能の .inf&gt; /install を実行します</Text>
 		</lblRemIntelExtNote>
+		<lblIntelExpert>
+			<Text>エキスパート オプション</Text>
+		</lblIntelExpert>
 		<lblRemQualcommCP>
 			<Text>Snapdragon コントロールパネルを削除する</Text>
 		</lblRemQualcommCP>
@@ -369,8 +372,11 @@
 			<Text>GPU にインストールされた OEM ドライバー拡張機能を削除する (より徹底したクリーンアップ) *</Text>
 		</lblRemQualcommExt>
 		<lblRemQualcommExtNote>
-			<Text>* 元に戻す方法を知っている場合のみ: 拡張機能がないと機能が欠けたり GPU が起動しない (コード 31) ことがあります</Text>
+			<Text>* 拡張機能がないと機能が欠けたり GPU が起動しない (コード 31) ことがあります。元に戻すには: Qualcomm または PC メーカーのドライバー パッケージを再インストールするか、pnputil /add-driver &lt;拡張機能の .inf&gt; /install を実行します</Text>
 		</lblRemQualcommExtNote>
+		<lblQualcommExpert>
+			<Text>エキスパート オプション</Text>
+		</lblQualcommExpert>
 		<lblRemQualcommNpu>
 			<Text>Qualcomm Hexagon NPU を削除する</Text>
 		</lblRemQualcommNpu>

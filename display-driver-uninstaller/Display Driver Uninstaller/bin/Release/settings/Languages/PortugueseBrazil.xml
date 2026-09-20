@@ -320,8 +320,11 @@ Esta opção não foi desenvolvida para corrigir problemas e pode não corrigir 
 			<Text>Remover as extensões do driver do fabricante do PC instaladas na GPU (limpeza mais completa) *</Text>
 		</lblRemIntelExt>
 		<lblRemIntelExtNote>
-			<Text>* Mais arriscado em notebooks. Somente se souber reinstalá-las: sem elas podem faltar recursos ou a GPU pode não iniciar (Código 31)</Text>
+			<Text>* Mais arriscado em notebooks. Sem elas podem faltar recursos ou a GPU pode não iniciar (Código 31). Para restaurá-las: reinstale o pacote de drivers do fabricante do PC, ou execute pnputil /add-driver &lt;extensão .inf&gt; /install</Text>
 		</lblRemIntelExtNote>
+		<lblIntelExpert>
+			<Text>Opções para especialistas</Text>
+		</lblIntelExpert>
 		<lblRemQualcommCP>
 			<Text>Remover o Snapdragon Control Panel</Text>
 		</lblRemQualcommCP>
@@ -329,8 +332,11 @@ Esta opção não foi desenvolvida para corrigir problemas e pode não corrigir 
 			<Text>Remover as extensões OEM do driver instaladas na GPU (limpeza mais completa) *</Text>
 		</lblRemQualcommExt>
 		<lblRemQualcommExtNote>
-			<Text>* Somente se souber reinstalá-las: sem elas podem faltar recursos ou a GPU pode não iniciar (Código 31)</Text>
+			<Text>* Sem elas podem faltar recursos ou a GPU pode não iniciar (Código 31). Para restaurá-las: reinstale o pacote de drivers da Qualcomm ou do fabricante do PC, ou execute pnputil /add-driver &lt;extensão .inf&gt; /install</Text>
 		</lblRemQualcommExtNote>
+		<lblQualcommExpert>
+			<Text>Opções para especialistas</Text>
+		</lblQualcommExpert>
 		<lblRemQualcommNpu>
 			<Text>Remover Qualcomm Hexagon NPU</Text>
 		</lblRemQualcommNpu>
