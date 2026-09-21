@@ -2734,7 +2734,7 @@ Namespace Display_Driver_Uninstaller.Win32
         End Sub
 
         ' RESERVED FOR CLEANING FROM CODE
-        Public Shared Sub UninstallDevice(ByVal device As Device, Optional ByVal removeExtensions As Boolean = True, Optional ByVal removeInfs As Boolean = True)
+        Public Shared Sub UninstallDevice(ByVal device As Device, Optional ByVal removeExtensions As Boolean = True, Optional ByVal removeInfs As Boolean = True, Optional ByVal forceExtensions As Boolean = False)
 
             Try
                 If device Is Nothing Then
@@ -2872,7 +2872,7 @@ Namespace Display_Driver_Uninstaller.Win32
                                 Dim inf As Inf = GetOemInf(Application.Paths.WinDir & "inf\", extendedInf)
 
                                 If inf IsNot Nothing AndAlso StrContainsAny(inf.Class, True, "Extension") Then
-                                    RemoveInf(inf, False, True)
+                                    RemoveInf(inf, forceExtensions, True)
                                 End If
                             Next
                         End If
