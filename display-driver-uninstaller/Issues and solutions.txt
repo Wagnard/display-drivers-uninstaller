@@ -115,6 +115,8 @@ pnputil /add-driver *.inf /subdirs /install
 
 Do not use Device Manager's "Update driver" for extensions: it applies them to one device only.
 
+On Snapdragon, after removing the NPU with the default settings, the Snapdragon Control Panel may show the NPU driver as installed although it isn't: use its **Repair** option, which reinstalls it.
+
 To check what is installed:
 
 ```
