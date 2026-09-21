@@ -1,5 +1,6 @@
 ﻿Imports Display_Driver_Uninstaller.Win32
 Imports System.IO
+Imports System.Text.RegularExpressions
 
 Namespace Display_Driver_Uninstaller
 	Public Class Inf
@@ -10,6 +11,7 @@ Namespace Display_Driver_Uninstaller
 		Private ReadOnly _fileExists As Boolean = False
 		Private ReadOnly _isValid As Boolean = False
 		Private ReadOnly _sourcedisksfiles As String() = Nothing
+		Private _componentIds As String() = Nothing
 		Private _installDate As DateTime
 
 		Public ReadOnly Property FileName As String
@@ -45,6 +47,27 @@ Namespace Display_Driver_Uninstaller
 		Public ReadOnly Property IsValid As Boolean
 			Get
 				Return _isValid
+			End Get
+		End Property
+		'Software components this INF declares (AddComponent / ComponentIDs), read on demand.
+		Public ReadOnly Property ComponentIDs As String()
+			Get
+				If _componentIds Is Nothing Then
+					Dim ids As New List(Of String)
+					Try
+						If FileExists Then
+							For Each m As Match In Regex.Matches(File.ReadAllText(_fileName), "^\s*ComponentIDs\s*=\s*([^;\r\n]+)", RegexOptions.Multiline Or RegexOptions.IgnoreCase)
+								For Each id As String In m.Groups(1).Value.Split(","c)
+									If Not String.IsNullOrWhiteSpace(id) Then ids.Add(id.Trim())
+								Next
+							Next
+						End If
+					Catch ex As Exception
+						Application.Log.AddException(ex)
+					End Try
+					_componentIds = ids.ToArray()
+				End If
+				Return _componentIds
 			End Get
 		End Property
 		Public Property InstallDate As DateTime

@@ -309,7 +309,7 @@ Namespace Display_Driver_Uninstaller
                             'platform devices. It follows the extension option like the rest : the generic Qualcomm NPU
                             'package ships it, so a reinstall puts it back.
                             If npu.ChildDevices IsNot Nothing AndAlso npu.ChildDevices.Length > 0 Then
-                                RemoveChiendrensFromDevices(npu.ChildDevices, removedDevices, removeExtensions)
+                                RemoveChiendrensFromDevices(npu.ChildDevices, removedDevices, removeExtensions, True, KeptExtensionComponents(npu, removeExtensions))
                             End If
 
                             SetupAPI.UninstallDevice(npu, removeExtensions)
@@ -342,7 +342,7 @@ Namespace Display_Driver_Uninstaller
                                     ' so they follow the same choice as the graphics extensions.
                                     If npu.ChildDevices IsNot Nothing AndAlso npu.ChildDevices.Length > 0 Then
                                         Application.Log.AddMessage("SetupAPI: Removing childrens associated to the Intel NPU")
-                                        RemoveChiendrensFromDevices(npu.ChildDevices, removedDevices, removeExtensions, removeExtensions)
+                                        RemoveChiendrensFromDevices(npu.ChildDevices, removedDevices, removeExtensions, removeExtensions, KeptExtensionComponents(npu, removeExtensions))
                                         Application.Log.AddMessage("SetupAPI: Removal of the childrens associated to the Intel NPU completed.")
                                     End If
 
@@ -666,7 +666,7 @@ Namespace Display_Driver_Uninstaller
 
                                 If GPU.ChildDevices IsNot Nothing AndAlso GPU.ChildDevices.Length > 0 Then
                                     Application.Log.AddMessage("SetupAPI: Removing childrens associated to the GPU(s)")
-                                    RemoveChiendrensFromDevices(GPU.ChildDevices, removedDevices, removeExtensions)
+                                    RemoveChiendrensFromDevices(GPU.ChildDevices, removedDevices, removeExtensions, True, KeptExtensionComponents(GPU, removeExtensions))
                                     Application.Log.AddMessage("SetupAPI: Removal of the childrens associated to the GPU(s) completed.")
                                 End If
                                 SetupAPI.UninstallDevice(GPU, removeExtensions) 'Then we remove the GPU itself.
@@ -1201,7 +1201,7 @@ Namespace Display_Driver_Uninstaller
 "nvidiaInspector")
         End Sub
 
-        Private Sub RemoveChiendrensFromDevices(devices As SetupAPI.Device(), removedDevices As List(Of String), Optional removeExtensions As Boolean = True, Optional removeInfs As Boolean = True)
+        Private Sub RemoveChiendrensFromDevices(devices As SetupAPI.Device(), removedDevices As List(Of String), Optional removeExtensions As Boolean = True, Optional removeInfs As Boolean = True, Optional keptComponents As String() = Nothing)
             For Each device As SetupAPI.Device In devices
                 If device IsNot Nothing Then
                     If removedDevices.Contains(device.ToString()) Then
@@ -1213,10 +1213,16 @@ Namespace Display_Driver_Uninstaller
                     If childRemoveInfs AndAlso IsCameraDevice(device) Then
                         childRemoveInfs = False
                     End If
+                    ' Same for a software component declared by an extension we keep : the reinstall recreates
+                    ' the component, nothing brings its driver back.
+                    If childRemoveInfs AndAlso keptComponents IsNot Nothing AndAlso device.HardwareIDs IsNot Nothing AndAlso
+                       device.HardwareIDs.Any(Function(h) keptComponents.Any(Function(c) String.Equals(c, h, StringComparison.OrdinalIgnoreCase) OrElse String.Equals("SWC\" & c, h, StringComparison.OrdinalIgnoreCase))) Then
+                        childRemoveInfs = False
+                    End If
                     ' Check if the device has child devices
                     If device.ChildDevices IsNot Nothing AndAlso device.ChildDevices.Length > 0 Then
                         ' Recursively remove child devices
-                        RemoveChiendrensFromDevices(device.ChildDevices, removedDevices, removeExtensions, childRemoveInfs)
+                        RemoveChiendrensFromDevices(device.ChildDevices, removedDevices, removeExtensions, childRemoveInfs, keptComponents)
                     End If
                     ' Uninstall the current device
                     SetupAPI.UninstallDevice(device, removeExtensions, childRemoveInfs)
@@ -1224,6 +1230,18 @@ Namespace Display_Driver_Uninstaller
                 End If
             Next
         End Sub
+
+        'Components declared by the extensions of a device, when those extensions are kept.
+        Private Function KeptExtensionComponents(device As SetupAPI.Device, removeExtensions As Boolean) As String()
+            If removeExtensions OrElse device Is Nothing OrElse device.ExtendedInfs Is Nothing Then Return Nothing
+            Dim ids As New List(Of String)
+            For Each extendedInf As String In device.ExtendedInfs
+                If String.IsNullOrWhiteSpace(extendedInf) Then Continue For
+                Dim inf As Inf = GetOemInf(Application.Paths.WinDir & "inf\", extendedInf)
+                If inf IsNot Nothing AndAlso inf.ComponentIDs IsNot Nothing Then ids.AddRange(inf.ComponentIDs)
+            Next
+            Return If(ids.Count > 0, ids.ToArray(), Nothing)
+        End Function
 
         Private Function IsCameraDevice(device As SetupAPI.Device) As Boolean
             If String.IsNullOrWhiteSpace(device.ClassGuid) Then Return False

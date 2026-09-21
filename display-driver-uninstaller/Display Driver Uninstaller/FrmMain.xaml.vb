@@ -1248,6 +1248,9 @@ Namespace Display_Driver_Uninstaller
 					info.Add(oem.FileName)
 					info.Add("Provider", oem.Provider)
 					info.Add("Class", oem.Class)
+					If oem.ComponentIDs IsNot Nothing AndAlso oem.ComponentIDs.Length > 0 Then
+						info.Add("Components", String.Join(", ", oem.ComponentIDs))
+					End If
 
 					If Not oem.IsValid Then
 						info.Add("This inf entry is corrupted or invalid.")
