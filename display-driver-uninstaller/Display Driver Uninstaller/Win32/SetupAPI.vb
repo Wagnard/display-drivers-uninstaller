@@ -2872,7 +2872,9 @@ Namespace Display_Driver_Uninstaller.Win32
                                 Dim inf As Inf = GetOemInf(Application.Paths.WinDir & "inf\", extendedInf)
 
                                 If inf IsNot Nothing AndAlso StrContainsAny(inf.Class, True, "Extension") Then
-                                    RemoveInf(inf, forceExtensions, True)
+                                    'Forced : DiUninstallDriver first (same as pnputil /delete-driver /uninstall), as
+                                    'SetupUninstallOEMInf alone cannot remove a package other devices still hold.
+                                    RemoveInf(inf, forceExtensions, Not forceExtensions)
                                 End If
                             Next
                         End If
