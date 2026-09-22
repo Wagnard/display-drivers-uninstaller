@@ -159,7 +159,7 @@
                         <CheckBox x:Name="lblRemIntelNpu" IsChecked="{Binding RemoveIntelNpu, Converter={StaticResource NulBoolToBool}}" Content="lblRemIntelNpu" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <Label x:Name="lblIntelExpert" Content="lblIntelExpert" FontWeight="Bold" Margin="0,8,0,4" Padding="0" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemIntelExt" IsChecked="{Binding RemoveIntelExt, Converter={StaticResource NulBoolToBool}}" Content="lblRemIntelExt" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
-                        <TextBlock x:Name="lblRemIntelExtNote" Text="lblRemIntelExtNote" FontStyle="Italic" Opacity="0.85" Margin="20,-3,0,8" TextWrapping="Wrap" FlowDirection="{Binding FlowControl}"/>
+                        <TextBlock x:Name="lblRemIntelExtNote" Text="lblRemIntelExtNote" FontStyle="Italic" Opacity="0.85" Margin="20,-3,0,8" TextWrapping="Wrap" MaxWidth="500" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                     </StackPanel>
                 </DockPanel>
             </TabItem>
@@ -173,7 +173,7 @@
                         <CheckBox x:Name="lblRemQualcommNpu" IsChecked="{Binding RemoveQualcommNpu, Converter={StaticResource NulBoolToBool}}" Content="lblRemQualcommNpu" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <Label x:Name="lblQualcommExpert" Content="lblQualcommExpert" FontWeight="Bold" Margin="0,8,0,4" Padding="0" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblRemQualcommExt" IsChecked="{Binding RemoveQualcommExt, Converter={StaticResource NulBoolToBool}}" Content="lblRemQualcommExt" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
-                        <TextBlock x:Name="lblRemQualcommExtNote" Text="lblRemQualcommExtNote" FontStyle="Italic" Opacity="0.85" Margin="20,-3,0,8" TextWrapping="Wrap" FlowDirection="{Binding FlowControl}"/>
+                        <TextBlock x:Name="lblRemQualcommExtNote" Text="lblRemQualcommExtNote" FontStyle="Italic" Opacity="0.85" Margin="20,-3,0,8" TextWrapping="Wrap" MaxWidth="500" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                     </StackPanel>
                 </DockPanel>
             </TabItem>

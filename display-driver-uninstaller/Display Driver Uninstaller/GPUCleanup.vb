@@ -1112,8 +1112,9 @@ Namespace Display_Driver_Uninstaller
                     If found IsNot Nothing AndAlso found.Count > 0 Then
                         For Each d As SetupAPI.Device In found
                             If d IsNot Nothing Then
-                                'Laptop panels carry OEM extensions (MyASUS Splendid...) that no GPU package brings back.
-                                SetupAPI.UninstallDevice(d, removeExtensions)
+                                'A screen's own extension (colour profiles, MyASUS Splendid...) is not part of the graphics
+                                'driver and no GPU package brings it back : it is never removed.
+                                SetupAPI.UninstallDevice(d, False)
                             End If
                         Next
                         found.Clear()
