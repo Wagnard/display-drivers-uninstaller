@@ -8326,19 +8326,6 @@ child.ToLower.Equals("oneapp_igcc") Then
                 End If
                 RemoveQualcommInstallerRecords(packages, config)
 
-                'Payload the installers extract before installing (gfx_drivers_8380_ARM64_{MSI code}, mcdm_drivers_...).
-                Dim payloadRoot As String = config.Paths.Roaming & "Qualcomm\Drivers"
-                If _fileIo.ExistsDir(payloadRoot) Then
-                    For Each child As String In _fileIo.GetDirectories(payloadRoot)
-                        If String.IsNullOrWhiteSpace(child) Then Continue For
-                        Dim leaf As String = Path.GetFileName(child)
-                        If leaf.StartsWith("gfx_drivers_", StringComparison.OrdinalIgnoreCase) OrElse
-                           (config.RemoveQualcommNpu AndAlso leaf.StartsWith("mcdm_drivers_", StringComparison.OrdinalIgnoreCase)) Then
-                            Delete(child)
-                        End If
-                    Next
-                End If
-
                 If config.RemoveQualcommCP Then
                     'Snapdragon Control Panel (MSIX identity "AdrenoControlPanel"). It runs unvirtualized, so its
                     'settings and data sit in the real HKCU and AppData of each user, outside the package.
@@ -8415,16 +8402,6 @@ child.ToLower.Equals("oneapp_igcc") Then
                                     Next
                                 End If
                             End Using
-
-                            'Cached bundle and MSI : "{code}" and "{code}v1.2.16.0".
-                            Dim packageCache As String = config.Paths.Roaming & "Package Cache"
-                            If _fileIo.ExistsDir(packageCache) Then
-                                For Each cached As String In _fileIo.GetDirectories(packageCache)
-                                    If Not String.IsNullOrWhiteSpace(cached) AndAlso Path.GetFileName(cached).StartsWith(child, StringComparison.OrdinalIgnoreCase) Then
-                                        Delete(cached)
-                                    End If
-                                Next
-                            End If
                         Next
                     End Using
                 Catch ex As Exception
