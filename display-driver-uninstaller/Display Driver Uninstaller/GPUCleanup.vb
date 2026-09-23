@@ -1221,13 +1221,15 @@ Namespace Display_Driver_Uninstaller
                        device.HardwareIDs.Any(Function(h) keptComponents.Any(Function(c) String.Equals(c, h, StringComparison.OrdinalIgnoreCase) OrElse String.Equals("SWC\" & c, h, StringComparison.OrdinalIgnoreCase))) Then
                         childRemoveInfs = False
                     End If
+                    ' A screen's own extension (colour profiles...) is never removed, see the monitor pass.
+                    Dim childRemoveExtensions As Boolean = removeExtensions AndAlso Not IsMonitorDevice(device)
                     ' Check if the device has child devices
                     If device.ChildDevices IsNot Nothing AndAlso device.ChildDevices.Length > 0 Then
                         ' Recursively remove child devices
                         RemoveChiendrensFromDevices(device.ChildDevices, removedDevices, removeExtensions, childRemoveInfs, keptComponents)
                     End If
                     ' Uninstall the current device
-                    SetupAPI.UninstallDevice(device, removeExtensions, childRemoveInfs)
+                    SetupAPI.UninstallDevice(device, childRemoveExtensions, childRemoveInfs)
                     removedDevices.Add(device.ToString)
                 End If
             Next
@@ -1243,6 +1245,11 @@ Namespace Display_Driver_Uninstaller
                 If inf IsNot Nothing AndAlso inf.ComponentIDs IsNot Nothing Then ids.AddRange(inf.ComponentIDs)
             Next
             Return If(ids.Count > 0, ids.ToArray(), Nothing)
+        End Function
+
+        Private Function IsMonitorDevice(device As SetupAPI.Device) As Boolean
+            If String.IsNullOrWhiteSpace(device.ClassGuid) Then Return False
+            Return StrContainsAny(device.ClassGuid, True, "4d36e96e-e325-11ce-bfc1-08002be10318")
         End Function
 
         Private Function IsCameraDevice(device As SetupAPI.Device) As Boolean
