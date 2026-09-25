@@ -8319,7 +8319,8 @@ child.ToLower.Equals("oneapp_igcc") Then
                 End If
 
                 'The Qualcomm installers (a Burn bundle over an MSI) keep their own install records. Left behind,
-                'the next install opens in maintenance mode and only offers Repair / Uninstall.
+                'the NPU installer opens in maintenance mode and only offers Repair / Uninstall. packages.cfg is
+                'empty on purpose, the GPU installer never had that problem, so its records are left alone.
                 Dim packages As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\QUALCOMM\packages.cfg")
                 If config.RemoveQualcommNpu Then
                     packages = packages.Concat(IO.File.ReadAllLines(config.Paths.AppBase & "settings\QUALCOMM\packagesnpu.cfg")).ToArray()
@@ -8371,43 +8372,9 @@ child.ToLower.Equals("oneapp_igcc") Then
 
             CleanupEngine.Installer(packages, config)
 
-            For Each uninstallPath As String In {"Software\Microsoft\Windows\CurrentVersion\Uninstall", "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"}
-                Try
-                    Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, uninstallPath, True)
-                        If regkey Is Nothing Then Continue For
-
-                        For Each child As String In regkey.GetSubKeyNames()
-                            If String.IsNullOrWhiteSpace(child) Then Continue For
-
-                            Dim displayName As String = Nothing
-                            Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child, False)
-                                If subregkey IsNot Nothing Then displayName = TryCast(subregkey.GetValue("DisplayName", String.Empty), String)
-                            End Using
-                            If String.IsNullOrWhiteSpace(displayName) OrElse Not StrContainsAny(displayName, True, packages) Then Continue For
-
-                            Deletesubregkey(regkey, child)
-
-                            'Burn registers a dependency entry for the bundle and for each MSI it installs.
-                            Using depKey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Installer\Dependencies", True)
-                                If depKey IsNot Nothing Then
-                                    For Each depChild As String In depKey.GetSubKeyNames()
-                                        If String.IsNullOrWhiteSpace(depChild) Then Continue For
-                                        Dim provider As String = Nothing
-                                        Using dep As RegistryKey = MyRegistry.OpenSubKey(depKey, depChild, False)
-                                            If dep IsNot Nothing Then provider = TryCast(dep.GetValue("", String.Empty), String)
-                                        End Using
-                                        If Not String.IsNullOrWhiteSpace(provider) AndAlso String.Equals(provider, child, StringComparison.OrdinalIgnoreCase) Then
-                                            Deletesubregkey(depKey, depChild, False)
-                                        End If
-                                    Next
-                                End If
-                            End Using
-                        Next
-                    End Using
-                Catch ex As Exception
-                    Application.Log.AddException(ex)
-                End Try
-            Next
+            Dim isMatch As Func(Of String, String, Boolean) = Function(key As String, name As String) Not String.IsNullOrWhiteSpace(name) AndAlso StrContainsAny(name, True, packages)
+            CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKey, isMatch, CleanupEngine.UninstallDependencies.ByProviderValue, False, config)
+            CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKeyWow, isMatch, CleanupEngine.UninstallDependencies.ByProviderValue, False, config)
         End Sub
 
         Private Sub CleanQualcommCache(config As ThreadSettings)

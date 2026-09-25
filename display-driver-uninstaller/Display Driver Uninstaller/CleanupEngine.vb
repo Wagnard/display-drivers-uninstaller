@@ -1382,6 +1382,76 @@ Namespace Display_Driver_Uninstaller
             End If
         End Sub
 
+        Public Const UninstallKey As String = "Software\Microsoft\Windows\CurrentVersion\Uninstall"
+        Public Const UninstallKeyWow As String = "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall"
+
+        Public Enum UninstallDependencies
+            None
+            ByProviderValue
+            ByKeyName
+        End Enum
+
+        ''' <summary>Removes the entries of an Uninstall view accepted by isMatch(keyName, displayName),
+        ''' then their installer dependency entry and their Package Cache folder if asked.</summary>
+        Public Sub RemoveUninstallEntries(ByVal uninstallPath As String, ByVal isMatch As Func(Of String, String, Boolean),
+                                          ByVal dependencies As UninstallDependencies, ByVal removePackageCache As Boolean, config As ThreadSettings)
+            Try
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, uninstallPath, True)
+                    If regkey Is Nothing Then Return
+
+                    For Each child As String In regkey.GetSubKeyNames()
+                        If String.IsNullOrWhiteSpace(child) Then Continue For
+
+                        Try
+                            Dim displayName As String = String.Empty
+                            Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child, False)
+                                If subregkey Is Nothing Then Continue For
+                                displayName = If(TryCast(subregkey.GetValue("DisplayName", String.Empty), String), String.Empty)
+                            End Using
+
+                            If Not isMatch(child, displayName) Then Continue For
+
+                            Deletesubregkey(regkey, child)
+
+                            Select Case dependencies
+                                Case UninstallDependencies.ByProviderValue
+                                    Using depKey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Installer\Dependencies", True)
+                                        If depKey IsNot Nothing Then
+                                            For Each depChild As String In depKey.GetSubKeyNames()
+                                                If String.IsNullOrWhiteSpace(depChild) Then Continue For
+                                                Dim provider As String = Nothing
+                                                Using dep As RegistryKey = MyRegistry.OpenSubKey(depKey, depChild, False)
+                                                    If dep IsNot Nothing Then provider = TryCast(dep.GetValue("", String.Empty), String)
+                                                End Using
+                                                If Not String.IsNullOrWhiteSpace(provider) AndAlso StrContainsAny(child, True, provider) Then
+                                                    Deletesubregkey(depKey, depChild, False)
+                                                End If
+                                            Next
+                                        End If
+                                    End Using
+                                Case UninstallDependencies.ByKeyName
+                                    Using depKey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Installer\Dependencies", True)
+                                        If depKey IsNot Nothing Then Deletesubregkey(depKey, child, False)
+                                    End Using
+                            End Select
+
+                            If removePackageCache Then
+                                Dim packageCache As String = config.Paths.Roaming & "Package Cache\" & child
+                                If Directory.Exists(packageCache) Then
+                                    Delete(packageCache)
+                                    RemoveSharedDlls(packageCache)
+                                End If
+                            End If
+                        Catch ex As Exception
+                            Application.Log.AddException(ex)
+                        End Try
+                    Next
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+            End Try
+        End Sub
+
         Public Sub Installer(ByVal packages As String(), config As ThreadSettings)
 
             Dim wantedvalue As String = Nothing
