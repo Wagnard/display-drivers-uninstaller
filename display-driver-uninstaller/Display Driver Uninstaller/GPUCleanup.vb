@@ -2527,90 +2527,10 @@ child.ToLower.Contains("mftvdecoder") Then
                     Application.Log.AddException(ex)
                 End Try
                 Application.Log.AddMessage("Removing known Packages")
-                Try
-                    Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-"Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
-                        If regkey IsNot Nothing Then
-                            For Each child As String In regkey.GetSubKeyNames()
-                                If String.IsNullOrWhiteSpace(child) Then Continue For
-                                Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
-                                    If subregkey IsNot Nothing Then
-                                        If String.IsNullOrWhiteSpace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then Continue For
-                                        wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
-                                        If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
-                                        For i As Integer = 0 To packages.Length - 1
-                                            If String.IsNullOrWhiteSpace(packages(i)) Then Continue For
-                                            If StrContainsAny(wantedvalue, True, packages(i)) Then
-                                                Try
-                                                    If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
-                                                        Deletesubregkey(regkey, child)
-                                                        Using dependencyRegkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Installer\Dependencies", True)
-                                                            If dependencyRegkey IsNot Nothing Then
-                                                                For Each depChild As String In dependencyRegkey.GetSubKeyNames
-                                                                    If String.IsNullOrWhiteSpace(depChild) Then Continue For
-                                                                    If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-                                                                    If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
-                                                                        Try
-                                                                            Deletesubregkey(dependencyRegkey, depChild, False)
-                                                                        Catch ex As Exception
-                                                                            Application.Log.AddException(ex)
-                                                                        End Try
-                                                                    End If
-                                                                Next
-                                                            End If
-                                                        End Using
-                                                        If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
-                                                            Delete(config.Paths.Roaming + "Package Cache\" + child)
-                                                        End If
-                                                        Continue For
-                                                    End If
-                                                Catch ex As Exception
-                                                    Application.Log.AddException(ex)
-                                                End Try
-                                            End If
-                                        Next
-                                    End If
-                                End Using
-                            Next
-                        End If
-                    End Using
-                Catch ex As Exception
-                    Application.Log.AddException(ex)
-                End Try
+                Dim isMatch As Func(Of String, String, Boolean) = Function(key As String, name As String) StrContainsAny(name, True, packages) AndAlso Not (config.RemoveVulkan = False AndAlso StrContainsAny(name, True, "vulkan"))
+                CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKey, isMatch, CleanupEngine.UninstallDependencies.ByProviderValue, True, config)
                 If IntPtr.Size = 8 Then
-                    Try
-                        Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-"Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
-                            If regkey IsNot Nothing Then
-                                For Each child As String In regkey.GetSubKeyNames()
-                                    If String.IsNullOrWhiteSpace(child) Then Continue For
-                                    Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-"Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
-                                        If subregkey IsNot Nothing Then
-                                            If String.IsNullOrWhiteSpace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then Continue For
-                                            wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
-                                            If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
-                                            For i As Integer = 0 To packages.Length - 1
-                                                If Not String.IsNullOrWhiteSpace(packages(i)) Then
-                                                    If StrContainsAny(wantedvalue, True, packages(i)) Then
-                                                        Try
-                                                            If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
-                                                                Deletesubregkey(regkey, child)
-                                                            End If
-                                                        Catch ex As Exception
-                                                            Application.Log.AddException(ex)
-                                                        End Try
-                                                    End If
-                                                End If
-                                            Next
-                                        End If
-                                    End Using
-                                Next
-                            End If
-                        End Using
-                    Catch ex As Exception
-                        Application.Log.AddException(ex)
-                    End Try
+                    CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKeyWow, isMatch, CleanupEngine.UninstallDependencies.None, False, config)
                 End If
                 CleanupEngine.Installer(packages, config)
                 Try
