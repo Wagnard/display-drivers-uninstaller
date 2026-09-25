@@ -7990,8 +7990,8 @@ child.ToLower.Equals("oneapp_igcc") Then
                 End If
 
                 'The Qualcomm installers (a Burn bundle over an MSI) keep their own install records. Left behind,
-                'the NPU installer opens in maintenance mode and only offers Repair / Uninstall. packages.cfg is
-                'empty on purpose, the GPU installer never had that problem, so its records are left alone.
+                'the installer opens in maintenance mode and only offers Repair / Uninstall. Only the records are
+                'removed, the payload folders hold the installer's own tools.
                 Dim packages As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\QUALCOMM\packages.cfg")
                 If config.RemoveQualcommNpu Then
                     packages = packages.Concat(IO.File.ReadAllLines(config.Paths.AppBase & "settings\QUALCOMM\packagesnpu.cfg")).ToArray()

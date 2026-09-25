@@ -107,9 +107,15 @@ To see what is installed:
 
        pnputil /enum-drivers | findstr /i /c:"Original Name"
 
-On Snapdragon, after removing the NPU with the default settings, the
-Snapdragon Control Panel may show the NPU driver as installed although it is
-not: use its Repair option, which reinstalls it.
+
+-------------------------------------------------------------------------------
+ 6. Snapdragon Control Panel: a driver download stalls
+-------------------------------------------------------------------------------
+
+The Snapdragon Control Panel downloads the drivers from Qualcomm's servers.
+After several installs in a row, the servers may slow down or stop answering
+for a while, and the download stalls or the panel stops responding. This is
+not caused by DDU: close the panel, wait a while, and try again.
 
 
 -------------------------------------------------------------------------------
