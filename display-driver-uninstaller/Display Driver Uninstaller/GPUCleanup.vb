@@ -4506,31 +4506,11 @@ child2.ToLower.Contains("nvidia control panel") Then
                     End If
                 End Using
 
+                Dim isPhysX As Func(Of String, Boolean) = Function(name As String) removephysx AndAlso StrContainsAny(name, True, "physx")
+
                 If IntPtr.Size = 8 Then
-                    Try
-                        Dim CanRemove As Boolean = True
-                        Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-"Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
-                            If regkey IsNot Nothing Then
-                                For Each child As String In regkey.GetSubKeyNames()
-                                    If String.IsNullOrWhiteSpace(child) Then Continue For
-                                    Try
-                                        Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-                                            If regkey2 IsNot Nothing Then
-                                                If removephysx Then
-                                                    If Not String.IsNullOrWhiteSpace(regkey2.GetValue("DisplayName", String.Empty).ToString) Then
-                                                        If regkey2.GetValue("DisplayName").ToString.ToLower.Contains("physx") Then
-                                                            Deletesubregkey(regkey, child)
-                                                            Continue For
-                                                        End If
-                                                    End If
-                                                End If
-                                            End If
-                                        End Using
-                                    Catch ex As Exception
-                                        Application.Log.AddException(ex)
-                                    End Try
-                                    If child.ToLower.Contains("display.3dvision") Or
+                    Dim isWowPackage As Func(Of String, Boolean) =
+                        Function(child As String) child.ToLower.Contains("display.3dvision") Or
 child.ToLower.Contains("3dtv") AndAlso config.Remove3DTVPlay Or
 child.ToLower.Contains("_display.controlpanel") Or
 child.ToLower.Contains("_display.driver") Or
@@ -4554,86 +4534,22 @@ child.ToLower.Contains("_shieldwireless") AndAlso removegfe Or
 child.ToLower.Contains("miracast.virtualaudio") AndAlso removegfe Or
 child.ToLower.Contains("_nvdisplaypluginwatchdog") AndAlso removegfe Or
 child.ToLower.Contains("_nvdisplaysessioncontainer") AndAlso removegfe Or
-child.ToLower.Contains("_virtualaudio.driver") AndAlso removegfe Then
-                                        Try
-                                            Deletesubregkey(regkey, child)
-                                        Catch ex As Exception
-                                            Application.Log.AddException(ex)
-                                        End Try
-                                    End If
-                                Next
-                                For Each child As String In regkey.GetSubKeyNames()
-                                    If String.IsNullOrWhiteSpace(child) Then Continue For
-                                    If StrContainsAny(child, True, "B2FE1952-0186-46C3-BAEC-A80AA35AC5B8") AndAlso Not StrContainsAny(child, True, "_installer") Then
-                                        CanRemove = False
-                                    End If
-                                Next
-                                If CanRemove Then
-                                    For Each child As String In regkey.GetSubKeyNames()
-                                        If String.IsNullOrWhiteSpace(child) Then Continue For
-                                        If StrContainsAny(child, True, "_installer") Then
-                                            Try
-                                                Deletesubregkey(regkey, child)
-                                            Catch ex As Exception
-                                                Application.Log.AddException(ex)
-                                            End Try
-                                        End If
-                                    Next
-                                End If
-                            End If
-                        End Using
-                    Catch ex As Exception
-                        Application.Log.AddException(ex)
-                    End Try
+child.ToLower.Contains("_virtualaudio.driver") AndAlso removegfe
+
+                    CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKeyWow, Function(key As String, name As String) isPhysX(name) OrElse isWowPackage(key),
+                                                         CleanupEngine.UninstallDependencies.None, False, config)
+                    If Not HasNvidiaPackagesLeft(CleanupEngine.UninstallKeyWow) Then
+                        CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKeyWow, Function(key As String, name As String) StrContainsAny(key, True, "_installer"),
+                                                             CleanupEngine.UninstallDependencies.None, False, config)
+                    End If
                 End If
 
-                Try
-                    Dim CanRemove As Boolean = True
-                    Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-"Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
-                        If regkey IsNot Nothing Then
-                            For Each child As String In regkey.GetSubKeyNames()
-                                If String.IsNullOrWhiteSpace(child) Then Continue For
-                                Using regkey2 As RegistryKey = MyRegistry.OpenSubKey(regkey, child)
-                                    If regkey2 IsNot Nothing Then
-                                        Try
-                                            If removephysx Then
-                                                If String.IsNullOrWhiteSpace(regkey2.GetValue("DisplayName", String.Empty).ToString) = False Then
-                                                    If StrContainsAny(regkey2.GetValue("DisplayName", String.Empty).ToString, True, "physx") Then
-                                                        Deletesubregkey(regkey, child)
-                                                        Using dependencyRegkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Installer\Dependencies", True)
-                                                            If dependencyRegkey IsNot Nothing Then
-                                                                For Each depChild As String In dependencyRegkey.GetSubKeyNames
-                                                                    If String.IsNullOrWhiteSpace(depChild) Then Continue For
-                                                                    If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-                                                                    If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
-                                                                        Try
-                                                                            Deletesubregkey(dependencyRegkey, depChild, False)
-                                                                        Catch ex As Exception
-                                                                            Application.Log.AddException(ex)
-                                                                        End Try
-                                                                    End If
-                                                                Next
-                                                            End If
-                                                        End Using
-                                                        If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
-                                                            Delete(config.Paths.Roaming + "Package Cache\" + child)
-                                                        End If
-                                                        Continue For
-                                                    End If
-                                                End If
-                                            End If
-                                        Catch ex As Exception
-                                            Application.Log.AddException(ex)
-                                        End Try
-                                    End If
-                                End Using
-
-                                If child.ToLower.Contains("display.3dvision") Or
-                                child.ToLower.Contains("3dtv") AndAlso config.Remove3DTVPlay Or
-                                child.ToLower.Contains("_display.controlpanel") Or
-                                child.ToLower.Contains("_display.driver") Or
-                                child.ToLower.Contains("_display.optimus") Or
+                Dim isPackage As Func(Of String, Boolean) =
+                    Function(child As String) child.ToLower.Contains("display.3dvision") Or
+                    child.ToLower.Contains("3dtv") AndAlso config.Remove3DTVPlay Or
+                    child.ToLower.Contains("_display.controlpanel") Or
+                    child.ToLower.Contains("_display.driver") Or
+                    child.ToLower.Contains("_display.optimus") Or
 child.ToLower.Contains("_frameviewsdk") AndAlso config.RemoveGFE Or
 child.ToLower.Contains("_gpxcommon.oss") AndAlso config.RemoveGFE Or
 child.ToLower.Contains("_display.gfexperience") AndAlso config.RemoveGFE Or
@@ -4678,47 +4594,16 @@ child.ToLower.Contains("_nvdisplaypluginwatchdog") AndAlso config.RemoveGFE Or
 child.ToLower.Contains("_nvdisplaysessioncontainer") AndAlso config.RemoveGFE Or
 child.ToLower.Contains("_osc") AndAlso config.RemoveGFE Or
 child.ToLower.Contains("_nvmoduletracker.driver") AndAlso config.RemoveGFE Or
-child.ToLower.Contains("_nvcontainer") AndAlso config.RemoveGFE Then
-                                    Try
-                                        Deletesubregkey(regkey, child)
-                                        Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child, False)
-                                        If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
-                                            Delete(config.Paths.Roaming + "Package Cache\" + child)
-                                        End If
-                                    Catch ex As Exception
-                                        Application.Log.AddException(ex)
-                                    End Try
-                                End If
-                            Next
+child.ToLower.Contains("_nvcontainer") AndAlso config.RemoveGFE
 
-                            For Each child As String In regkey.GetSubKeyNames()
-                                If String.IsNullOrWhiteSpace(child) Then Continue For
-                                If StrContainsAny(child, True, "B2FE1952-0186-46C3-BAEC-A80AA35AC5B8") AndAlso Not StrContainsAny(child, True, "_installer") Then
-                                    CanRemove = False
-                                End If
-                            Next
-
-                            If CanRemove Then
-                                For Each child As String In regkey.GetSubKeyNames()
-                                    If String.IsNullOrWhiteSpace(child) Then Continue For
-                                    If StrContainsAny(child, True, "_installer") Then
-                                        Try
-                                            Deletesubregkey(regkey, child)
-                                            Deletesubregkey(Registry.ClassesRoot, "Installer\Dependencies\" + child, False)
-                                            If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
-                                                Delete(config.Paths.Roaming + "Package Cache\" + child)
-                                            End If
-                                        Catch ex As Exception
-                                            Application.Log.AddException(ex)
-                                        End Try
-                                    End If
-                                Next
-                            End If
-                        End If
-                    End Using
-                Catch ex As Exception
-                    Application.Log.AddException(ex)
-                End Try
+                CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKey, Function(key As String, name As String) isPhysX(name),
+                                                     CleanupEngine.UninstallDependencies.ByProviderValue, True, config)
+                CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKey, Function(key As String, name As String) isPackage(key),
+                                                     CleanupEngine.UninstallDependencies.ByKeyName, True, config)
+                If Not HasNvidiaPackagesLeft(CleanupEngine.UninstallKey) Then
+                    CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKey, Function(key As String, name As String) StrContainsAny(key, True, "_installer"),
+                                                         CleanupEngine.UninstallDependencies.ByKeyName, True, config)
+                End If
 
                 Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, ".DEFAULT\Software", True)
                     If regkey IsNot Nothing Then
@@ -6103,6 +5988,18 @@ regkey.GetValue(child).ToString.ToLower.Contains("nvidia play on my tv context m
                 Application.Log.AddException(ex)
             End Try
         End Sub
+
+        Private Function HasNvidiaPackagesLeft(ByVal uninstallPath As String) As Boolean
+            Try
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, uninstallPath, False)
+                    If regkey Is Nothing Then Return False
+                    Return regkey.GetSubKeyNames().Any(Function(child) StrContainsAny(child, True, "B2FE1952-0186-46C3-BAEC-A80AA35AC5B8") AndAlso Not StrContainsAny(child, True, "_installer"))
+                End Using
+            Catch ex As Exception
+                Application.Log.AddException(ex)
+                Return True
+            End Try
+        End Function
 
         Private Sub CleanNvidiaCache(ByVal config As ThreadSettings)
             Dim filePath As String = config.Paths.System32 + "config\systemprofile\AppData\Local\NVIDIA"
