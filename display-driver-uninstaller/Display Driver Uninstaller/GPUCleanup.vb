@@ -4539,7 +4539,7 @@ child.ToLower.Contains("_virtualaudio.driver") AndAlso removegfe
                     CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKeyWow, Function(key As String, name As String) isPhysX(name) OrElse isWowPackage(key),
                                                          CleanupEngine.UninstallDependencies.None, False, config)
                     If Not HasNvidiaPackagesLeft(CleanupEngine.UninstallKeyWow) Then
-                        CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKeyWow, Function(key As String, name As String) StrContainsAny(key, True, "_installer"),
+                        CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKeyWow, Function(key As String, name As String) StrContainsAny(key, True, "B2FE1952-0186-46C3-BAEC-A80AA35AC5B8") AndAlso StrContainsAny(key, True, "_installer"),
                                                              CleanupEngine.UninstallDependencies.None, False, config)
                     End If
                 End If
@@ -4601,7 +4601,7 @@ child.ToLower.Contains("_nvcontainer") AndAlso config.RemoveGFE
                 CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKey, Function(key As String, name As String) isPackage(key),
                                                      CleanupEngine.UninstallDependencies.ByKeyName, True, config)
                 If Not HasNvidiaPackagesLeft(CleanupEngine.UninstallKey) Then
-                    CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKey, Function(key As String, name As String) StrContainsAny(key, True, "_installer"),
+                    CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKey, Function(key As String, name As String) StrContainsAny(key, True, "B2FE1952-0186-46C3-BAEC-A80AA35AC5B8") AndAlso StrContainsAny(key, True, "_installer"),
                                                          CleanupEngine.UninstallDependencies.ByKeyName, True, config)
                 End If
 
