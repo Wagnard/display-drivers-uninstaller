@@ -7670,173 +7670,27 @@ child.ToLower.Contains("igfxdtcm") Then
                     CleanupEngine.Installer(packagesEndurance, config)
                 End If
 
-                Try
-                    Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-"Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
-                        If regkey IsNot Nothing Then
-                            For Each child As String In regkey.GetSubKeyNames()
-                                If String.IsNullOrWhiteSpace(child) Then Continue For
-                                Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
-                                    If subregkey IsNot Nothing Then
-                                        If String.IsNullOrWhiteSpace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then
-                                            'Specific fix/workaround for failing to remove in the past the Package cache and causing the Intel installer to create an incomplete GUID regkey
-                                            If StrContainsAny(child, True, "{43B4715B-9FFB-47B0-AEAD-7C6D755EE010}", "{41a5e581-4a2c-406c-a1b5-ec680ffc64c8}", "{f8176a62-cc98-418f-a208-e187faebe116}") Then
-                                                Try
-                                                    Deletesubregkey(regkey, child)
-                                                    Using dependencyRegkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Installer\Dependencies", True)
-                                                        If dependencyRegkey IsNot Nothing Then
-                                                            For Each depChild As String In dependencyRegkey.GetSubKeyNames
-                                                                If String.IsNullOrWhiteSpace(depChild) Then Continue For
-                                                                If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-                                                                If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
-                                                                    Try
-                                                                        Deletesubregkey(dependencyRegkey, depChild, False)
-                                                                    Catch ex As Exception
-                                                                        Application.Log.AddException(ex)
-                                                                    End Try
-                                                                End If
-                                                            Next
-                                                        End If
-                                                    End Using
-                                                    If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
-                                                        Delete(config.Paths.Roaming + "Package Cache\" + child)
-                                                    End If
-                                                Catch ex As Exception
-                                                    Application.Log.AddException(ex)
-                                                End Try
-                                            End If
-                                            Continue For
-                                        Else
-                                            wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
-                                            Dim InstallSource = subregkey.GetValue("InstallSource", String.Empty).ToString.TrimEnd(CChar("\"))
-                                            If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
-                                            If StrContainsAny(wantedvalue, True, packages) OrElse
-                                            (config.RemoveINTELIGS AndAlso StrContainsAny(wantedvalue, True, packagesigs)) OrElse
-                                            (config.RemoveEnduranceGaming AndAlso StrContainsAny(wantedvalue, True, packagesEndurance)) OrElse
-                                            (config.RemoveIntelNpu AndAlso Not Tools.IsIntelNpuPresent AndAlso StrContainsAny(wantedvalue, True, packagesNpu)) OrElse
-                                            (config.RemoveOneAPI AndAlso StrContainsAny(wantedvalue, True, packagesoneapi)) Then
-                                                Try
-                                                    If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
-                                                        Deletesubregkey(regkey, child)
-                                                        Using dependencyRegkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Installer\Dependencies", True)
-                                                            If dependencyRegkey IsNot Nothing Then
-                                                                For Each depChild As String In dependencyRegkey.GetSubKeyNames
-                                                                    If String.IsNullOrWhiteSpace(depChild) Then Continue For
-                                                                    If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-                                                                    If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
-                                                                        Try
-                                                                            Deletesubregkey(dependencyRegkey, depChild, False)
-                                                                        Catch ex As Exception
-                                                                            Application.Log.AddException(ex)
-                                                                        End Try
-                                                                    End If
-                                                                Next
-                                                            End If
-                                                        End Using
-                                                        If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
-                                                            Delete(config.Paths.Roaming + "Package Cache\" + child)
-                                                        End If
-                                                        If ((Not String.IsNullOrWhiteSpace(InstallSource)) AndAlso Directory.Exists(InstallSource)) Then
-                                                            'Delete(InstallSource)
-                                                        End If
-                                                    End If
-                                                Catch ex As Exception
-                                                    Application.Log.AddException(ex)
-                                                End Try
-                                            End If
-                                        End If
-                                    End If
-                                End Using
-                            Next
-                        End If
-                    End Using
-                Catch ex As Exception
-                    Application.Log.AddException(ex)
-                End Try
+                Dim isPackage As Func(Of String, Boolean) =
+                    Function(name As String) (StrContainsAny(name, True, packages) OrElse
+                        (config.RemoveINTELIGS AndAlso StrContainsAny(name, True, packagesigs)) OrElse
+                        (config.RemoveEnduranceGaming AndAlso StrContainsAny(name, True, packagesEndurance)) OrElse
+                        (config.RemoveIntelNpu AndAlso Not Tools.IsIntelNpuPresent AndAlso StrContainsAny(name, True, packagesNpu)) OrElse
+                        (config.RemoveOneAPI AndAlso StrContainsAny(name, True, packagesoneapi))) AndAlso
+                        Not (config.RemoveVulkan = False AndAlso StrContainsAny(name, True, "vulkan"))
+
+                'Specific fix/workaround for failing to remove in the past the Package cache and causing the Intel installer to create an incomplete GUID regkey
+                CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKey,
+                    Function(key As String, name As String) If(String.IsNullOrWhiteSpace(name),
+                        StrContainsAny(key, True, "{43B4715B-9FFB-47B0-AEAD-7C6D755EE010}", "{41a5e581-4a2c-406c-a1b5-ec680ffc64c8}", "{f8176a62-cc98-418f-a208-e187faebe116}"),
+                        isPackage(name)),
+                    CleanupEngine.UninstallDependencies.ByProviderValue, True, config)
 
                 If IntPtr.Size = 8 Then
-                    Try
-                        Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
-                            If regkey IsNot Nothing Then
-                                For Each child As String In regkey.GetSubKeyNames()
-                                    If String.IsNullOrWhiteSpace(child) = False Then
-                                        Using subregkey As RegistryKey = MyRegistry.OpenSubKey(regkey, child, True)
-                                            If subregkey IsNot Nothing Then
-                                                If String.IsNullOrWhiteSpace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then
-                                                    If StrContainsAny(child, True, "{41a5e581-4a2c-406c-a1b5-ec680ffc64c8}", "{f8176a62-cc98-418f-a208-e187faebe116}", "{eec228c7-0de3-4e67-b631-359fb10e0bbe}") Then
-                                                        Try
-                                                            Deletesubregkey(regkey, child)
-                                                            Using dependencyRegkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Installer\Dependencies", True)
-                                                                If dependencyRegkey IsNot Nothing Then
-                                                                    For Each depChild As String In dependencyRegkey.GetSubKeyNames
-                                                                        If String.IsNullOrWhiteSpace(depChild) Then Continue For
-                                                                        If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-                                                                        If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
-                                                                            Try
-                                                                                Deletesubregkey(dependencyRegkey, depChild, False)
-                                                                            Catch ex As Exception
-                                                                                Application.Log.AddException(ex)
-                                                                            End Try
-                                                                        End If
-                                                                    Next
-                                                                End If
-                                                            End Using
-                                                            If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
-                                                                Delete(config.Paths.Roaming + "Package Cache\" + child)
-                                                            End If
-                                                        Catch ex As Exception
-                                                            Application.Log.AddException(ex)
-                                                        End Try
-                                                    End If
-                                                    Continue For
-                                                Else
-                                                    wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
-                                                    Dim InstallSource = subregkey.GetValue("InstallSource", String.Empty).ToString.TrimEnd(CChar("\"))
-                                                    If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
-                                                    If StrContainsAny(wantedvalue, True, packages) OrElse
-                                            (config.RemoveINTELIGS AndAlso StrContainsAny(wantedvalue, True, packagesigs)) OrElse
-                                            (config.RemoveEnduranceGaming AndAlso StrContainsAny(wantedvalue, True, packagesEndurance)) OrElse
-                                            (config.RemoveIntelNpu AndAlso Not Tools.IsIntelNpuPresent AndAlso StrContainsAny(wantedvalue, True, packagesNpu)) OrElse
-                                            (config.RemoveOneAPI AndAlso StrContainsAny(wantedvalue, True, packagesoneapi)) Then
-                                                        Try
-                                                            If Not (config.RemoveVulkan = False AndAlso StrContainsAny(wantedvalue, True, "vulkan")) Then
-                                                                Deletesubregkey(regkey, child)
-                                                                Using dependencyRegkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "Installer\Dependencies", True)
-                                                                    If dependencyRegkey IsNot Nothing Then
-                                                                        For Each depChild As String In dependencyRegkey.GetSubKeyNames
-                                                                            If String.IsNullOrWhiteSpace(depChild) Then Continue For
-                                                                            If String.IsNullOrWhiteSpace(MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then Continue For
-                                                                            If StrContainsAny(child, True, MyRegistry.OpenSubKey(dependencyRegkey, depChild, False).GetValue("", String.Empty).ToString()) Then
-                                                                                Try
-                                                                                    Deletesubregkey(dependencyRegkey, depChild, False)
-                                                                                Catch ex As Exception
-                                                                                    Application.Log.AddException(ex)
-                                                                                End Try
-                                                                            End If
-                                                                        Next
-                                                                    End If
-                                                                End Using
-                                                                If (Directory.Exists(config.Paths.Roaming + "Package Cache\" + child)) Then
-                                                                    Delete(config.Paths.Roaming + "Package Cache\" + child)
-                                                                End If
-                                                                If ((Not String.IsNullOrWhiteSpace(InstallSource)) AndAlso Directory.Exists(InstallSource)) Then
-                                                                    'Delete(InstallSource)
-                                                                End If
-                                                            End If
-                                                        Catch ex As Exception
-                                                            Application.Log.AddException(ex)
-                                                        End Try
-                                                    End If
-                                                End If
-                                            End If
-                                        End Using
-                                    End If
-                                Next
-                            End If
-                        End Using
-                    Catch ex As Exception
-                        Application.Log.AddException(ex)
-                    End Try
+                    CleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKeyWow,
+                        Function(key As String, name As String) If(String.IsNullOrWhiteSpace(name),
+                            StrContainsAny(key, True, "{41a5e581-4a2c-406c-a1b5-ec680ffc64c8}", "{f8176a62-cc98-418f-a208-e187faebe116}", "{eec228c7-0de3-4e67-b631-359fb10e0bbe}"),
+                            isPackage(name)),
+                        CleanupEngine.UninstallDependencies.ByProviderValue, True, config)
                 End If
 
                 If config.RemoveINTELIGS Then
