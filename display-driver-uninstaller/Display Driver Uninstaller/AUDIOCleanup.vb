@@ -127,8 +127,6 @@ Namespace Display_Driver_Uninstaller
 
 		Private Sub CleanRealtek(ByVal config As ThreadSettings)
 			Dim win10 As Boolean = FrmMain.IsWindows10
-			Dim packages As String()
-			Dim wantedvalue As String = Nothing
 
 			Application.Log.AddMessage("Cleaning known Regkeys")
 
@@ -152,72 +150,12 @@ Namespace Display_Driver_Uninstaller
 
                 Application.Log.AddMessage("Removing known Packages")
 
-                packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\packages.cfg")   '// add each line as String Array.
+                Dim packages As String() = IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\packages.cfg")
+                Dim isMatch As Func(Of String, String, Boolean) = Function(key As String, name As String) StrContainsAny(name, True, packages)
 
-                Try
-                    Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-            "Software\Microsoft\Windows\CurrentVersion\Uninstall", True)
-                        If regkey IsNot Nothing Then
-                            For Each child As String In regkey.GetSubKeyNames()
-                                If String.IsNullOrWhiteSpace(child) Then Continue For
-
-                                Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\Microsoft\Windows\CurrentVersion\Uninstall\" & child)
-
-                                    If subregkey IsNot Nothing Then
-                                        If String.IsNullOrWhiteSpace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then Continue For
-                                        wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
-                                        If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
-                                        For i As Integer = 0 To packages.Length - 1
-                                            If String.IsNullOrWhiteSpace(packages(i)) Then Continue For
-                                            If StrContainsAny(wantedvalue, True, packages(i)) Then
-                                                Try
-                                                    Deletesubregkey(regkey, child)
-                                                Catch ex As Exception
-                                                    Application.Log.AddException(ex)
-                                                End Try
-                                            End If
-                                        Next
-                                    End If
-                                End Using
-                            Next
-                        End If
-                    End Using
-                Catch ex As Exception
-                    Application.Log.AddException(ex)
-                End Try
-
+                _cleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKey, isMatch, CleanupEngine.UninstallDependencies.None, False, config)
                 If IntPtr.Size = 8 Then
-                    packages = IO.File.ReadAllLines(config.Paths.AppBase & "settings\REALTEK\packages.cfg")   '// add each line as String Array.
-                    Try
-                        Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-                 "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall", True)
-                            If regkey IsNot Nothing Then
-                                For Each child As String In regkey.GetSubKeyNames()
-                                    If String.IsNullOrWhiteSpace(child) Then Continue For
-                                    Using subregkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
-                                 "Software\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\" & child, True)
-                                        If subregkey IsNot Nothing Then
-                                            If String.IsNullOrWhiteSpace(subregkey.GetValue("DisplayName", String.Empty).ToString) Then Continue For
-                                            wantedvalue = subregkey.GetValue("DisplayName", String.Empty).ToString
-                                            If String.IsNullOrWhiteSpace(wantedvalue) Then Continue For
-                                            For i As Integer = 0 To packages.Length - 1
-                                                If String.IsNullOrWhiteSpace(packages(i)) Then Continue For
-                                                If StrContainsAny(wantedvalue, True, packages(i)) Then
-                                                    Try
-                                                        Deletesubregkey(regkey, child)
-                                                    Catch ex As Exception
-                                                        Application.Log.AddException(ex)
-                                                    End Try
-                                                End If
-                                            Next
-                                        End If
-                                    End Using
-                                Next
-                            End If
-                        End Using
-                    Catch ex As Exception
-                        Application.Log.AddException(ex)
-                    End Try
+                    _cleanupEngine.RemoveUninstallEntries(CleanupEngine.UninstallKeyWow, isMatch, CleanupEngine.UninstallDependencies.None, False, config)
                 End If
 
                 Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine,
