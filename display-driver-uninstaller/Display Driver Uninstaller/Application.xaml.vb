@@ -747,6 +747,9 @@ Namespace Display_Driver_Uninstaller
                 Settings.WinIs64 = (IntPtr.Size = 8)
                 Settings.WinArchText = Win32.WinAPI.GetNativeArchitecture()
 
+                ' PreventWinUpdate mirrors the registry, the saved value can be out of date.
+                Settings.PreventWinUpdate = FrmMain.InfoDriverSearch()
+
                 Try
 
                     'We check if there are any reboot from windows update pending. and if so we quit.
