@@ -2353,6 +2353,18 @@ child.ToLower.Contains("legacy_amdacpksd") Then
                     Application.Log.AddException(ex)
                 End Try
                 Try
+                    Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.ClassesRoot, "SOFTWARE\AMD", True)
+                        If regkey IsNot Nothing Then
+                            Deletevalue(regkey, "InstallManager", False)
+                            If regkey.SubKeyCount = 0 AndAlso regkey.ValueCount = 0 Then
+                                Deletesubregkey(Registry.ClassesRoot, "SOFTWARE\AMD", False)
+                            End If
+                        End If
+                    End Using
+                Catch ex As Exception
+                    Application.Log.AddException(ex)
+                End Try
+                Try
                     Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "Software\AMDDVR", True)
                         If regkey IsNot Nothing Then
                             If regkey.SubKeyCount = 0 Then
