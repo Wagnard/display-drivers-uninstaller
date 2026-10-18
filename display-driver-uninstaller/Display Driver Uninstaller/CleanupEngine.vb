@@ -2250,6 +2250,33 @@ Namespace Display_Driver_Uninstaller
                     End If
                 End Using
             Next
+
+            Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.LocalMachine, "SYSTEM\CurrentControlSet\Control\GraphicsDrivers", True)
+                If regkey IsNot Nothing Then
+                    Try
+                        Deletesubregkey(regkey, "InternalMonEdid", False)
+                    Catch ex As Exception
+                        Application.Log.AddException(ex)
+                    End Try
+                End If
+            End Using
+
+            For Each users As String In Registry.Users.GetSubKeyNames()
+                If String.IsNullOrWhiteSpace(users) Then Continue For
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, users & "\Control Panel\Desktop\PerMonitorSettings", True)
+                    If regkey IsNot Nothing Then
+                        For Each subregkey In regkey.GetSubKeyNames()
+                            If subregkey IsNot Nothing Then
+                                Try
+                                    Deletesubregkey(regkey, subregkey)
+                                Catch ex As Exception
+                                    Application.Log.AddException(ex)
+                                End Try
+                            End If
+                        Next
+                    End If
+                End Using
+            Next
         End Sub
 
         Public Function CheckServiceStartupType(ByVal service As String) As String
