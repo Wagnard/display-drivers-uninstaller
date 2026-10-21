@@ -3268,7 +3268,7 @@ child.ToLower.Contains("hydravision") Then
                     For Each child As String In _fileIo.GetDirectories(filePath)
                         If String.IsNullOrWhiteSpace(child) = False Then
                             If StrContainsAny(child, True, "kdb", "fuel", "installuep", "uxg") OrElse
-                            DirLeaf(child).Equals("PPC", StringComparison.OrdinalIgnoreCase) Then
+                            DirLeaf(child).Equals("\PPC", StringComparison.OrdinalIgnoreCase) Then
                                 Delete(child)
                             End If
                         End If
@@ -3347,7 +3347,7 @@ child.ToLower.Contains("hydravision") Then
                                 If String.IsNullOrWhiteSpace(child) = False Then
                                     If StrContainsAny(DirLeaf(child), True, "cn", "fuel", "dvr", "wvr", "openvr", "radeonsoftware", "link", "AMDRSSrcExt") Or
 removedxcache AndAlso StrContainsAny(DirLeaf(child), True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Or
-DirLeaf(child).Equals("PPC", StringComparison.OrdinalIgnoreCase) Then
+DirLeaf(child).Equals("\PPC", StringComparison.OrdinalIgnoreCase) Then
                                         Delete(child)
                                     End If
                                 End If
