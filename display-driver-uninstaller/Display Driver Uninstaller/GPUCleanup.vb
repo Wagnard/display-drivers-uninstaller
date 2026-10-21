@@ -2087,7 +2087,8 @@ child.ToLower.Contains("legacy_amdacpksd") Then
                             If regkey IsNot Nothing Then
                                 For Each child As String In regkey.GetSubKeyNames()
                                     If String.IsNullOrWhiteSpace(child) Then Continue For
-                                    If StrContainsAny(child, True, "AIM", "CN", "DVR", "HKIDs", "MOBILE", "SCENE", "SA", "AMDInstallManager", "BOOST", "CHILL", "DELAG") Then
+                                    If StrContainsAny(child, True, "AIM", "CN", "DVR", "HKIDs", "MOBILE", "SCENE", "SA", "AMDInstallManager", "BOOST", "CHILL", "DELAG") OrElse
+                                    child.Equals("PPC", StringComparison.OrdinalIgnoreCase) Then
                                         Deletesubregkey(regkey, child)
                                     End If
                                 Next
@@ -3266,7 +3267,8 @@ child.ToLower.Contains("hydravision") Then
                 If _fileIo.ExistsDir(filePath) Then
                     For Each child As String In _fileIo.GetDirectories(filePath)
                         If String.IsNullOrWhiteSpace(child) = False Then
-                            If StrContainsAny(child, True, "kdb", "ppc", "fuel", "installuep", "uxg") Then
+                            If StrContainsAny(child, True, "kdb", "fuel", "installuep", "uxg") OrElse
+                            DirLeaf(child).Equals("PPC", StringComparison.OrdinalIgnoreCase) Then
                                 Delete(child)
                             End If
                         End If
@@ -3344,7 +3346,8 @@ child.ToLower.Contains("hydravision") Then
                             For Each child As String In _fileIo.GetDirectories(filePath)
                                 If String.IsNullOrWhiteSpace(child) = False Then
                                     If StrContainsAny(DirLeaf(child), True, "cn", "fuel", "dvr", "wvr", "openvr", "radeonsoftware", "link", "AMDRSSrcExt") Or
-removedxcache AndAlso StrContainsAny(DirLeaf(child), True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Then
+removedxcache AndAlso StrContainsAny(DirLeaf(child), True, "dxcache", "vkcache", "glcache", "dxccache", "dx9cache", "OglpCache", "cl.cache") Or
+DirLeaf(child).Equals("PPC", StringComparison.OrdinalIgnoreCase) Then
                                         Delete(child)
                                     End If
                                 End If
