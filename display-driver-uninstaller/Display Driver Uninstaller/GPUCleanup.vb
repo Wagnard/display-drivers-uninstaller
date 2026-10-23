@@ -1120,7 +1120,7 @@ Namespace Display_Driver_Uninstaller
                         found.Clear()
                     End If
                     UpdateTextMethod(UpdateTextTranslated(27))
-                    cleanupEngine.RemoveMonitorConfiguration()
+                    cleanupEngine.RemoveMonitorConfiguration(config.ResetDisplayScale)
                     Application.Log.AddMessage("SetupAPI: Remove Monitor(s) Complete .")
                 End If
 

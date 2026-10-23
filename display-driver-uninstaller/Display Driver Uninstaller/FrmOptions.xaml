@@ -104,6 +104,7 @@
                 <DockPanel Margin="12,10,12,6">
                     <StackPanel DockPanel.Dock="Top">
                         <CheckBox x:Name="lblRemMonitors" IsChecked="{Binding RemoveMonitors, Converter={StaticResource NulBoolToBool}}" Content="lblRemMonitors" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
+                        <CheckBox x:Name="lblResetDisplayScale" IsChecked="{Binding ResetDisplayScale, Converter={StaticResource NulBoolToBool}}" IsEnabled="{Binding RemoveMonitors}" Content="lblResetDisplayScale" Margin="20,0,0,0" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblSaveLogs" IsChecked="{Binding SaveLogs, Converter={StaticResource NulBoolToBool}}" Content="lblSaveLogs" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblCreateRestorePoint" IsChecked="{Binding CreateRestorePoint, Converter={StaticResource NulBoolToBool}}" Content="lblCreateRestorePoint" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>
                         <CheckBox x:Name="lblUseRoamingCfg" IsChecked="{Binding UseRoamingConfig, Converter={StaticResource NulBoolToBool}}" Content="lblUseRoamingCfg" HorizontalAlignment="Left" FlowDirection="{Binding FlowControl}"/>

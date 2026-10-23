@@ -293,6 +293,9 @@
 		<lblRemMonitors>
 			<Text>Remove present and non-present monitors (Recommended)</Text>
 		</lblRemMonitors>
+		<lblResetDisplayScale>
+			<Text>Also reset the saved display scaling (text and icon size)</Text>
+		</lblResetDisplayScale>
 		<lblRemAMDAudioBus>
 			<Text>Remove AMD Audio Bus</Text>
 		</lblRemAMDAudioBus>

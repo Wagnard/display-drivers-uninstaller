@@ -104,6 +104,7 @@ Namespace Display_Driver_Uninstaller
 
 		' Removals
 		Private ReadOnly m_remMonitors As DependencyProperty = RegDP("RemoveMonitors", GetType(Boolean), GetType(AppSettings), True)
+		Private ReadOnly m_resetDisplayScale As DependencyProperty = RegDP("ResetDisplayScale", GetType(Boolean), GetType(AppSettings), False)
 
 		Private ReadOnly m_remCrimsonCache As DependencyProperty = RegDP("RemoveCrimsonCache", GetType(Boolean), GetType(AppSettings), True)
 		Private ReadOnly m_remAMDDirs As DependencyProperty = RegDP("RemoveAMDDirs", GetType(Boolean), GetType(AppSettings), False)
@@ -323,6 +324,15 @@ Namespace Display_Driver_Uninstaller
 			End Get
 			Set(value As Boolean)
 				SetValue(m_remMonitors, value)
+			End Set
+		End Property
+
+		Public Property ResetDisplayScale As Boolean
+			Get
+				Return CBool(GetValue(m_resetDisplayScale))
+			End Get
+			Set(value As Boolean)
+				SetValue(m_resetDisplayScale, value)
 			End Set
 		End Property
 
@@ -768,6 +778,7 @@ Namespace Display_Driver_Uninstaller
 		Public Sub ResetToDefaults()
 			' General
 			ClearValue(m_remMonitors)
+			ClearValue(m_resetDisplayScale)
 			ClearValue(m_saveLogs)
 			ClearValue(m_createRestorePoint)
 			ClearValue(m_UseRoamingCfg)
@@ -852,6 +863,7 @@ Namespace Display_Driver_Uninstaller
 							.WriteElementString("SelectedLanguage", If(SelectedLanguage IsNot Nothing, SelectedLanguage.ISOLanguage, Languages.DefaultEngISO))
 
 							.WriteElementString("RemoveMonitors", RemoveMonitors.ToString())
+							.WriteElementString("ResetDisplayScale", ResetDisplayScale.ToString())
 							.WriteElementString("RemoveCrimsonCache", RemoveCrimsonCache.ToString())
 							.WriteElementString("RemoveAMDDirs", RemoveAMDDirs.ToString())
 							.WriteElementString("RemoveAudioBus", RemoveAudioBus.ToString())
@@ -992,6 +1004,9 @@ Namespace Display_Driver_Uninstaller
 									Next
 								Case "removemonitors"
 									RemoveMonitors = Boolean.Parse(KvP.Value)
+
+								Case "resetdisplayscale"
+									ResetDisplayScale = Boolean.Parse(KvP.Value)
 
 								Case "removecrimsoncache"
 									RemoveCrimsonCache = Boolean.Parse(KvP.Value)

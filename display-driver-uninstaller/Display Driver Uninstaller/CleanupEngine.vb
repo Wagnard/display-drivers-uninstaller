@@ -2227,7 +2227,7 @@ Namespace Display_Driver_Uninstaller
             End Sub)
         End Sub
 
-        Public Sub RemoveMonitorConfiguration()
+        Public Sub RemoveMonitorConfiguration(ByVal resetDisplayScale As Boolean)
             Dim keysToClean As String() = {
                 "SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Configuration",
                 "SYSTEM\CurrentControlSet\Control\GraphicsDrivers\Connectivity",
@@ -2260,6 +2260,8 @@ Namespace Display_Driver_Uninstaller
                     End Try
                 End If
             End Using
+
+            If Not resetDisplayScale Then Return
 
             For Each users As String In Registry.Users.GetSubKeyNames()
                 If String.IsNullOrWhiteSpace(users) Then Continue For

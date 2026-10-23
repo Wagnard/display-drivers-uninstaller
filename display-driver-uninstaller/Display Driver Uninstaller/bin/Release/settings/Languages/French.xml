@@ -301,6 +301,9 @@
 		<lblRemMonitors>
 			<Text>Supprimer les moniteurs présents et non présents (Recommandé)</Text>
 		</lblRemMonitors>
+		<lblResetDisplayScale>
+			<Text>Réinitialiser aussi la mise à l'échelle de l'affichage (taille du texte et des icônes)</Text>
+		</lblResetDisplayScale>
 		<lblRemAMDAudioBus>
 			<Text>Supprimer Bus Audio AMD</Text>
 		</lblRemAMDAudioBus>
