@@ -2278,6 +2278,27 @@ Namespace Display_Driver_Uninstaller
                         Next
                     End If
                 End Using
+                Using regkey As RegistryKey = MyRegistry.OpenSubKey(Registry.Users, users & "\Control Panel\Desktop", True)
+                    If regkey IsNot Nothing Then
+                        If regkey.GetValue("Win8DpiScaling") IsNot Nothing Then
+                            Try
+                                regkey.SetValue("Win8DpiScaling", 0, RegistryValueKind.DWord)
+                            Catch ex As Exception
+                                Application.Log.AddException(ex)
+                            End Try
+                        End If
+                        Try
+                            Deletevalue(regkey, "LogPixels", False)
+                        Catch ex As Exception
+                            Application.Log.AddException(ex)
+                        End Try
+                        Try
+                            Deletevalue(regkey, "DesktopDPIOverride", False)
+                        Catch ex As Exception
+                            Application.Log.AddException(ex)
+                        End Try
+                    End If
+                End Using
             Next
         End Sub
 
