@@ -291,7 +291,7 @@ Namespace Display_Driver_Uninstaller
 
                 If config.SelectedGPU = GPUVendor.Qualcomm AndAlso config.RemoveQualcommNpu Then
                     Application.Log.AddMessage("Executing SetupAPI: Qualcomm NPU")
-                    Dim npus As List(Of SetupAPI.Device) = SetupAPI.GetDevices("ComputeAccelerator", vendIdExpected, False, includeChilds:=True)
+                    Dim npus As List(Of SetupAPI.Device) = SetupAPI.GetDevices("ComputeAccelerator", vendIdExpected, False, includeChilds:=True, driverDetails:=True)
                     If npus Is Nothing Then npus = New List(Of SetupAPI.Device)
 
                     'Without a driver the NPU sits in "Other devices" and has no class to search by.
@@ -326,7 +326,7 @@ Namespace Display_Driver_Uninstaller
 
                     If config.RemoveIntelNpu Then
                         Application.Log.AddMessage("Executing SetupAPI: Intel NPU and it's childrens") 'PCI Upstream
-                        Dim npus = SetupAPI.GetDevices("ComputeAccelerator", vendIdExpected, False, includeChilds:=True)
+                        Dim npus = SetupAPI.GetDevices("ComputeAccelerator", vendIdExpected, False, includeChilds:=True, driverDetails:=True)
                         If npus IsNot Nothing AndAlso npus.Count > 0 Then
 
                             ' Create a list to track devices already removed
@@ -655,7 +655,7 @@ Namespace Display_Driver_Uninstaller
 
                 Try
                     Application.Log.AddMessage("Executing SetupAPI: Remove GPU(s).")
-                    Dim GPUs As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCompatibleID(vendCompatibleID, False, False, True)
+                    Dim GPUs As List(Of SetupAPI.Device) = SetupAPI.GetDevicesByCompatibleID(vendCompatibleID, False, False, True, True)
                     If GPUs IsNot Nothing AndAlso GPUs.Count > 0 Then
                         ' Create a list to track devices already removed
                         Dim removedDevices As New List(Of String)
