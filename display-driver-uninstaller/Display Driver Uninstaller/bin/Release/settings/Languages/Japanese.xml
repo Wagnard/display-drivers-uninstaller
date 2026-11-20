@@ -378,7 +378,7 @@
 			<Text>* これらが存在しない場合、機能が利用できなくなったり、GPU が起動しなくなる (コード 31) 問題が発生する可能性があります。復元するには、Qualcomm または PC メーカーのドライバーパッケージを再インストールするか、「pnputil /add-driver &lt;拡張子は .inf&gt; /install」のコマンドを実行してください。</Text>
 		</lblRemQualcommExtNote>
 		<lblQualcommExpert>
-			<Text>エキスパート オプション</Text>
+			<Text>上級者向けのオプション</Text>
 		</lblQualcommExpert>
 		<lblRemQualcommNpu>
 			<Text>Qualcomm Hexagon NPU を削除する</Text>
