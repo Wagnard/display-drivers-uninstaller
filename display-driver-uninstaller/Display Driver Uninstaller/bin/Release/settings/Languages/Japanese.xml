@@ -63,7 +63,7 @@
 			<Text>検出された OS:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** DDUはお気に召しましたか？ 開発をサポートするためにチップをください ***</Text>
+			<Text>*** DDUはお気に召しましたか？ 開発を継続するためにチップをお願いします ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>ログ</Text>
