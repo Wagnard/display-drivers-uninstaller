@@ -63,7 +63,7 @@
 			<Text>検出された OS:</Text>
 		</lblWinVersion>
 		<lblDonate>
-			<Text>*** DDUはお気に召しましたか？ 開発をサポートするためにチップをください ***</Text>
+			<Text>*** DDUはお気に召しましたか？ 開発を継続するためにチップをお願いします ***</Text>
 		</lblDonate>
 		<lblLog>
 			<Text>ログ</Text>
@@ -133,13 +133,13 @@
 			<Text>GeForce のフォーラムを開く</Text>
 		</VisitGeforceMenuItem>
        <DownloadNvidiaMenuItem>
-			<Text>NVIDIAドライバーダウンロード</Text>
+			<Text>NVIDIA のドライバーをダウンロード</Text>
 		</DownloadNvidiaMenuItem>
         <DownloadAmdMenuItem>
-			<Text>AMDドライバーダウンロード</Text>
+			<Text>AMD のドライバーをダウンロード</Text>
 		</DownloadAmdMenuItem>
         <DownloadIntelMenuItem>
-			<Text>インテルドライバーダウンロード</Text>
+			<Text>Intel® のドライバーをダウンロード</Text>
 		</DownloadIntelMenuItem>
 
 		<Messages>
@@ -235,6 +235,9 @@
 	</frmMain>
 
 	<frmOptions Text="オプション">
+		<btnClose>
+			<Text>閉じる</Text>
+		</btnClose>
 		<btnResetDefaults>
 			<Text>推奨設定に戻す</Text>
 			<Tooltip>すべてのオプションを推奨される既定値に戻します。</Tooltip>
@@ -242,9 +245,6 @@
 		<Messages>
 			<Text1>すべてのオプションを推奨される既定値に戻しますか？</Text1>
 		</Messages>
-		<btnClose>
-			<Text>閉じる</Text>
-		</btnClose>
 		<lblOffer>
 			<Text>パートナーからのオファーを表示する</Text>
 		</lblOffer>
@@ -302,6 +302,9 @@
 		<lblRemMonitors>
 			<Text>存在するモニターと存在しないモニターを削除する (推奨)</Text>
 		</lblRemMonitors>
+		<lblResetDisplayScale>
+			<Text>保存済みのディスプレイのスケーリングもリセットする (テキストやアイコンのサイズ)</Text>
+		</lblResetDisplayScale>
 		<lblRemAMDAudioBus>
 			<Text>AMD Audio Bus を削除する</Text>
 		</lblRemAMDAudioBus>
@@ -360,10 +363,10 @@
 			<Text>GPU にインストールされた PC メーカーのドライバー拡張機能を削除する (より徹底したクリーンアップ) *</Text>
 		</lblRemIntelExt>
 		<lblRemIntelExtNote>
-			<Text>* ノート PC ではリスクが高くなります。拡張機能がないと機能が欠けたり GPU が起動しない (コード 31) ことがあります。元に戻すには: PC メーカーのドライバー パッケージを再インストールするか、pnputil /add-driver &lt;拡張機能の .inf&gt; /install を実行します</Text>
+			<Text>* ノート PC ではリスクが高まります。ドライバーがない場合、機能が利用できなくなったり、GPU が起動しなくなる (コード 31) 問題が発生する可能性があります。元に戻すには PC メーカーが提供するドライバーパッケージを再インストールするか、コマンド「pnputil /add-driver &lt;拡張子は .inf&gt; /install」を実行してください。</Text>
 		</lblRemIntelExtNote>
 		<lblIntelExpert>
-			<Text>エキスパート オプション</Text>
+			<Text>上級者向けのオプション</Text>
 		</lblIntelExpert>
 		<lblRemQualcommCP>
 			<Text>Snapdragon コントロールパネルを削除する</Text>
@@ -372,10 +375,10 @@
 			<Text>GPU にインストールされた OEM ドライバー拡張機能を削除する (より徹底したクリーンアップ) *</Text>
 		</lblRemQualcommExt>
 		<lblRemQualcommExtNote>
-			<Text>* 拡張機能がないと機能が欠けたり GPU が起動しない (コード 31) ことがあります。元に戻すには: Qualcomm または PC メーカーのドライバー パッケージを再インストールするか、pnputil /add-driver &lt;拡張機能の .inf&gt; /install を実行します</Text>
+			<Text>* これらが存在しない場合、機能が利用できなくなったり、GPU が起動しなくなる (コード 31) 問題が発生する可能性があります。復元するには、Qualcomm または PC メーカーのドライバーパッケージを再インストールするか、「pnputil /add-driver &lt;拡張子は .inf&gt; /install」のコマンドを実行してください。</Text>
 		</lblRemQualcommExtNote>
 		<lblQualcommExpert>
-			<Text>エキスパート オプション</Text>
+			<Text>上級者向けのオプション</Text>
 		</lblQualcommExpert>
 		<lblRemQualcommNpu>
 			<Text>Qualcomm Hexagon NPU を削除する</Text>
@@ -612,7 +615,7 @@
 		<Translator2>
 			<User>Re*Index.(ot_inc)</User>
 			<Details>https://reindex-ot.github.io/</Details>
-			<LastUpdate>07/12/2025</LastUpdate>
+			<LastUpdate>21/11/2026</LastUpdate>
 		</Translator2>
 
 		<Translator3>
